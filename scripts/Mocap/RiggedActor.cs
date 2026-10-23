@@ -16,6 +16,8 @@ public partial class RiggedActor : Node3D
     public int JointCount => _motion?.AnimatedJointCount ?? 0;
     public string ImportSummary { get; private set; } = "Prepared humanoid · import a BVH motion or load the included synthetic sample.";
     public Vector3 RootMotionOffset { get; private set; } = Vector3.Zero;
+    /// <summary>Current source-facing direction in actor-local XZ, including evaluated hip yaw.</summary>
+    public Vector3 AnimatedForward { get; private set; } = Vector3.Forward;
 
     private Skeleton3D? _skeleton;
     private StaticBody3D? _pickBody;
@@ -29,6 +31,7 @@ public partial class RiggedActor : Node3D
     private Vector3[] _rootCurve = Array.Empty<Vector3>();
     private float _sourceScale = 0.01f;
     private float _initialGroundCorrection;
+    private Vector3 _sourceForward = Vector3.Forward;
     private readonly List<BoneDefinition> _bones = new();
     private StandardMaterial3D? _bodyMaterial;
     private StandardMaterial3D? _jointMaterial;
@@ -78,6 +81,7 @@ public partial class RiggedActor : Node3D
         // small heading marker to the foot-rest direction rather than reversing the motion.
         Vector3 sourceForward = SourceAim(candidate, map, FindBone("LeftFoot")) + SourceAim(candidate, map, FindBone("RightFoot"));
         sourceForward.Y = 0;
+        _sourceForward = sourceForward.LengthSquared() > 0.00001f ? sourceForward.Normalized() : Vector3.Forward;
         if (_faceMarker != null && sourceForward.LengthSquared() > 0.00001f)
         {
             sourceForward = sourceForward.Normalized();
@@ -102,9 +106,11 @@ public partial class RiggedActor : Node3D
     {
         EnsureRig();
         _motion = null;
+        _motionTrack = Array.Empty<PreparedMotionClip>();
         MotionName = "No motion";
         ImportSummary = "Prepared humanoid · import a BVH motion or load the included synthetic sample.";
         RootMotionOffset = Vector3.Zero;
+        AnimatedForward = Vector3.Forward;
         if (_pickBody != null) _pickBody.Position = Vector3.Zero;
         SetNeutralPose();
     }
@@ -136,6 +142,7 @@ public partial class RiggedActor : Node3D
             _skeleton.SetBonePosePosition(i, localPosition);
             _skeleton.SetBonePoseRotation(i, localRotation);
         }
+        AnimatedForward = HorizontalFacing(_targetRotations[0] * _sourceForward);
         float minFoot = FootMinimum(FindBone("LeftFoot"));
         minFoot = Math.Min(minFoot, FootMinimum(FindBone("RightFoot")));
         if (calibrateGround)

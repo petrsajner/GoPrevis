@@ -1,48 +1,80 @@
-# Previs 0.1.0 validation
+# Previs 0.2.1 validation
 
 Validation date: **2026-10-24**. Verified platform: **Windows x64**.
 
-This record describes the first functional prototype. It distinguishes automated
-runtime checks from direct UI checks. Current feature limits and run instructions
-are in [README.md](README.md).
+This version adds independent cameras, editable BVH clip tracks with crossfades,
+drawn character paths and neutral default lighting. Application UI, dialogs,
+status messages and authored errors are English. Feature limits are recorded
+in [README.md](README.md).
 
 ## Toolchain
 
 - Godot **4.7.2 stable mono**, official build `ed1daf0bf`.
-- C# targeting **.NET 10**; local SDK **10.0.402** (`.tools/dotnet/dotnet.exe --version`).
-- The rendered exported build reports the Compatibility renderer, OpenGL 3.3,
-  NVIDIA driver 610.88, and an NVIDIA GeForce RTX 5090.
-- Application interface, file dialogs, status messages, and authored error
-  messages are English. `PrevisApp` explicitly sets locale `en`; the project also
-  sets its fallback locale to `en`.
+- C# targeting **.NET 10**; local SDK **10.0.402**.
+- Render checks use the Compatibility renderer, OpenGL 3.3, NVIDIA driver
+  610.88 and an NVIDIA GeForce RTX 5090.
+- `PrevisApp` sets locale `en`; the project fallback locale is also `en`.
 
-## Automated checks
+## Automated source checks
 
-The source project passed its C# build and headless smoke run during development.
-The exported Windows x64 executable was then tested independently in headless
-and rendered modes. The retained evidence is:
+The C# build and source headless smoke run passed during 0.2.1 development.
+The smoke suite retains the earlier BVH/parser, object-selection, scene-restore,
+camera-pilot and project checks, and now verifies:
 
-| Evidence | Result |
-| --- | --- |
-| `output/packaged-smoke.log` | Exported executable reports `PREVIS_SMOKE_OK objects=7 bones=21 keys=2`. |
-| `output/packaged-render.log` | Exported executable passes the same core checks, camera-pilot regressions, and full HD rendering. It also reports `PREVIS_SMOKE_OK objects=7 bones=21 keys=2`. |
-| `output/smoke/roundtrip.previs` and `roundtrip.assets/` | Saved project and copied BVH asset used by the project reopen check. |
-| `output/smoke/ui.png` | Rendered application screenshot from the exported build. |
-| `output/smoke/camera.png` and `camera.json` | Clean camera frame and metadata: 1920 × 1080, 24 fps, frame 30 at 1.25 seconds. |
+- Three cameras have independent identities. Static Camera B retains its pose
+  while the scene evaluates Camera A's dolly motion.
+- The neutral scene has no visible directional light. Enabling then disabling
+  the optional light reuses one light without accumulating extra nodes.
+- Sequential synthetic/real CMU motion clips overlap and receive a blend.
+- The drawn path controls character position and suppresses duplicate BVH X/Z
+  displacement. Pose, position and orientation reproduce after reverse seeking.
+- Version 2 roundtrip preserves three cameras, two BVH clips and path points.
+- Version 1 input migrates into one camera and one BVH clip for the human.
+- Removing the final motion clip survives scene restore.
 
-The smoke checks cover BVH parser checks, starter-scene creation, sample loading,
-deterministic BVH scrubbing, real CMU import with root motion, deterministic
-camera interpolation, object selection, scene restore, project save/reopen, and
-full HD camera rendering. The rendered exported run additionally verifies that
-the editor follows the shot keys during camera piloting and that the piloted
-camera excludes editor helpers (`CullMask == 1`).
+Successful core completion prints
+`PREVIS_SMOKE_OK objects=7 bones=21 keys=2`.
 
-The CMU walk animates the prepared **21-bone human rig**. This is a real captured
-motion, separate from the original procedural synthetic demo. Source and license
-information are retained in `samples/real/SOURCE-AND-LICENSE.md`.
+`scripts/Testing/ActorPathProbe.cs` passed **1,307 checks**. It verifies empty and
+degenerate paths, duplicate points, exact endpoints, before/after holds,
+approximately constant arc-length travel with uneven control points, finite
+normalized headings, reverse seeking and geometry-cache invalidation after
+point edits. Timing edits are evaluated without rebuilding unchanged geometry.
 
-An independent native-model runtime probe imported the Khronos Fox GLB with its
-own rig and embedded animation. The recorded results were:
+`scripts/Testing/MotionTrackProbe.cs` passed **29 checks**, including the real
+CMU plus synthetic-source regression. It verifies quaternion crossfades,
+continuous root position at transitions and source-loop boundaries, source
+offset/speed/clamping, gaps holding the previous endpoint, path/in-place root
+filtering, deterministic reverse seeking, reuse of prepared sources, atomic
+failure handling and clearing an empty track. Successful completion prints:
+
+```text
+MOTION_TRACK_REAL_CMU_OK mixed_sources=2
+MOTION_TRACK_PROBE_OK checks=29
+```
+
+The source smoke suite runs through `build.ps1 -Test`. The separate probes use
+these Godot arguments:
+
+```text
+--headless --path . --script res://scripts/Testing/ActorPathProbe.cs
+--headless --path . --script res://scripts/Testing/MotionTrackProbe.cs
+```
+
+## Rendered lighting checks
+
+The 0.2.1 neutral environment was rendered and inspected with the Compatibility
+renderer. Gray hemisphere illumination retains curved forms and material color
+without a default directional light or hard cast shadows. The scene and library
+thumbnails share that environment. An isolated lighting probe also checked the
+default absence of a directional node, repeated toggle reuse, sky ambient and
+reflection sources, and unboosted exposure. Its neutral and optional-light
+images are retained under ignored `.tools/lighting-probe/`.
+
+## Prior native-model compatibility evidence
+
+The 0.1.0 native-model probe imported the Khronos Fox GLB with its own skeleton
+and embedded animations:
 
 ```text
 MODEL_NATIVE_CLIP_OK index=0 name=Run duration=1.158 bones=24
@@ -50,47 +82,38 @@ MODEL_NATIVE_CLIP_OK index=1 name=Survey duration=3.417 bones=24
 MODEL_IMPORT_OK skeletons=1 clips=3 names=Run,Survey,Walk
 ```
 
-The probe checks that seeking two different times changes bone poses and that
-repeating a seek reproduces the original poses, for the first two native clips.
-These results validate native GLB animation import, not animal retargeting onto
-a supplied Previs model. The unchanged test GLB and its source/legal metadata
-are retained under ignored `output/testassets/` and are excluded from delivery.
+That probe verifies changing and repeated bone-pose seeks for the first two
+clips. It is prior compatibility evidence, not a claim that 0.2.1 provides
+animal retargeting or native-model BVH clip sequencing. The external GLB and
+source metadata are retained under ignored `output/testassets/` and are
+excluded from delivery. The rerunnable probe is
+`scripts/Testing/ModelImportProbe.cs` with `-- --model=<absolute GLB path>`.
 
-`build.ps1 -Test` rebuilds the C# project, imports Godot resources, runs the source
-headless smoke checks, and exports Windows x64. The additional model-import
-probe is `scripts/Testing/ModelImportProbe.cs`; it requires an external animated
-GLB supplied through `-- --model=<absolute path>`.
+## Delivery verification
 
-## Native Windows UI checks
+The exported Windows executable in `build/Previs-0.2.1-Windows/` passed its
+rendered smoke run independently, including full HD export. Evidence is retained
+in `output/packaged-0.2.1-render.log`; it ends in `PREVIS_SMOKE_OK`.
 
-The root implementation session directly operated the running Windows program
-and verified these interactions:
+Scene checks verify three cameras, independent playback, optional lighting,
+blended clips, path-driven position without duplicate mocap root translation,
+retimed arrivals at exact curve points, persistence of edited key times,
+version 1 migration, and deletion of the last motion clip surviving restore.
+The path probe now passes **1397 checks**; the motion-track probe passes **29**.
 
-- Opened the Props library and added a chair.
-- Selected and dragged the chair in the real 3D viewport. The inspector updated
-  to approximately **X = 1.85 m, Z = -0.05 m**.
-- Selected Alex and loaded the real CMU captured walk.
-- Scrubbed the timeline and observed changes in both the actor and the camera.
-- In the latest packaged build, entered camera view and visually checked a clean
-  16:9 framed scene matching the shot preview, with the helper body hidden.
-- In that same camera view, scrubbed to 4 seconds and observed both the actor
-  and the camera position change. The screenshot was reviewed directly.
+Direct Windows interaction verified appending the real CMU clip, opening its
+Motion inspector, moving a clip from 0 to 0.5 seconds by dragging, selecting
+Camera B through its timeline row, drawing three ground points and applying the
+curve, and scrubbing the character along it. In 0.2.1 the separate `Alex · Path`
+row displays P1/P2/P3. Dragging P2 from 3 to 4 seconds visibly moved the key and
+playhead while keeping the character at that curve point. The existing 0.2.0
+session was left open when the user began working in it.
 
-An initial pilot-view inspection found the editor camera icon visible from
-inside the shot. The camera-view culling mask was corrected to layer 1, and the
-exported rendered smoke run now contains the explicit passing regression
-`Pilot excludes editor helpers`. The later manual check above also verified
-the corrected visible result. MMB piloting, camera-key playback, camera framing,
-and exiting through Perspective received corresponding integration fixes.
+The package includes a complete keyed-path example under `examples/`.
+`BUILD-INFO.json` records the source commit and hashes of the executable,
+resource pack and managed application assembly. The portable archive is
+`build/Previs-0.2.1-Windows.zip`; its entries are checked with ZIP CRC validation.
 
-## Scope of verification
-
-Windows x64 is the only platform built and exercised. No macOS or Linux build
-or runtime result is claimed. This remains a prototype with the documented
-import, animation, camera, and output limits in [README.md](README.md), including
-a static dog blockout and no animal-motion retargeting.
-
-The delivery folder is `build/Previs-0.1.0-Windows/`; the portable archive is
-`build/Previs-0.1.0-Windows.zip`. `BUILD-INFO.json` in the delivery folder records
-the source commit, toolchain and executable/PCK hashes. Generated logs and test
-artifacts live in ignored `output/` directories.
+Windows x64 is the only platform exercised. No macOS or Linux build/runtime
+result is claimed. Video export, animal-motion retargeting and automatic
+foot/contact correction remain outside this prototype's implemented scope.

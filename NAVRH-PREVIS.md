@@ -1,8 +1,22 @@
 # Previs — návrh samostatného programu
 
-Stav: schválený směr a zahájený funkční prototyp 0.1.0, 24. 10. 2026. Aktuální implementovaný rozsah a omezení popisuje anglický `README.md`.
+Stav: funkční prototyp 0.2.1, 24. 10. 2026. Aktuální implementovaný rozsah a omezení popisuje anglický `README.md`, ověřené kontroly `VALIDATION.md`.
+
+Po připomínce k chybějícím klíčům pohybu po křivce má dráha vlastní stopu `Alex · Path` a časové klíče `P1`, `P2`, `P3` pro jednotlivé body. Tažení klíče mění skutečný čas příjezdu do daného bodu, podporuje změnu tempa mezi body a ukládá se s projektem. Výchozí scéna používá neutrální prostředí bez zapnutého směrového světla; to lze přidat volbou `Environment → Directional light`.
 
 Petr schválil tmavý vizuální směr a zadal první funkční prototyp v Godotu pro stavbu scény, import mocapu a pohyb kamery. **Veškeré uživatelské rozhraní výsledné aplikace musí být anglicky**, včetně dialogů, chyb, nápovědy a názvů ovládacích prvků. České názvy v původním návrhu níže jsou pouze popis specifikace, nikoli texty k převzetí do aplikace.
+
+### Implementovaný průřez 0.2.1
+
+Aktuální verze rozšiřuje základ 0.1.0 o více nezávislých kamer, navazující BVH klipy s prolnutím a pohyb postav po nakreslené dráze. Dodává se Godot **4.7.2 .NET / C# / .NET 10**, primárně pro Windows x64. Následující dlouhodobý návrh nadále obsahuje plánované části; není soupisem již hotových funkcí.
+
+- **Kamery:** úvodní scéna má Camera A, B a C, každou s vlastními klíči a ohniskem. Aktivní kamera se vybírá nad náhledem, v knihovně Cameras nebo kliknutím na její stopu. Lze ji přidat z pracovního pohledu, duplikovat, přejmenovat a odebrat při zachování alespoň jedné kamery. Klíče, předvolby, pilotování a čistý PNG export pracují s aktivní kamerou nad společnou akcí; střih kamer ani hromadný videoexport zatím nejsou hotové.
+- **Lidský BVH mocap:** další import přidá klip do stopy, tělo klipu se táhne po ose a pravý okraj mění délku. Překrytí sousedních klipů řídí prolnutí pózy s průběžně navazujícím kořenovým posunem. Motion inspector nabízí Start, Duration, Source offset, Blend in, Speed, Loop source, In-place clip a Source metres/unit. Změna Blend in zároveň umístí začátek klipu vůči konci předchozího. Importované FBX/GLB modely si vybírají jednu vlastní nativní animaci; víceklipová BVH stopa se na ně zatím nevztahuje.
+- **Dráhy:** Draw path otevře zadávání bodů klikáním na rovinu země; Finish path nebo Enter dokončí, Esc zruší a zachová původní dráhu. Path inspector nabízí začátek, dobu průchodu a orientaci po směru. Dráha potlačí vodorovný kořenový posun lidského BVH, aby se pohyb nesčítal dvakrát. Změna základní pozice objektu posouvá celou dráhu. Rychlost mocapu a dobu průchodu zatím sladí uživatel; automatické kontakty ani IK nohou nejsou implementované.
+- **Neutrální světlo:** výchozí scéna i náhledy knihovny používají šedé hemisférické okolní osvětlení a odrazy. Žádné směrové světlo není ve výchozím stavu aktivní. Environment → Directional light přidává volitelné směrové světlo se stíny. Jde o závazný výchozí pracovní režim: obyčejné rozmístění objektů nemá vyžadovat nastavování světel a přepalovat jejich barvy.
+- **Projekt:** verze 2 uchovává všechny kamery, aktivní výběr kamery, BVH klipy, dráhy a stav volitelného světla. Ukládání kopíruje všechny použité BVH a podporované modely do sousedního adresáře `.assets`; předchozí JSON při přepsání zůstává jako `.previs.bak`. Verze 1 se převádí na jednu kameru a jeden klip na dříve animovaného člověka. Připravovaná distribuce: `build/Previs-0.2.1-Windows/`.
+
+Zvířecí retargeting, dodaná animovaná zvířata, referenční video, vodicí video a hloubkové/hranové/maskové průchody jsou další práce. Pes v základní knihovně zůstává statickou rekvizitou. macOS a Linux zatím nejsou sestavené a ověřené. Rozsah původní přejímací scény níže tedy ještě není splněn.
 
 ## 1. Co stavíme
 
@@ -219,4 +233,4 @@ Import mocapu a export vodicích podkladů jsou již součástí B, ne dodatečn
 
 ## 11. Co tento návrh zatím neprohlašuje za hotové
 
-Vzniká první funkční prototyp 0.1.0 s vlastní scénou Godotu, připravenou figurínou, BVH importem, základními rekvizitami a kamerovými klíči. Proklikávací návrh z předchozí fáze nadále slouží jako vizuální reference. Kompletní distribuovatelné knihovny, filmový export všech průchodů a ověření ostatních OS zůstávají další prací. Stav konkrétního sestavení je v `README.md` a `VALIDATION.md`.
+Funkční prototyp 0.2.1 má vlastní scénu Godotu, připravenou figurínu, BVH klipové stopy s prolnutím, kreslené dráhy, základní rekvizity, více samostatných kamer a neutrální pracovní osvětlení. Proklikávací návrh z předchozí fáze nadále slouží jako vizuální reference. Kompletní distribuovatelné knihovny, animovaná zvířata, filmový export všech průchodů a ověření ostatních OS zůstávají další prací. Stav konkrétního sestavení je v `README.md` a `VALIDATION.md`.

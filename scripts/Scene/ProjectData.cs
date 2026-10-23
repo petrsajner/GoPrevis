@@ -5,7 +5,7 @@ namespace Previs;
 
 public sealed class ProjectData
 {
-    public int Version { get; set; } = 1;
+    public int Version { get; set; } = 2;
     public int Fps { get; set; } = 24;
     public double Duration { get; set; } = 8;
     public List<ObjectData> Objects { get; set; } = new();
@@ -13,6 +13,9 @@ public sealed class ProjectData
     public float[] ShotPosition { get; set; } = Array.Empty<float>();
     public float[] ShotRotation { get; set; } = Array.Empty<float>();
     public float FocalLength { get; set; } = 35;
+    public List<CameraTrackData> Cameras { get; set; } = new();
+    public string ActiveCameraId { get; set; } = "";
+    public bool DirectionalLightEnabled { get; set; }
 }
 
 public sealed class ObjectData
@@ -31,6 +34,43 @@ public sealed class ObjectData
     public bool Loop { get; set; } = true;
     public bool InPlace { get; set; }
     public double Speed { get; set; } = 1;
+    public List<MotionClipData> MotionClips { get; set; } = new();
+    public ActorPathData Path { get; set; } = new();
+}
+
+public sealed class MotionClipData
+{
+    public string Id { get; set; } = Guid.NewGuid().ToString("N");
+    public string MotionPath { get; set; } = "";
+    public string Name { get; set; } = "Motion";
+    public double Start { get; set; }
+    public double Duration { get; set; } = 3;
+    public double SourceOffset { get; set; }
+    public double Speed { get; set; } = 1;
+    public double BlendIn { get; set; } = .3;
+    public bool Loop { get; set; } = true;
+    public bool InPlace { get; set; }
+    public float SourceScale { get; set; } = .01f;
+}
+
+public sealed class ActorPathData
+{
+    public bool Enabled { get; set; }
+    public List<float[]> Points { get; set; } = new();
+    public List<double> PointTimes { get; set; } = new();
+    public double Start { get; set; }
+    public double Duration { get; set; } = 8;
+    public bool OrientToPath { get; set; } = true;
+}
+
+public sealed class CameraTrackData
+{
+    public string Id { get; set; } = Guid.NewGuid().ToString("N");
+    public string Name { get; set; } = "Camera A";
+    public List<CameraData> Keys { get; set; } = new();
+    public float[] Position { get; set; } = new float[] { 6, 3.2f, 7 };
+    public float[] Rotation { get; set; } = new float[3];
+    public float FocalLength { get; set; } = 35;
 }
 
 public sealed class CameraData
