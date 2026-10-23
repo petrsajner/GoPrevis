@@ -1,0 +1,11 @@
+<Project Sdk="Godot.NET.Sdk/4.7.2">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Previs</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove=".tools/**;build/**;tests/**" />
+  </ItemGroup>
+</Project>

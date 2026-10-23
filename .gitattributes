@@ -1,0 +1,4 @@
+* text=auto eol=lf
+# Preserve upstream capture and licence bytes, including their original spacing.
+samples/real/*.bvh -text -whitespace
+LICENSES/* -text -whitespace
