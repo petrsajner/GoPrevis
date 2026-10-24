@@ -19,5 +19,11 @@ func _initialize():
   var cover='res://assets/content/thumbnails/'+id+'.png'
   covers[id]=true
   if not ResourceLoader.exists(cover): failures.append(cover)
- print('PACKAGED_CONTENT_INVENTORY sources=',sources.size(),' covers=',covers.size(),' failures=',failures)
+ var poses=JSON.parse_string(FileAccess.get_file_as_string('res://assets/content/manifests/human-poses.json'))
+ for pose in poses:
+  covers[pose.Id]=true
+  if pose.Pose.BoneRotations.size()!=21: failures.append(pose.Id+' bones')
+  if not ResourceLoader.exists('res://assets/content/thumbnails/'+pose.Id+'.png'): failures.append(pose.Id+' cover')
+ if poses.size()!=118: failures.append('pose count')
+ print('PACKAGED_CONTENT_INVENTORY sources=',sources.size(),' covers=',covers.size(),' poses=',poses.size(),' failures=',failures)
  quit(0 if failures.is_empty() else 1)

@@ -15,11 +15,12 @@ public partial class PrevisApp
         {
             if(data.VariantType!=Variant.Type.Dictionary)return false;var d=data.AsGodotDictionary();if(!d.ContainsKey("previs_type"))return false;
             if(d["previs_type"].AsString()=="asset")return true;
+            if(d["previs_type"].AsString()=="pose")return App.FindLibraryPose(d["id"].AsString())!=null&&(App.PickMotionTarget(position) is not { } poseTarget||poseTarget.Node is RiggedActor);
             var motion=MotionCatalog.Find(d["id"].AsString());var target=App.PickMotionTarget(position);return motion!=null&&(target==null||App.CompatibleMotion(target,motion));
         }
         public override void _DropData(Vector2 position,Variant data)
         {
-            var d=data.AsGodotDictionary();try{if(d["previs_type"].AsString()=="asset")App.DropAsset(d["id"].AsString(),App.GroundPoint(position));else App.DropMotion(d["id"].AsString(),App.PickMotionTarget(position),App.GroundPoint(position));}catch(Exception ex){App.Error(ex.Message);}
+            var d=data.AsGodotDictionary();try{if(d["previs_type"].AsString()=="asset")App.DropAsset(d["id"].AsString(),App.GroundPoint(position));else if(d["previs_type"].AsString()=="pose")App.DropPose(d["id"].AsString(),App.PickMotionTarget(position),App.GroundPoint(position));else App.DropMotion(d["id"].AsString(),App.PickMotionTarget(position),App.GroundPoint(position));}catch(Exception ex){App.Error(ex.Message);}
         }
     }
     partial class LibraryCard:Button

@@ -43,7 +43,7 @@ public partial class PrevisApp
         var categories=new OptionButton{FitToLongestItem=false,ClipText=true};categories.AddItem("All categories");foreach(var category in models.Select(m=>m.Category).Distinct().Order())categories.AddItem(category);categories.Visible=categories.ItemCount>2;_library.AddChild(categories);
         var search=new LineEdit{PlaceholderText="Search models…",ClearButtonEnabled=true};_library.AddChild(search);
         BuildPagedCards(()=>models.Where(m=>(categories.Selected==0||m.Category==categories.GetItemText(categories.Selected))&&(search.Text==""||(m.Name+" "+m.Category).Contains(search.Text,StringComparison.OrdinalIgnoreCase))).Select(m=>new ContentCard(m.Id,m.Name,m.Category+" · "+m.License,m,null)).ToArray(),search,categories);
-        if(section=="People")_library.AddChild(Text("Prepared mannequin rigs",11,true));
+        if(section=="People"){_library.AddChild(Button("Browse static poses",()=>ShowCategory("Poses")));_library.AddChild(Text("Prepared mannequin rigs",11,true));}
     }
 
     void BuildMotionLibrary()
@@ -55,7 +55,7 @@ public partial class PrevisApp
         _library.AddChild(Button("Import BVH…",ImportMotion));
     }
 
-    sealed record ContentCard(string Id,string Name,string Detail,LibraryModel? Model,LibraryMotion? Motion);
+    sealed record ContentCard(string Id,string Name,string Detail,LibraryModel? Model,LibraryMotion? Motion,LibraryPose? Pose=null);
     void BuildPagedCards(Func<ContentCard[]> query,LineEdit search,params OptionButton[] filters)
     {
         var count=Text("",11,true);_library.AddChild(count);int page=0;
@@ -69,8 +69,8 @@ public partial class PrevisApp
             count.Text=items.Length+" items · drag into scene";pageLabel.Text=$"{page+1} / {pages}";previous.Disabled=page==0;next.Disabled=page==pages-1;
             foreach(var item in items.Skip(page*LibraryPageSize).Take(LibraryPageSize))
             {
-                var card=new LibraryCard{Kind=item.Motion==null?"asset":"motion",Id=item.Id,Caption=item.Name,CustomMinimumSize=new Vector2(88,116),SizeFlagsHorizontal=SizeFlags.ExpandFill,ClipText=true,TooltipText=item.Name+"\n"+item.Detail};
-                card.Pressed+=()=>{try{if(item.Motion!=null)DropMotion(item.Id,_selected!=null&&CompatibleMotion(_selected,item.Motion)?_selected:null,Vector3.Zero);else DropAsset(item.Id,Vector3.Zero);}catch(Exception ex){Error(ex.Message);}};
+                var card=new LibraryCard{Kind=item.Pose!=null?"pose":item.Motion==null?"asset":"motion",Id=item.Id,Caption=item.Name,CustomMinimumSize=new Vector2(88,116),SizeFlagsHorizontal=SizeFlags.ExpandFill,ClipText=true,TooltipText=item.Name+"\n"+item.Detail};
+                card.Pressed+=()=>{try{if(item.Pose!=null)DropPose(item.Id,_selected?.Node is RiggedActor?_selected:null,Vector3.Zero);else if(item.Motion!=null)DropMotion(item.Id,_selected!=null&&CompatibleMotion(_selected,item.Motion)?_selected:null,Vector3.Zero);else DropAsset(item.Id,Vector3.Zero);}catch(Exception ex){Error(ex.Message);}};
                 AddContentThumbnail(card,item);grid.AddChild(card);
             }
         }
@@ -82,19 +82,20 @@ public partial class PrevisApp
         var box=new VBoxContainer{MouseFilter=MouseFilterEnum.Ignore};box.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);box.OffsetLeft=3;box.OffsetRight=-3;box.OffsetTop=3;box.OffsetBottom=-4;box.AddThemeConstantOverride("separation",2);card.AddChild(box);
         var texture=new TextureRect{ExpandMode=TextureRect.ExpandModeEnum.IgnoreSize,StretchMode=TextureRect.StretchModeEnum.KeepAspectCentered,CustomMinimumSize=new Vector2(80,76),SizeFlagsVertical=SizeFlags.ExpandFill,MouseFilter=MouseFilterEnum.Ignore};box.AddChild(texture);
         var label=Text(item.Name,11);label.HorizontalAlignment=HorizontalAlignment.Center;label.AutowrapMode=TextServer.AutowrapMode.WordSmart;label.MaxLinesVisible=2;label.CustomMinimumSize=new Vector2(0,28);label.MouseFilter=MouseFilterEnum.Ignore;box.AddChild(label);
-        string path="res://assets/content/thumbnails/"+item.Id+".png";Texture2D? cover=ResourceLoader.Exists(path)?GD.Load<Texture2D>(path):null;texture.Texture=cover;
+        string path="res://assets/content/thumbnails/"+item.Id+".png";Texture2D? cover=ResourceLoader.Exists(path)?GD.Load<Texture2D>(path):null;if(cover==null&&item.Pose!=null){string saved=SavedPoseLibrary.ThumbnailPath(item.Id);if(System.IO.File.Exists(saved))cover=ImageTexture.CreateFromImage(Image.LoadFromFile(saved));}texture.Texture=cover;
         SubViewport? viewport=null;RiggedActor? actor=null;NativeMotionTrack? native=null;double time=.2;bool hovered=false;
         void CreatePreview()
         {
             if(viewport!=null)return;
             viewport=new SubViewport{Size=new Vector2I(160,128),OwnWorld3D=true,RenderTargetUpdateMode=SubViewport.UpdateMode.Once};card.AddChild(viewport);var world=new Node3D();viewport.AddChild(world);world.AddChild(new WorldEnvironment{Environment=StudioLighting.CreateEnvironment()});
-            var wrapper=new Node3D();world.AddChild(wrapper);var model=item.Model??ContentCatalog.ForFamily(item.Motion!.ActorFamily).First();
+            var wrapper=new Node3D();world.AddChild(wrapper);var model=item.Model??ContentCatalog.ForFamily(item.Motion?.ActorFamily??"human").First();
             if(model.IsBuiltin)
             {
                 if(model.BuiltinKind=="actor")
                 {
                     actor=new RiggedActor();wrapper.AddChild(actor);actor.Scale=Vector(model.BodyScale,Vector3.One);ApplyHumanAppearance(actor,model.Id);
-                    if(item.Motion is { } motion){actor.SetMotionClips(new[]{new MotionClipData{MotionPath=MotionCatalog.MaterializeSource(motion),Name=motion.Name,Duration=motion.Duration,SourceOffset=motion.SourceOffset,SourceScale=motion.SourceScale,Loop=true}});actor.EvaluateTimeline(.4,true);}
+                    if(item.Pose!=null)actor.SetStaticPose(item.Pose.Pose);
+                    else if(item.Motion is { } motion){actor.SetMotionClips(new[]{new MotionClipData{MotionPath=MotionCatalog.MaterializeSource(motion),Name=motion.Name,Duration=motion.Duration,SourceOffset=motion.SourceOffset,SourceScale=motion.SourceScale,Loop=true}});actor.EvaluateTimeline(.4,true);}
                 }
                 else wrapper.AddChild(PropFactory.Create(model.BuiltinKind));
             }
@@ -108,8 +109,8 @@ public partial class PrevisApp
                 }
                 var bounds=PropFactory.CalculateBounds(wrapper);generated.Position-=Vector3.Up*bounds.Position.Y;
             }
-            var framing=actor!=null?new Aabb(new Vector3(-.65f,0,-.45f),new Vector3(1.3f,2.05f,.9f)):PropFactory.CalculateBounds(wrapper);
-            var camera=new Camera3D{Current=true,Fov=38,Near=.01f,Far=500};world.AddChild(camera);var target=framing.GetCenter();float radius=Math.Max(.4f,framing.Size.Length()*1.1f);var cameraPosition=target+new Vector3(radius*.65f,radius*.35f,radius);camera.Transform=Transform3D.Identity.LookingAt(target-cameraPosition,Vector3.Up);camera.Position=cameraPosition;texture.Texture=viewport.GetTexture();
+            var framing=actor!=null?actor.GetPreparedPoseBounds():PropFactory.CalculateBounds(wrapper);
+            var camera=new Camera3D{Current=true,Fov=38,Near=.01f,Far=500};world.AddChild(camera);var target=framing.GetCenter();float radius=Math.Max(.4f,framing.Size.Length()*1.1f);var cameraPosition=target+new Vector3(radius*.65f,radius*.35f,item.Pose!=null?-radius:radius);camera.Transform=Transform3D.Identity.LookingAt(target-cameraPosition,Vector3.Up);camera.Position=cameraPosition;texture.Texture=viewport.GetTexture();
         }
         // Catalog pages load only PNGs. A source is parsed only while its motion card is hovered.
         if(cover==null){try{CreatePreview();}catch(Exception ex){GD.PushWarning("Library preview: "+ex.Message);}}

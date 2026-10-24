@@ -45,6 +45,7 @@ public partial class RiggedActor : Node3D
         if (!float.IsFinite(sourceScale) || sourceScale <= 0 || sourceScale > 1000)
             throw new FormatException("The source scale must be a positive finite value no greater than 1000.");
         EnsureRig();
+        RestoreMotionPicker();
         // Parse and prepare entirely before changing the currently playable motion.
         BvhMotion candidate = BvhMotion.FromFile(absolutePath);
         int[] map = CreateMapping(candidate);
@@ -105,6 +106,7 @@ public partial class RiggedActor : Node3D
     public void ClearMotion()
     {
         EnsureRig();
+        RestoreMotionPicker();
         _motion = null;
         _motionTrack = Array.Empty<PreparedMotionClip>();
         MotionName = "No motion";

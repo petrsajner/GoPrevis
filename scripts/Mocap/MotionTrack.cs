@@ -13,7 +13,7 @@ public partial class RiggedActor
     public int MotionTrackPreparedSourceCount => _preparedMotions.Count;
     public double MotionTrackDurationSeconds => _motionTrack.Length == 0 ? 0 : _motionTrack.Max(clip => clip.End);
     public string MotionTrackSummary => _motionTrack.Length == 0
-        ? "No motion clips. Import a BVH motion to begin."
+        ? _staticPose == null ? "No motion clips. Import a BVH motion to begin." : "Static pose · " + _staticPose.Name
         : $"{_motionTrack.Length} clips · {MotionTrackDurationSeconds:0.##} s · quaternion crossfades · continuous root motion. Overlap blends use the incoming clip's Blend In; gaps hold the previous pose.";
 
     private PreparedMotionClip[] _motionTrack = Array.Empty<PreparedMotionClip>();
@@ -102,7 +102,7 @@ public partial class RiggedActor
             _trackPose = new Quaternion[_bones.Count];
             _trackIncomingPose = new Quaternion[_bones.Count];
         }
-        if (_motionTrack.Length == 0) { ClearMotion(); return; }
+        if (_motionTrack.Length == 0) { ClearMotion(); ApplyStaticPose(); return; }
         // Preserve the source-statistics API for callers opening a saved track directly.
         PreparedMotion first = _motionTrack[0].Source;
         _motion = first.Motion; _sourceMap = first.Mapping; _corrections = first.Corrections;
@@ -117,7 +117,8 @@ public partial class RiggedActor
     public void EvaluateTimeline(double sceneSeconds, bool forceInPlace = false)
     {
         EnsureRig();
-        if (_motionTrack.Length == 0) return;
+        if (_motionTrack.Length == 0) { if (_staticPose != null) ApplyStaticPose(); return; }
+        RestoreMotionPicker();
         if (!double.IsFinite(sceneSeconds)) sceneSeconds = 0;
         PreparedMotionClip first = _motionTrack[0];
         SampleTrackPose(first, sceneSeconds, _trackPose);

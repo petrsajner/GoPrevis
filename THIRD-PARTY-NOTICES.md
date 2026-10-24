@@ -19,3 +19,5 @@ The 12 new rigged animal models and their 152 authored skeletal animation cycles
 The bundled animated Fox model and its Walk/Run/Survey animation use the attributions and licences in `LICENSES/Fox-NOTICE.md` (CC0 model; CC-BY-4.0 rig, animation and conversion). The source GLB is unchanged, including its raw-safe packaging copy.
 
 The original procedural mannequins and blockout props, project logic and UI are project assets; no Topview source, images or models were copied.
+
+The 118 prepared static humanoid poses are authored project assets, independent of the motion datasets. Preparation and scope are recorded in `LICENSES/POSE-CONTENT.md`.

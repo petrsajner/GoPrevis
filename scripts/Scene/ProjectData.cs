@@ -5,7 +5,7 @@ namespace Previs;
 
 public sealed class ProjectData
 {
-    public int Version { get; set; } = 3;
+    public int Version { get; set; } = 4;
     public int Fps { get; set; } = 24;
     public double Duration { get; set; } = 8;
     public List<ObjectData> Objects { get; set; } = new();
@@ -42,6 +42,7 @@ public sealed class ObjectData
     public float[] PathOffset { get; set; } = new float[3];
     public TransformAnimationData TransformAnimation { get; set; } = new();
     public string ActorFamily { get; set; } = "";
+    public StaticPoseData? StaticPose { get; set; }
 }
 
 public sealed class MotionClipData

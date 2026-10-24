@@ -1,10 +1,10 @@
-# Previs 0.4.0 — film shot planning
+# Previs 0.5.0 — film shot planning
 
 Previs is a desktop blockout tool for preparing movement and camera references for AI video. It uses Godot 4.7.2 .NET, C# and .NET 10. The application UI, dialogs and authored errors are English.
 
 ## Run
 
-The Windows portable output is `build/Previs-0.4.0-Windows/Previs.exe`. Keep Previs.exe, Previs.pck and data_Previs_windows_x86_64 together. The portable Windows build includes its runtime; using it does not require the Godot editor or .NET SDK.
+The Windows portable output is `build/Previs-0.5.0-Windows/Previs.exe`. Keep Previs.exe, Previs.pck and data_Previs_windows_x86_64 together. The portable Windows build includes its runtime; using it does not require the Godot editor or .NET SDK.
 
 For development, open project.godot with Godot 4.7.2 .NET. Local tools are in the ignored .tools directory. The existing run.ps1 starts the source project; build.ps1 -Test builds, runs source checks and exports Windows x64.
 
@@ -48,6 +48,18 @@ The CMU cards use a source offset that skips the conversion's first calibration 
 
 Sources, licenses and preparation notes are in [LICENSES/PROP-CONTENT.md](LICENSES/PROP-CONTENT.md), [LICENSES/ANIMAL-CONTENT.md](LICENSES/ANIMAL-CONTENT.md) and [LICENSES/CMU-MOTION-CONTENT.md](LICENSES/CMU-MOTION-CONTENT.md). The original Fox has separate attributions in [LICENSES/Fox-NOTICE.md](LICENSES/Fox-NOTICE.md); the original walk sample is documented in [samples/real/SOURCE-AND-LICENSE.md](samples/real/SOURCE-AND-LICENSE.md).
 
+## Static poses
+
+**Poses** contains **118 ready-made human body poses** in nine categories: standing and gestures, chair and floor sitting, kneeling, crouching, lying down and action/interaction positions. Search by name or category and drag a pose onto a prepared human figure. Dropping a pose onto empty ground creates a posed average-adult figure there. The other human body variants retain their proportions when a pose is applied.
+
+A posed figure holds its shape for the entire scene without a motion clip. Applying a pose replaces that figure's current source clips; Undo restores the previous state. Position, Rotation, Scale, drawn paths and their manual correction keys remain available above the body pose.
+
+The Poses library can also **save the current body pose** from a selected figure, including a frame sampled from mocap. Saving a preset leaves the figure's existing animation intact. The saved preset can then be applied to another figure as a static pose. Custom presets are stored locally, and a project's applied body pose is embedded in the `.previs` file, so opening a static figure does not require its original motion source or the creator's preset library. Clear pose restores the default standing body; if source clips are present, they continue playing.
+
+The self-contained `samples/static-poses.previs` example includes a seated figure and chair, floor sitting, kneeling and lying figures. It contains no motion clips or external asset dependencies.
+
+Seating presets are prepared around practical blocking proportions. Match the figure's placement to the actual chair, stool or floor; smaller body variants scale the pose as well. These are prepared poses, with no automatic seat/contact fitting or per-joint pose editor. Existing animal animations retain their own rig compatibility.
+
 ## Arrange motion, paths and corrections
 
 The evaluation order is fixed:
@@ -80,7 +92,7 @@ Layout measurements are in **logical UI pixels**. At 2560 × 1440 the checked he
 
 ## Save, reopen and export
 
-Save creates a **version 3 .previs** project and neighbouring .assets folder containing used sources. Keep both together when moving a project. It preserves motion tracks, paths and path keys, final transform channels, camera channels/lenses, active camera and lighting. Version 1/2 scenes are migrated on opening. Overwriting an existing project keeps the previous JSON as .previs.bak.
+Save creates a **version 4 .previs** project and neighbouring .assets folder containing used sources. Keep both together when moving a project. It preserves embedded static body poses, motion tracks, paths and path keys, final transform channels, camera channels/lenses, active camera and lighting. Version 1/2/3 scenes are migrated on opening. Overwriting an existing project keeps the previous JSON as .previs.bak.
 
 Export frame produces a clean **1920 × 1080 PNG from the active camera**, with JSON shot data. Editor grid, path guides, camera helpers and selection outlines are excluded. Current export is PNG/JSON; video and control passes remain future work.
 

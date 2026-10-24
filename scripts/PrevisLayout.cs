@@ -42,7 +42,7 @@ public partial class PrevisApp
         var upper=new HBoxContainer{SizeFlagsVertical=SizeFlags.ExpandFill,SizeFlagsHorizontal=SizeFlags.ExpandFill};upper.AddThemeConstantOverride("separation",1);_layoutWorkSplit.AddChild(upper);
 
         var rail=new VBoxContainer{CustomMinimumSize=new Vector2(54,0)};rail.AddThemeConstantOverride("separation",3);
-        foreach(var category in new[]{"Scene","People","Animals","Props","Environment","Cameras","Camera moves","Motions"})
+        foreach(var category in new[]{"Scene","People","Poses","Animals","Props","Environment","Cameras","Camera moves","Motions"})
         {
             string captured=category;string label=category switch{"Environment"=>"World","Camera moves"=>"Moves",_=>category};
             var button=Button(label,()=>ShowCategory(captured),true);button.TooltipText=category;button.ClipText=true;button.CustomMinimumSize=new Vector2(52,34);

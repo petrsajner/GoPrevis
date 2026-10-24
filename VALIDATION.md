@@ -1,8 +1,8 @@
-# Previs 0.4.0 validation
+# Previs 0.5.0 validation
 
 Validation date: **2026-10-24**. Development/verified platform: **Windows x64**.
 
-This revision populates the model and motion libraries and validates real source content, prepared rigs, portable imports and library workflows. Compact desktop layout, final transform layers and unified camera selection remain in place. Application UI and authored messages are English. See README.md for feature limits.
+This revision adds static human poses, source-independent body snapshots and a reusable custom-pose library above the populated model and motion libraries. Compact desktop layout, final transform layers and unified camera selection remain in place. Application UI and authored messages are English. See README.md for feature limits.
 
 ## Toolchain
 
@@ -53,7 +53,7 @@ These tests exercise the evaluation order **source blend → path → final manu
 
 ## Scene and file checks
 
-Core smoke checks retain BVH parsing, malformed-source handling, deterministic scrubbing, prepared-rig mapping, independent cameras, neutral/optional lighting, source asset bundling and full HD clean-frame rendering. Project format 3 stores final transform channels and camera lens channels. Prior project formats remain migration inputs.
+Core smoke checks retain BVH parsing, malformed-source handling, deterministic scrubbing, prepared-rig mapping, independent cameras, neutral/optional lighting, source asset bundling and full HD clean-frame rendering. Project format 4 adds embedded static poses to final transform channels and camera lens channels. Project formats 1–3 remain migration inputs. Earlier releases refuse format 4 instead of silently discarding poses on save.
 
 Earlier tests of version 2 cover path timing persistence, source BVH bundling, last-clip deletion surviving restore and version 1 migration. Current source workflow also verifies the new transform and lens fields through scene restore.
 
@@ -66,16 +66,31 @@ The catalog has **284 model entries and 457 motion cards**. It includes 255 new 
 - Every one of the **300 CMU BVHs** passes original-byte SHA-256, hierarchy/frame/channel validation and the actual `BvhMotion` / `RiggedActor` runtime. Each maps 31 animated source joints to 21 prepared bones. Six samples per take verify finite normalized poses, changing bones, deterministic seeking and in-place roots. Evidence: `output/content-human-validation.json` (300 passed, zero failures).
 - All **255 static models and 12 new animal models** pass actual Godot GLTF import, nonempty mesh/bounds and material checks. A real GPU produces their covers. Evidence: `output/content-audit.json` and rendered contact sheets.
 - All **152 animal native clips** resolve by exact imported animation name and animate real bones. Evidence: `assets/content/animals/validation.json`.
-- **741 distinct PNG covers** match every catalog model/motion ID. Cards initially load these images; source parsing and live skeletal previews initialize only on hover. Pages contain at most twelve cards.
-- The integrated content workflow passes **225 assertions**, including representative metre-scale grounded props, all six humanoids, every new animal rig, compatible/incompatible drops, empty-ground actor creation, native bone motion, crossfades under paths/manual corrections, cache reuse, and portable save/reopen of identities, proportions, units, final transforms and bone poses. Evidence: `output/content-workflow-report.json` and `output/content-workflow-0.4.0.log`.
-- A standalone resource inventory against the exported PCK confirms **567 unique new source files and all 741 covers**, with zero missing resources. Evidence: `output/package-inventory-0.4.0.log`; reproducible script: `tools/content/check_packaged_library.gd`.
+- **859 distinct PNG covers** match every catalog model/motion/pose ID. Cards initially load these images; source parsing and live skeletal previews initialize only on hover. Pages contain at most twelve cards.
+- The integrated content workflow passes **225 assertions**, including representative metre-scale grounded props, all six humanoids, every new animal rig, compatible/incompatible drops, empty-ground actor creation, native bone motion, crossfades under paths/manual corrections, cache reuse, and portable save/reopen of identities, proportions, units, final transforms and bone poses. Evidence: `output/content-workflow-report.json` and `output/content-workflow-0.5.0.log`.
+- A standalone resource inventory against the exported PCK confirms **567 unique new source files and all 859 covers**, with zero missing resources. Evidence: `output/package-inventory-0.5.0.log`; reproducible script: `tools/content/check_packaged_library.gd`.
 
 CMU takes skip the conversion calibration frame and do not loop by default. Source BVHs are unchanged. Git attributes preserve their exact bytes. Recorded takes may contain multiple actions and need manual trimming. Scene length supports up to 600 seconds, including long recordings. Human and animal motion compatibility is explicit; universal animal retargeting and foot/contact solving remain unimplemented.
 
 Provenance and terms are recorded in `LICENSES/CMU-MOTION-CONTENT.md`, `LICENSES/ANIMAL-CONTENT.md` and `LICENSES/PROP-CONTENT.md`. Original source notices are also copied into the portable package's `LICENSES/content/` directory. The legacy Fox attribution remains in `LICENSES/Fox-NOTICE.md`.
 
+## Static-pose validation
+
+The integrated source and independent rendered Windows executable validate **118 poses with 278 assertions** through `RunPoseLibraryChecks` / `PoseProbe`. Evidence: `output/pose-workflow-0.5.0.log` and `output/pose-workflow-report.json`. The format-4 checks include loading all three prior project versions. The checks cover:
+
+- Every bundled pose has finite, normalized prepared-rig transforms and remains unchanged under forward/reverse scene-time evaluation.
+- Empty-ground placement creates a human with no motion clip or BVH dependency; applying a pose to an existing figure retains body proportions and avoids a duplicate actor.
+- Seated/lying figures use pose geometry, including a lowered pelvis and a horizontal lying body, rather than a standing selection/pick envelope.
+- Source clips override stored static poses; removing the final clip restores the stored fallback. Clearing a pose retains active animation.
+- Capturing a mocap frame preserves local bone rotations in a reusable source-independent snapshot. Saving a custom preset leaves the selected actor's source clips intact; tests remove only their own GUID-named temporary presets.
+- Path placement, heading and final manual keys remain above the body pose. Duplication and project-format-4 save/reopen retain bone poses and final transforms. Older projects without pose fields remain valid inputs.
+
+Pose contact geometry is reviewed visually through rendered covers. These checks do not claim automatic chair/foot-contact solving, universal animal pose retargeting or a per-joint pose editor.
+
 ## Delivery verification
 
-The independent portable executable is `build/Previs-0.4.0-Windows/Previs.exe`. Its content workflow uses the exported PCK and its bundled .NET runtime, including raw-safe model loading and project asset copies. The rendered packaged smoke verifies the previous layer/camera/path regressions and a clean full-HD camera export. Logs: `output/packaged-0.4.0-content.log` and `output/packaged-0.4.0-render.log`.
+The independent portable executable is `build/Previs-0.5.0-Windows/Previs.exe`. Its content workflow uses the exported PCK and its bundled .NET runtime, including raw-safe model loading and project asset copies. The rendered packaged smoke verifies the previous layer/camera/path regressions and a clean full-HD camera export. Logs: `output/packaged-0.5.0-poses.log` (278 pose assertions), `output/packaged-0.5.0-content.log` (225 library assertions), and `output/packaged-0.5.0-render.log` (full-HD smoke). All three stderr logs are empty. A rendered source UI probe verifies the actual Poses tab and search narrowing to one Sit upright card, then restoring all 118 entries; evidence is in `output/pose-ui-probe.log` and `output/pose-library-ui.png`.
 
 `BUILD-INFO.json` records source revision, catalog counts and executable/resource/managed-assembly hashes. The final portable ZIP is checked by reading all entries and verifying CRCs. Only Windows x64 has been exercised; no macOS/Linux runtime result is claimed. Current output remains active-camera PNG/JSON, with video/control-pass export outside this revision.
+
+All **118 authored poses** were independently rendered with the actual rig and neutral studio environment. Their poses remain identical after a 100-second seek. `output/pose-content-validation.json` reports 118 passed, zero failures; the chair reference and contact sheets verify seated support, grounded feet and horizontal lying shapes. `samples/static-poses.previs` is a self-contained static scene example.
