@@ -1,10 +1,10 @@
-# Previs 0.3.1 — film shot planning
+# Previs 0.4.0 — film shot planning
 
 Previs is a desktop blockout tool for preparing movement and camera references for AI video. It uses Godot 4.7.2 .NET, C# and .NET 10. The application UI, dialogs and authored errors are English.
 
 ## Run
 
-Open `build/Previs-0.3.1-Windows/Previs.exe`. Keep Previs.exe, Previs.pck and data_Previs_windows_x86_64 together. The portable Windows build includes its runtime; using it does not require the Godot editor or .NET SDK.
+The Windows portable output is `build/Previs-0.4.0-Windows/Previs.exe`. Keep Previs.exe, Previs.pck and data_Previs_windows_x86_64 together. The portable Windows build includes its runtime; using it does not require the Godot editor or .NET SDK.
 
 For development, open project.godot with Godot 4.7.2 .NET. Local tools are in the ignored .tools directory. The existing run.ps1 starts the source project; build.ps1 -Test builds, runs source checks and exports Windows x64.
 
@@ -16,23 +16,37 @@ For development, open project.godot with Godot 4.7.2 .NET. Local tools are in th
 
 Transform tracks are collapsed by default. Expand an object's **Transform** row to reveal **Position, Rotation and Scale**; a camera also exposes **Focal length**. Each Position/Rotation/Scale diamond stores XYZ together. Drag a diamond to retime it, right-click one to remove it, or double-click an empty parameter lane to add a key.
 
-## Motions and animals
+## Model and motion libraries
 
-Motions is a small prepared library, with Human/Animals filters, search and animated hover previews. It currently contains **five motions**:
+The library contains **284 ready-to-place model entries**: 255 new props, 12 new rigged animals, the original animated Fox, six prepared human mannequin variants and ten original procedural blockout models. The new props are organized as follows:
 
-| Actor family | Motion | Source |
-| --- | --- | --- |
-| Human | Walk & gesture | Original synthetic test motion |
-| Human | Captured walk | Recorded CMU walk, Bruce Hahne conversion |
-| Fox | Walk | Fox's supplied native animation |
-| Fox | Run | Fox's supplied native animation |
-| Fox | Look around | Fox's native Survey animation |
+| Category | Models |
+| --- | ---: |
+| Furniture | 71 |
+| Vehicles | 20 |
+| Architecture | 63 |
+| Nature | 55 |
+| Props | 46 |
 
-The Fox is an animated animal model, not the static dog prop. Its native animation cycles are not presented as recorded mocap. Drag it from Animals, or drop one of its motion cards onto empty ground. Human motions apply to the prepared human rig; Fox cards apply to the prepared Fox family. An incompatible drop does not retarget between species.
+The new animals are Alpaca, Bull, Cow, Deer, Donkey, Fox, Horse, White Horse, Husky, Shiba Inu, Stag and Wolf. The selection includes breed and color variants. Models are bundled locally and use placement scales appropriate for a metre-based scene.
 
-Import a personal BVH through **File → Import motion…** or the import action in Motions. Supported humanoid names include standard Mixamo/CMU-style skeletons. The bundled CMU source uses 0.055 metres per source unit; the synthetic source uses 0.01. Source scale is editable per clip.
+**Motions has 457 cards**:
 
-Attribution for the Fox model, rigging, animation and conversion is in LICENSES/Fox-NOTICE.md. The CMU source and conditions are in samples/real/SOURCE-AND-LICENSE.md.
+| Prepared actors | Cards | Content |
+| --- | ---: | --- |
+| Human | 302 | 300 newly bundled recorded CMU takes, plus the existing synthetic test and captured-walk sample cards |
+| New animals | 152 | Quaternius native skeletal animation cycles |
+| Original Fox | 3 | Walk, Run and Look around (native Survey) |
+
+The 300 newly bundled CMU takes provide approximately **85 minutes of recorded human motion**, including locomotion, sports, interactions, actions, dance, climbing, everyday activities, sitting and gestures. The 152 new animal clips are **authored animation cycles, not recorded mocap**.
+
+Use library sections, category filters and search to narrow the library. Pages contain 12 cards. PNG covers show the actual models or sampled poses; animated hover previews initialize lazily. Drag an animal into the scene, or drop one of its motion cards onto empty ground to create the matching actor. Human motions apply to the prepared human rig; native animal cards apply to their matching prepared actor family. An incompatible drop does not retarget between species or unrelated rigs.
+
+Import a personal BVH through **File → Import motion…** or the import action in Motions. Supported humanoid names include standard Mixamo/CMU-style skeletons. Bundled CMU sources use 0.055 metres per source unit; the synthetic source uses 0.01. Source scale is editable per clip.
+
+The CMU cards use a source offset that skips the conversion's first calibration T-pose without modifying the BVH files. Their displayed duration excludes that frame, and **Loop source defaults to off** because recorded takes are not guaranteed to loop seamlessly. Several takes contain multiple actions; trim the desired section on the timeline.
+
+Sources, licenses and preparation notes are in [LICENSES/PROP-CONTENT.md](LICENSES/PROP-CONTENT.md), [LICENSES/ANIMAL-CONTENT.md](LICENSES/ANIMAL-CONTENT.md) and [LICENSES/CMU-MOTION-CONTENT.md](LICENSES/CMU-MOTION-CONTENT.md). The original Fox has separate attributions in [LICENSES/Fox-NOTICE.md](LICENSES/Fox-NOTICE.md); the original walk sample is documented in [samples/real/SOURCE-AND-LICENSE.md](samples/real/SOURCE-AND-LICENSE.md).
 
 ## Arrange motion, paths and corrections
 
@@ -44,7 +58,7 @@ Mocap or native skeletal sources blend before the final object transform. Path h
 
 ### Clips
 
-Click a motion clip to open Motion. Drag its body to move it or its right edge to trim duration. Overlap neighbouring clips to crossfade. Start, Duration, Source offset, Blend in, Speed, Loop source and In-place clip are available for detailed editing. The prepared Fox's native clips can also be sequenced and blended.
+Click a motion clip to open Motion. Drag its body to move it or its right edge to trim duration. Overlap neighbouring clips to crossfade. Start, Duration, Source offset, Blend in, Speed, Loop source and In-place clip are available for detailed editing. Prepared animals' native clips can also be sequenced and blended within their compatible family. Scene duration can be extended to **600 seconds**.
 
 ### Paths
 
@@ -83,12 +97,12 @@ The scene and library previews use neutral hemisphere illumination, with **no di
 
 ## Current limits
 
-- The supplied motion library is curated and small: two human sources and three Fox cycles, not a complete dataset catalogue.
+- The recorded library is a curated CMU subset, not the complete database. Source quality and take lengths vary; no motion cleanup or seamless looping is implied.
 - Humanoid BVH retargeting uses a fixed 21-bone mannequin. There is no universal animal retargeting, finger animation, foot-contact IK, automatic foot-slip correction, collision avoidance or prop-contact solving.
 - Match mocap Speed and path arrival times to the intended gait. Keyed path timing does not itself solve foot contacts.
 - Imported FBX/GLB/glTF models preserve their own rigs and embedded clips. Native skeletal sequencing works on supported skeletons; library compatibility is restricted to prepared actor families.
 - Use self-contained GLB for portable models. External glTF dependencies are not bundled; saving such a model is refused. FBX may require embedded textures.
-- The dog remains a static prop; the Fox is the supplied animated animal.
+- The original Dog blockout model remains a static prop. Husky and Shiba Inu are supplied rigged dogs with native animation cycles.
 - Camera cuts, video plates, video/depth/edge/mask export and direct AI generation are not implemented.
 - Windows x64 is the verified development platform. macOS/Linux builds have not been verified.
 

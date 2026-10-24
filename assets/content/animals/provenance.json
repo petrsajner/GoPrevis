@@ -1,0 +1,307 @@
+{
+  "RetrievedDate": "2026-10-24",
+  "SourceUrl": "https://quaternius.com/packs/ultimateanimatedanimals.html",
+  "License": "CC0-1.0",
+  "Models": [
+    {
+      "Id": "animal-alpaca",
+      "Name": "Alpaca",
+      "OriginalFileName": "Alpaca.gltf",
+      "DownloadUrl": "https://drive.google.com/uc?export=download&id=13dxCPosR1tVx24LKXr6gN44sIOY4hZgo",
+      "SourceGltfSha256": "5009bfa756c7b7af5e02263d47a6d9088cadaada2240b41b4e87f31327b0e063",
+      "PackedGlbSha256": "52b84a93cafb5c51baea724524f3e124f1e2609ae46f6cfcb11419706b0e0871",
+      "Bytes": 783988,
+      "Bones": 46,
+      "AnimationCount": 13,
+      "RawBoundsMin": [
+        -0.632768988609314,
+        0.004994251299649477,
+        -1.731520652770996
+      ],
+      "RawBoundsMax": [
+        0.6327688694000244,
+        5.402582168579102,
+        2.567869186401367
+      ],
+      "TargetHeightMetres": 1.75,
+      "ModelScale": 0.32421889681457067,
+      "ForwardAxis": "+Z",
+      "Transformation": "Lossless self-contained glTF-to-GLB container repack"
+    },
+    {
+      "Id": "animal-bull",
+      "Name": "Bull",
+      "OriginalFileName": "Bull.gltf",
+      "DownloadUrl": "https://drive.google.com/uc?export=download&id=1M9gyr2UikIDW_Ynp-OfgiK-JjI7ziPd3",
+      "SourceGltfSha256": "535da2992eb125d517725159a2eddeb520b72595bcb3021985fc43d2c84bff76",
+      "PackedGlbSha256": "fb9681e83ad95c88842e7f4efa17066b9dd94de68b89fcefb0e037ef7a95b2c0",
+      "Bytes": 1918548,
+      "Bones": 42,
+      "AnimationCount": 13,
+      "RawBoundsMin": [
+        -1.256723403930664,
+        -0.055506087839603424,
+        -2.9796159267425537
+      ],
+      "RawBoundsMax": [
+        1.2567236423492432,
+        4.531166076660156,
+        5.087368488311768
+      ],
+      "TargetHeightMetres": 1.65,
+      "ModelScale": 0.35973794089117234,
+      "ForwardAxis": "+Z",
+      "Transformation": "Lossless self-contained glTF-to-GLB container repack"
+    },
+    {
+      "Id": "animal-cow",
+      "Name": "Cow",
+      "OriginalFileName": "Cow.gltf",
+      "DownloadUrl": "https://drive.google.com/uc?export=download&id=1lS3t1Sof0FVne1C1WXfdX48qaHES_pDG",
+      "SourceGltfSha256": "b04af067688d9fadf1395b4456dbf3117c2f760fb49e704ee5c8b6391fc8adb5",
+      "PackedGlbSha256": "8e345f177881c1d5e234dd1a503472208d67bba515d0314c5abf606a888e39d0",
+      "Bytes": 1921572,
+      "Bones": 42,
+      "AnimationCount": 13,
+      "RawBoundsMin": [
+        -1.1560940742492676,
+        -0.055506087839603424,
+        -2.9796159267425537
+      ],
+      "RawBoundsMax": [
+        1.1560943126678467,
+        4.531166076660156,
+        5.087368488311768
+      ],
+      "TargetHeightMetres": 1.6,
+      "ModelScale": 0.34883679116719746,
+      "ForwardAxis": "+Z",
+      "Transformation": "Lossless self-contained glTF-to-GLB container repack"
+    },
+    {
+      "Id": "animal-deer",
+      "Name": "Deer",
+      "OriginalFileName": "Deer.gltf",
+      "DownloadUrl": "https://drive.google.com/uc?export=download&id=1iGpXKrqYGyZCPGHPPSuDAoKnOXLhXJ0q",
+      "SourceGltfSha256": "b8afd0647e7a74332ce802c8326dfefe1a2b76da67ab925a631aaddb5ae9bdd4",
+      "PackedGlbSha256": "19a3ee311cbec9f0dfb5fc5038c1c49455c7d76a14e7678c61978672e3bddf25",
+      "Bytes": 2013688,
+      "Bones": 46,
+      "AnimationCount": 13,
+      "RawBoundsMin": [
+        -0.729489266872406,
+        -0.013107329607009888,
+        -1.6421959400177002
+      ],
+      "RawBoundsMax": [
+        0.7294893860816956,
+        4.260977745056152,
+        2.755115270614624
+      ],
+      "TargetHeightMetres": 1.55,
+      "ModelScale": 0.3626507130586666,
+      "ForwardAxis": "+Z",
+      "Transformation": "Lossless self-contained glTF-to-GLB container repack"
+    },
+    {
+      "Id": "animal-donkey",
+      "Name": "Donkey",
+      "OriginalFileName": "Donkey.gltf",
+      "DownloadUrl": "https://drive.google.com/uc?export=download&id=1Buic-_4vNtmwN0rtMHcdWw3TEaSPz4iW",
+      "SourceGltfSha256": "4cbb2eb7d057789c945b6445d99d0c73b76c0caf7ac9b37ce88a04ca718be2ff",
+      "PackedGlbSha256": "2e71a683e1e00c76d5c36e6429adc238620a43bea50b146958cac66c7a43670b",
+      "Bytes": 2181252,
+      "Bones": 50,
+      "AnimationCount": 13,
+      "RawBoundsMin": [
+        -0.5801277160644531,
+        0.004989135079085827,
+        -1.7093286514282227
+      ],
+      "RawBoundsMax": [
+        0.5801276564598083,
+        3.9587738513946533,
+        2.9987008571624756
+      ],
+      "TargetHeightMetres": 1.55,
+      "ModelScale": 0.39202943792154826,
+      "ForwardAxis": "+Z",
+      "Transformation": "Lossless self-contained glTF-to-GLB container repack"
+    },
+    {
+      "Id": "animal-fox",
+      "Name": "Fox",
+      "OriginalFileName": "Fox.gltf",
+      "DownloadUrl": "https://drive.google.com/uc?export=download&id=1z-CWoUC2vJxrqgGFTYlMaywpE1ooV-bA",
+      "SourceGltfSha256": "2f36e3c9c75ecddda85c5f9944e98ee1e88e7c679a546534aff1cea8ecde64c7",
+      "PackedGlbSha256": "46c849f445d9ae25b11568b72c09a75ed3e17c79b36c5e8bc58ffadb41812ecf",
+      "Bytes": 1909976,
+      "Bones": 51,
+      "AnimationCount": 12,
+      "RawBoundsMin": [
+        -0.5308331251144409,
+        -0.0019306379836052656,
+        -3.180311918258667
+      ],
+      "RawBoundsMax": [
+        0.5308331251144409,
+        2.6747665405273438,
+        2.7027435302734375
+      ],
+      "TargetHeightMetres": 0.65,
+      "ModelScale": 0.24283658428690694,
+      "ForwardAxis": "+Z",
+      "Transformation": "Lossless self-contained glTF-to-GLB container repack"
+    },
+    {
+      "Id": "animal-horse-white",
+      "Name": "White Horse",
+      "OriginalFileName": "Horse_White.gltf",
+      "DownloadUrl": "https://drive.google.com/uc?export=download&id=1sb2XaaPjEV9Z3a1bG8ReISiGlRXrSA7W",
+      "SourceGltfSha256": "f137ee67bd565244f7441f35b5594a597588cda8b60ab109e2041cf13c58e1dd",
+      "PackedGlbSha256": "bae93e54c59c69cfb4ace3317573e449eaa4a2ad695bc273f90861f31254b51f",
+      "Bytes": 2214800,
+      "Bones": 50,
+      "AnimationCount": 13,
+      "RawBoundsMin": [
+        -0.7034680843353271,
+        -0.011219287291169167,
+        -2.22329044342041
+      ],
+      "RawBoundsMax": [
+        0.7034680843353271,
+        4.812726974487305,
+        3.4528236389160156
+      ],
+      "TargetHeightMetres": 2.1,
+      "ModelScale": 0.43532823253834924,
+      "ForwardAxis": "+Z",
+      "Transformation": "Lossless self-contained glTF-to-GLB container repack"
+    },
+    {
+      "Id": "animal-horse",
+      "Name": "Horse",
+      "OriginalFileName": "Horse.gltf",
+      "DownloadUrl": "https://drive.google.com/uc?export=download&id=1hbtY8kxnXiPdwYGVY7rWRgU0jl_-Q-LG",
+      "SourceGltfSha256": "3deb61550dff1d2786d04b6e8559d63ad3907d6ab606ba28ce0af074ed96341b",
+      "PackedGlbSha256": "0588334842feae74a257dea69983db37088da2e97d76beb4a2ecbe6afdb81e26",
+      "Bytes": 2215824,
+      "Bones": 50,
+      "AnimationCount": 13,
+      "RawBoundsMin": [
+        -0.7034680843353271,
+        -0.011219287291169167,
+        -2.22329044342041
+      ],
+      "RawBoundsMax": [
+        0.7034680843353271,
+        4.812726974487305,
+        3.4528236389160156
+      ],
+      "TargetHeightMetres": 2.1,
+      "ModelScale": 0.43532823253834924,
+      "ForwardAxis": "+Z",
+      "Transformation": "Lossless self-contained glTF-to-GLB container repack"
+    },
+    {
+      "Id": "animal-husky",
+      "Name": "Husky",
+      "OriginalFileName": "Husky.gltf",
+      "DownloadUrl": "https://drive.google.com/uc?export=download&id=1oYn47mfq9JAdkJJDcUftbhHNsgQ_CWdt",
+      "SourceGltfSha256": "0cfd85ddfcc5c07caf1bdeb296b21017b0da4c8558a92086daf4a172e0bf8d97",
+      "PackedGlbSha256": "d5e33b7f9ffc92e5278df5035f86e8749f14c5ff8d9c79a922b2e8c1c906fcec",
+      "Bytes": 1849832,
+      "Bones": 49,
+      "AnimationCount": 12,
+      "RawBoundsMin": [
+        -0.4949823021888733,
+        0.0030392014887183905,
+        -1.4742636680603027
+      ],
+      "RawBoundsMax": [
+        0.4949823021888733,
+        3.194108247756958,
+        2.4149329662323
+      ],
+      "TargetHeightMetres": 0.85,
+      "ModelScale": 0.2663684137433576,
+      "ForwardAxis": "+Z",
+      "Transformation": "Lossless self-contained glTF-to-GLB container repack"
+    },
+    {
+      "Id": "animal-shiba-inu",
+      "Name": "Shiba Inu",
+      "OriginalFileName": "ShibaInu.gltf",
+      "DownloadUrl": "https://drive.google.com/uc?export=download&id=1XWUVbmMbiG9E90OqrumueD_pBdnYdyHZ",
+      "SourceGltfSha256": "3236979b94a840eb72d9ce091b1361da327a96f5ce068e666680297480f30f6b",
+      "PackedGlbSha256": "8302af941f144185c1afbde4ad8cc79358b575311deea23be4fbcd3d367f50a8",
+      "Bytes": 1752268,
+      "Bones": 46,
+      "AnimationCount": 12,
+      "RawBoundsMin": [
+        -0.5355237126350403,
+        0.00442533241584897,
+        -1.4544079303741455
+      ],
+      "RawBoundsMax": [
+        0.5355237126350403,
+        3.100023031234741,
+        2.4940385818481445
+      ],
+      "TargetHeightMetres": 0.65,
+      "ModelScale": 0.20997560511432214,
+      "ForwardAxis": "+Z",
+      "Transformation": "Lossless self-contained glTF-to-GLB container repack"
+    },
+    {
+      "Id": "animal-stag",
+      "Name": "Stag",
+      "OriginalFileName": "Stag.gltf",
+      "DownloadUrl": "https://drive.google.com/uc?export=download&id=1URNoFeIFblJXPFOV6qwPrxZr5dLZ3YGx",
+      "SourceGltfSha256": "170b964909d16d1ab4d428b1d714f25016913d32481acd9c3d62923192583be6",
+      "PackedGlbSha256": "be287c4e8bd0e20d84d50b73e8eda7a9cfa94b599b66a705b9eed968ffbb9c58",
+      "Bytes": 2044468,
+      "Bones": 38,
+      "AnimationCount": 13,
+      "RawBoundsMin": [
+        -1.2680424451828003,
+        -0.03011874482035637,
+        -1.8072829246520996
+      ],
+      "RawBoundsMax": [
+        1.2680422067642212,
+        4.192246437072754,
+        3.0358686447143555
+      ],
+      "TargetHeightMetres": 2.2,
+      "ModelScale": 0.5210349899232599,
+      "ForwardAxis": "+Z",
+      "Transformation": "Lossless self-contained glTF-to-GLB container repack"
+    },
+    {
+      "Id": "animal-wolf",
+      "Name": "Wolf",
+      "OriginalFileName": "Wolf.gltf",
+      "DownloadUrl": "https://drive.google.com/uc?export=download&id=1lFQoQ9ln2Z2wGuFFWObj9i5jHqUl_ftG",
+      "SourceGltfSha256": "cc02e9d128b5715f352ee8bea086f97a35f1d875d240de99b0f9f2775c37d415",
+      "PackedGlbSha256": "142291b6f9114c2fc9ac8e51ffda8d9f959c5726036c3ea9946be173b608a5aa",
+      "Bytes": 1920324,
+      "Bones": 51,
+      "AnimationCount": 12,
+      "RawBoundsMin": [
+        -0.532599925994873,
+        -0.010202704928815365,
+        -2.9918973445892334
+      ],
+      "RawBoundsMax": [
+        0.532599925994873,
+        2.670809745788574,
+        2.5611910820007324
+      ],
+      "TargetHeightMetres": 1.0,
+      "ModelScale": 0.3729934188602587,
+      "ForwardAxis": "+Z",
+      "Transformation": "Lossless self-contained glTF-to-GLB container repack"
+    }
+  ]
+}

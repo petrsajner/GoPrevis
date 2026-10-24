@@ -8,8 +8,14 @@ The Windows package includes the Microsoft .NET runtime. Its MIT licence and thi
 
 Official source: https://github.com/dotnet/runtime
 
-The included real CMU walk is attributed with its original source and conversion conditions in `samples/real/SOURCE-AND-LICENSE.md`. Its original data are unchanged. The synthetic BVH is authored test data created for this project.
+The 300 newly bundled human BVH takes are recorded data from the [Carnegie Mellon University Graphics Lab Motion Capture Database](http://mocap.cs.cmu.edu/), converted to MotionBuilder-friendly BVH by Bruce Hahne / cgspeed.com. Their source-specific permissions, acknowledgments, original publisher notices and archive checksums are documented in `LICENSES/CMU-MOTION-CONTENT.md`. CMU permits inclusion in commercially sold products but prohibits directly reselling the motion data, including converted data; these files are not CC0. The [conversion publisher's release page](https://sites.google.com/a/cgspeed.com/cgspeed/motion-capture/the-motionbuilder-friendly-bvh-conversion-release-of-cmus-motion-capture-database) supplies the source archives. The BVH files are unchanged; catalog offsets skip their added calibration frame during playback.
+
+The original real CMU walk sample is additionally documented in `samples/real/SOURCE-AND-LICENSE.md` and is governed by the applicable CMU source terms. The synthetic BVH is authored test data created for this project.
+
+The 255 new static models are selected from Kenney's [Furniture Kit](https://kenney.nl/assets/furniture-kit), [Car Kit](https://kenney.nl/assets/car-kit), [Nature Kit](https://kenney.nl/assets/nature-kit) and [Modular Buildings](https://kenney.nl/assets/modular-buildings), all under CC0 1.0 Universal. See `LICENSES/PROP-CONTENT.md` for original package notices, model/source metadata, placement scales and self-contained GLB packaging details. Original notices are retained under `assets/content/props/*-LICENSE.txt`.
+
+The 12 new rigged animal models and their 152 authored skeletal animation cycles are by Quaternius, from the [Ultimate Animated Animal Pack](https://quaternius.com/packs/ultimateanimatedanimals.html), under CC0 1.0 Universal. They are not recorded motion-capture data. See `LICENSES/ANIMAL-CONTENT.md`, `assets/content/animals/SOURCE-LICENSE.txt` and `assets/content/animals/provenance.json` for the creator's original license, source URLs, checksums and lossless glTF-to-GLB container repack details. These assets are distinct from the original Fox below.
 
 The bundled animated Fox model and its Walk/Run/Survey animation use the attributions and licences in `LICENSES/Fox-NOTICE.md` (CC0 model; CC-BY-4.0 rig, animation and conversion). The source GLB is unchanged, including its raw-safe packaging copy.
 
-Procedural mannequin, blockout props, project logic and UI are project assets; no Topview source, images or models were copied.
+The original procedural mannequins and blockout props, project logic and UI are project assets; no Topview source, images or models were copied.

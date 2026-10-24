@@ -102,8 +102,8 @@ public partial class PrevisApp
         _clipChoice=new OptionButton{FitToLongestItem=false,ClipText=true};_clipChoice.ItemSelected+=i=>{if(_refreshing||_selected==null||i<0||i>=_selected.Data.MotionClips.Count)return;_selectedClipId=_selected.Data.MotionClips[(int)i].Id;RefreshSequenceInspector();_timeline.QueueRedraw();};_inspector.AddChild(_clipChoice);
         _inspector.AddChild(Row(Button("Append BVH…",ImportMotion),Button("Remove clip",RemoveSelectedClip)));
         void Field(string name,SpinBox field){_inspector.AddChild(Row(Text(name,11,true),field));}
-        _clipStart=Spin(0,120,1.0/_fps,0);Field("Start (s)",_clipStart);
-        _clipLength=Spin(.04,120,1.0/_fps,3);Field("Duration (s)",_clipLength);
+        _clipStart=Spin(0,MaxSceneDuration,1.0/_fps,0);Field("Start (s)",_clipStart);
+        _clipLength=Spin(.04,MaxSceneDuration,1.0/_fps,3);Field("Duration (s)",_clipLength);
         _clipOffset=Spin(0,3600,1.0/_fps,0);Field("Source offset (s)",_clipOffset);
         _clipBlend=Spin(0,30,.05,.3);Field("Blend in (s)",_clipBlend);
         _speed=Spin(.1,4,.1,1);Field("Speed",_speed);
@@ -118,11 +118,11 @@ public partial class PrevisApp
         _pathInfo=Text("No path drawn.",11,true);_pathInfo.AutowrapMode=TextServer.AutowrapMode.WordSmart;_inspector.AddChild(_pathInfo);
         _usePath=new CheckButton{Text="Move along path"};_usePath.Toggled+=v=>{if(_refreshing||_selected==null)return;PushUndo();_selected.Data.Path.Enabled=v;SetTime(_time);RefreshSequenceInspector();};_inspector.AddChild(_usePath);
         _inspector.AddChild(Row(Button("Draw / replace",StartDrawingPath),Button("Clear",ClearSelectedPath)));
-        _pathStart=Spin(0,120,1.0/_fps,0);Field("Path start (s)",_pathStart);_pathDuration=Spin(.1,120,.1,8);Field("Travel time (s)",_pathDuration);
+        _pathStart=Spin(0,MaxSceneDuration,1.0/_fps,0);Field("Path start (s)",_pathStart);_pathDuration=Spin(.1,MaxSceneDuration,.1,8);Field("Travel time (s)",_pathDuration);
         _pathStart.ValueChanged+=v=>EditPath(p=>p.Start=v);_pathDuration.ValueChanged+=v=>EditPath(p=>{var times=ActorPathRuntime.PointTimes(p);double old=Math.Max(.0001,p.Duration);p.PointTimes=times.Select(t=>t*v/old).ToList();p.Duration=v;});
         _facePath=new CheckButton{Text="Face travel direction"};_facePath.Toggled+=v=>EditPath(p=>p.OrientToPath=v);_inspector.AddChild(_facePath);
         _inspector.AddChild(Text("PATH KEYFRAMES",12,true));_pathKeyChoice=new OptionButton{FitToLongestItem=false,ClipText=true};_pathKeyChoice.ItemSelected+=i=>{if(!_refreshing&&_selected!=null)SelectPathKey(_selected,(int)i);};_inspector.AddChild(_pathKeyChoice);
-        _pathKeyTime=Spin(0,120,1.0/_fps,0);Field("Arrival time (s)",_pathKeyTime);_pathKeyTime.ValueChanged+=v=>{if(!_refreshing&&_selected!=null)SetPathKeyTime(_selected,_selectedPathPoint,v,true);};
+        _pathKeyTime=Spin(0,MaxSceneDuration,1.0/_fps,0);Field("Arrival time (s)",_pathKeyTime);_pathKeyTime.ValueChanged+=v=>{if(!_refreshing&&_selected!=null)SetPathKeyTime(_selected,_selectedPathPoint,v,true);};
         _inspector.AddChild(Text("Drag the diamond keys on the Path track to change arrival times.",11,true));
         ShowInspectorSection("Object");
     }
@@ -166,7 +166,7 @@ public partial class PrevisApp
         var clip=new MotionClipData{MotionPath=System.IO.Path.GetFullPath(path),Name=System.IO.Path.GetFileNameWithoutExtension(path),Duration=duration,Start=previous==null?Math.Max(0,_time):Math.Max(0,previous.Start+previous.Duration-blend),BlendIn=blend,SourceScale=scale};
         var candidate=new List<MotionClipData>(entry.Data.MotionClips){clip};((RiggedActor)entry.Node).SetMotionClips(candidate);entry.Data.MotionClips=candidate;entry.Data.MotionPath=clip.MotionPath;entry.Data.MotionName=clip.Name;entry.Data.SourceScale=scale;_selectedClipId=clip.Id;EnsureDuration(clip.Start+clip.Duration);RefreshTimelineSize();
     }
-    void EnsureDuration(double end){if(end<=_duration)return;_duration=Math.Min(120,Math.Ceiling(end));_scrub.MaxValue=_duration;bool old=_refreshing;_refreshing=true;_durationField.Value=_duration;_refreshing=old;}
+    void EnsureDuration(double end){if(end<=_duration)return;_duration=Math.Min(MaxSceneDuration,Math.Ceiling(end));_scrub.MaxValue=_duration;bool old=_refreshing;_refreshing=true;_durationField.Value=_duration;_refreshing=old;}
     void SelectTimelineClip(Entry entry,MotionClipData clip){_selectedClipId=clip.Id;Select(entry);ShowInspectorSection("Motion");RefreshSequenceInspector();}
     void RefreshTimelineSize(){if(_timeline!=null){_timeline.UpdateMinimumHeight();_timeline.QueueRedraw();}}
     void SelectPathKey(Entry entry,int index)

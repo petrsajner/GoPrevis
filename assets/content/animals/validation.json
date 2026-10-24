@@ -1,0 +1,991 @@
+{
+  "Engine": "4.7.2-stable (official)",
+  "Models": [
+    {
+      "Animations": [
+        {
+          "Duration": 1.0,
+          "Name": "Attack_Headbutt",
+          "PoseChange": 0.775854170322418,
+          "Tracks": 33
+        },
+        {
+          "Duration": 1.0,
+          "Name": "Attack_Kick",
+          "PoseChange": 2.50870490074158,
+          "Tracks": 38
+        },
+        {
+          "Duration": 1.04166662693024,
+          "Name": "Death",
+          "PoseChange": 2.29903268814087,
+          "Tracks": 36
+        },
+        {
+          "Duration": 7.5,
+          "Name": "Eating",
+          "PoseChange": 1.18936669826508,
+          "Tracks": 34
+        },
+        {
+          "Duration": 0.666666686534882,
+          "Name": "Gallop",
+          "PoseChange": 2.68136715888977,
+          "Tracks": 44
+        },
+        {
+          "Duration": 1.75,
+          "Name": "Gallop_Jump",
+          "PoseChange": 4.78488492965698,
+          "Tracks": 46
+        },
+        {
+          "Duration": 4.16666650772095,
+          "Name": "Idle",
+          "PoseChange": 0.440711468458176,
+          "Tracks": 34
+        },
+        {
+          "Duration": 4.16666650772095,
+          "Name": "Idle_2",
+          "PoseChange": 0.440711468458176,
+          "Tracks": 34
+        },
+        {
+          "Duration": 4.16666650772095,
+          "Name": "Idle_Headlow",
+          "PoseChange": 0.844682335853577,
+          "Tracks": 33
+        },
+        {
+          "Duration": 0.583333313465118,
+          "Name": "Idle_HitReact1",
+          "PoseChange": 0.413981467485428,
+          "Tracks": 31
+        },
+        {
+          "Duration": 0.666666686534882,
+          "Name": "Idle_HitReact2",
+          "PoseChange": 0.479366302490234,
+          "Tracks": 32
+        },
+        {
+          "Duration": 1.91666662693024,
+          "Name": "Jump_toIdle",
+          "PoseChange": 4.86507368087769,
+          "Tracks": 46
+        },
+        {
+          "Duration": 1.45833337306976,
+          "Name": "Walk",
+          "PoseChange": 1.31298089027405,
+          "Tracks": 37
+        }
+      ],
+      "Bones": 46,
+      "Id": "animal-alpaca"
+    },
+    {
+      "Animations": [
+        {
+          "Duration": 1.03333330154419,
+          "Name": "Attack_Headbutt",
+          "PoseChange": 0.784864544868469,
+          "Tracks": 30
+        },
+        {
+          "Duration": 1.0,
+          "Name": "Attack_Kick",
+          "PoseChange": 2.47488498687744,
+          "Tracks": 35
+        },
+        {
+          "Duration": 1.0,
+          "Name": "Death",
+          "PoseChange": 2.29903292655945,
+          "Tracks": 38
+        },
+        {
+          "Duration": 6.0,
+          "Name": "Eating",
+          "PoseChange": 1.18938255310059,
+          "Tracks": 27
+        },
+        {
+          "Duration": 0.600000023841858,
+          "Name": "Gallop",
+          "PoseChange": 2.57421326637268,
+          "Tracks": 41
+        },
+        {
+          "Duration": 1.46666669845581,
+          "Name": "Gallop_Jump",
+          "PoseChange": 4.79267358779907,
+          "Tracks": 43
+        },
+        {
+          "Duration": 3.33333325386047,
+          "Name": "Idle",
+          "PoseChange": 0.44202333688736,
+          "Tracks": 29
+        },
+        {
+          "Duration": 3.33333325386047,
+          "Name": "Idle_2",
+          "PoseChange": 0.44202333688736,
+          "Tracks": 29
+        },
+        {
+          "Duration": 3.33333325386047,
+          "Name": "Idle_Headlow",
+          "PoseChange": 0.844614863395691,
+          "Tracks": 30
+        },
+        {
+          "Duration": 0.666666686534882,
+          "Name": "Idle_HitReact1",
+          "PoseChange": 0.502238035202026,
+          "Tracks": 27
+        },
+        {
+          "Duration": 0.666666686534882,
+          "Name": "Idle_HitReact2",
+          "PoseChange": 0.502238512039185,
+          "Tracks": 28
+        },
+        {
+          "Duration": 1.73333334922791,
+          "Name": "Jump_toIdle",
+          "PoseChange": 4.87283086776733,
+          "Tracks": 43
+        },
+        {
+          "Duration": 1.16666662693024,
+          "Name": "Walk",
+          "PoseChange": 1.29342555999756,
+          "Tracks": 40
+        }
+      ],
+      "Bones": 42,
+      "Id": "animal-bull"
+    },
+    {
+      "Animations": [
+        {
+          "Duration": 1.03333330154419,
+          "Name": "Attack_Headbutt",
+          "PoseChange": 0.784864544868469,
+          "Tracks": 30
+        },
+        {
+          "Duration": 1.0,
+          "Name": "Attack_Kick",
+          "PoseChange": 2.47488498687744,
+          "Tracks": 35
+        },
+        {
+          "Duration": 1.0,
+          "Name": "Death",
+          "PoseChange": 2.29903292655945,
+          "Tracks": 38
+        },
+        {
+          "Duration": 6.0,
+          "Name": "Eating",
+          "PoseChange": 0.941341400146484,
+          "Tracks": 27
+        },
+        {
+          "Duration": 0.600000023841858,
+          "Name": "Gallop",
+          "PoseChange": 2.57421326637268,
+          "Tracks": 41
+        },
+        {
+          "Duration": 1.46666669845581,
+          "Name": "Gallop_Jump",
+          "PoseChange": 4.79267358779907,
+          "Tracks": 43
+        },
+        {
+          "Duration": 3.33333325386047,
+          "Name": "Idle",
+          "PoseChange": 0.44202333688736,
+          "Tracks": 29
+        },
+        {
+          "Duration": 3.33333325386047,
+          "Name": "Idle_2",
+          "PoseChange": 0.44202333688736,
+          "Tracks": 29
+        },
+        {
+          "Duration": 3.33333325386047,
+          "Name": "Idle_Headlow",
+          "PoseChange": 0.844614863395691,
+          "Tracks": 30
+        },
+        {
+          "Duration": 0.666666686534882,
+          "Name": "Idle_HitReact1",
+          "PoseChange": 0.502238035202026,
+          "Tracks": 27
+        },
+        {
+          "Duration": 0.666666686534882,
+          "Name": "Idle_HitReact2",
+          "PoseChange": 0.502238512039185,
+          "Tracks": 28
+        },
+        {
+          "Duration": 1.73333334922791,
+          "Name": "Jump_toIdle",
+          "PoseChange": 4.87283086776733,
+          "Tracks": 43
+        },
+        {
+          "Duration": 1.16666662693024,
+          "Name": "Walk",
+          "PoseChange": 1.29342555999756,
+          "Tracks": 40
+        }
+      ],
+      "Bones": 42,
+      "Id": "animal-cow"
+    },
+    {
+      "Animations": [
+        {
+          "Duration": 0.800000011920929,
+          "Name": "Attack_Headbutt",
+          "PoseChange": 0.778311669826508,
+          "Tracks": 26
+        },
+        {
+          "Duration": 0.800000011920929,
+          "Name": "Attack_Kick",
+          "PoseChange": 2.51482152938843,
+          "Tracks": 36
+        },
+        {
+          "Duration": 0.833333313465118,
+          "Name": "Death",
+          "PoseChange": 2.29903292655945,
+          "Tracks": 34
+        },
+        {
+          "Duration": 6.0,
+          "Name": "Eating",
+          "PoseChange": 1.18938267230988,
+          "Tracks": 26
+        },
+        {
+          "Duration": 0.533333361148834,
+          "Name": "Gallop",
+          "PoseChange": 2.58182048797607,
+          "Tracks": 43
+        },
+        {
+          "Duration": 1.39999997615814,
+          "Name": "Gallop_Jump",
+          "PoseChange": 4.78546476364136,
+          "Tracks": 45
+        },
+        {
+          "Duration": 3.33333325386047,
+          "Name": "Idle",
+          "PoseChange": 0.442022800445557,
+          "Tracks": 27
+        },
+        {
+          "Duration": 3.33333325386047,
+          "Name": "Idle_2",
+          "PoseChange": 0.442022800445557,
+          "Tracks": 27
+        },
+        {
+          "Duration": 3.33333325386047,
+          "Name": "Idle_Headlow",
+          "PoseChange": 0.84461510181427,
+          "Tracks": 26
+        },
+        {
+          "Duration": 0.466666668653488,
+          "Name": "Idle_HitReact1",
+          "PoseChange": 0.422433108091354,
+          "Tracks": 23
+        },
+        {
+          "Duration": 0.533333361148834,
+          "Name": "Idle_HitReact2",
+          "PoseChange": 0.448716431856155,
+          "Tracks": 24
+        },
+        {
+          "Duration": 1.53333330154419,
+          "Name": "Jump_toIdle",
+          "PoseChange": 4.86507368087769,
+          "Tracks": 45
+        },
+        {
+          "Duration": 1.16666662693024,
+          "Name": "Walk",
+          "PoseChange": 1.31743109226227,
+          "Tracks": 37
+        }
+      ],
+      "Bones": 46,
+      "Id": "animal-deer"
+    },
+    {
+      "Animations": [
+        {
+          "Duration": 1.60000002384186,
+          "Name": "Attack_Headbutt",
+          "PoseChange": 1.81780457496643,
+          "Tracks": 44
+        },
+        {
+          "Duration": 0.800000011920929,
+          "Name": "Attack_Kick",
+          "PoseChange": 2.51482129096985,
+          "Tracks": 40
+        },
+        {
+          "Duration": 1.0,
+          "Name": "Death",
+          "PoseChange": 2.29903292655945,
+          "Tracks": 39
+        },
+        {
+          "Duration": 6.0,
+          "Name": "Eating",
+          "PoseChange": 1.18938267230988,
+          "Tracks": 31
+        },
+        {
+          "Duration": 0.533333361148834,
+          "Name": "Gallop",
+          "PoseChange": 2.5818202495575,
+          "Tracks": 48
+        },
+        {
+          "Duration": 1.39999997615814,
+          "Name": "Gallop_Jump",
+          "PoseChange": 4.78546571731567,
+          "Tracks": 50
+        },
+        {
+          "Duration": 3.33333325386047,
+          "Name": "Idle",
+          "PoseChange": 0.442022234201431,
+          "Tracks": 32
+        },
+        {
+          "Duration": 3.33333325386047,
+          "Name": "Idle_2",
+          "PoseChange": 0.442022234201431,
+          "Tracks": 32
+        },
+        {
+          "Duration": 3.33333325386047,
+          "Name": "Idle_Headlow",
+          "PoseChange": 0.84461510181427,
+          "Tracks": 35
+        },
+        {
+          "Duration": 0.466666668653488,
+          "Name": "Idle_HitReact1",
+          "PoseChange": 0.488927066326141,
+          "Tracks": 32
+        },
+        {
+          "Duration": 0.533333361148834,
+          "Name": "Idle_HitReact2",
+          "PoseChange": 0.510018944740295,
+          "Tracks": 33
+        },
+        {
+          "Duration": 1.53333330154419,
+          "Name": "Jump_toIdle",
+          "PoseChange": 4.86507368087769,
+          "Tracks": 50
+        },
+        {
+          "Duration": 1.16666662693024,
+          "Name": "Walk",
+          "PoseChange": 1.31743085384369,
+          "Tracks": 42
+        }
+      ],
+      "Bones": 50,
+      "Id": "animal-donkey"
+    },
+    {
+      "Animations": [
+        {
+          "Duration": 1.33333337306976,
+          "Name": "Attack",
+          "PoseChange": 1.30608940124512,
+          "Tracks": 30
+        },
+        {
+          "Duration": 1.06666672229767,
+          "Name": "Death",
+          "PoseChange": 1.87622976303101,
+          "Tracks": 44
+        },
+        {
+          "Duration": 2.53333330154419,
+          "Name": "Eating",
+          "PoseChange": 0.705957114696503,
+          "Tracks": 31
+        },
+        {
+          "Duration": 0.566666662693024,
+          "Name": "Gallop",
+          "PoseChange": 2.30590748786926,
+          "Tracks": 47
+        },
+        {
+          "Duration": 0.933333337306976,
+          "Name": "Gallop_Jump",
+          "PoseChange": 3.110759973526,
+          "Tracks": 51
+        },
+        {
+          "Duration": 3.33333325386047,
+          "Name": "Idle",
+          "PoseChange": 0.460428148508072,
+          "Tracks": 29
+        },
+        {
+          "Duration": 3.33333325386047,
+          "Name": "Idle_2",
+          "PoseChange": 0.453223437070847,
+          "Tracks": 31
+        },
+        {
+          "Duration": 4.0,
+          "Name": "Idle_2_HeadLow",
+          "PoseChange": 0.535298347473145,
+          "Tracks": 30
+        },
+        {
+          "Duration": 0.666666686534882,
+          "Name": "Idle_HitReact1",
+          "PoseChange": 0.529557049274445,
+          "Tracks": 33
+        },
+        {
+          "Duration": 0.666666686534882,
+          "Name": "Idle_HitReact2",
+          "PoseChange": 0.529557526111603,
+          "Tracks": 34
+        },
+        {
+          "Duration": 1.33333337306976,
+          "Name": "Jump_ToIdle",
+          "PoseChange": 2.90862083435059,
+          "Tracks": 52
+        },
+        {
+          "Duration": 1.06666672229767,
+          "Name": "Walk",
+          "PoseChange": 1.43693280220032,
+          "Tracks": 43
+        }
+      ],
+      "Bones": 51,
+      "Id": "animal-fox"
+    },
+    {
+      "Animations": [
+        {
+          "Duration": 1.03333330154419,
+          "Name": "Attack_Headbutt",
+          "PoseChange": 0.784864544868469,
+          "Tracks": 32
+        },
+        {
+          "Duration": 1.0,
+          "Name": "Attack_Kick",
+          "PoseChange": 2.47488498687744,
+          "Tracks": 39
+        },
+        {
+          "Duration": 1.0,
+          "Name": "Death",
+          "PoseChange": 2.29903268814087,
+          "Tracks": 38
+        },
+        {
+          "Duration": 6.0,
+          "Name": "Eating",
+          "PoseChange": 1.18938267230988,
+          "Tracks": 30
+        },
+        {
+          "Duration": 0.600000023841858,
+          "Name": "Gallop",
+          "PoseChange": 2.57421326637268,
+          "Tracks": 47
+        },
+        {
+          "Duration": 1.46666669845581,
+          "Name": "Gallop_Jump",
+          "PoseChange": 4.79267358779907,
+          "Tracks": 49
+        },
+        {
+          "Duration": 3.33333325386047,
+          "Name": "Idle",
+          "PoseChange": 0.442022234201431,
+          "Tracks": 31
+        },
+        {
+          "Duration": 3.33333325386047,
+          "Name": "Idle_2",
+          "PoseChange": 0.442022234201431,
+          "Tracks": 31
+        },
+        {
+          "Duration": 3.33333325386047,
+          "Name": "Idle_Headlow",
+          "PoseChange": 0.844614923000336,
+          "Tracks": 34
+        },
+        {
+          "Duration": 0.666666686534882,
+          "Name": "Idle_HitReact1",
+          "PoseChange": 0.438613712787628,
+          "Tracks": 31
+        },
+        {
+          "Duration": 0.666666686534882,
+          "Name": "Idle_HitReact2",
+          "PoseChange": 0.438614845275879,
+          "Tracks": 32
+        },
+        {
+          "Duration": 1.73333334922791,
+          "Name": "Jump_toIdle",
+          "PoseChange": 4.87283086776733,
+          "Tracks": 49
+        },
+        {
+          "Duration": 1.16666662693024,
+          "Name": "Walk",
+          "PoseChange": 1.29342591762543,
+          "Tracks": 41
+        }
+      ],
+      "Bones": 50,
+      "Id": "animal-horse-white"
+    },
+    {
+      "Animations": [
+        {
+          "Duration": 1.03333330154419,
+          "Name": "Attack_Headbutt",
+          "PoseChange": 0.784864544868469,
+          "Tracks": 32
+        },
+        {
+          "Duration": 1.0,
+          "Name": "Attack_Kick",
+          "PoseChange": 2.47488498687744,
+          "Tracks": 39
+        },
+        {
+          "Duration": 1.0,
+          "Name": "Death",
+          "PoseChange": 2.29903268814087,
+          "Tracks": 38
+        },
+        {
+          "Duration": 6.0,
+          "Name": "Eating",
+          "PoseChange": 1.18938267230988,
+          "Tracks": 30
+        },
+        {
+          "Duration": 0.600000023841858,
+          "Name": "Gallop",
+          "PoseChange": 2.57421326637268,
+          "Tracks": 47
+        },
+        {
+          "Duration": 1.46666669845581,
+          "Name": "Gallop_Jump",
+          "PoseChange": 4.79267358779907,
+          "Tracks": 49
+        },
+        {
+          "Duration": 3.33333325386047,
+          "Name": "Idle",
+          "PoseChange": 0.442022234201431,
+          "Tracks": 31
+        },
+        {
+          "Duration": 3.33333325386047,
+          "Name": "Idle_2",
+          "PoseChange": 0.442022234201431,
+          "Tracks": 31
+        },
+        {
+          "Duration": 3.33333325386047,
+          "Name": "Idle_Headlow",
+          "PoseChange": 0.844614923000336,
+          "Tracks": 34
+        },
+        {
+          "Duration": 0.666666686534882,
+          "Name": "Idle_HitReact1",
+          "PoseChange": 0.438613712787628,
+          "Tracks": 31
+        },
+        {
+          "Duration": 0.666666686534882,
+          "Name": "Idle_HitReact2",
+          "PoseChange": 0.438614845275879,
+          "Tracks": 32
+        },
+        {
+          "Duration": 1.73333334922791,
+          "Name": "Jump_toIdle",
+          "PoseChange": 4.87283086776733,
+          "Tracks": 49
+        },
+        {
+          "Duration": 1.16666662693024,
+          "Name": "Walk",
+          "PoseChange": 1.29342591762543,
+          "Tracks": 41
+        }
+      ],
+      "Bones": 50,
+      "Id": "animal-horse"
+    },
+    {
+      "Animations": [
+        {
+          "Duration": 1.20000004768372,
+          "Name": "Attack",
+          "PoseChange": 1.03752326965332,
+          "Tracks": 32
+        },
+        {
+          "Duration": 1.06666672229767,
+          "Name": "Death",
+          "PoseChange": 1.87622976303101,
+          "Tracks": 41
+        },
+        {
+          "Duration": 2.66666674613953,
+          "Name": "Eating",
+          "PoseChange": 0.72558319568634,
+          "Tracks": 26
+        },
+        {
+          "Duration": 0.566666662693024,
+          "Name": "Gallop",
+          "PoseChange": 2.26908326148987,
+          "Tracks": 45
+        },
+        {
+          "Duration": 0.933333337306976,
+          "Name": "Gallop_Jump",
+          "PoseChange": 2.67378711700439,
+          "Tracks": 46
+        },
+        {
+          "Duration": 3.33333325386047,
+          "Name": "Idle",
+          "PoseChange": 0.460428148508072,
+          "Tracks": 28
+        },
+        {
+          "Duration": 3.33333325386047,
+          "Name": "Idle_2",
+          "PoseChange": 0.453224539756775,
+          "Tracks": 29
+        },
+        {
+          "Duration": 4.0,
+          "Name": "Idle_2_HeadLow",
+          "PoseChange": 0.535297393798828,
+          "Tracks": 29
+        },
+        {
+          "Duration": 0.666666686534882,
+          "Name": "Idle_HitReact1",
+          "PoseChange": 0.617103397846222,
+          "Tracks": 28
+        },
+        {
+          "Duration": 0.666666686534882,
+          "Name": "Idle_HitReact2",
+          "PoseChange": 0.617102980613709,
+          "Tracks": 29
+        },
+        {
+          "Duration": 1.33333337306976,
+          "Name": "Jump_ToIdle",
+          "PoseChange": 2.44407868385315,
+          "Tracks": 47
+        },
+        {
+          "Duration": 1.06666672229767,
+          "Name": "Walk",
+          "PoseChange": 1.29738259315491,
+          "Tracks": 41
+        }
+      ],
+      "Bones": 49,
+      "Id": "animal-husky"
+    },
+    {
+      "Animations": [
+        {
+          "Duration": 1.20000004768372,
+          "Name": "Attack",
+          "PoseChange": 1.03752326965332,
+          "Tracks": 30
+        },
+        {
+          "Duration": 1.06666672229767,
+          "Name": "Death",
+          "PoseChange": 1.87622976303101,
+          "Tracks": 39
+        },
+        {
+          "Duration": 2.66666674613953,
+          "Name": "Eating",
+          "PoseChange": 0.725580871105194,
+          "Tracks": 24
+        },
+        {
+          "Duration": 0.566666662693024,
+          "Name": "Gallop",
+          "PoseChange": 2.26908326148987,
+          "Tracks": 42
+        },
+        {
+          "Duration": 0.933333337306976,
+          "Name": "Gallop_Jump",
+          "PoseChange": 2.67848086357117,
+          "Tracks": 46
+        },
+        {
+          "Duration": 3.33333325386047,
+          "Name": "Idle",
+          "PoseChange": 0.460428148508072,
+          "Tracks": 24
+        },
+        {
+          "Duration": 3.33333325386047,
+          "Name": "Idle_2",
+          "PoseChange": 0.453223437070847,
+          "Tracks": 26
+        },
+        {
+          "Duration": 4.0,
+          "Name": "Idle_2_HeadLow",
+          "PoseChange": 0.535297393798828,
+          "Tracks": 25
+        },
+        {
+          "Duration": 0.666666686534882,
+          "Name": "Idle_HitReact1",
+          "PoseChange": 0.529558002948761,
+          "Tracks": 28
+        },
+        {
+          "Duration": 0.666666686534882,
+          "Name": "Idle_HitReact2",
+          "PoseChange": 0.529557526111603,
+          "Tracks": 29
+        },
+        {
+          "Duration": 1.33333337306976,
+          "Name": "Jump_ToIdle",
+          "PoseChange": 2.44628214836121,
+          "Tracks": 47
+        },
+        {
+          "Duration": 1.06666672229767,
+          "Name": "Walk",
+          "PoseChange": 1.29171645641327,
+          "Tracks": 38
+        }
+      ],
+      "Bones": 46,
+      "Id": "animal-shiba-inu"
+    },
+    {
+      "Animations": [
+        {
+          "Duration": 0.800000011920929,
+          "Name": "Attack_Headbutt",
+          "PoseChange": 0.778311133384705,
+          "Tracks": 26
+        },
+        {
+          "Duration": 0.800000011920929,
+          "Name": "Attack_Kick",
+          "PoseChange": 2.51482129096985,
+          "Tracks": 32
+        },
+        {
+          "Duration": 1.10000002384186,
+          "Name": "Death",
+          "PoseChange": 2.29903292655945,
+          "Tracks": 34
+        },
+        {
+          "Duration": 12.1000003814697,
+          "Name": "Eating",
+          "PoseChange": 1.19010782241821,
+          "Tracks": 22
+        },
+        {
+          "Duration": 0.533333361148834,
+          "Name": "Gallop",
+          "PoseChange": 2.58182001113892,
+          "Tracks": 35
+        },
+        {
+          "Duration": 1.39999997615814,
+          "Name": "Gallop_Jump",
+          "PoseChange": 4.78546571731567,
+          "Tracks": 39
+        },
+        {
+          "Duration": 3.33333325386047,
+          "Name": "Idle",
+          "PoseChange": 0.442022800445557,
+          "Tracks": 25
+        },
+        {
+          "Duration": 3.33333325386047,
+          "Name": "Idle_2",
+          "PoseChange": 0.442022800445557,
+          "Tracks": 25
+        },
+        {
+          "Duration": 3.33333325386047,
+          "Name": "Idle_Headlow",
+          "PoseChange": 0.84461510181427,
+          "Tracks": 26
+        },
+        {
+          "Duration": 0.466666668653488,
+          "Name": "Idle_HitReact1",
+          "PoseChange": 0.411420941352844,
+          "Tracks": 23
+        },
+        {
+          "Duration": 0.533333361148834,
+          "Name": "Idle_HitReact2",
+          "PoseChange": 0.491718530654907,
+          "Tracks": 24
+        },
+        {
+          "Duration": 1.53333330154419,
+          "Name": "Jump_toIdle",
+          "PoseChange": 4.86507320404053,
+          "Tracks": 39
+        },
+        {
+          "Duration": 1.16666662693024,
+          "Name": "Walk",
+          "PoseChange": 1.31743109226227,
+          "Tracks": 34
+        }
+      ],
+      "Bones": 38,
+      "Id": "animal-stag"
+    },
+    {
+      "Animations": [
+        {
+          "Duration": 1.33333337306976,
+          "Name": "Attack",
+          "PoseChange": 1.17609322071075,
+          "Tracks": 30
+        },
+        {
+          "Duration": 1.06666672229767,
+          "Name": "Death",
+          "PoseChange": 1.87622976303101,
+          "Tracks": 44
+        },
+        {
+          "Duration": 2.53333330154419,
+          "Name": "Eating",
+          "PoseChange": 0.705957114696503,
+          "Tracks": 31
+        },
+        {
+          "Duration": 0.566666662693024,
+          "Name": "Gallop",
+          "PoseChange": 2.29849100112915,
+          "Tracks": 47
+        },
+        {
+          "Duration": 0.933333337306976,
+          "Name": "Gallop_Jump",
+          "PoseChange": 3.04566168785095,
+          "Tracks": 51
+        },
+        {
+          "Duration": 3.33333325386047,
+          "Name": "Idle",
+          "PoseChange": 0.460428148508072,
+          "Tracks": 29
+        },
+        {
+          "Duration": 3.33333325386047,
+          "Name": "Idle_2",
+          "PoseChange": 0.45322397351265,
+          "Tracks": 31
+        },
+        {
+          "Duration": 4.0,
+          "Name": "Idle_2_HeadLow",
+          "PoseChange": 0.535298347473145,
+          "Tracks": 30
+        },
+        {
+          "Duration": 0.666666686534882,
+          "Name": "Idle_HitReact1",
+          "PoseChange": 0.529558002948761,
+          "Tracks": 33
+        },
+        {
+          "Duration": 0.666666686534882,
+          "Name": "Idle_HitReact2",
+          "PoseChange": 0.529557526111603,
+          "Tracks": 34
+        },
+        {
+          "Duration": 1.33333337306976,
+          "Name": "Jump_ToIdle",
+          "PoseChange": 2.86180520057678,
+          "Tracks": 52
+        },
+        {
+          "Duration": 1.06666672229767,
+          "Name": "Walk",
+          "PoseChange": 1.33486080169678,
+          "Tracks": 43
+        }
+      ],
+      "Bones": 51,
+      "Id": "animal-wolf"
+    }
+  ],
+  "Passed": true,
+  "TotalClips": 152
+}

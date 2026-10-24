@@ -12,7 +12,7 @@ if ($Test) {
     & $previsGodot --headless --path $PSScriptRoot -- --smoke-test
     if ($LASTEXITCODE -ne 0) { throw 'Headless smoke checks failed.' }
 }
-$previsOutput = Join-Path $PSScriptRoot 'build\Previs-0.3.1-Windows'
+$previsOutput = Join-Path $PSScriptRoot 'build\Previs-0.4.0-Windows'
 New-Item -ItemType Directory -Path $previsOutput -Force | Out-Null
 New-Item -ItemType Directory -Path (Join-Path $PSScriptRoot 'output') -Force | Out-Null
 $previsLog = Join-Path $PSScriptRoot 'output\export.log'
@@ -22,4 +22,12 @@ Copy-Item -LiteralPath 'README.md', 'THIRD-PARTY-NOTICES.md' -Destination $previ
 if (Test-Path -LiteralPath 'VALIDATION.md') { Copy-Item -LiteralPath 'VALIDATION.md' -Destination $previsOutput -Force }
 Copy-Item -LiteralPath 'LICENSES' -Destination $previsOutput -Recurse -Force
 Copy-Item -LiteralPath 'samples' -Destination $previsOutput -Recurse -Force
+$previsContentNotices = Join-Path $previsOutput 'LICENSES\content'
+New-Item -ItemType Directory -Path $previsContentNotices -Force | Out-Null
+Copy-Item -LiteralPath 'assets\content\animals\SOURCE-LICENSE.txt' -Destination (Join-Path $previsContentNotices 'Quaternius-Animals.txt') -Force
+Get-ChildItem -LiteralPath 'assets\content\props' -Filter '*-LICENSE.txt' | Copy-Item -Destination $previsContentNotices -Force
+Copy-Item -LiteralPath 'assets\content\motions\human\READMEFIRST-cgspeed.txt' -Destination $previsContentNotices -Force
+$previsCatalogOutput = Join-Path $previsOutput 'catalog'
+New-Item -ItemType Directory -Path $previsCatalogOutput -Force | Out-Null
+Get-ChildItem -LiteralPath 'assets\content\manifests' -Filter '*.json' | Copy-Item -Destination $previsCatalogOutput -Force
 Write-Output ('Built: ' + (Join-Path $previsOutput 'Previs.exe'))

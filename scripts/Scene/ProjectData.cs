@@ -30,6 +30,9 @@ public sealed class ObjectData
     public string? MotionName { get; set; }
     public string? ModelPath { get; set; }
     public string? ModelAnimation { get; set; }
+    public string? LibraryModelId { get; set; }
+    public float ModelUnitScale { get; set; } = 1;
+    public bool ModelGrounded { get; set; }
     public float SourceScale { get; set; } = .01f;
     public bool Loop { get; set; } = true;
     public bool InPlace { get; set; }

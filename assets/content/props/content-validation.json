@@ -1,0 +1,3879 @@
+{
+  "Models": 255,
+  "TotalBytes": 7303352,
+  "Categories": {
+    "Architecture": 63,
+    "Furniture": 71,
+    "Nature": 55,
+    "Props": 46,
+    "Vehicles": 20
+  },
+  "Sources": [
+    {
+      "Pack": "Furniture Kit",
+      "Version": "2.0",
+      "SourceUrl": "https://kenney.nl/assets/furniture-kit",
+      "DownloadUrl": "https://kenney.nl/media/pages/assets/furniture-kit/440e0608a4-1677580847/kenney_furniture-kit.zip",
+      "ArchiveSha256": "e67652d0932cee41683f74711c03d3e192a2af9979ef8e6b237711f5482d46b0",
+      "SelectedModels": 119
+    },
+    {
+      "Pack": "Car Kit",
+      "Version": "3.1",
+      "SourceUrl": "https://kenney.nl/assets/car-kit",
+      "DownloadUrl": "https://kenney.nl/media/pages/assets/car-kit/1a312ec241-1775131960/kenney_car-kit.zip",
+      "ArchiveSha256": "fac7dacac5c7874348cf19729af3ef205f3d366493edaf0a827d93f4fdf3d0c4",
+      "SelectedModels": 21
+    },
+    {
+      "Pack": "Nature Kit",
+      "Version": "2.1",
+      "SourceUrl": "https://kenney.nl/assets/nature-kit",
+      "DownloadUrl": "https://kenney.nl/media/pages/assets/nature-kit/37ac38a37b-1677698939/kenney_nature-kit.zip",
+      "ArchiveSha256": "fa7974a0d342bfe63c38664ba9f8ec1a4aab8ea25f099bdc56870e33588c4d9d",
+      "SelectedModels": 78
+    },
+    {
+      "Pack": "Modular Buildings",
+      "Version": "2.1",
+      "SourceUrl": "https://kenney.nl/assets/modular-buildings",
+      "DownloadUrl": "https://kenney.nl/media/pages/assets/modular-buildings/3253b4219a-1707397411/kenney_modular-buildings.zip",
+      "ArchiveSha256": "47e1614686b4c0fe55190e88b22ff2b8b10935edf61f37f478a9b6a99477edc6",
+      "SelectedModels": 37
+    }
+  ],
+  "Validation": "All GLB 2.0 headers, chunks, meshes, finite POSITION data, index ranges, buffer ranges and embedded PNGs checked.",
+  "GeometryValidation": {
+    "FinitePositionVertices": 190812,
+    "ValidIndexedTriangles": 82447,
+    "EmbeddedPngImages": 58,
+    "AllIndicesInRange": true
+  },
+  "ModelsValidated": [
+    {
+      "Id": "kenney-furniture-bathroom-cabinet",
+      "Bytes": 7216,
+      "OriginalSha256": "9db540227acaaedbbadc6a085f4a00460b73944e608afaad4770e53238a3b7f8",
+      "Vertices": 156,
+      "Triangles": 64,
+      "Primitives": 4,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.46,
+        0.78,
+        0.26
+      ]
+    },
+    {
+      "Id": "kenney-furniture-bathroom-mirror",
+      "Bytes": 6792,
+      "OriginalSha256": "940b986894101ea59b50541554b6dc608a22b133057975849259009012984175",
+      "Vertices": 339,
+      "Triangles": 72,
+      "Primitives": 3,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.60268,
+        0.86925,
+        0.2888
+      ]
+    },
+    {
+      "Id": "kenney-furniture-bathroom-sink",
+      "Bytes": 22536,
+      "OriginalSha256": "39d4f19608cab7e0fed52303b2c689f5f51fae1bad9b6913cb53d838875e797e",
+      "Vertices": 1545,
+      "Triangles": 316,
+      "Primitives": 3,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.68,
+        1.12,
+        0.58
+      ]
+    },
+    {
+      "Id": "kenney-furniture-bathroom-sink-square",
+      "Bytes": 15108,
+      "OriginalSha256": "360853c822f268e7267c62ef20cf646f170a13d76254cc0804a1d397a4a3ea67",
+      "Vertices": 936,
+      "Triangles": 234,
+      "Primitives": 3,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.86,
+        1.16,
+        0.6
+      ]
+    },
+    {
+      "Id": "kenney-furniture-bathtub",
+      "Bytes": 35500,
+      "OriginalSha256": "54c405c7035aab63dc41e709dc3c50fc5bcfbc4cddc91ffc54188075a6d25d01",
+      "Vertices": 2436,
+      "Triangles": 602,
+      "Primitives": 3,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        2.38,
+        0.84,
+        1.12
+      ]
+    },
+    {
+      "Id": "kenney-furniture-bear",
+      "Bytes": 11884,
+      "OriginalSha256": "fd87c08f81dcd652b1f7f61afae9d1f040fa1322ac4ddda6f543ed423b954aed",
+      "Vertices": 750,
+      "Triangles": 134,
+      "Primitives": 3,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.77942,
+        0.9,
+        0.495
+      ]
+    },
+    {
+      "Id": "kenney-furniture-bed-bunk",
+      "Bytes": 40784,
+      "OriginalSha256": "a3eccbc4a04340dd84878d959e15eede76f517fb8d4de6862ca46877c88d764e",
+      "Vertices": 1512,
+      "Triangles": 580,
+      "Primitives": 8,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.142,
+        1.7,
+        2.19
+      ]
+    },
+    {
+      "Id": "kenney-furniture-bed-double",
+      "Bytes": 23368,
+      "OriginalSha256": "c49b33e7d797d2ba1111895587dba7ff63b17a712eb9b4ceeb40a598f73e476c",
+      "Vertices": 866,
+      "Triangles": 264,
+      "Primitives": 7,
+      "Materials": 4,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.912,
+        0.75,
+        2.25
+      ]
+    },
+    {
+      "Id": "kenney-furniture-bed-single",
+      "Bytes": 18636,
+      "OriginalSha256": "ca00c63f9a12da3138d902b2f5f18e0360fb6e8a5ac42ccb4bc3f185724b65d1",
+      "Vertices": 768,
+      "Triangles": 214,
+      "Primitives": 6,
+      "Materials": 4,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.142,
+        0.75,
+        2.25
+      ]
+    },
+    {
+      "Id": "kenney-furniture-bench",
+      "Bytes": 10756,
+      "OriginalSha256": "ba05a6d23a5a5a44da016757632070e47ff7587ce10e2f6d6d52328b4cf5489b",
+      "Vertices": 230,
+      "Triangles": 170,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.8,
+        0.94,
+        0.4
+      ]
+    },
+    {
+      "Id": "kenney-furniture-bench-cushion",
+      "Bytes": 12500,
+      "OriginalSha256": "5186ad938f8b9eff255361fd1fdc48a81f08c318161cde27c93753ab95a2d354",
+      "Vertices": 520,
+      "Triangles": 196,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.8,
+        0.92,
+        0.4
+      ]
+    },
+    {
+      "Id": "kenney-furniture-bench-cushion-low",
+      "Bytes": 10268,
+      "OriginalSha256": "d1fac209eae2ea7393beefa4932dacb54d500e8f9932a1b17d2a842527df1b2c",
+      "Vertices": 594,
+      "Triangles": 138,
+      "Primitives": 3,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.84,
+        0.4,
+        0.44
+      ]
+    },
+    {
+      "Id": "kenney-furniture-bookcase-closed",
+      "Bytes": 23132,
+      "OriginalSha256": "9d210448de5e1179541da895450bbc7a39f4cd673d677654cd6b134e4ea0e047",
+      "Vertices": 540,
+      "Triangles": 372,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.8,
+        1.7,
+        0.5
+      ]
+    },
+    {
+      "Id": "kenney-furniture-bookcase-closed-doors",
+      "Bytes": 22644,
+      "OriginalSha256": "ff33f535acdb1825c0e958a293642b39665adcae0b1317b650e83d2bb687f4e2",
+      "Vertices": 568,
+      "Triangles": 296,
+      "Primitives": 5,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.8,
+        1.7,
+        0.5
+      ]
+    },
+    {
+      "Id": "kenney-furniture-bookcase-closed-wide",
+      "Bytes": 23140,
+      "OriginalSha256": "55b9903e9646dc407ed5237a1c41c1f0a14f9edc22e3392bdb9a4804d846af6a",
+      "Vertices": 540,
+      "Triangles": 372,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.6,
+        1.58,
+        0.5
+      ]
+    },
+    {
+      "Id": "kenney-furniture-bookcase-open",
+      "Bytes": 18020,
+      "OriginalSha256": "750702218d68c062b15dfef6ab06a4014d1cfa8bd05f02e57c53b7e13bec157c",
+      "Vertices": 400,
+      "Triangles": 320,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.8,
+        1.76,
+        0.5
+      ]
+    },
+    {
+      "Id": "kenney-furniture-bookcase-open-low",
+      "Bytes": 11520,
+      "OriginalSha256": "6d4d625faf977a2dbf155f1313cd32c6310e463114a1cd4c08cb9f80a5fb1d75",
+      "Vertices": 248,
+      "Triangles": 184,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.8,
+        0.8,
+        0.5
+      ]
+    },
+    {
+      "Id": "kenney-furniture-books",
+      "Bytes": 6864,
+      "OriginalSha256": "b8dc56e5d29f6fc1f4727fccb1b9642627fee9942c48060a00034e98df02701c",
+      "Vertices": 424,
+      "Triangles": 62,
+      "Primitives": 4,
+      "Materials": 4,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.3009,
+        0.2078,
+        0.189
+      ]
+    },
+    {
+      "Id": "kenney-furniture-cabinet-bed",
+      "Bytes": 7496,
+      "OriginalSha256": "b651fafb9e2c8e4adcb8cad3d10dc94404b46fe039b26e66b2c9020df4e5301d",
+      "Vertices": 168,
+      "Triangles": 72,
+      "Primitives": 3,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.532,
+        0.4664,
+        0.43
+      ]
+    },
+    {
+      "Id": "kenney-furniture-cabinet-television",
+      "Bytes": 10524,
+      "OriginalSha256": "811719593d676ff76f7b5904d52c845ce0396af2bc9a6a2636c4818ead320b99",
+      "Vertices": 228,
+      "Triangles": 154,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.6,
+        0.62,
+        0.5
+      ]
+    },
+    {
+      "Id": "kenney-furniture-cabinet-television-doors",
+      "Bytes": 16876,
+      "OriginalSha256": "8959347bfe26b1ac7e44c476f05789466bb84bcd2ad8b0fb40286005399bfcfc",
+      "Vertices": 420,
+      "Triangles": 210,
+      "Primitives": 5,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.6,
+        0.62,
+        0.52
+      ]
+    },
+    {
+      "Id": "kenney-furniture-cardboard-box-closed",
+      "Bytes": 5400,
+      "OriginalSha256": "4af079dca52960912764574950f0549ff2ae1224b3db1528718629473a2d5d81",
+      "Vertices": 176,
+      "Triangles": 60,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.425,
+        0.562,
+        0.425
+      ]
+    },
+    {
+      "Id": "kenney-furniture-cardboard-box-open",
+      "Bytes": 5404,
+      "OriginalSha256": "960da412564774c75e7b32f9af0100895e1edb877fc1e70dd34ee2422a2196d4",
+      "Vertices": 176,
+      "Triangles": 60,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.74375,
+        0.562,
+        0.425
+      ]
+    },
+    {
+      "Id": "kenney-furniture-ceiling-fan",
+      "Bytes": 15284,
+      "OriginalSha256": "5fdf7b3c4328875462c9887c6b1f2fad08126ea42e758cf86534639b9ea72044",
+      "Vertices": 975,
+      "Triangles": 214,
+      "Primitives": 3,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.90947,
+        0.26744,
+        1.05017
+      ]
+    },
+    {
+      "Id": "kenney-furniture-chair",
+      "Bytes": 10756,
+      "OriginalSha256": "c8a11eec93e89e31250ba91afc1b8d56c3bec7ae86640fd1239f595ff4180883",
+      "Vertices": 230,
+      "Triangles": 170,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.4,
+        0.94,
+        0.4
+      ]
+    },
+    {
+      "Id": "kenney-furniture-chair-cushion",
+      "Bytes": 12588,
+      "OriginalSha256": "33544228984857f2cb502b58452fed72157335f9b1caf29e96da5c9094c53fdc",
+      "Vertices": 524,
+      "Triangles": 198,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.4,
+        0.92,
+        0.4
+      ]
+    },
+    {
+      "Id": "kenney-furniture-chair-desk",
+      "Bytes": 39016,
+      "OriginalSha256": "46406619186034cbe92b19b79a5f1a8e3f442a17a70a7524ef2c0ad0f35095c6",
+      "Vertices": 1698,
+      "Triangles": 588,
+      "Primitives": 3,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.6699,
+        1.2152,
+        0.6286
+      ]
+    },
+    {
+      "Id": "kenney-furniture-chair-modern-cushion",
+      "Bytes": 7376,
+      "OriginalSha256": "245132697e633e907e2b48c86d56f6c8543604a3440a055d1c71c06ce11d2858",
+      "Vertices": 276,
+      "Triangles": 92,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.4,
+        0.92,
+        0.4
+      ]
+    },
+    {
+      "Id": "kenney-furniture-chair-modern-frame-cushion",
+      "Bytes": 18592,
+      "OriginalSha256": "fd3351b077cafbd54224e20fa7a3a1b4a4304019cf44c25a6e7709ad71b852b8",
+      "Vertices": 832,
+      "Triangles": 284,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.4,
+        0.92,
+        0.4
+      ]
+    },
+    {
+      "Id": "kenney-furniture-chair-rounded",
+      "Bytes": 17156,
+      "OriginalSha256": "53f4933ec547179c499f04dbda1231cf44b83ec82c7f4ab981cdf680aee5c973",
+      "Vertices": 388,
+      "Triangles": 280,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.4,
+        0.91,
+        0.4
+      ]
+    },
+    {
+      "Id": "kenney-furniture-coat-rack-standing",
+      "Bytes": 13288,
+      "OriginalSha256": "d8231c22dab63ceb9fc8678f6c8ceafc62afa8726b51a73b4ce349043d3cdc91",
+      "Vertices": 300,
+      "Triangles": 190,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.5456,
+        1.54,
+        0.5456
+      ]
+    },
+    {
+      "Id": "kenney-furniture-computer-keyboard",
+      "Bytes": 3476,
+      "OriginalSha256": "9d9135789de2120e9f41ce3f0a56dd1b15f40adcc7888739bb842a2d820da322",
+      "Vertices": 76,
+      "Triangles": 32,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.5644,
+        0.05511,
+        0.23638
+      ]
+    },
+    {
+      "Id": "kenney-furniture-computer-mouse",
+      "Bytes": 5868,
+      "OriginalSha256": "d3ad1a923f0f7707ef367bb969eb94c9076e211c98c830ba52e133fadc5cdfc0",
+      "Vertices": 113,
+      "Triangles": 71,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.0994,
+        0.04714,
+        0.17021
+      ]
+    },
+    {
+      "Id": "kenney-furniture-computer-screen",
+      "Bytes": 6404,
+      "OriginalSha256": "5942cbad29a2d2b956619569926e81d50a4174403d592fece6556e57632dc643",
+      "Vertices": 228,
+      "Triangles": 72,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.78538,
+        0.58857,
+        0.20801
+      ]
+    },
+    {
+      "Id": "kenney-furniture-desk",
+      "Bytes": 15048,
+      "OriginalSha256": "0164fe828f028b321730fb8c74502e353583f751be74da1682d42fff7d3c5a42",
+      "Vertices": 380,
+      "Triangles": 198,
+      "Primitives": 3,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.46895,
+        0.76882,
+        0.7846
+      ]
+    },
+    {
+      "Id": "kenney-furniture-desk-corner",
+      "Bytes": 17984,
+      "OriginalSha256": "a6a77ba0083d5ecd34ad50f738867b03ed7b7f469429bb1acc78f423bcc3f034",
+      "Vertices": 452,
+      "Triangles": 250,
+      "Primitives": 3,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.94895,
+        0.76882,
+        1.94895
+      ]
+    },
+    {
+      "Id": "kenney-furniture-doorway",
+      "Bytes": 14532,
+      "OriginalSha256": "08983e299822140d580eb55d4b4e4e4552c37bb6e88571e41d2b7b5d2eef987e",
+      "Vertices": 544,
+      "Triangles": 188,
+      "Primitives": 3,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.972,
+        2.01906,
+        0.2268
+      ]
+    },
+    {
+      "Id": "kenney-furniture-doorway-front",
+      "Bytes": 13016,
+      "OriginalSha256": "b5b8e4c14ee1f2ffa10ef5c69badc995ae6fbcc868abac240221c61b8c593b0e",
+      "Vertices": 624,
+      "Triangles": 156,
+      "Primitives": 4,
+      "Materials": 4,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.972,
+        2.01906,
+        0.2268
+      ]
+    },
+    {
+      "Id": "kenney-furniture-doorway-open",
+      "Bytes": 3256,
+      "OriginalSha256": "cf05e165ea26dbbeaab4dc6296c143ef5f5a001e2ab5af9cd4fd65739408317e",
+      "Vertices": 48,
+      "Triangles": 28,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.972,
+        2.01906,
+        0.1782
+      ]
+    },
+    {
+      "Id": "kenney-furniture-dryer",
+      "Bytes": 17760,
+      "OriginalSha256": "d8b727612fdfc141c0b56360f75b897f1b71d3420c8c0942b5ec626bd3c8303c",
+      "Vertices": 817,
+      "Triangles": 262,
+      "Primitives": 4,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.78,
+        0.94,
+        0.76
+      ]
+    },
+    {
+      "Id": "kenney-furniture-floor-corner",
+      "Bytes": 2524,
+      "OriginalSha256": "7a3ed4473bd7dc71a7fac74a77c548412ed01caf9fd21be605bc8bbda824f8ff",
+      "Vertices": 30,
+      "Triangles": 16,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.1,
+        0.1,
+        1.1
+      ]
+    },
+    {
+      "Id": "kenney-furniture-floor-full",
+      "Bytes": 2260,
+      "OriginalSha256": "99fc5df646d8dc605d6fe35001fe5b15bb7b269cc5c65f4f7793fbc76ff3d822",
+      "Vertices": 24,
+      "Triangles": 12,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        2.0,
+        0.1,
+        2.0
+      ]
+    },
+    {
+      "Id": "kenney-furniture-hood-large",
+      "Bytes": 4652,
+      "OriginalSha256": "e9b60fa02bba74d99103e8ba9d7ca99fbd99299bc57c4f5f84b2add2a6a3afcc",
+      "Vertices": 150,
+      "Triangles": 36,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.86,
+        0.73906,
+        0.5698
+      ]
+    },
+    {
+      "Id": "kenney-furniture-hood-modern",
+      "Bytes": 3968,
+      "OriginalSha256": "f5ac7dbadd1d98813c48315e56fa6ab2e8783870b1fb7be30825177bbf2b2afe",
+      "Vertices": 112,
+      "Triangles": 28,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.86,
+        0.79906,
+        0.5698
+      ]
+    },
+    {
+      "Id": "kenney-furniture-kitchen-bar",
+      "Bytes": 6004,
+      "OriginalSha256": "792c3d31e60c8a8d8c7a28cf7d1efe004c5a601adc1b163a8799dde32c1b559d",
+      "Vertices": 264,
+      "Triangles": 76,
+      "Primitives": 3,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.86,
+        0.84,
+        0.42
+      ]
+    },
+    {
+      "Id": "kenney-furniture-kitchen-bar-end",
+      "Bytes": 11084,
+      "OriginalSha256": "410c6d83defe4ed248a8ec32f81553b56c8b610372d02ecf0e547e3f52cdc0a1",
+      "Vertices": 464,
+      "Triangles": 152,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.20312,
+        0.84,
+        0.42
+      ]
+    },
+    {
+      "Id": "kenney-furniture-kitchen-blender",
+      "Bytes": 18728,
+      "OriginalSha256": "f471defb5b2b1cf3b949a1a8aaef0a8b727afe662b0815068cf4e963325a3c1f",
+      "Vertices": 418,
+      "Triangles": 246,
+      "Primitives": 4,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.27165,
+        0.45504,
+        0.21824
+      ]
+    },
+    {
+      "Id": "kenney-furniture-kitchen-cabinet",
+      "Bytes": 10444,
+      "OriginalSha256": "7238c57778935ae25db5e57e9f7af3ba7068c71b005ff7cfbff3b6f3b1a13200",
+      "Vertices": 406,
+      "Triangles": 114,
+      "Primitives": 5,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.86,
+        0.9,
+        0.9
+      ]
+    },
+    {
+      "Id": "kenney-furniture-kitchen-cabinet-corner-inner",
+      "Bytes": 5184,
+      "OriginalSha256": "8d1b69e63048424a0559d1e5c77427fab9021def7dea74cf1c4d3d8ce16e6e69",
+      "Vertices": 168,
+      "Triangles": 54,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.92,
+        0.9,
+        0.92
+      ]
+    },
+    {
+      "Id": "kenney-furniture-kitchen-cabinet-corner-round",
+      "Bytes": 13656,
+      "OriginalSha256": "333ab73202cb87b76d4ff94939038dcaf315eda55285bdbeba20d255da488e97",
+      "Vertices": 592,
+      "Triangles": 194,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.9,
+        0.9,
+        0.9
+      ]
+    },
+    {
+      "Id": "kenney-furniture-kitchen-cabinet-drawer",
+      "Bytes": 15384,
+      "OriginalSha256": "6f784807e3cadb15b4d2d3db726d93357ea5e6c4f2b6e4c9c064048a2d1d9cfc",
+      "Vertices": 660,
+      "Triangles": 174,
+      "Primitives": 8,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.86,
+        0.9,
+        0.9
+      ]
+    },
+    {
+      "Id": "kenney-furniture-kitchen-cabinet-upper",
+      "Bytes": 8168,
+      "OriginalSha256": "8f2496feed85a745ffb6e554075b8450d647f8f68b01d6a010fcac1510fc173a",
+      "Vertices": 228,
+      "Triangles": 80,
+      "Primitives": 4,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.86,
+        0.78,
+        0.44
+      ]
+    },
+    {
+      "Id": "kenney-furniture-kitchen-cabinet-upper-corner",
+      "Bytes": 13712,
+      "OriginalSha256": "b23551ff585b5b804cf3ec0fe046b7bc1e84a387021e3cdb01c93add56444e8d",
+      "Vertices": 308,
+      "Triangles": 204,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.43,
+        0.78,
+        0.42
+      ]
+    },
+    {
+      "Id": "kenney-furniture-kitchen-cabinet-upper-double",
+      "Bytes": 18184,
+      "OriginalSha256": "7b2abd976f2e8f1727d6ba23490aaf5fe18db9c5ac66e729ef6fe8de835c039e",
+      "Vertices": 540,
+      "Triangles": 234,
+      "Primitives": 7,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.86,
+        0.78,
+        0.44
+      ]
+    },
+    {
+      "Id": "kenney-furniture-kitchen-cabinet-upper-low",
+      "Bytes": 7216,
+      "OriginalSha256": "c25293d38ad3d4338142f5bfb6832a2f7e8a069a552fc4a6730231b1b382d33e",
+      "Vertices": 204,
+      "Triangles": 64,
+      "Primitives": 4,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.86,
+        0.39,
+        0.44
+      ]
+    },
+    {
+      "Id": "kenney-furniture-kitchen-coffee-machine",
+      "Bytes": 13332,
+      "OriginalSha256": "063f582c6fa0f00a9f24e3393dac2295491c4becdaf5513c893ab1a2826b6ec3",
+      "Vertices": 420,
+      "Triangles": 166,
+      "Primitives": 3,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.37908,
+        0.35498,
+        0.48033
+      ]
+    },
+    {
+      "Id": "kenney-furniture-kitchen-fridge",
+      "Bytes": 20116,
+      "OriginalSha256": "8af4f4bbb1b5525ad8226e97926a5af60fa8fb20a3cb74dbda5328a9d320dbab",
+      "Vertices": 976,
+      "Triangles": 250,
+      "Primitives": 7,
+      "Materials": 4,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.86,
+        1.84,
+        0.58387
+      ]
+    },
+    {
+      "Id": "kenney-furniture-kitchen-fridge-built-in",
+      "Bytes": 22616,
+      "OriginalSha256": "eedcfbca0a9e565424d941b8cf82ddc0c3c4dfc63911a420bfae058e9a18044c",
+      "Vertices": 1476,
+      "Triangles": 268,
+      "Primitives": 10,
+      "Materials": 5,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.86,
+        1.7375,
+        0.9
+      ]
+    },
+    {
+      "Id": "kenney-furniture-kitchen-fridge-large",
+      "Bytes": 30632,
+      "OriginalSha256": "5851cc59c7e12f6f34a01a2ea93d5b9540be4078c1b703f517239fcede98fb32",
+      "Vertices": 1104,
+      "Triangles": 436,
+      "Primitives": 5,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.04,
+        1.84,
+        0.8111
+      ]
+    },
+    {
+      "Id": "kenney-furniture-kitchen-fridge-small",
+      "Bytes": 12988,
+      "OriginalSha256": "35dab7f63711623be321bfd82072f4ab29fe8006aac9371c6e6b78df2e02f5ed",
+      "Vertices": 632,
+      "Triangles": 152,
+      "Primitives": 5,
+      "Materials": 4,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.86,
+        1.20049,
+        0.58387
+      ]
+    },
+    {
+      "Id": "kenney-furniture-kitchen-microwave",
+      "Bytes": 11248,
+      "OriginalSha256": "dd6a6c919f4bebc6e2080fe419262cf97a0d6461ead3f3998aa3c9edf4d2bd27",
+      "Vertices": 510,
+      "Triangles": 152,
+      "Primitives": 6,
+      "Materials": 4,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.58,
+        0.36,
+        0.46
+      ]
+    },
+    {
+      "Id": "kenney-furniture-kitchen-sink",
+      "Bytes": 23480,
+      "OriginalSha256": "7b9610277d71f00dcf1bba49cf4d98d77ce5177e84bf76c7da2f8893e542f743",
+      "Vertices": 2194,
+      "Triangles": 318,
+      "Primitives": 8,
+      "Materials": 6,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.86,
+        0.98,
+        0.9
+      ]
+    },
+    {
+      "Id": "kenney-furniture-kitchen-stove",
+      "Bytes": 54324,
+      "OriginalSha256": "3239edb36295dfca9530a9b9a6ad0aff98ce62e7cf8d13ca2a5a1a6b2a904656",
+      "Vertices": 4860,
+      "Triangles": 830,
+      "Primitives": 6,
+      "Materials": 5,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.86,
+        0.9,
+        0.9
+      ]
+    },
+    {
+      "Id": "kenney-furniture-kitchen-stove-electric",
+      "Bytes": 18604,
+      "OriginalSha256": "cf646b960d7dfed1fac27898ff6de1f0671cfa33beecbed06ead7d0684517392",
+      "Vertices": 2040,
+      "Triangles": 338,
+      "Primitives": 6,
+      "Materials": 6,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.86,
+        0.9,
+        0.9
+      ]
+    },
+    {
+      "Id": "kenney-furniture-lamp-round-floor",
+      "Bytes": 6600,
+      "OriginalSha256": "50fe1b5b588edf15bfa9cc880f71a02a4fda6036350b24733d0ef4de5cc5e908",
+      "Vertices": 240,
+      "Triangles": 76,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.30408,
+        1.72,
+        0.35112
+      ]
+    },
+    {
+      "Id": "kenney-furniture-lamp-round-table",
+      "Bytes": 6604,
+      "OriginalSha256": "75bb644caaa3da003b4fcad7a931722dd61cd2858aab70cf660021d5061fa1b2",
+      "Vertices": 240,
+      "Triangles": 76,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.30408,
+        0.6285,
+        0.35112
+      ]
+    },
+    {
+      "Id": "kenney-furniture-lamp-square-ceiling",
+      "Bytes": 5628,
+      "OriginalSha256": "57066be51583d83ae60071e8179af275189cb2911ecb9fc24953bb930c8bf118",
+      "Vertices": 192,
+      "Triangles": 60,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.24,
+        0.46,
+        0.24
+      ]
+    },
+    {
+      "Id": "kenney-furniture-lamp-square-floor",
+      "Bytes": 5624,
+      "OriginalSha256": "6466993748d8e184de9ec5b6b0af613867c50c0ce320d1898b1db9e4c27c2561",
+      "Vertices": 192,
+      "Triangles": 60,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.24,
+        1.72,
+        0.24
+      ]
+    },
+    {
+      "Id": "kenney-furniture-lamp-square-table",
+      "Bytes": 5624,
+      "OriginalSha256": "70ec9211af336b1ef3b4da32590b8737b4facf219348c22e6533a1e898cdb13d",
+      "Vertices": 192,
+      "Triangles": 60,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.24,
+        0.58,
+        0.24
+      ]
+    },
+    {
+      "Id": "kenney-furniture-lamp-wall",
+      "Bytes": 4828,
+      "OriginalSha256": "a9679ecd3be05731846f22ade97c37069598ca7a06dd9319f50230e63a1ea83c",
+      "Vertices": 156,
+      "Triangles": 42,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.45327,
+        0.1856,
+        0.30067
+      ]
+    },
+    {
+      "Id": "kenney-furniture-laptop",
+      "Bytes": 5540,
+      "OriginalSha256": "5fa8a1f4a71ab8d82ef64da77a6973ffd350c6d4557516069a4ffd4bb8d808af",
+      "Vertices": 228,
+      "Triangles": 68,
+      "Primitives": 3,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.528,
+        0.32362,
+        0.48013
+      ]
+    },
+    {
+      "Id": "kenney-furniture-lounge-chair",
+      "Bytes": 9648,
+      "OriginalSha256": "ddfe6bc4b3451bca61666d7b614552d6ed2a03d82fc76244b72ae3155874dc6c",
+      "Vertices": 392,
+      "Triangles": 128,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.98,
+        0.92,
+        0.82
+      ]
+    },
+    {
+      "Id": "kenney-furniture-lounge-chair-relax",
+      "Bytes": 13904,
+      "OriginalSha256": "def698179e44de6cd17f4cfc2730273da54dd25458a29b079fbf4468abe5d98e",
+      "Vertices": 876,
+      "Triangles": 188,
+      "Primitives": 3,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.98,
+        1.26,
+        1.34939
+      ]
+    },
+    {
+      "Id": "kenney-furniture-lounge-design-chair",
+      "Bytes": 9136,
+      "OriginalSha256": "f0766a7d5698974b711adac18a2108f0e74e3a036fa4e4e0ccf91195b0ee5abf",
+      "Vertices": 368,
+      "Triangles": 116,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.45919,
+        0.8,
+        0.82
+      ]
+    },
+    {
+      "Id": "kenney-furniture-lounge-design-sofa",
+      "Bytes": 9128,
+      "OriginalSha256": "b4f4e6850118e409da301df678228c703b6ac02e94fbb9dbde61543af817fa53",
+      "Vertices": 368,
+      "Triangles": 116,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        2.24,
+        0.8,
+        0.82
+      ]
+    },
+    {
+      "Id": "kenney-furniture-lounge-sofa",
+      "Bytes": 9644,
+      "OriginalSha256": "1886b811c0d3ad0d8525a4fd43adf4112c497c8e0ed906f06877ca3517f4c7dd",
+      "Vertices": 392,
+      "Triangles": 128,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.96,
+        0.92,
+        0.82
+      ]
+    },
+    {
+      "Id": "kenney-furniture-lounge-sofa-long",
+      "Bytes": 13112,
+      "OriginalSha256": "452df1c862f97781615e2c1c832913b48cf6c6f011d3260dc023ff3f117cc9d1",
+      "Vertices": 564,
+      "Triangles": 186,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.96,
+        0.92,
+        1.64
+      ]
+    },
+    {
+      "Id": "kenney-furniture-paneling",
+      "Bytes": 3960,
+      "OriginalSha256": "69234bb71f54b0241ef6b78c3c7aa8aa855aae745475645f9adec4895296a96c",
+      "Vertices": 66,
+      "Triangles": 40,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.0,
+        1.18953,
+        0.06
+      ]
+    },
+    {
+      "Id": "kenney-furniture-pillow",
+      "Bytes": 5044,
+      "OriginalSha256": "6fae7c190d0b676ef3efd35e5178cef21dffb5c80e1257d8b537ad424da0e5f6",
+      "Vertices": 96,
+      "Triangles": 50,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.46,
+        0.44433,
+        0.17697
+      ]
+    },
+    {
+      "Id": "kenney-furniture-plant-small1",
+      "Bytes": 8224,
+      "OriginalSha256": "2b9c022feb47be857b2c4fdc29f36522766ba9b70c578c31d7c05d71b4377d15",
+      "Vertices": 320,
+      "Triangles": 102,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.18932,
+        0.28,
+        0.18932
+      ]
+    },
+    {
+      "Id": "kenney-furniture-potted-plant",
+      "Bytes": 7576,
+      "OriginalSha256": "5b760eda2766f75fda36b2c5df652a1662f82981ef64cd8fa7fe7bcd386b3a15",
+      "Vertices": 192,
+      "Triangles": 60,
+      "Primitives": 3,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.42412,
+        1.30803,
+        0.48292
+      ]
+    },
+    {
+      "Id": "kenney-furniture-radio",
+      "Bytes": 25020,
+      "OriginalSha256": "1ba93d6ba6f049750853b4652b92f286f2898e527695a0705b75cc7615897fed",
+      "Vertices": 1644,
+      "Triangles": 432,
+      "Primitives": 3,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.63,
+        0.45638,
+        0.195
+      ]
+    },
+    {
+      "Id": "kenney-furniture-rug-doormat",
+      "Bytes": 13812,
+      "OriginalSha256": "bd888e41853342cdc0d34d3f09b99cedc50a144f47b514943b65cdb9a2cfd802",
+      "Vertices": 312,
+      "Triangles": 204,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.8586,
+        0.02,
+        0.47402
+      ]
+    },
+    {
+      "Id": "kenney-furniture-rug-rectangle",
+      "Bytes": 3188,
+      "OriginalSha256": "a989d2d59c04e3071e0c90388b113a9a8f339ce1814ef984c51cb6dcd7c8e0eb",
+      "Vertices": 64,
+      "Triangles": 28,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        3.14,
+        0.02,
+        1.84
+      ]
+    },
+    {
+      "Id": "kenney-furniture-rug-round",
+      "Bytes": 10164,
+      "OriginalSha256": "c4cdc8f51ed2dbfb853b147521ed40e995307392fd3b19045b2203ea50f376db",
+      "Vertices": 380,
+      "Triangles": 188,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.84,
+        0.02,
+        1.84
+      ]
+    },
+    {
+      "Id": "kenney-furniture-shower",
+      "Bytes": 52020,
+      "OriginalSha256": "25c1cebad681fe369dc04839a8f08f5da2ccbd99b3a70aa83fe2e4d1590c6951",
+      "Vertices": 3483,
+      "Triangles": 810,
+      "Primitives": 6,
+      "Materials": 4,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.12358,
+        2.18807,
+        1.16358
+      ]
+    },
+    {
+      "Id": "kenney-furniture-shower-round",
+      "Bytes": 72048,
+      "OriginalSha256": "1723208eaba3fb215089e02c8cdd3d7201d0980ad0c7b275319eb539f6094bfb",
+      "Vertices": 2400,
+      "Triangles": 960,
+      "Primitives": 5,
+      "Materials": 4,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.12358,
+        2.18807,
+        1.12358
+      ]
+    },
+    {
+      "Id": "kenney-furniture-side-table",
+      "Bytes": 8800,
+      "OriginalSha256": "8227810584f7d37582e4e9ec821c56f1dc54b99c88a8dc74242ea3b7402bc472",
+      "Vertices": 348,
+      "Triangles": 118,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.06895,
+        0.76882,
+        0.44
+      ]
+    },
+    {
+      "Id": "kenney-furniture-speaker",
+      "Bytes": 15744,
+      "OriginalSha256": "78230b9fb382a937cb19e4bf7556ee9402d33ac80b1baaee2d2eb89493cfa1fc",
+      "Vertices": 696,
+      "Triangles": 228,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.296,
+        1.2728,
+        0.296
+      ]
+    },
+    {
+      "Id": "kenney-furniture-speaker-small",
+      "Bytes": 15244,
+      "OriginalSha256": "34db09984703282822f3f57fc9a31bfdfa6a8f6bf8251893d0c907e7ee6601b2",
+      "Vertices": 672,
+      "Triangles": 220,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.296,
+        0.59596,
+        0.2664
+      ]
+    },
+    {
+      "Id": "kenney-furniture-stairs",
+      "Bytes": 21616,
+      "OriginalSha256": "b442f997583e417fcb32ec89470ecc441b0556f416d3afe00e3f18c806e556a0",
+      "Vertices": 1004,
+      "Triangles": 308,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        3.64687,
+        2.67906,
+        1.58
+      ]
+    },
+    {
+      "Id": "kenney-furniture-stairs-corner",
+      "Bytes": 21576,
+      "OriginalSha256": "250d3c51e10fa250c30954b8a3d6bb0d011362be34ba85a50f5bebdd4184e0dc",
+      "Vertices": 998,
+      "Triangles": 312,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        3.54738,
+        2.67906,
+        2.85159
+      ]
+    },
+    {
+      "Id": "kenney-furniture-stairs-open",
+      "Bytes": 39924,
+      "OriginalSha256": "cbfe1dc9fd66f1375f9c79ccff7069923655238fdf49c7c366653d17632453a5",
+      "Vertices": 1506,
+      "Triangles": 558,
+      "Primitives": 5,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        3.64687,
+        2.67906,
+        1.58
+      ]
+    },
+    {
+      "Id": "kenney-furniture-stool-bar",
+      "Bytes": 11816,
+      "OriginalSha256": "a86167a9f92401a61fec7e509ad089ecc552d0f299743add3aeb919acb24e341",
+      "Vertices": 492,
+      "Triangles": 176,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.53088,
+        0.87,
+        0.45976
+      ]
+    },
+    {
+      "Id": "kenney-furniture-stool-bar-square",
+      "Bytes": 9784,
+      "OriginalSha256": "a7e1099d64eb35416d4d8c9b16921ef12ae7c1c1e6fff5ea75f3ae19cc934a8b",
+      "Vertices": 388,
+      "Triangles": 142,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.307,
+        0.81,
+        0.29525
+      ]
+    },
+    {
+      "Id": "kenney-furniture-table",
+      "Bytes": 8196,
+      "OriginalSha256": "ff1a94498d023957f4bc3ff6f55a7a82977d336dbf01a573b3364f03afe5ff61",
+      "Vertices": 168,
+      "Triangles": 120,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.93542,
+        0.75149,
+        1.02896
+      ]
+    },
+    {
+      "Id": "kenney-furniture-table-cloth",
+      "Bytes": 9920,
+      "OriginalSha256": "64de52b5c4370724c29feefd68a65b157c55c88592e2096987bbce007ae80bcb",
+      "Vertices": 396,
+      "Triangles": 144,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.93542,
+        0.75149,
+        1.02896
+      ]
+    },
+    {
+      "Id": "kenney-furniture-table-coffee",
+      "Bytes": 8256,
+      "OriginalSha256": "e38bea760fbd514efbb75528d09b4752c91af44677bbb97e6d4386c263525179",
+      "Vertices": 168,
+      "Triangles": 124,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.32199,
+        0.46,
+        0.8
+      ]
+    },
+    {
+      "Id": "kenney-furniture-table-coffee-glass",
+      "Bytes": 9428,
+      "OriginalSha256": "05bf257a086a540b3b79b0c1c7dae35b036ed4d520686aed74ea94ea701c447e",
+      "Vertices": 368,
+      "Triangles": 140,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.32199,
+        0.46,
+        0.8
+      ]
+    },
+    {
+      "Id": "kenney-furniture-table-coffee-glass-square",
+      "Bytes": 9448,
+      "OriginalSha256": "e4a7ebef6ad0dbafee629df78b0edd88433a1059c4dd5fb3d70304ba2f71b945",
+      "Vertices": 368,
+      "Triangles": 140,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.8,
+        0.46,
+        0.8
+      ]
+    },
+    {
+      "Id": "kenney-furniture-table-coffee-square",
+      "Bytes": 8276,
+      "OriginalSha256": "bcc81d8919a3af9141c9c93b4520106dd0a90a7144346cd87928014018aac816",
+      "Vertices": 168,
+      "Triangles": 124,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.8,
+        0.46,
+        0.8
+      ]
+    },
+    {
+      "Id": "kenney-furniture-table-cross",
+      "Bytes": 12140,
+      "OriginalSha256": "f0d83392aff5df82f6c9585cadff694643dbd30a4ff2b8bb01a00a7a161338a3",
+      "Vertices": 269,
+      "Triangles": 178,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.95988,
+        0.79905,
+        1.02896
+      ]
+    },
+    {
+      "Id": "kenney-furniture-table-glass",
+      "Bytes": 9848,
+      "OriginalSha256": "a5ed516d18b51cf5db3cc78f1403451f853a81db45510543d3ed56c1dd9c412b",
+      "Vertices": 392,
+      "Triangles": 144,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.93542,
+        0.75149,
+        1.02896
+      ]
+    },
+    {
+      "Id": "kenney-furniture-table-round",
+      "Bytes": 6444,
+      "OriginalSha256": "f8daea9124a542a00b7bdacfddac82dc468573d43e44d7b54dd6316e9695754b",
+      "Vertices": 128,
+      "Triangles": 80,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.59349,
+        0.84349,
+        1.84
+      ]
+    },
+    {
+      "Id": "kenney-furniture-television-antenna",
+      "Bytes": 4500,
+      "OriginalSha256": "00eea4123b3efc7f8050fd3eaac0a83de3053c9e6cead18dc739260a429b2bb7",
+      "Vertices": 80,
+      "Triangles": 44,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.52906,
+        0.20547,
+        0.16
+      ]
+    },
+    {
+      "Id": "kenney-furniture-television-modern",
+      "Bytes": 6368,
+      "OriginalSha256": "d89519ad0a5f28b5b0dccb0d83209dccf610cda959578238dd21bbf9e219cfc6",
+      "Vertices": 228,
+      "Triangles": 72,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.3696,
+        0.9095,
+        0.2568
+      ]
+    },
+    {
+      "Id": "kenney-furniture-television-vintage",
+      "Bytes": 19392,
+      "OriginalSha256": "eb144cc8fb1e7f761e3665226e4266c8868679421d21d6548f24d2abad7c67cf",
+      "Vertices": 1656,
+      "Triangles": 280,
+      "Primitives": 4,
+      "Materials": 4,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.82,
+        0.54,
+        0.54
+      ]
+    },
+    {
+      "Id": "kenney-furniture-toaster",
+      "Bytes": 14924,
+      "OriginalSha256": "38c1fb7b122be9997758c8ee855d87f28014cf282f24d66d39f4e8d8b236d2af",
+      "Vertices": 652,
+      "Triangles": 220,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.37597,
+        0.26,
+        0.2
+      ]
+    },
+    {
+      "Id": "kenney-furniture-toilet",
+      "Bytes": 18112,
+      "OriginalSha256": "16165cfd03c56c2cb443b800570810a22ef770f65e7a468f6761d9dc14eaaeae",
+      "Vertices": 1062,
+      "Triangles": 230,
+      "Primitives": 4,
+      "Materials": 4,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.6251,
+        0.90193,
+        0.95435
+      ]
+    },
+    {
+      "Id": "kenney-furniture-trashcan",
+      "Bytes": 6452,
+      "OriginalSha256": "e0ccc1fe50cbd05386477fdff527171d1cf7c0de2ba7ff3233f8d9561feb2561",
+      "Vertices": 232,
+      "Triangles": 68,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.41539,
+        0.85573,
+        0.46825
+      ]
+    },
+    {
+      "Id": "kenney-furniture-wall",
+      "Bytes": 3340,
+      "OriginalSha256": "69273d5d623bddfce41d12d4e5eeb5621ea04f1edcbd8f35c00a60c2fd3258b7",
+      "Vertices": 90,
+      "Triangles": 12,
+      "Primitives": 3,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        2.0,
+        2.57906,
+        0.1
+      ]
+    },
+    {
+      "Id": "kenney-furniture-wall-corner",
+      "Bytes": 4460,
+      "OriginalSha256": "0e6521caee1f9282784c52e0f651084e49f575b091ad97bf25540b8049757aef",
+      "Vertices": 174,
+      "Triangles": 28,
+      "Primitives": 3,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.1,
+        2.57906,
+        1.1
+      ]
+    },
+    {
+      "Id": "kenney-furniture-wall-doorway",
+      "Bytes": 6444,
+      "OriginalSha256": "a55be1da05aa80c74749d0c38bd093fa5e2b1eaf21cbc9a7c3a0e6fbcfbe38e2",
+      "Vertices": 324,
+      "Triangles": 60,
+      "Primitives": 3,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        2.0,
+        2.57906,
+        0.1782
+      ]
+    },
+    {
+      "Id": "kenney-furniture-wall-doorway-wide",
+      "Bytes": 6468,
+      "OriginalSha256": "877af5b239f31f12027e3cec92aa26e97d511e1ae8673a8e3d7d13302d33edf3",
+      "Vertices": 324,
+      "Triangles": 60,
+      "Primitives": 3,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        2.0,
+        2.57906,
+        0.1782
+      ]
+    },
+    {
+      "Id": "kenney-furniture-wall-half",
+      "Bytes": 3348,
+      "OriginalSha256": "24db9f126891b48b443dcfa9f80d79e4321c8780aede83fb6d8f384b3d4eb35f",
+      "Vertices": 90,
+      "Triangles": 12,
+      "Primitives": 3,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.0,
+        2.57906,
+        0.1
+      ]
+    },
+    {
+      "Id": "kenney-furniture-wall-window",
+      "Bytes": 10744,
+      "OriginalSha256": "166a10fddb8a78d942bc2791186913f7015dfee8501d20efd7a7b8f196fc5c3e",
+      "Vertices": 476,
+      "Triangles": 108,
+      "Primitives": 5,
+      "Materials": 4,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        2.0,
+        2.57906,
+        0.1782
+      ]
+    },
+    {
+      "Id": "kenney-furniture-wall-window-slide",
+      "Bytes": 14564,
+      "OriginalSha256": "33e51d7ee74f13de318e419b0ebfb31fe7f6e9fd37050f13aa9347641b49376a",
+      "Vertices": 604,
+      "Triangles": 152,
+      "Primitives": 7,
+      "Materials": 4,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        2.0,
+        2.57906,
+        0.1782
+      ]
+    },
+    {
+      "Id": "kenney-furniture-washer",
+      "Bytes": 48104,
+      "OriginalSha256": "0c9704df1817d2699b72305b96cde097c9558bacabaef2fd5ab1ff4c03b81abf",
+      "Vertices": 3288,
+      "Triangles": 720,
+      "Primitives": 6,
+      "Materials": 6,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.78,
+        0.94,
+        0.78
+      ]
+    },
+    {
+      "Id": "kenney-furniture-washer-dryer-stacked",
+      "Bytes": 64060,
+      "OriginalSha256": "efcc2155ef170092dc2602a98179380de3442c2500998a6ca37cc5554d275676",
+      "Vertices": 4135,
+      "Triangles": 992,
+      "Primitives": 7,
+      "Materials": 6,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.78,
+        1.88,
+        0.78
+      ]
+    },
+    {
+      "Id": "kenney-cars-ambulance",
+      "Bytes": 246020,
+      "OriginalSha256": "9e429e2b6202c0d78d0c38b2adbaae6b77716bb2a0f6fbb2811556e1fb31edba",
+      "Vertices": 4328,
+      "Triangles": 2804,
+      "Primitives": 7,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        2.25,
+        2.7,
+        4.875
+      ]
+    },
+    {
+      "Id": "kenney-cars-delivery-flat",
+      "Bytes": 226876,
+      "OriginalSha256": "2973152df7699767692ce890b3a0845a11333a52a23aa74b86a12ed443254c1b",
+      "Vertices": 4004,
+      "Triangles": 2574,
+      "Primitives": 5,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        2.55,
+        2.295,
+        5.525
+      ]
+    },
+    {
+      "Id": "kenney-cars-delivery",
+      "Bytes": 252672,
+      "OriginalSha256": "426a3e3a2c242c05c889b1445ba02ef95b2c8b7cd6f597e1275ef736a826014b",
+      "Vertices": 4530,
+      "Triangles": 2476,
+      "Primitives": 6,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        2.55,
+        2.805,
+        5.525
+      ]
+    },
+    {
+      "Id": "kenney-cars-firetruck",
+      "Bytes": 244860,
+      "OriginalSha256": "c0c0a22809316536468da7e9c7f57b8ec1a8e387ec3a1cde032976c6d8a6c7a4",
+      "Vertices": 4338,
+      "Triangles": 2767,
+      "Primitives": 6,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        2.55,
+        2.89,
+        5.78
+      ]
+    },
+    {
+      "Id": "kenney-cars-garbage-truck",
+      "Bytes": 280628,
+      "OriginalSha256": "6f2943e0ba4c6d86eb69a9243224259d6e0f169f474228439cda0579d49d3509",
+      "Vertices": 5003,
+      "Triangles": 3124,
+      "Primitives": 7,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        2.72,
+        2.72,
+        5.865
+      ]
+    },
+    {
+      "Id": "kenney-cars-hatchback-sports",
+      "Bytes": 210188,
+      "OriginalSha256": "bd5c9d4c3b4bdd254a66b8426563a68b1487ae7a5076df3a2488e6ffed7be64f",
+      "Vertices": 3709,
+      "Triangles": 2088,
+      "Primitives": 5,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        1.95,
+        1.65,
+        4.275
+      ]
+    },
+    {
+      "Id": "kenney-cars-police",
+      "Bytes": 207712,
+      "OriginalSha256": "a617b880594f56239b7ac4cf6fd4d74ebdae3ba6c5d842e77c76a5906eff352a",
+      "Vertices": 3606,
+      "Triangles": 2304,
+      "Primitives": 6,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        2.25,
+        1.95,
+        4.65
+      ]
+    },
+    {
+      "Id": "kenney-cars-race-future",
+      "Bytes": 185548,
+      "OriginalSha256": "869e2a58d2c12de474e824aff137334491b8f234b97127cf23f1ea04e42deec6",
+      "Vertices": 3198,
+      "Triangles": 2068,
+      "Primitives": 5,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        1.8,
+        1.24882,
+        3.98966
+      ]
+    },
+    {
+      "Id": "kenney-cars-race",
+      "Bytes": 179656,
+      "OriginalSha256": "e1408c4c6e135f5a39c5f34cbfbcac9ae21c5c491e793fdee74bccac8334d942",
+      "Vertices": 3090,
+      "Triangles": 1952,
+      "Primitives": 5,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        1.95,
+        1.09882,
+        3.83966
+      ]
+    },
+    {
+      "Id": "kenney-cars-sedan-sports",
+      "Bytes": 190056,
+      "OriginalSha256": "2889c428ca1dd9c975c3ff760eb8757883490410555ab60b818f712f583826d6",
+      "Vertices": 3268,
+      "Triangles": 2088,
+      "Primitives": 6,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        1.95,
+        1.65,
+        3.825
+      ]
+    },
+    {
+      "Id": "kenney-cars-sedan",
+      "Bytes": 184600,
+      "OriginalSha256": "b532ea7d2c59f7f6b22b138cf1955218a2c1898f1cea932af4d3fd563c3959b7",
+      "Vertices": 3184,
+      "Triangles": 2032,
+      "Primitives": 5,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        2.25,
+        1.95,
+        3.825
+      ]
+    },
+    {
+      "Id": "kenney-cars-suv-luxury",
+      "Bytes": 188296,
+      "OriginalSha256": "9e2a79dc050189d4555a88d2e9da0f30ff946ba74f1d43b5b3bda3c193d1f7d7",
+      "Vertices": 3254,
+      "Triangles": 2086,
+      "Primitives": 5,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        2.25,
+        1.95,
+        4.275
+      ]
+    },
+    {
+      "Id": "kenney-cars-suv",
+      "Bytes": 219948,
+      "OriginalSha256": "9df31f6e89e927a8176fc792aa125f0b19dc1ba29d2025bfef7c4f4d6ab1778a",
+      "Vertices": 3836,
+      "Triangles": 2474,
+      "Primitives": 6,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        2.25,
+        1.95,
+        4.05
+      ]
+    },
+    {
+      "Id": "kenney-cars-taxi",
+      "Bytes": 187996,
+      "OriginalSha256": "3803539718ffd3b84b515dbce8ed6b489f1ff5be58edb1903d2c5db5c584bdc7",
+      "Vertices": 3250,
+      "Triangles": 2072,
+      "Primitives": 5,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        2.25,
+        2.25,
+        4.125
+      ]
+    },
+    {
+      "Id": "kenney-cars-tractor-shovel",
+      "Bytes": 234964,
+      "OriginalSha256": "1bc67bcc36dc563baf7b5060e2a790f67a5a0b42fbdf17c18ab933fcc8a4aa53",
+      "Vertices": 4130,
+      "Triangles": 2646,
+      "Primitives": 6,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        2.82295,
+        2.57044,
+        4.1991
+      ]
+    },
+    {
+      "Id": "kenney-cars-tractor",
+      "Bytes": 188340,
+      "OriginalSha256": "48b30b3e4bb0adb48378c473dc27ee5ae4d9296ec758c85816f17121a3ce8371",
+      "Vertices": 3260,
+      "Triangles": 2044,
+      "Primitives": 5,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        2.28153,
+        2.72349,
+        3.74264
+      ]
+    },
+    {
+      "Id": "kenney-cars-truck-flat",
+      "Bytes": 219840,
+      "OriginalSha256": "4279862f2442e96c6603c514edf50bfb932707545695d8c4747611cd3796cf3b",
+      "Vertices": 3868,
+      "Triangles": 2488,
+      "Primitives": 5,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        2.25,
+        1.95,
+        4.11767
+      ]
+    },
+    {
+      "Id": "kenney-cars-truck",
+      "Bytes": 188744,
+      "OriginalSha256": "5e1bc66c343501dd7d5734b57e672dd949bf95d7abdce680c6508cef99d374f8",
+      "Vertices": 3264,
+      "Triangles": 2082,
+      "Primitives": 5,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        2.25,
+        1.95,
+        4.425
+      ]
+    },
+    {
+      "Id": "kenney-cars-van",
+      "Bytes": 188048,
+      "OriginalSha256": "ed4ed56e8e5ed98db050af09ed2062b3b6bb7b93eab1e563cb6774b387b233a1",
+      "Vertices": 3250,
+      "Triangles": 2082,
+      "Primitives": 5,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        2.25,
+        2.025,
+        4.125
+      ]
+    },
+    {
+      "Id": "kenney-cars-box",
+      "Bytes": 26532,
+      "OriginalSha256": "b773815c791d2708a2a70f1a9bb6d197d7211269ad96e273f9e364ea536c1b18",
+      "Vertices": 248,
+      "Triangles": 124,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        0.715,
+        0.715,
+        0.715
+      ]
+    },
+    {
+      "Id": "kenney-cars-cone",
+      "Bytes": 29120,
+      "OriginalSha256": "d6659fc365de47c5d056b14f3d3fb3e191d3a5b869c43171753621dcf14b76bd",
+      "Vertices": 288,
+      "Triangles": 172,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        0.47619,
+        0.59524,
+        0.47619
+      ]
+    },
+    {
+      "Id": "kenney-nature-bridge-stone",
+      "Bytes": 17708,
+      "OriginalSha256": "b8b311f525ad616fcdebb6463db8b0c7710af58eb45308b54c08bcb290a2315e",
+      "Vertices": 800,
+      "Triangles": 252,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        3.12,
+        1.2,
+        3.12
+      ]
+    },
+    {
+      "Id": "kenney-nature-bridge-stone-narrow",
+      "Bytes": 17724,
+      "OriginalSha256": "ea011dbaa2926013456c001ac93d24be07c2b1bed98fe5b24aae372f68c5ff24",
+      "Vertices": 800,
+      "Triangles": 252,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        3.12,
+        1.05,
+        2.52
+      ]
+    },
+    {
+      "Id": "kenney-nature-bridge-wood",
+      "Bytes": 15692,
+      "OriginalSha256": "3da4c208b0f72b7f2ba42db521b62ec4b0278050c75256a6982c40d21aab5701",
+      "Vertices": 1008,
+      "Triangles": 220,
+      "Primitives": 3,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        3.12,
+        1.2,
+        3.12
+      ]
+    },
+    {
+      "Id": "kenney-nature-bridge-wood-narrow",
+      "Bytes": 15708,
+      "OriginalSha256": "df46d1ba2ae557f3c69850c4faf03bcd16786fff305bce772f5b260e50def351",
+      "Vertices": 1008,
+      "Triangles": 220,
+      "Primitives": 3,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        3.12,
+        1.05,
+        2.52
+      ]
+    },
+    {
+      "Id": "kenney-nature-cactus-short",
+      "Bytes": 8844,
+      "OriginalSha256": "81ac9fc4c66eacceaf4aebcb6df3468ea450a2f5081151bb11400282efbc51bd",
+      "Vertices": 186,
+      "Triangles": 116,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.68332,
+        1.066,
+        0.59438
+      ]
+    },
+    {
+      "Id": "kenney-nature-cactus-tall",
+      "Bytes": 9668,
+      "OriginalSha256": "d43a1aca5952e1f8a104d64a0edfec09c39f15102ca6bdc531460dd5a2c53d25",
+      "Vertices": 210,
+      "Triangles": 122,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.7925,
+        1.5,
+        0.67816
+      ]
+    },
+    {
+      "Id": "kenney-nature-campfire-logs",
+      "Bytes": 9284,
+      "OriginalSha256": "98d87cdcf9095b94fd348d0946e911dd4ca6c0956bac3318cfd2b0030b86055a",
+      "Vertices": 376,
+      "Triangles": 112,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.5837,
+        0.1252,
+        0.5837
+      ]
+    },
+    {
+      "Id": "kenney-nature-campfire-stones",
+      "Bytes": 17344,
+      "OriginalSha256": "54869db23243a3f4905bc00bd4cd93b1037b28556ab3ef93e7a893a093791e35",
+      "Vertices": 396,
+      "Triangles": 264,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.08168,
+        0.1555,
+        1.03101
+      ]
+    },
+    {
+      "Id": "kenney-nature-canoe",
+      "Bytes": 15780,
+      "OriginalSha256": "ad9c7a315f55accbce8d1ee3dc853f919f01f97ab4e3096bb235d1815aed6941",
+      "Vertices": 720,
+      "Triangles": 200,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.9,
+        0.5475,
+        3.45
+      ]
+    },
+    {
+      "Id": "kenney-nature-canoe-paddle",
+      "Bytes": 3952,
+      "OriginalSha256": "7f8e0bc5beacfa1e4ae12f942ab045b1f7a13a04b497859f749bf7999b99d0bd",
+      "Vertices": 66,
+      "Triangles": 32,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.23016,
+        0.10831,
+        1.77058
+      ]
+    },
+    {
+      "Id": "kenney-nature-cliff-block-rock",
+      "Bytes": 2776,
+      "OriginalSha256": "2f31de8502288d6adcdae4d5605cfe65d4bcd4369dd0decd116c2615b9d3d01f",
+      "Vertices": 48,
+      "Triangles": 12,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        3.0,
+        3.0,
+        3.0
+      ]
+    },
+    {
+      "Id": "kenney-nature-cliff-block-slope-rock",
+      "Bytes": 6720,
+      "OriginalSha256": "82fe2e0477c7ce2c5994435f44074022cb2a36f56ff40bd34598cbfc87286885",
+      "Vertices": 248,
+      "Triangles": 70,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        3.6,
+        3.0,
+        3.0
+      ]
+    },
+    {
+      "Id": "kenney-nature-cliff-cave-rock",
+      "Bytes": 5480,
+      "OriginalSha256": "2d83296b0166ad0e980152ad4f45b4e45349e932a6b6c2adbe7eb606a6472d8d",
+      "Vertices": 102,
+      "Triangles": 64,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        3.0,
+        3.0,
+        0.5055
+      ]
+    },
+    {
+      "Id": "kenney-nature-cliff-corner-rock",
+      "Bytes": 2360,
+      "OriginalSha256": "4a22b80e18ac1798035867b7ff6e4d78161fa25b507112c903ad6f80765cf181",
+      "Vertices": 24,
+      "Triangles": 12,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.5055,
+        3.0,
+        0.5055
+      ]
+    },
+    {
+      "Id": "kenney-nature-cliff-top-rock",
+      "Bytes": 5312,
+      "OriginalSha256": "8c3b4d37fad0bacf39d0315a51850dfe9c55eea03de74854e3d92ce4157bbebb",
+      "Vertices": 174,
+      "Triangles": 53,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        3.0,
+        3.0,
+        0.8055
+      ]
+    },
+    {
+      "Id": "kenney-nature-crops-bamboo-stage-b",
+      "Bytes": 40144,
+      "OriginalSha256": "238c4cbeedf747dea96d579cf63301d35bb8709310f0405596c8f988dcc366e6",
+      "Vertices": 996,
+      "Triangles": 564,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.68019,
+        1.78,
+        0.61602
+      ]
+    },
+    {
+      "Id": "kenney-nature-crops-corn-stage-d",
+      "Bytes": 29316,
+      "OriginalSha256": "d90d9cbba85e99526b254adee638495f914480831ab41d00807378c004c112c3",
+      "Vertices": 928,
+      "Triangles": 300,
+      "Primitives": 9,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.88314,
+        2.5,
+        0.88314
+      ]
+    },
+    {
+      "Id": "kenney-nature-crops-wheat-stage-b",
+      "Bytes": 30040,
+      "OriginalSha256": "589db4d6fe0bd7616c1f1c2f10a335704b2dad5d24638dc08a5b2e5334c68852",
+      "Vertices": 1488,
+      "Triangles": 360,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.07922,
+        1.06987,
+        0.8934
+      ]
+    },
+    {
+      "Id": "kenney-nature-crop-carrot",
+      "Bytes": 12664,
+      "OriginalSha256": "2a3641c609dd837a4feebb4f5c95d4cd43c3046e800acd416f4f6a3b923ba9d8",
+      "Vertices": 560,
+      "Triangles": 148,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.68628,
+        1.23881,
+        0.68628
+      ]
+    },
+    {
+      "Id": "kenney-nature-crop-melon",
+      "Bytes": 13328,
+      "OriginalSha256": "4296c5fc07c4d0707ab11b9d97d2978132f4bf525a00ccd20e463fdcf04a5e5f",
+      "Vertices": 765,
+      "Triangles": 236,
+      "Primitives": 3,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.8352,
+        0.696,
+        0.7233
+      ]
+    },
+    {
+      "Id": "kenney-nature-crop-pumpkin",
+      "Bytes": 10840,
+      "OriginalSha256": "5b4878c5996033629419c26ac32153ce8ac06bbbdac98e4fa8a5cbab98f78077",
+      "Vertices": 468,
+      "Triangles": 120,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.88254,
+        0.66766,
+        0.90389
+      ]
+    },
+    {
+      "Id": "kenney-nature-fence-corner",
+      "Bytes": 8644,
+      "OriginalSha256": "f37060de68c5680e518183d44e7ac498e0bfe7b04f3fe71e355d8a4670ef83f1",
+      "Vertices": 336,
+      "Triangles": 116,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        2.5,
+        0.86257,
+        2.5
+      ]
+    },
+    {
+      "Id": "kenney-nature-fence-gate",
+      "Bytes": 27652,
+      "OriginalSha256": "34d10d5620179b8a211a01eea837caa828c0782422f0b408e1a5838788888436",
+      "Vertices": 1476,
+      "Triangles": 524,
+      "Primitives": 5,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        2.5,
+        0.86257,
+        0.175
+      ]
+    },
+    {
+      "Id": "kenney-nature-fence-planks",
+      "Bytes": 7720,
+      "OriginalSha256": "2db68f60d24443dbeab05dedd92fcc665d0e21bd261c6a668ea9022a732a06a9",
+      "Vertices": 160,
+      "Triangles": 96,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        2.5,
+        0.86257,
+        0.23975
+      ]
+    },
+    {
+      "Id": "kenney-nature-fence-simple",
+      "Bytes": 5712,
+      "OriginalSha256": "ecaf6c29532aa9fd305a8ef71df769d60748bd797f2eb1c63bdefc4edb8062a7",
+      "Vertices": 192,
+      "Triangles": 64,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        2.5,
+        0.86257,
+        0.175
+      ]
+    },
+    {
+      "Id": "kenney-nature-flower-purple-a",
+      "Bytes": 7112,
+      "OriginalSha256": "f6fc34c96a03420a74fe36d4c2d0ec88f15204fcad99cd1416c3c4ecb22e48c4",
+      "Vertices": 268,
+      "Triangles": 76,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.3182,
+        0.485,
+        0.36212
+      ]
+    },
+    {
+      "Id": "kenney-nature-flower-red-c",
+      "Bytes": 7600,
+      "OriginalSha256": "5a5c9c8572e8f56287ee1f5f836f98ac08e275f31325b4bc91d2832bc142ceb7",
+      "Vertices": 408,
+      "Triangles": 78,
+      "Primitives": 3,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.36119,
+        0.465,
+        0.36212
+      ]
+    },
+    {
+      "Id": "kenney-nature-flower-yellow-b",
+      "Bytes": 11256,
+      "OriginalSha256": "aaa8707779a5de59f881f80185bc507b35ec3fd5f23a39d6447ef61141dcd4f5",
+      "Vertices": 468,
+      "Triangles": 154,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.41467,
+        0.317,
+        0.47836
+      ]
+    },
+    {
+      "Id": "kenney-nature-grass",
+      "Bytes": 11496,
+      "OriginalSha256": "260e41d3e5f2472492ed7b475c5b92a30b13ce2bad408535b5ff50574d4575e7",
+      "Vertices": 264,
+      "Triangles": 132,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.76215,
+        0.508,
+        0.78437
+      ]
+    },
+    {
+      "Id": "kenney-nature-grass-large",
+      "Bytes": 18504,
+      "OriginalSha256": "af49a595624abca7249824eeefb944d4baf974abeeb5b16110d175da3563d6cd",
+      "Vertices": 448,
+      "Triangles": 224,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.818,
+        0.508,
+        0.81578
+      ]
+    },
+    {
+      "Id": "kenney-nature-grass-leafs",
+      "Bytes": 4608,
+      "OriginalSha256": "8bc4c0b17c2e64c34e1acbf7c4a2fd8c04cfcd7155328e61767887b2ced112c7",
+      "Vertices": 84,
+      "Triangles": 36,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.46897,
+        0.285,
+        0.51462
+      ]
+    },
+    {
+      "Id": "kenney-nature-ground-grass",
+      "Bytes": 1576,
+      "OriginalSha256": "da741e8ab34ca70c0c85ccda21538558a798188db2f1e265885bcdd226a5cca2",
+      "Vertices": 4,
+      "Triangles": 2,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        2.0,
+        0.0,
+        2.0
+      ]
+    },
+    {
+      "Id": "kenney-nature-ground-path-straight",
+      "Bytes": 5620,
+      "OriginalSha256": "86a1e88aaa028ccdfb98b6653c282c6aadb0fbccf9c4de00a834516b9bf79d37",
+      "Vertices": 240,
+      "Triangles": 62,
+      "Primitives": 3,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        2.0,
+        0.1,
+        2.0
+      ]
+    },
+    {
+      "Id": "kenney-nature-ground-path-corner",
+      "Bytes": 3532,
+      "OriginalSha256": "704324699e7151e72d4d06bb782fbc4017c418a1c0d562c5d9bdc96c95e9c081",
+      "Vertices": 90,
+      "Triangles": 22,
+      "Primitives": 3,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        2.0,
+        0.1,
+        2.0
+      ]
+    },
+    {
+      "Id": "kenney-nature-ground-path-cross",
+      "Bytes": 6404,
+      "OriginalSha256": "6638d277b1fa06912d7fe2617f25507c14dfa7a39b16211d73bf4ae6ca79bb2f",
+      "Vertices": 300,
+      "Triangles": 74,
+      "Primitives": 3,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        2.0,
+        0.1,
+        2.0
+      ]
+    },
+    {
+      "Id": "kenney-nature-ground-river-straight",
+      "Bytes": 6044,
+      "OriginalSha256": "d1061c7ab8d883fb26177e7cc36b2564b0a437620465c24f1a29629423cda096",
+      "Vertices": 320,
+      "Triangles": 62,
+      "Primitives": 4,
+      "Materials": 4,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        2.0,
+        0.1,
+        2.0
+      ]
+    },
+    {
+      "Id": "kenney-nature-ground-river-corner",
+      "Bytes": 4844,
+      "OriginalSha256": "e6e1eece775ad0fd23bc60fe5d7094a792bef53de71e68790afac692f511edb9",
+      "Vertices": 204,
+      "Triangles": 40,
+      "Primitives": 4,
+      "Materials": 4,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        2.0,
+        0.1,
+        2.0
+      ]
+    },
+    {
+      "Id": "kenney-nature-lily-large",
+      "Bytes": 8044,
+      "OriginalSha256": "c8f7080df0ae3166e9d33f523b66360c2ac7556dff36cc9c8ee78b6a676c7db2",
+      "Vertices": 438,
+      "Triangles": 86,
+      "Primitives": 3,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.54373,
+        0.196,
+        0.62784
+      ]
+    },
+    {
+      "Id": "kenney-nature-log",
+      "Bytes": 14288,
+      "OriginalSha256": "8c8fe8f6adfc03a3c0cd6cb24961ff74be96c2da284d70322f05797d049972d6",
+      "Vertices": 624,
+      "Triangles": 200,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.46792,
+        0.34641,
+        1.42
+      ]
+    },
+    {
+      "Id": "kenney-nature-log-stack",
+      "Bytes": 10896,
+      "OriginalSha256": "90eaae4a01ba1f25c2f0c6d83087e4a7a8fac684f2452615245333968d118d68",
+      "Vertices": 424,
+      "Triangles": 184,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.84943,
+        0.69282,
+        1.42
+      ]
+    },
+    {
+      "Id": "kenney-nature-mushroom-red",
+      "Bytes": 6364,
+      "OriginalSha256": "843e2de43dce78920a5675a67bac4b72f500e6220315e713fe08381642cfc571",
+      "Vertices": 244,
+      "Triangles": 48,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.34793,
+        0.4056,
+        0.40176
+      ]
+    },
+    {
+      "Id": "kenney-nature-path-stone",
+      "Bytes": 12392,
+      "OriginalSha256": "06f2eb4f914df4dd419b7fb33e81059bc0b1a5b941a193b7c9f8ffd8851146c5",
+      "Vertices": 792,
+      "Triangles": 136,
+      "Primitives": 3,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        2.5,
+        0.125,
+        1.44153
+      ]
+    },
+    {
+      "Id": "kenney-nature-path-wood",
+      "Bytes": 6448,
+      "OriginalSha256": "395f1d5972484f0ba96ef27446cc986b02245b1166c8681e566a3697f6a97688",
+      "Vertices": 240,
+      "Triangles": 60,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        2.5,
+        0.125,
+        1.28595
+      ]
+    },
+    {
+      "Id": "kenney-nature-plant-bush-detailed",
+      "Bytes": 10172,
+      "OriginalSha256": "2e0487020d68ccf664435db9d829c78ae00e6d2785ee3ec10b9f89cc70a10406",
+      "Vertices": 232,
+      "Triangles": 104,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.20509,
+        0.72082,
+        1.20509
+      ]
+    },
+    {
+      "Id": "kenney-nature-plant-bush-large",
+      "Bytes": 6436,
+      "OriginalSha256": "10e1d9fbf29d96d1d1a56fb2ce25ae66537505101759229afe01ae22c6c45e02",
+      "Vertices": 132,
+      "Triangles": 60,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.74862,
+        0.48587,
+        0.67138
+      ]
+    },
+    {
+      "Id": "kenney-nature-plant-bush-small",
+      "Bytes": 3212,
+      "OriginalSha256": "a9620a7d1fb165ae68d323676f80dbb2a9e3aafb21110d18d18d90b07026b91d",
+      "Vertices": 48,
+      "Triangles": 16,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.76595,
+        0.41458,
+        0.67268
+      ]
+    },
+    {
+      "Id": "kenney-nature-pot-large",
+      "Bytes": 6168,
+      "OriginalSha256": "57e60214bc6ab1dc3764c9ffe80091ff45f2bfd49fbc313c1b68dcaab1537aef",
+      "Vertices": 216,
+      "Triangles": 68,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.12719,
+        0.4,
+        0.97618
+      ]
+    },
+    {
+      "Id": "kenney-nature-pot-small",
+      "Bytes": 7004,
+      "OriginalSha256": "1141d9e16099c2103f1a177de0cae4ea979a3246439e33074923e4cfe3098df8",
+      "Vertices": 360,
+      "Triangles": 72,
+      "Primitives": 3,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.6469,
+        0.536,
+        0.56023
+      ]
+    },
+    {
+      "Id": "kenney-nature-rock-large-a",
+      "Bytes": 7552,
+      "OriginalSha256": "6dd15390fd96501dcd1454765a17ba61dbbd8d47705dfe5149c8dd92b353ce25",
+      "Vertices": 292,
+      "Triangles": 80,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.56981,
+        0.51955,
+        2.03092
+      ]
+    },
+    {
+      "Id": "kenney-nature-rock-large-b",
+      "Bytes": 8560,
+      "OriginalSha256": "caa8b025833d4dabf6d98fe2e96cf2fbd886693ac990df0db75f9d827194374b",
+      "Vertices": 489,
+      "Triangles": 85,
+      "Primitives": 3,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.53343,
+        0.86051,
+        2.03092
+      ]
+    },
+    {
+      "Id": "kenney-nature-rock-large-c",
+      "Bytes": 7004,
+      "OriginalSha256": "23aee8b727adeaf260207af3e0615dc69aa766c6d87de1d44cbc8c2711d74dd1",
+      "Vertices": 264,
+      "Triangles": 72,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        2.12882,
+        0.64222,
+        2.03132
+      ]
+    },
+    {
+      "Id": "kenney-nature-rock-small-a",
+      "Bytes": 3044,
+      "OriginalSha256": "df9fff9d711e61370e8df0caa2514c89b8f8a8dc6c6fafaf4eb2ec79c5ae07c1",
+      "Vertices": 60,
+      "Triangles": 16,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.7216,
+        0.38245,
+        0.7216
+      ]
+    },
+    {
+      "Id": "kenney-nature-rock-small-flat-a",
+      "Bytes": 3300,
+      "OriginalSha256": "40ceafacfaabb0f04f93688fd8696c1464c65512bef219e1459c1f238cbbbe21",
+      "Vertices": 72,
+      "Triangles": 20,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.99158,
+        0.12989,
+        0.85915
+      ]
+    },
+    {
+      "Id": "kenney-nature-rock-tall-a",
+      "Bytes": 12072,
+      "OriginalSha256": "88250f236a3b75f8b55c1d8afb6af020f8a91b1e81f9fb51f7ef513420d45a2d",
+      "Vertices": 762,
+      "Triangles": 136,
+      "Primitives": 3,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.96614,
+        1.99185,
+        1.36642
+      ]
+    },
+    {
+      "Id": "kenney-nature-rock-tall-f",
+      "Bytes": 5608,
+      "OriginalSha256": "823cecdfa45e9b23c608a4b3ade9e699e0dea0e0141dde4e757fe97ad5850c10",
+      "Vertices": 258,
+      "Triangles": 46,
+      "Primitives": 3,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.88739,
+        1.14734,
+        1.02467
+      ]
+    },
+    {
+      "Id": "kenney-nature-sign",
+      "Bytes": 5040,
+      "OriginalSha256": "c658c21672ecd63c5d3e53f06f875d68e6509edb1ab7e3b75374df7c61e7dd0c",
+      "Vertices": 210,
+      "Triangles": 44,
+      "Primitives": 3,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.6,
+        0.81754,
+        0.14
+      ]
+    },
+    {
+      "Id": "kenney-nature-statue-column",
+      "Bytes": 10472,
+      "OriginalSha256": "5d7f6c8bce8d1dc7ee62b1841376cda331c4359acfa2b9a11dd7e78c14ea9dbb",
+      "Vertices": 630,
+      "Triangles": 122,
+      "Primitives": 3,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.6,
+        2.0,
+        0.6
+      ]
+    },
+    {
+      "Id": "kenney-nature-statue-head",
+      "Bytes": 14704,
+      "OriginalSha256": "02a0c58e713176004f9054f6a6181b965e2cc25ff7c77f5d17458b00c270b60e",
+      "Vertices": 942,
+      "Triangles": 196,
+      "Primitives": 3,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.452,
+        2.0,
+        1.10884
+      ]
+    },
+    {
+      "Id": "kenney-nature-statue-obelisk",
+      "Bytes": 4416,
+      "OriginalSha256": "e18013044ad6453a1850226be29f63c37d67e0002141f5f6a4d14a46bde69e00",
+      "Vertices": 128,
+      "Triangles": 38,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.61404,
+        1.75079,
+        0.61404
+      ]
+    },
+    {
+      "Id": "kenney-nature-stump-round",
+      "Bytes": 5644,
+      "OriginalSha256": "e9b0f385f0ef98493ef716a055aa51e0b99efb8445279be7bb8bd83329a4c4af",
+      "Vertices": 192,
+      "Triangles": 56,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        0.64259,
+        0.413,
+        0.742
+      ]
+    },
+    {
+      "Id": "kenney-nature-tent-detailed-open",
+      "Bytes": 15324,
+      "OriginalSha256": "d54d9665d07e0ff9680e56731c9f5338fc25d93788504d63b8375f54e6444193",
+      "Vertices": 664,
+      "Triangles": 232,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        2.62478,
+        1.68339,
+        1.9992
+      ]
+    },
+    {
+      "Id": "kenney-nature-tent-small-closed",
+      "Bytes": 13200,
+      "OriginalSha256": "326bb7909d67a587149be7f048f39257daadc899d80b5f956090571881b096e0",
+      "Vertices": 976,
+      "Triangles": 220,
+      "Primitives": 4,
+      "Materials": 4,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.6428,
+        1.68339,
+        1.9092
+      ]
+    },
+    {
+      "Id": "kenney-nature-tree-blocks",
+      "Bytes": 10128,
+      "OriginalSha256": "cb74bda3024bbe396c01b3d5b381a93e6d7c73241079868c19ac420ad52e475c",
+      "Vertices": 416,
+      "Triangles": 132,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.8,
+        3.555,
+        1.8
+      ]
+    },
+    {
+      "Id": "kenney-nature-tree-cone",
+      "Bytes": 10924,
+      "OriginalSha256": "90be4d214ee2cbf79d317677cb87fc11dac9873b73e446b75e8c12825a374272",
+      "Vertices": 464,
+      "Triangles": 132,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.58899,
+        4.291,
+        1.58899
+      ]
+    },
+    {
+      "Id": "kenney-nature-tree-default",
+      "Bytes": 9428,
+      "OriginalSha256": "562d29638c902de3c7bee465d3a53bb77117efbc392ae04ed894faf6b5dc691d",
+      "Vertices": 384,
+      "Triangles": 114,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        2.265,
+        5.12366,
+        1.96155
+      ]
+    },
+    {
+      "Id": "kenney-nature-tree-detailed",
+      "Bytes": 31412,
+      "OriginalSha256": "c041daf2f0fb1d49e4325227cbcd58667adbe51e9b55e8c1f0a94b74cc521b3b",
+      "Vertices": 2274,
+      "Triangles": 402,
+      "Primitives": 3,
+      "Materials": 3,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        2.54135,
+        3.99725,
+        2.28481
+      ]
+    },
+    {
+      "Id": "kenney-nature-tree-oak",
+      "Bytes": 14644,
+      "OriginalSha256": "d7fd8773674928c50c11b66d12c636d49bdcc15a8b1c7fbb98e6f63a3439a3f3",
+      "Vertices": 648,
+      "Triangles": 196,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.92166,
+        3.67872,
+        2.21894
+      ]
+    },
+    {
+      "Id": "kenney-nature-tree-palm-bend",
+      "Bytes": 14820,
+      "OriginalSha256": "8af9dae16ce3c03183f9457996ebdd135167199514e8f4f944ee2bd82828d5c9",
+      "Vertices": 656,
+      "Triangles": 200,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        2.80647,
+        4.13973,
+        3.03829
+      ]
+    },
+    {
+      "Id": "kenney-nature-tree-palm-detailed-tall",
+      "Bytes": 28204,
+      "OriginalSha256": "2cbea0f9621cde884c63a7b4ad787bda1d051fa27ef3c66b9f2b65328dc53683",
+      "Vertices": 640,
+      "Triangles": 336,
+      "Primitives": 3,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        4.38829,
+        4.2704,
+        4.38829
+      ]
+    },
+    {
+      "Id": "kenney-nature-tree-palm-short",
+      "Bytes": 15596,
+      "OriginalSha256": "d2526ca31c144a238820aa5c0f6183c5b9cf37fd3cc037932e637cf7c473ba27",
+      "Vertices": 712,
+      "Triangles": 190,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        3.10299,
+        3.1687,
+        3.10299
+      ]
+    },
+    {
+      "Id": "kenney-nature-tree-pine-default-a",
+      "Bytes": 17220,
+      "OriginalSha256": "60d8f352fa3659ed275e06cbddfecf8f92c8effe2977c2f2d7b29b6c9b582e46",
+      "Vertices": 784,
+      "Triangles": 230,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.59588,
+        4.63751,
+        1.59588
+      ]
+    },
+    {
+      "Id": "kenney-nature-tree-pine-round-c",
+      "Bytes": 15332,
+      "OriginalSha256": "29080a4935bae6b4ab29066f22c99c58f88b23ce4e2f79b4dcbb5e76de73f69d",
+      "Vertices": 684,
+      "Triangles": 206,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.44115,
+        3.75856,
+        1.6641
+      ]
+    },
+    {
+      "Id": "kenney-nature-tree-pine-small-a",
+      "Bytes": 12820,
+      "OriginalSha256": "be1a438bbb2e157266c1fb093b775bff8ce3e29a4c8f04aaf9d44c7a4e1f1ff0",
+      "Vertices": 560,
+      "Triangles": 164,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.5,
+        2.9016,
+        1.5
+      ]
+    },
+    {
+      "Id": "kenney-nature-tree-pine-tall-a-detailed",
+      "Bytes": 10708,
+      "OriginalSha256": "9ba6337460e718b8baf165b23c02f39455e3d5757b1911505410c46bc88a86b5",
+      "Vertices": 448,
+      "Triangles": 134,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.15882,
+        4.58882,
+        1.17585
+      ]
+    },
+    {
+      "Id": "kenney-nature-tree-plateau",
+      "Bytes": 16304,
+      "OriginalSha256": "7f19e347ff28703dd9e5fcce89b920156e291fbdb19331a57cb31a95c73e1322",
+      "Vertices": 738,
+      "Triangles": 215,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.83522,
+        3.74802,
+        1.9647
+      ]
+    },
+    {
+      "Id": "kenney-nature-tree-small",
+      "Bytes": 6500,
+      "OriginalSha256": "d26c0eeed65cc681667f50042ef23ec72ce47ae3b39837bfeec170b05ba6ab6a",
+      "Vertices": 240,
+      "Triangles": 62,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.06391,
+        3.33011,
+        1.2285
+      ]
+    },
+    {
+      "Id": "kenney-nature-tree-tall",
+      "Bytes": 7000,
+      "OriginalSha256": "3515a8826044d91e84e011186c86878f62024a487a079b4e32c9ac2e71994411",
+      "Vertices": 264,
+      "Triangles": 72,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        1.19875,
+        5.06316,
+        1.3842
+      ]
+    },
+    {
+      "Id": "kenney-nature-tree-thin",
+      "Bytes": 17200,
+      "OriginalSha256": "f0f1f6861fe0446963d3be216cc628324f538bb0841bc9a8e14140313f64e2f3",
+      "Vertices": 784,
+      "Triangles": 228,
+      "Primitives": 2,
+      "Materials": 2,
+      "EmbeddedImages": 0,
+      "ScaledSizeMetres": [
+        2.04131,
+        4.47089,
+        1.84957
+      ]
+    },
+    {
+      "Id": "kenney-buildings-building-block",
+      "Bytes": 10436,
+      "OriginalSha256": "c289bc818d2b32fa0cce6cb4d75e162f759c2571b686206293fdc5a63571f65f",
+      "Vertices": 24,
+      "Triangles": 12,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        4.0,
+        2.5,
+        4.0
+      ]
+    },
+    {
+      "Id": "kenney-buildings-building-corner",
+      "Bytes": 10740,
+      "OriginalSha256": "2afe63d13e10f072ff4be782c5ef1a44a5cda2062959d1901fd9272308da2d79",
+      "Vertices": 30,
+      "Triangles": 16,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        4.0,
+        2.5,
+        4.0
+      ]
+    },
+    {
+      "Id": "kenney-buildings-building-door",
+      "Bytes": 11636,
+      "OriginalSha256": "a4f72c92f47e9a98896baedfdb95b5da97d5fd6e49ca56ccf9a79b39bd35b14d",
+      "Vertices": 48,
+      "Triangles": 28,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        4.0,
+        2.5,
+        4.0
+      ]
+    },
+    {
+      "Id": "kenney-buildings-building-door-window",
+      "Bytes": 12860,
+      "OriginalSha256": "90a8cf6f5bf30420ef2e4065589ca462c93d34ecb05ae006f40c614701334b8e",
+      "Vertices": 72,
+      "Triangles": 44,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        4.0,
+        2.5,
+        4.0
+      ]
+    },
+    {
+      "Id": "kenney-buildings-building-sample-house-a",
+      "Bytes": 35920,
+      "OriginalSha256": "28fae63b748ee8610174092c1d648a2b913a0c5f1ba07426656571766c69b415",
+      "Vertices": 512,
+      "Triangles": 312,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        4.38257,
+        4.575,
+        8.0
+      ]
+    },
+    {
+      "Id": "kenney-buildings-building-sample-house-b",
+      "Bytes": 41372,
+      "OriginalSha256": "6c00dc5fcd4552dbad0ef5850265a7741ed20b943929df0a9cd2bdef92e34228",
+      "Vertices": 620,
+      "Triangles": 374,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        4.36514,
+        7.925,
+        8.8
+      ]
+    },
+    {
+      "Id": "kenney-buildings-building-sample-house-c",
+      "Bytes": 39136,
+      "OriginalSha256": "66e3c287792b84559af4c1de4cd42ca7ca3230c0a4f0bade5a92c42a3ef31f95",
+      "Vertices": 580,
+      "Triangles": 322,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        8.0,
+        7.925,
+        8.8
+      ]
+    },
+    {
+      "Id": "kenney-buildings-building-sample-tower-a",
+      "Bytes": 42844,
+      "OriginalSha256": "e44adf48cbde19f84d579fbd492664e4b39e39f96cad234bbd6d5758f83f89a6",
+      "Vertices": 648,
+      "Triangles": 398,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        4.4,
+        10.0,
+        5.0
+      ]
+    },
+    {
+      "Id": "kenney-buildings-building-sample-tower-b",
+      "Bytes": 36492,
+      "OriginalSha256": "b7360904ab4a6e26098b4ae6f761a6a98022c851faf04ea7760a0ef11328c704",
+      "Vertices": 524,
+      "Triangles": 326,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        4.4,
+        7.55,
+        5.0
+      ]
+    },
+    {
+      "Id": "kenney-buildings-building-sample-tower-c",
+      "Bytes": 41552,
+      "OriginalSha256": "46c3f2133649fb92b5fb70768f8e409fb560797375be9453de8154d69e63b8f8",
+      "Vertices": 620,
+      "Triangles": 384,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        4.4,
+        12.55,
+        5.1
+      ]
+    },
+    {
+      "Id": "kenney-buildings-building-steps-narrow",
+      "Bytes": 15488,
+      "OriginalSha256": "bd1616dbb155bb26a5f6b34ab9563d944212dff9f631ce95d7f58f3a081ea83d",
+      "Vertices": 124,
+      "Triangles": 74,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        4.0,
+        3.35,
+        4.8
+      ]
+    },
+    {
+      "Id": "kenney-buildings-building-steps-wide",
+      "Bytes": 16096,
+      "OriginalSha256": "b3c10bce5ead461125744fbc45fec24a2d57b3351bee017208895f5713143fcf",
+      "Vertices": 136,
+      "Triangles": 82,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        4.0,
+        3.35,
+        4.8
+      ]
+    },
+    {
+      "Id": "kenney-buildings-building-window-awnings",
+      "Bytes": 18500,
+      "OriginalSha256": "04e5e97a6382342a0a7a534dd3ead72cc5794c77fd6565f5e28de3311630d22e",
+      "Vertices": 184,
+      "Triangles": 116,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        4.0,
+        2.5,
+        4.513
+      ]
+    },
+    {
+      "Id": "kenney-buildings-building-window-balcony",
+      "Bytes": 15100,
+      "OriginalSha256": "35287369925027795dabbe83600342518b708daedcf53f92a57bed1f863d3c19",
+      "Vertices": 116,
+      "Triangles": 72,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        4.0,
+        2.5,
+        4.6
+      ]
+    },
+    {
+      "Id": "kenney-buildings-building-window-door-window",
+      "Bytes": 14084,
+      "OriginalSha256": "68b0f43e02fc8ebaabf91a781354197f66b011b118f12bb19319078f5707f017",
+      "Vertices": 96,
+      "Triangles": 60,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        4.0,
+        2.5,
+        4.0
+      ]
+    },
+    {
+      "Id": "kenney-buildings-building-window-large",
+      "Bytes": 11660,
+      "OriginalSha256": "906b92fe14e4c44b8c5c83d465b581994949ba59df4823e72feed9886526ad20",
+      "Vertices": 48,
+      "Triangles": 28,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        4.0,
+        2.5,
+        4.0
+      ]
+    },
+    {
+      "Id": "kenney-buildings-building-window-sill",
+      "Bytes": 12668,
+      "OriginalSha256": "da467306683bb1c57a46ebb8a29be5cfc269d1bdd616fa2fd986f2dc9fa5856a",
+      "Vertices": 68,
+      "Triangles": 40,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        4.0,
+        2.5,
+        4.2
+      ]
+    },
+    {
+      "Id": "kenney-buildings-building-window-wide",
+      "Bytes": 11656,
+      "OriginalSha256": "4a4974404b5c7011445f8ab69d1f2772a7d6470e49acaee101c1dae7a6479f59",
+      "Vertices": 48,
+      "Triangles": 28,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        4.0,
+        2.5,
+        4.0
+      ]
+    },
+    {
+      "Id": "kenney-buildings-building-windows-round",
+      "Bytes": 14672,
+      "OriginalSha256": "06e60785f8ad6b562bac71c92a12adbdaa6fc25a1b80b590152bb71ea1ff2e64",
+      "Vertices": 108,
+      "Triangles": 68,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        4.0,
+        2.5,
+        4.0
+      ]
+    },
+    {
+      "Id": "kenney-buildings-building-windows",
+      "Bytes": 12848,
+      "OriginalSha256": "08a65ac609c1b81035d9d72f2bee022b4586b7952d20d53f888013d6161cb608",
+      "Vertices": 72,
+      "Triangles": 44,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        4.0,
+        2.5,
+        4.0
+      ]
+    },
+    {
+      "Id": "kenney-buildings-detail-ac-a",
+      "Bytes": 14144,
+      "OriginalSha256": "9301b6dd4a25a49225c375964b70280398d67ae33cf6a9733d4ded2fc965770d",
+      "Vertices": 96,
+      "Triangles": 60,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        0.96,
+        0.425,
+        0.96
+      ]
+    },
+    {
+      "Id": "kenney-buildings-door-brown",
+      "Bytes": 11660,
+      "OriginalSha256": "05d107b6443dd210c451ae176db2fb2cc0f1c1729259aea7fbd26e89b6d769e0",
+      "Vertices": 48,
+      "Triangles": 28,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        1.0,
+        2.0,
+        0.2
+      ]
+    },
+    {
+      "Id": "kenney-buildings-door-brown-glass",
+      "Bytes": 11660,
+      "OriginalSha256": "0aba787bb7c0d59a0d76b107226c0be2a534d501dd6483d91213c6e09ec57f95",
+      "Vertices": 48,
+      "Triangles": 28,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        1.0,
+        2.0,
+        0.2
+      ]
+    },
+    {
+      "Id": "kenney-buildings-door-white-window",
+      "Bytes": 11680,
+      "OriginalSha256": "dc465c78d70faac302bfba0b52a1289aa89b9a7ba78c96770b86c53e92a82b41",
+      "Vertices": 48,
+      "Triangles": 28,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        1.0,
+        2.0,
+        0.2
+      ]
+    },
+    {
+      "Id": "kenney-buildings-roof-flat-center",
+      "Bytes": 10456,
+      "OriginalSha256": "e785aa9eec03c3720e97dd9046b2c567600dca1ab588c118e4f5ef138dc2d889",
+      "Vertices": 24,
+      "Triangles": 12,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        4.0,
+        0.425,
+        4.0
+      ]
+    },
+    {
+      "Id": "kenney-buildings-roof-flat-corner",
+      "Bytes": 10756,
+      "OriginalSha256": "92e74059d5c729992a7246a9fb6cd140af31e63a3a8471a60575c3b1f4c0c8e4",
+      "Vertices": 30,
+      "Triangles": 16,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        4.0,
+        0.425,
+        4.0
+      ]
+    },
+    {
+      "Id": "kenney-buildings-roof-flat-border-straight",
+      "Bytes": 11684,
+      "OriginalSha256": "4360bb7e57ca38b405e51c7016941ec145b83d471a3b60435b6e8ce293dc3fae",
+      "Vertices": 48,
+      "Triangles": 28,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        4.0,
+        0.85,
+        4.0
+      ]
+    },
+    {
+      "Id": "kenney-buildings-roof-gable",
+      "Bytes": 11208,
+      "OriginalSha256": "46c82911f18f6f6c65a5f814538626477321fc97c9eaf2d4549628c890f87dde",
+      "Vertices": 38,
+      "Triangles": 20,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        4.36514,
+        2.075,
+        4.0
+      ]
+    },
+    {
+      "Id": "kenney-buildings-roof-gable-end",
+      "Bytes": 11032,
+      "OriginalSha256": "b68db641f6bf36e9ced4fe00e92dc711e6b3edbc9cb85881f918a6af66ef8a28",
+      "Vertices": 34,
+      "Triangles": 16,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        4.36514,
+        2.075,
+        4.0
+      ]
+    },
+    {
+      "Id": "kenney-buildings-roof-slanted",
+      "Bytes": 11692,
+      "OriginalSha256": "18a4bc25e2e411ed7236ae8000eb211194b59e04f6823b3f41f0a2f891610ccc",
+      "Vertices": 48,
+      "Triangles": 28,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        4.0,
+        3.12816,
+        4.55671
+      ]
+    },
+    {
+      "Id": "kenney-buildings-roof-slanted-corner-a",
+      "Bytes": 12272,
+      "OriginalSha256": "8aef6d4ee6dc6c8c9e5d9f631f99184d48185cc3dc02fb40841730b94f489b80",
+      "Vertices": 58,
+      "Triangles": 32,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        4.55671,
+        3.12816,
+        4.55671
+      ]
+    },
+    {
+      "Id": "kenney-buildings-roof-slanted-window",
+      "Bytes": 16664,
+      "OriginalSha256": "53c02f27ad166d96ca93cac0e61e52f9305290f2d14a9a87ad4803ea01a4386c",
+      "Vertices": 148,
+      "Triangles": 80,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        4.0,
+        3.12816,
+        4.55671
+      ]
+    },
+    {
+      "Id": "kenney-buildings-window-brown",
+      "Bytes": 14908,
+      "OriginalSha256": "d0f6de0dae3e8e66c981fa89f970242562ded3e150599286b140ec5e8a5f75bd",
+      "Vertices": 112,
+      "Triangles": 80,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        1.25,
+        1.52,
+        0.2
+      ]
+    },
+    {
+      "Id": "kenney-buildings-window-brown-large",
+      "Bytes": 12092,
+      "OriginalSha256": "67aa7208b5f237bfe80ecabd52f7076347e2d8f2ad17bed6b0900d3934acf9cf",
+      "Vertices": 56,
+      "Triangles": 40,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        1.5,
+        2.0,
+        0.2
+      ]
+    },
+    {
+      "Id": "kenney-buildings-window-brown-round-wide",
+      "Bytes": 13520,
+      "OriginalSha256": "eccb7b9e4fb1a4113eae9b2a67b2e8172d0f9eb60731b74ed32709d654f1d6d7",
+      "Vertices": 84,
+      "Triangles": 56,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        1.25,
+        1.865,
+        0.2
+      ]
+    },
+    {
+      "Id": "kenney-buildings-window-brown-tall",
+      "Bytes": 14908,
+      "OriginalSha256": "57435424a52d092346b3428712727bbff23101f83cb47c7942adadf8ab722b11",
+      "Vertices": 112,
+      "Triangles": 80,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        1.25,
+        2.0,
+        0.2
+      ]
+    },
+    {
+      "Id": "kenney-buildings-window-white-detailed",
+      "Bytes": 11908,
+      "OriginalSha256": "0669529ff365456d090dbb524947486c7c85f1a152134d4ff2f5e0eae849eac5",
+      "Vertices": 52,
+      "Triangles": 34,
+      "Primitives": 1,
+      "Materials": 1,
+      "EmbeddedImages": 1,
+      "ScaledSizeMetres": [
+        1.25,
+        1.52,
+        0.2
+      ]
+    }
+  ]
+}

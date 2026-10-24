@@ -61,10 +61,17 @@ public partial class PrevisApp : Control
     {
         TranslationServer.SetLocale("en");
         var window=GetWindow();float dpiScale=Math.Clamp(Math.Max(DisplayServer.ScreenGetScale(),DisplayServer.ScreenGetDpi()/96f),1,2.5f);window.ContentScaleMode=Window.ContentScaleModeEnum.CanvasItems;window.ContentScaleSize=Vector2I.Zero;window.ContentScaleFactor=dpiScale;
-        DisplayServer.WindowSetTitle("Previs 0.3.1 — Film shot planning");
+        DisplayServer.WindowSetTitle("Previs 0.4.0 — Film shot planning");
         BuildTheme(); BuildUi(); BuildWorld(); StarterScene();
-        if (OS.GetCmdlineUserArgs().Contains("--smoke-test")) _ = RunSmokeChecks();
+        if (OS.GetCmdlineUserArgs().Contains("--content-test")) _ = RunContentChecksAndQuit();
+        else if (OS.GetCmdlineUserArgs().Contains("--smoke-test")) _ = RunSmokeChecks();
         else {var open=OS.GetCmdlineUserArgs().FirstOrDefault(a=>a.StartsWith("--open=",StringComparison.Ordinal));if(open!=null){try{LoadProjectFromPath(open[7..]);if(_selected?.Data.Path.Points.Count>0)ShowInspectorSection("Path");}catch(Exception ex){Error(ex.Message);}}}
+    }
+
+    async Task RunContentChecksAndQuit()
+    {
+        try{await RunContentLibraryChecks();GetTree().Quit(0);}
+        catch(Exception ex){GD.PushError("CONTENT_LIBRARY_FAILED "+ex);GetTree().Quit(1);}
     }
 
     void BuildTheme()
@@ -200,31 +207,8 @@ public partial class PrevisApp : Control
             else foreach (string preset in new[] { "Static", "Dolly in", "Truck right", "Crane up", "Orbit" }) { string p = preset; _library.AddChild(Button(p, () => { PushUndo(); _shot.SetPreset(p, _duration);SyncCameraFromRig(_cameras.First(c=>c.Rig==_shot));SetTime(0);SelectCamera(_cameras.First(c=>c.Rig==_shot)); Status(p + " camera move applied."); })); }
             _library.AddChild(Button("Add camera key", CaptureCameraKey)); _library.AddChild(Button("Clear camera keys",ClearCameraAnimation)); return;
         }
-        if (category == "Motions")
-        {
-            var notice = Text("Append BVH clips to the selected actor. Drag clips to move; drag their right edge to trim. Overlap clips to blend.", 12, true); notice.AutowrapMode = TextServer.AutowrapMode.WordSmart; _library.AddChild(notice);
-            _library.AddChild(Button("Append BVH clip…", ImportMotion));
-            _library.AddChild(Button("Synthetic walk / gesture", () => ApplySample("res://samples/synthetic-walk-gesture.bvh")));
-            string realSample = SamplePath("samples/real/CMU_02_01_Walk.bvh");
-            if (File.Exists(realSample)) _library.AddChild(Button("CMU · Captured walk", () => ApplySample(realSample)));
-            return;
-        }
-        if (category == "Scene") { _library.AddChild(Text("Select an object below.\nDrag with Move.\nF frames the selection.\nCtrl+D duplicates.\nDelete removes it.", 12, true)); return; }
-        var kinds = category switch { "People" => new[] { "actor" }, "Animals" => new[] { "fox_actor" }, "Props" => new[] { "table", "chair", "car", "box", "sphere", "cylinder","dog" }, _ => new[] { "wall", "floor", "tree", "box" } };
-        var cards = new GridContainer { Columns = 2, SizeFlagsHorizontal = SizeFlags.ExpandFill }; _library.AddChild(cards);
-        foreach (string kind in kinds)
-        {
-            string k = kind; var card = new LibraryCard{Kind="asset",Id=k,Caption=k=="fox_actor"?"Fox":k=="actor"?"Human actor":PropFactory.DisplayName(k),CustomMinimumSize=new Vector2(94,118),SizeFlagsHorizontal=SizeFlags.ExpandFill};card.Pressed+=()=>{try{DropAsset(k,Vector3.Zero);}catch(Exception ex){Error(ex.Message);}};
-            var content = new VBoxContainer { MouseFilter = MouseFilterEnum.Ignore }; content.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect); content.OffsetLeft = 4; content.OffsetTop = 4; content.OffsetRight = -4; content.OffsetBottom = -4; card.AddChild(content);
-            var thumb = new SubViewport { Size = new Vector2I(176, 144), OwnWorld3D = true, TransparentBg = false, RenderTargetUpdateMode = SubViewport.UpdateMode.Once }; card.AddChild(thumb);
-            var thumbWorld = new Node3D(); thumb.AddChild(thumbWorld);
-            thumbWorld.AddChild(new WorldEnvironment { Environment=StudioLighting.CreateEnvironment() });
-            Node3D model;if(kind=="fox_actor"){var document=new GltfDocument();var state=new GltfState();document.AppendFromFile(MotionCatalog.MaterializeSource(MotionCatalog.Find("fox-walk")!),state);model=(Node3D)document.GenerateScene(state);model.Scale=Vector3.One*MotionCatalog.FoxModelScale;}else model=kind == "actor" ? new RiggedActor() : PropFactory.Create(kind);thumbWorld.AddChild(model);
-            Aabb bounds = kind == "actor" ? new Aabb(new Vector3(-.5f, 0, -.3f), new Vector3(1, 1.8f, .6f)) : PropFactory.CalculateBounds(model);
-            var camera = new Camera3D { Current = true, Fov = 40 }; thumbWorld.AddChild(camera); var target = bounds.GetCenter(); float radius = Math.Max(1.2f, bounds.Size.Length() * 1.15f); var cameraPosition = target + new Vector3(radius * .7f, radius * .5f, radius); camera.Transform = Transform3D.Identity.LookingAt(target - cameraPosition, Vector3.Up); camera.Position = cameraPosition;
-            content.AddChild(new TextureRect { Texture = thumb.GetTexture(), CustomMinimumSize = new Vector2(84, 78), ExpandMode = TextureRect.ExpandModeEnum.IgnoreSize, StretchMode = TextureRect.StretchModeEnum.KeepAspectCentered, MouseFilter = MouseFilterEnum.Ignore, SizeFlagsVertical = SizeFlags.ExpandFill });
-            var title = Text(kind=="fox_actor"?"Fox · animated":kind == "actor" ? "Human actor" : PropFactory.DisplayName(kind), 11); title.HorizontalAlignment = HorizontalAlignment.Center; title.AutowrapMode = TextServer.AutowrapMode.WordSmart; title.MouseFilter = MouseFilterEnum.Ignore; content.AddChild(title); cards.AddChild(card);
-        }
+        if (category == "Scene") { _library.AddChild(Text("Select an object below.\nDrag with Move.\nF frames the selection.\nK keys the transform.", 12, true)); return; }
+        BuildModelLibrary(category);
     }
 
     void Select(Entry? entry)
@@ -296,11 +280,17 @@ public partial class PrevisApp : Control
         var result = document.AppendFromFile(path, state); if (result != Godot.Error.Ok) throw new InvalidDataException("The model could not be imported: " + result);
         var model = document.GenerateScene(state) ?? throw new InvalidDataException("No scene was found in the model.");
         var root = new Node3D(); root.SetMeta("entry_id", data.Id); _world.AddChild(root); root.AddChild(model);
-        if(data.ActorFamily=="fox"&&model is Node3D model3d)model3d.Scale*=MotionCatalog.FoxModelScale;
+        if(model is Node3D model3d)
+        {
+            float units=data.LibraryModelId==null&&data.ActorFamily=="fox"?MotionCatalog.FoxModelScale:data.ModelUnitScale;
+            if(!float.IsFinite(units)||units<=0)throw new InvalidDataException("The model unit scale is invalid.");
+            model3d.Scale*=units;
+            if(data.ModelGrounded){var bounds=PropFactory.CalculateBounds(root);model3d.Position-=Vector3.Up*bounds.Position.Y;}
+        }
         foreach (var mesh in Descendants(model).OfType<MeshInstance3D>()) if (mesh.Mesh != null) { mesh.CreateTrimeshCollision(); foreach (Node child in mesh.GetChildren()) if (child is StaticBody3D body) body.SetMeta("scene_root", root); }
         var player = Descendants(model).OfType<AnimationPlayer>().FirstOrDefault(); string animation = data.ModelAnimation != null && player?.HasAnimation(data.ModelAnimation)==true ? data.ModelAnimation : player?.GetAnimationList().FirstOrDefault(a => a != "RESET") ?? "";
         if (player != null && animation != "") { player.Set("callback_mode_process", 2); player.Play(animation); }
-        var entry = new Entry { Data = data, Node = root, Player = player, Animation = animation,NativeTrack=player!=null?new NativeMotionTrack(model,player):null }; _entries.Add(entry);return entry;
+        var entry = new Entry { Data = data, Node = root, Player = player, Animation = animation,NativeTrack=player!=null&&Descendants(model).OfType<Skeleton3D>().Any(s=>s.GetBoneCount()>0)?new NativeMotionTrack(model,player):null }; _entries.Add(entry);return entry;
     }
     static IEnumerable<Node> Descendants(Node root) { yield return root; foreach (Node child in root.GetChildren()) foreach (Node nested in Descendants(child)) yield return nested; }
 
@@ -420,12 +410,12 @@ public partial class PrevisApp : Control
         foreach(var clip in copy.MotionClips)if(!Path.IsPathRooted(clip.MotionPath))clip.MotionPath=Path.GetFullPath(Path.Combine(baseDirectory,clip.MotionPath));
         Entry e = copy.Kind == "imported" ? ImportModelData(copy) : AddObject(copy.Kind, Vector(copy.Position), copy.Name);
         e.Data = copy;if(e.Node is RiggedActor&&copy.ActorFamily=="")copy.ActorFamily="human"; e.Node.SetMeta("entry_id", copy.Id); e.Node.Position = Vector(copy.Position); e.Node.RotationDegrees = Vector(copy.Rotation); e.Node.Scale = Vector(copy.Scale, Vector3.One);
-        if(e.Node is RiggedActor){if(copy.MotionClips.Count>0)RebuildTrack(e);else if(!string.IsNullOrEmpty(copy.MotionPath)){string? label=copy.MotionName;LoadMotion(e,copy.MotionPath,copy.SourceScale);var clip=copy.MotionClips[0];clip.Speed=copy.Speed;clip.Loop=copy.Loop;clip.InPlace=copy.InPlace;clip.Duration/=Math.Max(.1,copy.Speed);if(!string.IsNullOrEmpty(label))clip.Name=copy.MotionName=label;RebuildTrack(e);}}else if(e.NativeTrack!=null){if(copy.MotionClips.Count>0)RebuildTrack(e);else if(_loadingVersion<3)InitializeNativeClip(e);else e.NativeTrack.SetClips(Array.Empty<MotionClipData>());}RefreshObjects();RefreshTimelineSize();return e;
+        if(e.Node is RiggedActor human){ApplyHumanAppearance(human,copy.LibraryModelId);if(copy.MotionClips.Count>0)RebuildTrack(e);else if(!string.IsNullOrEmpty(copy.MotionPath)){string? label=copy.MotionName;LoadMotion(e,copy.MotionPath,copy.SourceScale);var clip=copy.MotionClips[0];clip.Speed=copy.Speed;clip.Loop=copy.Loop;clip.InPlace=copy.InPlace;clip.Duration/=Math.Max(.1,copy.Speed);if(!string.IsNullOrEmpty(label))clip.Name=copy.MotionName=label;RebuildTrack(e);}}else if(e.NativeTrack!=null){if(copy.MotionClips.Count>0)RebuildTrack(e);else if(_loadingVersion<3)InitializeNativeClip(e);else e.NativeTrack.SetClips(Array.Empty<MotionClipData>());}RefreshObjects();RefreshTimelineSize();return e;
     }
     void Restore(ProjectData data, string baseDirectory)
     {
         if ((data.Version <1||data.Version>3) || data.Objects.Count > 500 || data.CameraKeys.Count > 10000||data.Cameras.Count>100) throw new InvalidDataException("Unsupported project version or project size.");
-        _loadingVersion=data.Version;ClearObjects(); _fps = Math.Clamp(data.Fps, 1, 120); _duration = Math.Clamp(data.Duration, 1, 120); _scrub.MaxValue = _duration; _scrub.Step = 1.0 / _fps; _refreshing=true;_durationField.Value=_duration;for(int i=0;i<_fpsChoice.ItemCount;i++)if(_fpsChoice.GetItemId(i)==_fps)_fpsChoice.Select(i);_refreshing=false;
+        _loadingVersion=data.Version;ClearObjects(); _fps = Math.Clamp(data.Fps, 1, 120); _duration = Math.Clamp(data.Duration, 1, MaxSceneDuration); _scrub.MaxValue = _duration; _scrub.Step = 1.0 / _fps; _refreshing=true;_durationField.Value=_duration;for(int i=0;i<_fpsChoice.ItemCount;i++)if(_fpsChoice.GetItemId(i)==_fps)_fpsChoice.Select(i);_refreshing=false;
         foreach (var obj in data.Objects) RestoreObject(obj, baseDirectory);
         ClearCameras();if(data.Cameras.Count>0){foreach(var camera in data.Cameras)CreateCamera(camera.Name,camera,false);SetActiveCamera(data.Cameras.Any(c=>c.Id==data.ActiveCameraId)?data.ActiveCameraId:data.Cameras[0].Id);}else{var legacy=new CameraTrackData{Name="Camera A",Position=data.ShotPosition.Length==3?data.ShotPosition:new float[]{6,3,7},Rotation=data.ShotRotation,FocalLength=data.FocalLength,Keys=data.CameraKeys};CreateCamera("Camera A",legacy,true);}
         _lighting.DirectionalEnabled=data.DirectionalLightEnabled;RefreshCameraChoices();RefreshTimelineSize();
@@ -465,7 +455,7 @@ public partial class PrevisApp : Control
         if (!path.EndsWith(".png",StringComparison.OrdinalIgnoreCase))path+=".png";
         var view = new SubViewport { Size = new Vector2I(1920,1080), World3D = _sceneViewport.World3D, RenderTargetUpdateMode = SubViewport.UpdateMode.Once, Msaa3D = Viewport.Msaa.Msaa4X };
         AddChild(view); var camera = new Camera3D { Current=true,CullMask=1,Near=.05f,Far=500,KeepAspect=Camera3D.KeepAspectEnum.Width,Fov=_shot.ShotCamera.Fov };view.AddChild(camera);camera.GlobalTransform=_shot.ShotCamera.GlobalTransform;
-        try { for(int i=0;i<2;i++)await ToSignal(GetTree(),SceneTree.SignalName.ProcessFrame);await ToSignal(RenderingServer.Singleton,RenderingServer.SignalName.FramePostDraw);var image=view.GetTexture().GetImage();var error=image.SavePng(path);if(error!=Godot.Error.Ok)throw new IOException("The frame could not be saved: "+error); File.WriteAllText(Path.ChangeExtension(path,".json"),JsonSerializer.Serialize(new {application="Previs",version="0.3.1",frame=(int)Math.Round(_time*_fps),timeSeconds=_time,fps=_fps,width=1920,height=1080,activeCameraId=ActiveCameraId,camera=Snapshot()},_json)); }
+        try { for(int i=0;i<2;i++)await ToSignal(GetTree(),SceneTree.SignalName.ProcessFrame);await ToSignal(RenderingServer.Singleton,RenderingServer.SignalName.FramePostDraw);var image=view.GetTexture().GetImage();var error=image.SavePng(path);if(error!=Godot.Error.Ok)throw new IOException("The frame could not be saved: "+error); File.WriteAllText(Path.ChangeExtension(path,".json"),JsonSerializer.Serialize(new {application="Previs",version="0.4.0",frame=(int)Math.Round(_time*_fps),timeSeconds=_time,fps=_fps,width=1920,height=1080,activeCameraId=ActiveCameraId,camera=Snapshot()},_json)); }
         finally { view.QueueFree(); }
     }
 

@@ -2,3 +2,6 @@
 # Preserve upstream capture and licence bytes, including their original spacing.
 samples/real/*.bvh -text -whitespace
 LICENSES/* -text -whitespace
+assets/content/**/*.bvh -text -whitespace
+assets/content/**/*.txt -text -whitespace
+assets/content/**/*.bytes binary

@@ -18,6 +18,12 @@ public sealed record LibraryMotion
     public double Duration { get; init; }
     public string Attribution { get; init; } = "";
     public string Description { get; init; } = "";
+    public string Category { get; init; } = "Other";
+    public string[] Tags { get; init; } = Array.Empty<string>();
+    public string License { get; init; } = "";
+    public string SourceUrl { get; init; } = "";
+    public double SourceOffset { get; init; }
+    public bool Loop { get; init; } = true;
 }
 
 public static class MotionCatalog
@@ -26,29 +32,27 @@ public static class MotionCatalog
     public const string FoxBytesPath = "res://assets/library/fox.glb.bytes";
     public const float FoxModelScale = .01f;
 
-    public static IReadOnlyList<LibraryMotion> All { get; } = new LibraryMotion[]
+    public static IReadOnlyList<LibraryMotion> All { get; } = LoadMotions();
+
+    private static IReadOnlyList<LibraryMotion> LoadMotions()
     {
-        new() { Id="human-walk-gesture", Name="Walk & gesture", ActorFamily="human", SourcePath="res://samples/synthetic-walk-gesture.bvh", SourceScale=.01f, Duration=4, Attribution="Previs original synthetic test motion", Description="Prepared human · walk and arm gesture" },
-        new() { Id="human-cmu-walk", Name="Captured walk", ActorFamily="human", SourcePath="res://samples/real/CMU_02_01_Walk.bvh", SourceScale=.055f, Duration=344*.0083333, Attribution="CMU Graphics Lab · Bruce Hahne conversion", Description="Prepared human · recorded walking" },
-        new() { Id="fox-walk", Name="Fox · Walk", ActorFamily="fox", SourcePath=FoxModelPath, SourceAnimation="Walk", Duration=.7083333134651184, Attribution="PixelMannen · tomkranis · AsoboStudio / scurest", Description="Fox rig · walking cycle" },
-        new() { Id="fox-run", Name="Fox · Run", ActorFamily="fox", SourcePath=FoxModelPath, SourceAnimation="Run", Duration=1.1583333015441895, Attribution="PixelMannen · tomkranis · AsoboStudio / scurest", Description="Fox rig · running cycle" },
-        new() { Id="fox-survey", Name="Fox · Look around", ActorFamily="fox", SourcePath=FoxModelPath, SourceAnimation="Survey", Duration=3.4166667461395264, Attribution="PixelMannen · tomkranis · AsoboStudio / scurest", Description="Fox rig · alert looking-around action" }
-    };
+        var motions = new List<LibraryMotion>
+        {
+            new() { Id="human-walk-gesture", Name="Walk & gesture", ActorFamily="human", SourcePath="res://samples/synthetic-walk-gesture.bvh", SourceScale=.01f, Duration=4, Attribution="Previs original synthetic test motion", Description="Prepared human · walk and arm gesture", Category="Locomotion", Tags=new[]{"human","synthetic","walk","gesture"}, License="Previs project asset" },
+            new() { Id="human-cmu-walk", Name="Captured walk", ActorFamily="human", SourcePath="res://samples/real/CMU_02_01_Walk.bvh", SourceScale=.055f, SourceOffset=.0083333, Duration=342*.0083333, Loop=false, Attribution="CMU Graphics Lab · Bruce Hahne conversion", Description="Prepared human · recorded walking", Category="Locomotion", Tags=new[]{"human","mocap","walk","recorded","cmu"}, License="CMU", SourceUrl="https://mocap.cs.cmu.edu/" },
+            new() { Id="fox-walk", Name="Fox (classic) · Walk", ActorFamily="fox", SourcePath=FoxModelPath, SourceAnimation="Walk", Duration=.7083333134651184, Attribution="PixelMannen · tomkranis · AsoboStudio / scurest", Description="Fox rig · walking cycle", Category="Locomotion", Tags=new[]{"animal","fox","walk","authored"}, License="CC0-1.0 / CC-BY-4.0", SourceUrl="https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/Fox" },
+            new() { Id="fox-run", Name="Fox (classic) · Run", ActorFamily="fox", SourcePath=FoxModelPath, SourceAnimation="Run", Duration=1.1583333015441895, Attribution="PixelMannen · tomkranis · AsoboStudio / scurest", Description="Fox rig · running cycle", Category="Locomotion", Tags=new[]{"animal","fox","run","authored"}, License="CC0-1.0 / CC-BY-4.0", SourceUrl="https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/Fox" },
+            new() { Id="fox-survey", Name="Fox (classic) · Look around", ActorFamily="fox", SourcePath=FoxModelPath, SourceAnimation="Survey", Duration=3.4166667461395264, Attribution="PixelMannen · tomkranis · AsoboStudio / scurest", Description="Fox rig · alert looking-around action", Category="Idle", Tags=new[]{"animal","fox","look","authored"}, License="CC0-1.0 / CC-BY-4.0", SourceUrl="https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/Fox" }
+        };
+        motions.AddRange(ContentCatalog.ReadManifest<LibraryMotion>("res://assets/content/manifests/human-motions.json"));
+        motions.AddRange(ContentCatalog.ReadManifest<LibraryMotion>("res://assets/content/manifests/animal-motions.json"));
+        ContentCatalog.ValidateUniqueIds(motions.Select(motion => motion.Id), "motion");
+        return motions.AsReadOnly();
+    }
 
     public static LibraryMotion? Find(string id) => All.FirstOrDefault(motion => motion.Id.Equals(id, StringComparison.Ordinal));
     public static IEnumerable<LibraryMotion> ForFamily(string family) => All.Where(motion => motion.ActorFamily.Equals(family, StringComparison.Ordinal));
 
     /// <summary>Returns a real file path suitable for runtime import and portable project asset copies.</summary>
-    public static string MaterializeSource(LibraryMotion motion)
-    {
-        string path=motion.SourcePath;
-        if(!path.StartsWith("res://",StringComparison.Ordinal))return Path.GetFullPath(path);
-        string physical=ProjectSettings.GlobalizePath(path);if(File.Exists(physical))return physical;
-        // glTF import remapping must not replace the original bytes used by runtime import.
-        string raw=path==FoxModelPath?FoxBytesPath:path;
-        if(!Godot.FileAccess.FileExists(raw))throw new FileNotFoundException("The bundled motion source is missing: "+motion.Name,raw);
-        byte[] bytes=Godot.FileAccess.GetFileAsBytes(raw);if(bytes.Length==0)throw new IOException("The bundled motion source is empty: "+motion.Name);
-        string directory=ProjectSettings.GlobalizePath("user://library/"+motion.Id);Directory.CreateDirectory(directory);
-        string destination=Path.Combine(directory,Path.GetFileName(path));File.WriteAllBytes(destination,bytes);return destination;
-    }
+    public static string MaterializeSource(LibraryMotion motion) => ContentCatalog.MaterializeSource(motion.Id, motion.SourcePath);
 }

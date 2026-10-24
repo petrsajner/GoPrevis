@@ -1,8 +1,8 @@
-# Previs 0.3.1 validation
+# Previs 0.4.0 validation
 
 Validation date: **2026-10-24**. Development/verified platform: **Windows x64**.
 
-This revision targets compact desktop layout, final manual transform layers above motion/path animation, unified camera object selection, and a drag-and-drop motion library with human and animal clips. Application UI and authored messages are English. See README.md for feature limits.
+This revision populates the model and motion libraries and validates real source content, prepared rigs, portable imports and library workflows. Compact desktop layout, final transform layers and unified camera selection remain in place. Application UI and authored messages are English. See README.md for feature limits.
 
 ## Toolchain
 
@@ -59,21 +59,23 @@ Earlier tests of version 2 cover path timing persistence, source BVH bundling, l
 
 The neutral lighting implementation remains a gray hemisphere with reflections and no active directional light by default. Its optional directional light reuses one node. It does not add a hidden default key light to recover contrast.
 
-## Library and provenance
+## Populated content and runtime validation
 
-The shipped catalogue has **five prepared motions**: two human sources and three Fox native cycles. Library cards expose compatible actor families, and the source drop workflow appends to a matching actor or creates the matching actor on blank ground.
+The catalog has **284 model entries and 457 motion cards**. It includes 255 new Kenney props, 12 new Quaternius rigged animals with 152 authored native clips, and 300 new recorded CMU human takes (about 85 minutes). Six human body variants, ten original procedural props, the original Fox and the original five motion cards remain available. Animal models include breed/color variants; they are not 12 distinct biological species.
 
-- Human capture provenance: samples/real/SOURCE-AND-LICENSE.md.
-- Fox asset/animation/conversion credits: LICENSES/Fox-NOTICE.md and retained assets/library/fox.metadata.json.
-- The Fox model's raw data are unchanged; runtime sampling and blending are application behavior.
-- The dog prop remains static; universal animal retargeting is not implemented.
+- Every one of the **300 CMU BVHs** passes original-byte SHA-256, hierarchy/frame/channel validation and the actual `BvhMotion` / `RiggedActor` runtime. Each maps 31 animated source joints to 21 prepared bones. Six samples per take verify finite normalized poses, changing bones, deterministic seeking and in-place roots. Evidence: `output/content-human-validation.json` (300 passed, zero failures).
+- All **255 static models and 12 new animal models** pass actual Godot GLTF import, nonempty mesh/bounds and material checks. A real GPU produces their covers. Evidence: `output/content-audit.json` and rendered contact sheets.
+- All **152 animal native clips** resolve by exact imported animation name and animate real bones. Evidence: `assets/content/animals/validation.json`.
+- **741 distinct PNG covers** match every catalog model/motion ID. Cards initially load these images; source parsing and live skeletal previews initialize only on hover. Pages contain at most twelve cards.
+- The integrated content workflow passes **225 assertions**, including representative metre-scale grounded props, all six humanoids, every new animal rig, compatible/incompatible drops, empty-ground actor creation, native bone motion, crossfades under paths/manual corrections, cache reuse, and portable save/reopen of identities, proportions, units, final transforms and bone poses. Evidence: `output/content-workflow-report.json` and `output/content-workflow-0.4.0.log`.
+- A standalone resource inventory against the exported PCK confirms **567 unique new source files and all 741 covers**, with zero missing resources. Evidence: `output/package-inventory-0.4.0.log`; reproducible script: `tools/content/check_packaged_library.gd`.
+
+CMU takes skip the conversion calibration frame and do not loop by default. Source BVHs are unchanged. Git attributes preserve their exact bytes. Recorded takes may contain multiple actions and need manual trimming. Scene length supports up to 600 seconds, including long recordings. Human and animal motion compatibility is explicit; universal animal retargeting and foot/contact solving remain unimplemented.
+
+Provenance and terms are recorded in `LICENSES/CMU-MOTION-CONTENT.md`, `LICENSES/ANIMAL-CONTENT.md` and `LICENSES/PROP-CONTENT.md`. Original source notices are also copied into the portable package's `LICENSES/content/` directory. The legacy Fox attribution remains in `LICENSES/Fox-NOTICE.md`.
 
 ## Delivery verification
 
-The independent exported executable in **build/Previs-0.3.1-Windows/** passed its rendered smoke run, including raw-safe Fox loading, grouped transform/lens persistence, the 17-sample crossfade-layer regression, motion-drop target resolution and full HD frame export. Evidence is retained in `output/packaged-0.3.1-render.log`, ending in `PREVIS_SMOKE_OK`.
+The independent portable executable is `build/Previs-0.4.0-Windows/Previs.exe`. Its content workflow uses the exported PCK and its bundled .NET runtime, including raw-safe model loading and project asset copies. The rendered packaged smoke verifies the previous layer/camera/path regressions and a clean full-HD camera export. Logs: `output/packaged-0.4.0-content.log` and `output/packaged-0.4.0-render.log`.
 
-Direct Windows UI operation verified the compact desktop layout, all five motion cards, and selecting Camera B in the unified Scene list to open its position/rotation/scale/lens controls. A native library drag was accepted and created a matching animated actor on ground. The existing-actor drop route is additionally tested through the actual viewport drop callbacks: it appends a clip without increasing the actor count, including the projected-rig fallback for moving limbs outside their simplified collider.
-
-The previous running sessions were left open once user input was detected. The supplied `examples/layered-scene.previs` includes human and Fox tracks, camera channels, path timing and manual corrections. `BUILD-INFO.json` records the source commit and executable/resource/managed-assembly hashes. The portable `build/Previs-0.3.1-Windows.zip` is verified by reading every entry and checking its ZIP CRC.
-
-Windows is the only platform exercised. No macOS/Linux runtime result is claimed. Current output is active-camera PNG/JSON; video/control-pass export, foot/contact solving, a large motion catalogue and universal animal retargeting remain outside this implemented scope.
+`BUILD-INFO.json` records source revision, catalog counts and executable/resource/managed-assembly hashes. The final portable ZIP is checked by reading all entries and verifying CRCs. Only Windows x64 has been exercised; no macOS/Linux runtime result is claimed. Current output remains active-camera PNG/JSON, with video/control-pass export outside this revision.
