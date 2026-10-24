@@ -1,8 +1,8 @@
-# Previs 0.8.0 validation
+# Previs 0.9.0 validation
 
 Validation date: **2026-10-25**. Development/verified platform: **Windows x64**.
 
-This revision improves interaction: temporary pose-tool switching, intermediate-joint movement, camera picking, complete scene transform handles, wheel-free zoom, source-IN trimming and precise numeric scrubbing. Compact desktop layout, final transform layers and unified camera selection remain in place. Application UI and authored messages are English. See README.md for feature limits.
+This revision adds complete active-camera shot export, synchronized depth and pose guidance, and illustrated camera movements. Ordinary object/camera dragging preserves Y; Shift transform handles retain unrestricted 3D adjustment. Application UI and authored messages are English. See README.md for output semantics and limits.
 
 ## Toolchain
 
@@ -10,6 +10,22 @@ This revision improves interaction: temporary pose-tool switching, intermediate-
 - C# targeting .NET 10; local SDK **10.0.402**.
 - Rendered source checks use the Compatibility renderer on the development Windows machine.
 - Godot locale and fallback locale are en.
+
+## Whole-shot export and control passes for 0.9.0 — source evidence
+
+The rendered source whole-shot suite passes **31 assertions**. Evidence: `output/shot-export-source-0.9.0.log` and `output/shot-export-report.json`. It exports a complete 8-second shot from **Camera B**, with 192 frames at 640×360/24 fps in color, depth and pose. Each H.264 MP4 is independently checked using ffprobe for codec, dimensions, frame count, rate and duration. The PNG sequences include frame 000191 and match the end-exclusive timestamp array. The fixture includes mocap, a keyed head correction, a path, animated camera keys and a native animal rig.
+
+The suite checks exact pose projection through the exported camera, evaluated world joint coordinates, native topology, grayscale depth, colored pose pixels, changing rendered frames, restoration of time/camera/selection/materials/Undo, protection of an existing export folder, two full-HD PNG frames, MP4-only scratch cleanup, PNG-only output, and cancellation with an accurate partial manifest.
+
+The separate real-GPU control-pass suite passes **17 assertions** (`output/control-pass-probe.log`). It checks actual surface depth, posed/native skinned animation, human guidance coordinates, foreground occlusion, native animal topology and end-exclusive sampling. These are graphics results, not headless substitutes.
+
+The isolated real encoder API suite passes **8 assertions** using the pinned FFmpeg 9.0.2 runtime: H.264 dimensions/timing, completion progress, no overwrite, odd-size rejection, pre-cancellation, in-flight cancellation and partial cleanup, plus missing-input-frame rejection. The source fixture is under the ignored `.tools/encoder-probe/` directory. Runtime setup is reproducible with `tools/export/setup_ffmpeg.py --offline` after the verified archive is cached.
+
+The Cameras library contains 24 original illustrated Basic/Aerial movement cards. Their runtime checks are recorded separately when executed; this section does not infer a pass from catalog size. Current 0.9.0 source evidence does **not** yet claim an independent exported-package pass. The final delivery audit adds that result after the actual executable has run.
+
+## Historical regression evidence
+
+The versioned sections below retain previous tested behavior and provenance. Earlier free-Y ordinary dragging and still-only export descriptions are historical; the 0.9.0 workflow and output definitions are given in README.md.
 
 ## Unified workflow and correction layers for 0.8.0 — source evidence
 
@@ -152,3 +168,11 @@ The exported Windows executable passes **31 integrated interaction assertions, 1
 ## Independent 0.8.0 delivery
 
 The exported Windows executable passes **55 additive-correction checks plus 13 real pose-key timeline checks**, **38 unified-workflow checks plus 15 numeric and 14 clip-trim checks**, 71 updated manual-pose checks, 278 static-pose checks, 225 content-library checks and the rendered full-HD smoke test. Logs are `output/packaged-0.8.0-{corrections,workflow,manual,poses,content,render}.log`; all six stderr files are empty. The PCK inventory confirms 567 motion/model sources, 859 covers and 118 poses without missing files. `examples/keyed-pose.previs` includes its original mocap sources plus head/hand/hips correction keys and path/manual layers. Project format 5 preserves these tracks; older formats 1–4 load with an identity correction layer.
+
+The camera movement probe passes **124 checks for all 24 presets** (`output/camera-move-probe-0.9.0.log`). The rendered library test verifies all cards and a lens-only Zoom in. Export dialog geometry is checked at 550x590 logical pixels so both Export and Cancel remain accessible (`output/export-ui-0.9.0.log`). The final whole-shot portable test uses 1920x1080 at 24 fps over eight seconds (192 frames), superseding the earlier 640x360 source fixture.
+
+## Independent 0.9.0 delivery
+
+The exported Windows executable passes **31 complete-shot export assertions** at **1920x1080, 24fps, 192frames/eightseconds**, exporting Color/Depth/Pose to all three H.264MP4 files and all three PNG sequences. FFprobeindependentlyverifies everyvideo. Italso verifies activeCameraB, allframetimes, jointprojection, originalscene/material/time/selection/Undorestoration, 1080PNG-only, MP4-onlyscratchcleanup, nooverwrite, andcancellation. Evidence: `output/packaged-0.9.0-export.log` and the exported `shot-export-report.json`.
+
+The same package passes 38workflow+15numeric+14trimchecks,55correction+13posekeychecks,278staticposechecks,225contentchecks andthecleanfullHDsmoke. Allsixstderrlogsareempty. SourceGPUcontrol-passcalibrationpasses17checkswithcleanstderr; 24camerapresetspass124runtimechecksandrenderedlibraryinteraction. The resourceinventoryhas567sources/859covers/118poseswithnomissingfiles. `BUILD-INFO.json` records exact source andbinaryhashes. ZIPentries arefullyreadbackforCRCverification.

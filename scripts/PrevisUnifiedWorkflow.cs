@@ -16,7 +16,7 @@ public partial class PrevisApp
     Control BuildUnifiedViewportToolbar()
     {
         _arrangeButton=Button("Arrange",()=>{StopPoseEditing();ShowInspectorSection("Object");},true);
-        _arrangeButton.TooltipText="Select and drag any object or camera. Hold Shift for move, rotate and scale handles.";
+        _arrangeButton.TooltipText="Select and drag while keeping the current height. Hold Shift for unrestricted move, rotate and scale handles.";
         _poseToolbarButton=Button("Pose",()=>{if(_poseEditing){StopPoseEditing();ShowInspectorSection("Object");}else StartPoseEditing();},true);
         _poseToolbarButton.TooltipText="Adjust the figure at the playhead. Corrections are keyed above its existing motion.";
         var bar=Row(_arrangeButton,_poseToolbarButton,_drawPathButton,_finishPathButton,Space(),Button("Frame",FrameSelected),Button("Perspective",()=>{if(_pilot)TogglePilot();else ResetEditorView();}));bar.AddThemeConstantOverride("separation",4);return bar;
@@ -40,8 +40,7 @@ public partial class PrevisApp
     {
         _arrangeNode=ObjectGizmoTarget;if(_arrangeNode==null)return;_playing=false;_play.Text="▶";
         _arrangeNodeOrigin=_arrangeNode.GlobalPosition;_arrangePlaneOrigin=_arrangeNodeOrigin;
-        if(_selected is {} entry){var bounds=entry.Node is RiggedActor actor?actor.GetPreparedPoseBounds():PropFactory.CalculateBounds(entry.Node);_arrangePlaneOrigin=entry.Node.GlobalTransform*bounds.GetCenter();}
-        _arrangeNormal=_editorCamera.GlobalBasis.Z.Normalized();_arrangeMouse=mouse;_arrangeDragging=ArrangePlanePoint(mouse,out _arrangePointerStart);_arrangeGestureStarted=false;
+        _arrangeNormal=Vector3.Up;_arrangeMouse=mouse;_arrangeDragging=ArrangePlanePoint(mouse,out _arrangePointerStart);_arrangeGestureStarted=false;
     }
     bool HandleArrangeDrag(InputEvent input)
     {
@@ -52,7 +51,7 @@ public partial class PrevisApp
         if(!_arrangeGestureStarted){if(motion.Position.DistanceTo(_arrangeMouse)<2)return true;BeginSceneTransformGesture();_arrangeGestureStarted=true;}
         if(ArrangePlanePoint(motion.Position,out var point))
         {
-            var world=_arrangeNodeOrigin+point-_arrangePointerStart;if(motion.CtrlPressed)world=new Vector3(Mathf.Snapped(world.X,.01f),Mathf.Snapped(world.Y,.01f),Mathf.Snapped(world.Z,.01f));
+            var world=_arrangeNodeOrigin+point-_arrangePointerStart;world.Y=_arrangeNodeOrigin.Y;if(motion.CtrlPressed)world=new Vector3(Mathf.Snapped(world.X,.01f),_arrangeNodeOrigin.Y,Mathf.Snapped(world.Z,.01f));
             var parent=_arrangeNode.GetParentNode3D();SetSelectedTransformFromGizmo("Position",parent==null?world:parent.GlobalTransform.AffineInverse()*world);
         }
         return true;

@@ -60,9 +60,10 @@ public partial class PrevisApp : Control
     {
         TranslationServer.SetLocale("en");
         var window=GetWindow();float dpiScale=Math.Clamp(Math.Max(DisplayServer.ScreenGetScale(),DisplayServer.ScreenGetDpi()/96f),1,2.5f);window.ContentScaleMode=Window.ContentScaleModeEnum.CanvasItems;window.ContentScaleSize=Vector2I.Zero;window.ContentScaleFactor=dpiScale;
-        DisplayServer.WindowSetTitle("Previs 0.8.0 — Film shot planning");
+        DisplayServer.WindowSetTitle("Previs 0.9.0 — Film shot planning");
         BuildTheme(); BuildUi(); BuildWorld(); StarterScene();
-        if (OS.GetCmdlineUserArgs().Contains("--correction-test")) _ = RunPoseCorrectionChecksAndQuit();
+        if (OS.GetCmdlineUserArgs().Contains("--shot-export-test")) _ = RunShotExportChecksAndQuit();
+        else if (OS.GetCmdlineUserArgs().Contains("--correction-test")) _ = RunPoseCorrectionChecksAndQuit();
         else if (OS.GetCmdlineUserArgs().Contains("--interaction-test")) _ = RunInteractionChecksAndQuit();
         else if (OS.GetCmdlineUserArgs().Contains("--manual-pose-test")) _ = RunManualPoseChecksAndQuit();
         else if (OS.GetCmdlineUserArgs().Contains("--pose-test")) _ = RunPoseChecksAndQuit();
@@ -338,6 +339,7 @@ public partial class PrevisApp : Control
     }
     void ViewportInput(InputEvent input)
     {
+        if(_exportBusy)return;
         if(input is InputEventMouseButton {Pressed:true,ButtonIndex:MouseButton.Left or MouseButton.Right or MouseButton.Middle})GetViewport().GuiReleaseFocus();
         UpdateViewportModifiers(input);
         if(HandleViewportZoom(input))return;
@@ -378,6 +380,7 @@ public partial class PrevisApp : Control
     }
     public override void _UnhandledInput(InputEvent input)
     {
+        if(_exportBusy)return;
         if (input is not InputEventKey key || !key.Pressed || key.Echo) return;
         if(_drawingPath&&key.Keycode==Key.Escape){CancelDrawingPath();return;}if(_drawingPath&&key.Keycode==Key.Enter){FinishDrawingPath();return;}
         if (GetViewport().GuiGetFocusOwner() is LineEdit or TextEdit) return;
@@ -466,7 +469,7 @@ public partial class PrevisApp : Control
         if (!path.EndsWith(".png",StringComparison.OrdinalIgnoreCase))path+=".png";
         var view = new SubViewport { Size = new Vector2I(1920,1080), World3D = _sceneViewport.World3D, RenderTargetUpdateMode = SubViewport.UpdateMode.Once, Msaa3D = Viewport.Msaa.Msaa4X };
         AddChild(view); var camera = new Camera3D { Current=true,CullMask=1,Near=.05f,Far=500,KeepAspect=Camera3D.KeepAspectEnum.Width,Fov=_shot.ShotCamera.Fov };view.AddChild(camera);camera.GlobalTransform=_shot.ShotCamera.GlobalTransform;
-        try { for(int i=0;i<2;i++)await ToSignal(GetTree(),SceneTree.SignalName.ProcessFrame);await ToSignal(RenderingServer.Singleton,RenderingServer.SignalName.FramePostDraw);var image=view.GetTexture().GetImage();var error=image.SavePng(path);if(error!=Godot.Error.Ok)throw new IOException("The frame could not be saved: "+error); File.WriteAllText(Path.ChangeExtension(path,".json"),JsonSerializer.Serialize(new {application="Previs",version="0.8.0",frame=(int)Math.Round(_time*_fps),timeSeconds=_time,fps=_fps,width=1920,height=1080,activeCameraId=ActiveCameraId,camera=Snapshot()},_json)); }
+        try { for(int i=0;i<2;i++)await ToSignal(GetTree(),SceneTree.SignalName.ProcessFrame);await ToSignal(RenderingServer.Singleton,RenderingServer.SignalName.FramePostDraw);var image=view.GetTexture().GetImage();var error=image.SavePng(path);if(error!=Godot.Error.Ok)throw new IOException("The frame could not be saved: "+error); File.WriteAllText(Path.ChangeExtension(path,".json"),JsonSerializer.Serialize(new {application="Previs",version="0.9.0",frame=(int)Math.Round(_time*_fps),timeSeconds=_time,fps=_fps,width=1920,height=1080,activeCameraId=ActiveCameraId,camera=Snapshot()},_json)); }
         finally { view.QueueFree(); }
     }
 

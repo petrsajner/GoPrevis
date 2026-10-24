@@ -28,12 +28,12 @@ public partial class PrevisApp
 
         var fileMenu=new MenuButton{Text="File",FocusMode=FocusModeEnum.None};
         var filePopup=fileMenu.GetPopup();
-        foreach(var item in new[]{"New scene","Open project…","Save project","Import motion…","Import 3D model…"})filePopup.AddItem(item);
-        filePopup.IdPressed+=id=>{switch(id){case 0:NewScene();break;case 1:OpenProject();break;case 2:SaveProject();break;case 3:ImportMotion();break;case 4:ImportModel();break;}};
+        foreach(var item in new[]{"New scene","Open project…","Save project","Import motion…","Import 3D model…","Export shot…","Export frame…"})filePopup.AddItem(item);
+        filePopup.IdPressed+=id=>{switch(id){case 0:NewScene();break;case 1:OpenProject();break;case 2:SaveProject();break;case 3:ImportMotion();break;case 4:ImportModel();break;case 5:OpenShotExport();break;case 6:ExportFrame();break;}};
         var editMenu=new MenuButton{Text="Edit",FocusMode=FocusModeEnum.None};
         foreach(var item in new[]{"Undo","Redo","Duplicate selected","Delete selected"})editMenu.GetPopup().AddItem(item);
         editMenu.GetPopup().IdPressed+=id=>{switch(id){case 0:Undo();break;case 1:Redo();break;case 2:DuplicateSelected();break;case 3:DeleteSelected();break;}};
-        var export=Button("Export frame",ExportFrame);export.AddThemeStyleboxOverride("normal",Style(new Color("e5e2ec"),4));export.AddThemeColorOverride("font_color",new Color("202026"));
+        var export=Button("Export shot",OpenShotExport);export.AddThemeStyleboxOverride("normal",Style(new Color("e5e2ec"),4));export.AddThemeColorOverride("font_color",new Color("202026"));
         var header=Row(Text("PREVIS",14),fileMenu,editMenu,Space(),Button("Save",SaveProject),export);
         header.AddThemeConstantOverride("separation",6);_layoutHeader=CompactPanel(header,4,2);_layoutRoot.AddChild(_layoutHeader);
 
@@ -83,7 +83,7 @@ public partial class PrevisApp
         _cameraInfo=Text("Active camera",11,true);_cameraInfo.ClipText=true;right.AddChild(_cameraInfo);
         _cameraQuickControls=new VBoxContainer();_cameraQuickControls.AddThemeConstantOverride("separation",4);right.AddChild(_cameraQuickControls);
         _pilotButton=Button("Camera view",TogglePilot,true);_cameraQuickControls.AddChild(_pilotButton);
-        _lens=Spin(14,200,.1,35);_lens.CustomMinimumSize=new Vector2(64,0);_lens.ValueChanged+=ChangeCameraLens;
+        _lens=Spin(8,300,.1,35);_lens.CustomMinimumSize=new Vector2(64,0);_lens.ValueChanged+=ChangeCameraLens;
         _cameraQuickControls.AddChild(Row(Text("Lens",11,true),_lens,Text("mm",11,true),Button("◆ Key",CaptureCameraKey)));
         right.AddChild(new HSeparator());_layoutInspectorScroll=new ScrollContainer{SizeFlagsVertical=SizeFlags.ExpandFill,SizeFlagsHorizontal=SizeFlags.ExpandFill,HorizontalScrollMode=ScrollContainer.ScrollMode.Disabled,FollowFocus=true};
         _inspector=new VBoxContainer{SizeFlagsHorizontal=SizeFlags.ExpandFill};_inspector.AddThemeConstantOverride("separation",6);_layoutInspectorScroll.AddChild(_inspector);right.AddChild(_layoutInspectorScroll);BuildInspector();

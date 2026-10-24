@@ -85,17 +85,7 @@ public partial class PrevisApp
     }
     void ClearCameras(){foreach(var c in _cameras){_world.RemoveChild(c.Rig);c.Rig.QueueFree();}_cameras.Clear();}
     CameraTrackData SnapshotCamera(CameraEntry item){EnsureCameraAnimation(item);return JsonSerializer.Deserialize<CameraTrackData>(JsonSerializer.Serialize(new CameraTrackData{Id=item.Id,Name=item.Name,Position=Array3(item.BasePosition),Rotation=Array3(item.BaseRotation),Scale=Array3(item.BaseScale),FocalLength=item.BaseLens,TransformAnimation=item.Animation,LensKeys=item.LensKeys,Keys=new()}))!;}
-    void BuildCameraLibrary()
-    {
-        foreach(var camera in _cameras){var captured=camera;_library.AddChild(Button(camera.Name,()=>SelectCamera(captured)));}
-        _library.AddChild(Row(Button("Add camera",()=>AddCameraFromView(false)),Button("Duplicate",()=>AddCameraFromView(true))));
-        var rename=new LineEdit {Text=ActiveCameraName,PlaceholderText="Camera name",TooltipText="Press Enter to rename the active camera"};
-        rename.TextSubmitted+=value=>{if(string.IsNullOrWhiteSpace(value))return;PushUndo();var entry=_cameras.First(c=>c.Rig==_shot);entry.Name=value.Trim();foreach(var label in entry.Rig.GetChildren().OfType<Label3D>())label.Text=entry.Name;RefreshCameraChoices();UpdatePreview();ShowCategory("Cameras");};_library.AddChild(rename);
-        _library.AddChild(Text("FRAMING",12,true));foreach(var p in new[]{"Wide shot","Medium shot","Close-up","High angle","Current view"}){string choice=p;_library.AddChild(Button(p,()=>ApplyShot(choice)));}
-        _library.AddChild(Text("MOVEMENT",12,true));
-        foreach(string preset in new[]{"Static","Dolly in","Truck right","Crane up","Orbit"}){string move=preset;_library.AddChild(Button(move,()=>{PushUndo();_shot.SetPreset(move,_duration);SyncCameraFromRig(_cameras.First(c=>c.Rig==_shot));SetTime(0);SelectCamera(_cameras.First(c=>c.Rig==_shot));Status(move+" camera move applied.");}));}
-        _library.AddChild(Button("Clear camera keys",ClearCameraAnimation));
-    }
+    void BuildCameraLibrary()=>BuildIllustratedCameraLibrary();
 
     void BuildSequenceInspector()
     {

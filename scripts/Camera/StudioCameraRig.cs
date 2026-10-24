@@ -187,6 +187,10 @@ public partial class StudioCameraRig : Node3D
         Evaluate(0.0);
     }
 
+    /// <summary>Apply a composition-relative illustrated movement from the camera library.</summary>
+    public void SetMovementPreset(string id,double durationSeconds,Vector3 target)
+        =>CameraMoveCatalog.Apply(this,id,durationSeconds,target);
+
     private void AddTargetKey(double seconds, Vector3 position, Vector3 target)
     {
         Keys.Add(new ShotCameraKey(seconds, position, RotationToward(position, target), 35f));

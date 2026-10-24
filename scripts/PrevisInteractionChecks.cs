@@ -30,7 +30,7 @@ public partial class PrevisApp
             Check(!_arrangeButton.GetParent().GetChildren().OfType<Button>().Any(b=>b.Text is "Select" or "Move"),"the viewport has one Arrange tool rather than competing Select and Move tools");
             ShowCategory("Models");Check(Descendants(_library).OfType<LibraryCard>().Count()==19&&Descendants(_library).OfType<Button>().Any(b=>b.Text.Contains("People"))&&Descendants(_library).OfType<Button>().Any(b=>b.Text.Contains("Animals")),"Models contains both visibly grouped people and animals");
             ShowCategory("Objects");Check(Descendants(_library).OfType<LibraryCard>().Count()==265,"Objects includes all props and environment models in one scrollable library");
-            ShowCategory("Cameras");Check(Descendants(_library).OfType<Button>().Any(b=>b.Text=="Dolly in")&&Descendants(_library).OfType<Button>().Any(b=>b.Text=="Orbit"),"camera movement presets live with the camera tools");
+            ShowCategory("Cameras");Check(CameraMoveCatalog.All.Count==24&&Descendants(_library).OfType<Label>().Any(b=>b.Text=="Dolly in")&&Descendants(_library).OfType<Label>().Any(b=>b.Text=="Orbit"),"camera movement presets live with the camera tools");
             _playing=false;StopPoseEditing();ClearObjects();ClearCameras();CreateCamera("Camera test",null,true);SetTime(0);
             await Settle();DropPose("pose-sit-upright",null,new Vector3(-2,0,0));var actorEntry=_selected!;var actor=(RiggedActor)actorEntry.Node;StartPoseEditing();await Settle();await ToSignal(GetTree(),SceneTree.SignalName.PhysicsFrame);SelectPoseBone("RightHand");SetPoseTool("Move");
             Shift(true);Check(EffectivePoseTool=="Rotate","Shift switches a terminal hand to rotation before any pointer movement");
@@ -57,7 +57,7 @@ public partial class PrevisApp
             Send(new InputEventMouseButton{ButtonIndex=MouseButton.Left,Pressed=true,Position=cameraPoint});Send(new InputEventMouseButton{ButtonIndex=MouseButton.Left,Pressed=false,Position=cameraPoint});
             Check(_selectedCamera==camera&&!_poseEditing&&_selected==null,"clicking a camera exits pose mode and opens its own properties");
             var cameraStart=camera.Rig.GlobalPosition;int history=_undo.Count;Drag(cameraPoint,cameraPoint+new Vector2(12,-26),false);
-            Check(camera.Rig.GlobalPosition.Y>cameraStart.Y+.01f,"Arrange can drag the camera vertically instead of pinning it to the floor");Check(_undo.Count==history+1,"one camera move creates one undo item");
+            Check(Math.Abs(camera.Rig.GlobalPosition.Y-cameraStart.Y)<.0001f&&camera.Rig.GlobalPosition.DistanceTo(cameraStart)>.01f,"ordinary camera dragging preserves height while Shift axes remain unrestricted");Check(_undo.Count==history+1,"one camera move creates one undo item");
             _editorCamera.Position=new Vector3(3,4,5);_editorCamera.LookAt(camera.Rig.GlobalPosition);await Settle();Shift(true);Check(ObjectGizmoVisible,"Shift in Arrange reveals the complete scene transform gizmo for a camera");
             var origin=camera.Rig.GlobalPosition;float length=ObjectGizmoWorldLength(origin);var from=Project(origin+Vector3.Up*length*.95f);var to=Project(origin+Vector3.Up*(length*.95f+.25f));
             history=_undo.Count;Send(new InputEventMouseButton{ButtonIndex=MouseButton.Left,Pressed=true,Position=from,ShiftPressed=true});Shift(false);Send(new InputEventMouseMotion{Position=to,Relative=to-from});Send(new InputEventMouseButton{ButtonIndex=MouseButton.Left,Pressed=false,Position=to});
@@ -69,7 +69,7 @@ public partial class PrevisApp
             Check(!basis.IsEqualApprox(camera.Rig.GlobalBasis)&&position.DistanceTo(camera.Rig.GlobalPosition)<.001f,"camera rotation works directly in the viewport without moving its origin");
             var box=AddObject("box",new Vector3(1,.2f,0));Select(box);FrameSelected();await Settle();await ToSignal(GetTree(),SceneTree.SignalName.PhysicsFrame);Shift(false);
             var boxBefore=box.Node.Position;history=_undo.Count;var boxPoint=Project(box.Node.GlobalTransform*PropFactory.CalculateBounds(box.Node).GetCenter());Drag(boxPoint,boxPoint+new Vector2(18,-15),false);
-            Check(_selected==box&&box.Node.Position.DistanceTo(boxBefore)>.02f&&box.Node.Position.Y>boxBefore.Y,"ordinary box dragging selects and moves an object freely without switching tools");Check(_undo.Count==history+1,"ordinary object and camera drags share the same single-undo workflow");
+            Check(_selected==box&&box.Node.Position.DistanceTo(boxBefore)>.02f&&Math.Abs(box.Node.Position.Y-boxBefore.Y)<.0001f,"ordinary box dragging selects and moves an object while preserving its existing height");Check(_undo.Count==history+1,"ordinary object and camera drags share the same single-undo workflow");
             box.Data.Position=new float[]{1,.2f,0};SetTime(_time);Shift(true);origin=box.Node.GlobalPosition;length=ObjectGizmoWorldLength(origin);
             Drag(Project(origin+Vector3.Up*length*.95f),Project(origin+Vector3.Up*(length*.95f+.4f)));
             Check(Math.Abs(box.Node.Position.Y-.6f)<.003f,"an ordinary object can be lifted above the floor with the Y arrow");

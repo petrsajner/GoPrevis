@@ -1,16 +1,16 @@
-# Previs 0.8.0 — film shot planning
+# Previs 0.9.0 — film shot planning
 
 Previs is a desktop blockout tool for preparing movement and camera references for AI video. It uses Godot 4.7.2 .NET, C# and .NET 10. The application UI, dialogs and authored errors are English.
 
 ## Run
 
-The Windows portable output is `build/Previs-0.8.0-Windows/Previs.exe`. Keep Previs.exe, Previs.pck and data_Previs_windows_x86_64 together. The portable Windows build includes its runtime; using it does not require the Godot editor or .NET SDK.
+The Windows portable output is `build/Previs-0.9.0-Windows/Previs.exe`. Keep Previs.exe, Previs.pck and data_Previs_windows_x86_64 together. The portable Windows build includes its runtime; using it does not require the Godot editor or .NET SDK.
 
 For development, open project.godot with Godot 4.7.2 .NET. Local tools are in the ignored .tools directory. The existing run.ps1 starts the source project; build.ps1 -Test builds, runs source checks and exports Windows x64.
 
 ## One placement workflow
 
-**Arrange** combines selection and movement. Click an object or camera, then drag its visible body or selection box to move it in the current view plane. Height is available immediately. Hold **Shift** to use the complete XYZ transform gizmo: arrows move, cubes scale and rings rotate. There is no separate Select/Move workflow and no ground-only object drag. Each continuous drag is one Undo/Redo action.
+**Arrange** combines selection and movement. Click an object or camera, then drag its visible body or selection box across the horizontal plane at its current height. Ordinary dragging preserves its Y position. Hold **Shift** to use the complete XYZ transform gizmo: arrows move, cubes scale and rings rotate. There is no separate Select/Move workflow. Free vertical and spatial adjustments are available through the Shift handles. Each continuous drag is one Undo/Redo action.
 
 Use **Pose** on a selected human to edit its body at the playhead. The inspector shows the current task and a back control rather than separate Object/Motion/Path/Pose tabs. Selecting a clip, path key, camera or figure opens the relevant context.
 
@@ -112,9 +112,16 @@ Face travel direction can stay enabled while manual Rotation offsets or keys add
 
 ## Cameras use the same controls
 
-Camera A/B/C appear in the SCENE list and can be picked through their visible bodies or helper lines. Arrange selects and drags cameras using the same view-plane movement as other objects. Hold Shift for constrained XYZ movement, scale and rotation. Existing camera animation channels remain editable.
+Camera A/B/C appear in the SCENE list and can be picked through their visible bodies or helper lines. Arrange selects and drags cameras horizontally at their current height, using the same placement interaction as other objects. Hold Shift for constrained XYZ movement, scale and rotation. Existing camera animation channels remain editable.
 
 The **Cameras** library contains the camera list, framing presets and camera movement presets together. **Camera view** pilots the active shot; the 16:9 guide matches the preview. Position, Rotation, Scale and Lens are keyable. **Preview** can hide the small shot view to provide more inspector space.
+
+### Illustrated camera movement presets
+
+The Cameras library includes **24 movement cards**, grouped into **Basic** and **Aerial**. Each card has an original diagram showing the camera, subject, viewing frustum and movement direction. Static shot, tilt, pan, crane, truck, dolly, lens zoom, handheld, reveal, push-through, whip pan and crash zoom are available alongside orbit, ascending/descending orbit, aerial establishing, dive and pull-away moves.
+
+A movement preset starts from the camera's current composition and focal length and writes editable camera keys from **frame 0 through the scene duration**. Applying one replaces that camera's movement keys; Undo restores the previous movement. Other cameras keep their own animation. When a selected subject is available, it supplies the composition target; the preset does not create an automatic actor-tracking constraint. **Zoom** presets animate the lens, while **Dolly** presets translate the camera. Handheld movement is deterministic so scrubbing and export reproduce it.
+
 
 ## Compact desktop layout
 
@@ -132,11 +139,32 @@ A continuous numeric scrub creates one Undo action. After reaching a minimum or 
 
 Save creates a **version 5 .previs** project and neighbouring .assets folder containing used sources. Keep both together when moving a project. It preserves embedded static body poses and keyed additive pose corrections, motion tracks, paths and path keys, final transform channels, camera channels/lenses, active camera and lighting. Version 1/2/3/4 scenes are accepted on opening. Older releases refuse version 5 instead of silently dropping its correction keys. Overwriting an existing project keeps the previous JSON as .previs.bak.
 
-Export frame produces a clean **1920 × 1080 PNG from the active camera**, with JSON shot data. Editor grid, path guides, camera helpers and selection outlines are excluded. Current export is PNG/JSON; video and control passes remain future work.
+### Export a complete shot
+
+Choose **Export shot** and confirm the active camera shown in the dialog. Export uses the **whole scene range**, sampled from time zero to the end of the shot with an end-exclusive frame interval. For example, an 8-second shot at 24 fps produces 192 frames at times 0 through 7.95833 seconds, and an 8-second video.
+
+Choose **MP4 + PNG sequences**, **MP4 videos**, or **PNG sequences**; select 1920×1080, 1280×720 or 3840×2160 and 24/25/30/60 fps. Color, Depth and Pose can be selected independently. A uniquely named output folder preserves earlier exports. The export dialog reports progress and offers cancellation. After success, failure or cancellation, the application restores the working time, selection, playback state and original scene materials.
+
+All selected passes use the **same evaluated frame time, active-camera transform and lens**. This includes mocap blends, keyed body corrections, paths, final object transforms, native animation and camera/lens keys. Editor grid, joint/transform handles, paths, camera helpers and selection outlines are excluded.
+
+| Output | Files and interpretation |
+| --- | --- |
+| Color | `color/000000.png`… and/or `color.mp4`; the active camera's rendered scene |
+| Depth | `depth/000000.png`… and/or `depth.mp4`; actual rendered surface depth, with white at the configured near distance and black at the far distance or background |
+| Pose | `pose/000000.png`… and/or `pose.mp4`; colored rig guidance over black, plus per-frame `pose/000000.json`… annotations |
+| Manifest | `manifest.json`; camera identity, settings, exact frame times, pass encoding, frame count, completion status and encoded-video metadata |
+
+**Depth** is an equal-channel **RGB8 linear camera-Z** map, rather than radial distance or inverse depth. The configurable Depth range is recorded in metres. Interior surface values follow `gray = clamp((far - cameraZ) / (far - near), 0, 1)`; background is black. The normalization range is separate from the camera clipping planes. PNG is the lossless control-map master; MP4 uses lossy H.264/YUV420 encoding and may change edge colors or depth byte values.
+
+For **Pose**, choose **Human body · COCO-18** for prepared humanoids, or **All scene rigs · humans + animals** to include animals under their actual native bone names and parent topology. Native animals are **not** relabelled as human COCO joints. The mixed rig map is intended for workflows that can interpret its native topology; it is not a standard human OpenPose map. Human nose, eye and ear anchors are geometric proxies derived from the head rig, not captured facial landmarks. Fingers are not supplied. Per-frame JSON records pixel, normalized and world coordinates, camera-axis depth, visibility/confidence and inferred-landmark flags. Occlusion uses the matching depth render with a documented body/quantization tolerance.
+
+MP4-only export removes its temporary PNG cache after encoding but retains pose JSON. PNG-only export creates no MP4 files. Cancellation records a `cancelled` manifest for any completed frames rather than marking an incomplete shot as successful. Encoding uses the separately bundled FFmpeg tools; no system installation or network access is needed during export. The tool provenance and license are recorded in [LICENSES/FFMPEG-NOTICE.md](LICENSES/FFMPEG-NOTICE.md).
+
+The existing **Export frame** action remains available for a clean **1920×1080 PNG from the active camera** with JSON shot data.
 
 ## Navigation and lighting
 
-- Arrange: click to select, drag the object or its box to move in the view plane. Hold Shift for XYZ move/scale/rotation handles, including height. Ctrl snaps movement.
+- Arrange: click to select, drag the object or its box while preserving its height. Hold Shift for XYZ move/scale/rotation handles, including height. Ctrl snaps movement.
 - RMB orbits; RMB + WASD/QE flies, with Shift for faster travel.
 - MMB pans; **Alt + MMB drag zooms** without a mouse wheel. Drag up to move closer and down to move farther away. Wheel zoom also remains available; F frames selection.
 - In Pose: **Shift** temporarily swaps Move/Rotate; **W/E** choose Move/Rotate explicitly. **Alt** is fine adjustment.
@@ -154,7 +182,7 @@ The scene and library previews use neutral hemisphere illumination, with **no di
 - Imported FBX/GLB/glTF models preserve their own rigs and embedded clips. Native skeletal sequencing works on supported skeletons; library compatibility is restricted to prepared actor families.
 - Use self-contained GLB for portable models. External glTF dependencies are not bundled; saving such a model is refused. FBX may require embedded textures.
 - The original Dog blockout model remains a static prop. Husky and Shiba Inu are supplied rigged dogs with native animation cycles.
-- Camera cuts, video plates, video/depth/edge/mask export and direct AI generation are not implemented.
+- Camera cuts, audio, video plates, edge/mask passes and direct AI generation are not implemented. The current whole-shot export contains video frames and selected depth/pose guidance; compatibility with an AI model depends on that model's required control format.
 - Windows x64 is the verified development platform. macOS/Linux builds have not been verified.
 
 See VALIDATION.md for the exact checks and final delivery status.

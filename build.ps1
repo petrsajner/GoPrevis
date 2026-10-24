@@ -12,7 +12,7 @@ if ($Test) {
     & $previsGodot --headless --path $PSScriptRoot -- --smoke-test
     if ($LASTEXITCODE -ne 0) { throw 'Headless smoke checks failed.' }
 }
-$previsOutput = Join-Path $PSScriptRoot 'build\Previs-0.8.0-Windows'
+$previsOutput = Join-Path $PSScriptRoot 'build\Previs-0.9.0-Windows'
 New-Item -ItemType Directory -Path $previsOutput -Force | Out-Null
 New-Item -ItemType Directory -Path (Join-Path $PSScriptRoot 'output') -Force | Out-Null
 $previsLog = Join-Path $PSScriptRoot 'output\export.log'
@@ -30,4 +30,7 @@ Copy-Item -LiteralPath 'assets\content\motions\human\READMEFIRST-cgspeed.txt' -D
 $previsCatalogOutput = Join-Path $previsOutput 'catalog'
 New-Item -ItemType Directory -Path $previsCatalogOutput -Force | Out-Null
 Get-ChildItem -LiteralPath 'assets\content\manifests' -Filter '*.json' | Copy-Item -Destination $previsCatalogOutput -Force
+$previsVideoTools = Join-Path $previsOutput 'tools\ffmpeg'
+New-Item -ItemType Directory -Path $previsVideoTools -Force | Out-Null
+Get-ChildItem -LiteralPath '.tools\ffmpeg' -File | Copy-Item -Destination $previsVideoTools -Force
 Write-Output ('Built: ' + (Join-Path $previsOutput 'Previs.exe'))
