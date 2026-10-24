@@ -1,4 +1,4 @@
-# Previs 0.7.0 validation
+# Previs 0.8.0 validation
 
 Validation date: **2026-10-25**. Development/verified platform: **Windows x64**.
 
@@ -11,9 +11,25 @@ This revision improves interaction: temporary pose-tool switching, intermediate-
 - Rendered source checks use the Compatibility renderer on the development Windows machine.
 - Godot locale and fallback locale are en.
 
-## Interaction changes for 0.7.0 — current source evidence
+## Unified workflow and correction layers for 0.8.0 — source evidence
 
-The integrated source builds with zero warnings and errors. `RunInteractionChecks` passes **31 application assertions**, and invokes **15 precision-numeric checks** plus **14 timeline-trim checks**. Evidence: `output/interaction-source-0.7.0.log` ends in `INTERACTION_OK checks=31 numeric=15 timeline=14`. The standalone precision and trim probes also pass. This section records source execution; independent 0.7.0 packaged/rendered delivery results are added only after that execution.
+The new integrated source builds with zero warnings and errors. The current correction suite passes **55 assertions**, and the actual correction timeline passes **13 assertions**. The revised interaction suite passes **38 assertions**, invoking **15 precision-number checks** and **14 motion-trim checks**. Static-pose, model/motion library and desktop layout reruns pass **278**, **225** and **24** assertions respectively. This section records source execution; independent exported-executable results are added by the final delivery audit.
+
+The revision verifies:
+
+- One Arrange interaction selects and drags object bodies/boxes and cameras in the view plane; holding Shift adds the complete XYZ move/scale/rotation gizmo. Separate Select and Move toolbar modes are absent.
+- Exactly five library sections remain: Models, Objects, Poses, Motions and Cameras. Human/animal models and prop/world assets use visible scrollable subgroups; camera moves are part of Cameras. The inspector shows a context and back control rather than parallel task tabs.
+- Elbow IK solves upward and retains descendant local poses. Forearm/hand children follow the moved elbow; shin/foot children follow a moved knee instead of being fixed at their old endpoints.
+- Manual pose edits create sparse additive local-quaternion and root-offset keys without removing or replacing mocap clips. The source assets, speed, clip timing, blends and base static pose remain intact when the editor is entered.
+- First late edits get a neutral time-zero key; affected channels alone are written during a gesture. Quaternion interpolation, exact key evaluation, non-accumulating neutral/static/mocap playback, reverse seeking, source-facing path alignment and zero-correction behavior are tested.
+- Pose-correction groups expand to keyed joint/root rows. Actual timeline selection, capture, retiming, collision handling, removal and Undo/Redo are exercised separately from motion clip trimming and object Transform channels.
+- Scene format **5** embeds corrections and accepts formats **1–4**. Duplication and project save/reopen retain source motion and correction channels. Static library capture includes the visible corrected pose while the original actor continues using its source motion.
+
+A rendered source UI run verifies a keyed head change while the mocap leg motion continues. The older manual editor compatibility fixture is being updated to assert preservation of live source data rather than the obsolete freeze-and-clear contract; it is not counted as a new pass until rerun.
+
+## Previous interaction checks for 0.7.0
+
+The integrated source builds with zero warnings and errors. `RunInteractionChecks` passes **31 application assertions**, and invokes **15 precision-numeric checks** plus **14 timeline-trim checks**. Evidence: `output/interaction-source-0.7.0.log` ends in `INTERACTION_OK checks=31 numeric=15 timeline=14`. The standalone precision and trim probes also pass. These are historical 0.7.0 source results; the new Arrange workflow supersedes the former Select/Move split.
 
 - Shift switches a hand from Move to Rotate before pointer motion; releasing Shift during the drag retains the latched rotation until mouse release. Wrist orientation changes without moving the wrist position, and explicit Rotate selection survives reselecting that hand. W/E select Move/Rotate while posing.
 - Shift-moved elbows and knees change their bend positions while retaining the hand/foot endpoint and fixed limb lengths.
@@ -29,7 +45,7 @@ A rendered source UI probe also passes: the actual camera body is selected, its 
 
 ## Historical regression evidence (0.4–0.6)
 
-The following sections retain prior verification and content provenance. Their versioned logs are historical evidence, not claims that a 0.7.0 portable executable has already passed those runs.
+The following sections retain prior verification and content provenance. Their versioned logs are historical evidence, not claims about the new 0.8.0 exported executable.
 
 ## Responsive layout
 
@@ -132,3 +148,7 @@ The portable package contains `examples/manual-adjusted-pose.previs` with its ow
 ## Independent 0.7.0 delivery
 
 The exported Windows executable passes **31 integrated interaction assertions, 15 precision-number assertions and 14 IN/OUT timeline assertions** in one rendered run. It also passes 71 rendered manual-pose checks, 278 static-pose checks, 225 model/motion library checks and the clean full-HD smoke render. Logs: `output/packaged-0.7.0-{interaction,manual,poses,content,render}.log`; all five stderr logs are empty. The exported resource inventory confirms 567 sources, 859 covers and 118 poses without missing files. `BUILD-INFO.json` records the exact source revision, binary hashes and counts. The portable ZIP is fully read back for CRC verification.
+
+## Independent 0.8.0 delivery
+
+The exported Windows executable passes **55 additive-correction checks plus 13 real pose-key timeline checks**, **38 unified-workflow checks plus 15 numeric and 14 clip-trim checks**, 71 updated manual-pose checks, 278 static-pose checks, 225 content-library checks and the rendered full-HD smoke test. Logs are `output/packaged-0.8.0-{corrections,workflow,manual,poses,content,render}.log`; all six stderr files are empty. The PCK inventory confirms 567 motion/model sources, 859 covers and 118 poses without missing files. `examples/keyed-pose.previs` includes its original mocap sources plus head/hand/hips correction keys and path/manual layers. Project format 5 preserves these tracks; older formats 1–4 load with an identity correction layer.

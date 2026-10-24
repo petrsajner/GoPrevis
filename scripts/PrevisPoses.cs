@@ -37,19 +37,21 @@ public partial class PrevisApp
     void ApplyPoseToEntry(Entry target,LibraryPose pose)
     {
         if(target.Node is not RiggedActor actor)throw new InvalidDataException("Choose a prepared human figure for this pose.");
-        actor.SetStaticPose(pose.Pose);target.Data.StaticPose=actor.GetStaticPoseSnapshot();target.Data.MotionClips.Clear();target.Data.MotionPath=null;target.Data.MotionName=null;_selectedClipId="";RebuildTrack(target);
+        actor.EndPoseCorrectionEdit();target.Data.PoseCorrections=new();actor.SetStaticPose(pose.Pose);target.Data.StaticPose=actor.GetStaticPoseSnapshot();target.Data.MotionClips.Clear();target.Data.MotionPath=null;target.Data.MotionName=null;_selectedClipId="";RebuildTrack(target);
     }
     void ClearSelectedPose()
     {
         if(_selected?.Node is not RiggedActor actor){Status("Select a human figure to reset its pose.");return;}
-        PushUndo();_selected.Data.StaticPose=null;actor.SetStaticPose(null);SetTime(_time);Select(_selected);Status(_selected.Data.MotionClips.Count==0?"Standing pose restored.":"Stored pose cleared; motion clips remain active.");
+        PushUndo();actor.EndPoseCorrectionEdit();_selected.Data.PoseCorrections=new();_selected.Data.StaticPose=null;actor.SetStaticPose(null);SetTime(_time);Select(_selected);Status(_selected.Data.MotionClips.Count==0?"Standing pose restored.":"Stored pose cleared; motion clips remain active.");
     }
     string DefaultPoseName()=>(_selected?.Data.Name??"Figure")+" · frame "+(int)Math.Round(_time*_fps);
     void CaptureSelectedPose(){try{SaveCapturedPose(DefaultPoseName());}catch(Exception ex){Error(ex.Message);}}
     LibraryPose SaveCapturedPose(string name)
     {
         if(_selected?.Node is not RiggedActor actor)throw new InvalidDataException("Select a human figure to save its current pose.");
-        _playing=false;_play.Text="▶";SetTime(_time);var snapshot=actor.MotionTrackClipCount==0&&actor.HasStaticPose?actor.GetStaticPoseSnapshot()!:actor.BakeCurrentPose(name);snapshot.Name=string.IsNullOrWhiteSpace(name)?"Custom pose":name.Trim();string id="pose-user-"+Guid.NewGuid().ToString("N");snapshot.CatalogId=id;
+        _playing=false;_play.Text="▶";SetTime(_time);var snapshot=actor.CaptureEvaluatedPose(name);
+        if(actor.MotionTrackClipCount>0&&_poseBaseSnapshots.TryGetValue(_selected.Data.Id,out var source)){snapshot.RootPosition[0]-=source.RootPosition[0];snapshot.RootPosition[2]-=source.RootPosition[2];}
+        snapshot.Name=string.IsNullOrWhiteSpace(name)?"Custom pose":name.Trim();string id="pose-user-"+Guid.NewGuid().ToString("N");snapshot.CatalogId=id;
         var pose=new LibraryPose{Id=id,Name=snapshot.Name,Category="My poses",Tags=new[]{"human","saved","static"},Description="Saved from the selected figure at frame "+(int)Math.Round(_time*_fps)+". Independent of its motion file.",Pose=snapshot};
         _=AllLibraryPoses.Count();SavedPoseLibrary.Save(pose);_userPoses.Add(pose);ShowCategory("Poses");_ = RenderSavedPoseCover(pose);Status("Saved "+pose.Name+" in My poses. The figure's animation is unchanged.");return pose;
     }

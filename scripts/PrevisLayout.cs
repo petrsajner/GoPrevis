@@ -17,7 +17,7 @@ public partial class PrevisApp
     HSplitContainer _layoutLibrarySplit=null!,_layoutInspectorSplit=null!;
     ScrollContainer _layoutInspectorScroll=null!;
     SubViewportContainer _layoutCameraPreview=null!;
-    Button _finishPathButton=null!,_selectToolButton=null!,_moveToolButton=null!;
+    Button _finishPathButton=null!;
     Control _layoutHeader=null!,_layoutTimelinePane=null!;
     int _layoutBreakpoint=-1;
 
@@ -42,9 +42,9 @@ public partial class PrevisApp
         var upper=new HBoxContainer{SizeFlagsVertical=SizeFlags.ExpandFill,SizeFlagsHorizontal=SizeFlags.ExpandFill};upper.AddThemeConstantOverride("separation",1);_layoutWorkSplit.AddChild(upper);
 
         var rail=new VBoxContainer{CustomMinimumSize=new Vector2(54,0)};rail.AddThemeConstantOverride("separation",3);
-        foreach(var category in new[]{"Scene","People","Poses","Animals","Props","Environment","Cameras","Camera moves","Motions"})
+        foreach(var category in new[]{"Models","Objects","Poses","Motions","Cameras"})
         {
-            string captured=category;string label=category switch{"Environment"=>"World","Camera moves"=>"Moves",_=>category};
+            string captured=category;string label=category;
             var button=Button(label,()=>ShowCategory(captured),true);button.TooltipText=category;button.ClipText=true;button.CustomMinimumSize=new Vector2(52,34);
             button.AddThemeFontSizeOverride("font_size",11);button.AddThemeStyleboxOverride("normal",CompactStyle(new Color("1a1a20"),4,2));
             button.AddThemeStyleboxOverride("hover",CompactStyle(new Color("303039"),4,2));button.AddThemeStyleboxOverride("pressed",CompactStyle(new Color("383045"),4,2));
@@ -69,7 +69,7 @@ public partial class PrevisApp
         _layoutInspectorSplit.AddThemeConstantOverride("separation",5);_layoutLibrarySplit.AddChild(_layoutInspectorSplit);
         var center=new VBoxContainer{CustomMinimumSize=new Vector2(340,180),SizeFlagsHorizontal=SizeFlags.ExpandFill,SizeFlagsVertical=SizeFlags.ExpandFill};center.AddThemeConstantOverride("separation",1);_layoutInspectorSplit.AddChild(center);
         _drawPathButton=Button("Draw path",StartDrawingPath,true);_finishPathButton=Button("Finish",FinishDrawingPath);_finishPathButton.Visible=false;
-        _poseToolbarButton=Button("Pose",()=>{if(_poseEditing){StopPoseEditing();ShowInspectorSection("Object");}else StartPoseEditing();},true);_poseToolbarButton.TooltipText="Edit the selected human by dragging its hands, feet and body joints.";_selectToolButton=Button("Select",()=>{StopPoseEditing();_moveTool=false;},true);_moveToolButton=Button("Move",()=>{StopPoseEditing();_moveTool=true;},true);var toolbar=Row(_selectToolButton,_moveToolButton,_poseToolbarButton,_drawPathButton,_finishPathButton,Space(),Button("Frame",FrameSelected),Button("Perspective",()=>{if(_pilot)TogglePilot();else ResetEditorView();}));toolbar.AddThemeConstantOverride("separation",4);center.AddChild(CompactPanel(toolbar,4,2));
+        center.AddChild(CompactPanel(BuildUnifiedViewportToolbar(),4,2));
         _sceneContainer=CreateSceneViewportContainer();_sceneContainer.Stretch=true;_sceneContainer.SizeFlagsVertical=SizeFlags.ExpandFill;_sceneContainer.SizeFlagsHorizontal=SizeFlags.ExpandFill;_sceneContainer.MouseFilter=MouseFilterEnum.Stop;
         _sceneViewport=new SubViewport{Size=new Vector2I(800,500),RenderTargetUpdateMode=SubViewport.UpdateMode.Always,HandleInputLocally=true,Msaa3D=Viewport.Msaa.Msaa4X};_sceneContainer.AddChild(_sceneViewport);_sceneContainer.GuiInput+=ViewportInput;center.AddChild(_sceneContainer);
         _framing=new CameraFrameOverlay{App=this,MouseFilter=MouseFilterEnum.Ignore};_framing.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);_sceneContainer.AddChild(_framing);BuildPoseViewportOverlay();BuildObjectGizmoOverlay();
@@ -99,7 +99,7 @@ public partial class PrevisApp
         var transport=Row(_play,Button("|◀",()=>SetTime(0)),_timeLabel,_scrub,Text("Length",11,true),_durationField,Text("fps",11,true),_fpsChoice);transport.AddThemeConstantOverride("separation",5);timelinePane.AddChild(CompactPanel(transport,6,2));
         _timeline=new TimelineView{App=this,CustomMinimumSize=new Vector2(0,150),SizeFlagsHorizontal=SizeFlags.ExpandFill};
         var timelineScroll=new ScrollContainer{SizeFlagsVertical=SizeFlags.ExpandFill,SizeFlagsHorizontal=SizeFlags.ExpandFill,HorizontalScrollMode=ScrollContainer.ScrollMode.Disabled};timelineScroll.AddChild(_timeline);var tracksPanel=CompactPanel(timelineScroll,2,2);tracksPanel.SizeFlagsVertical=SizeFlags.ExpandFill;timelinePane.AddChild(tracksPanel);
-        _status=Text("Ready",11,true);_status.ClipText=true;_status.TooltipText="RMB orbit · MMB pan · Alt+MMB zoom · Shift in Select: 3D transforms · F frame selection";_layoutRoot.AddChild(CompactPanel(_status,6,1));
+        _status=Text("Ready",11,true);_status.ClipText=true;_status.TooltipText="RMB orbit · MMB pan · Alt+MMB zoom · Shift: 3D transforms · F frame selection";_layoutRoot.AddChild(CompactPanel(_status,6,1));
 
         _fileDialog=new FileDialog{Access=FileDialog.AccessEnum.Filesystem,UseNativeDialog=false};_fileDialog.FileSelected+=path=>{try{_fileAction?.Invoke(path);}catch(Exception ex){Error(ex.Message);}};AddChild(_fileDialog);
         _message=new AcceptDialog{Title="Previs"};AddChild(_message);
@@ -124,7 +124,7 @@ public partial class PrevisApp
         FitCompactPreview();_layoutTimelinePane.CustomMinimumSize=new Vector2(0,height<850?172:205);UpdateCompactChrome();
     }
     void FitCompactPreview(){if(_layoutCameraPreview==null||_layoutCameraPreview.Size.X<1)return;float height=Mathf.Round(_layoutCameraPreview.Size.X*9f/16f);if(Math.Abs(_layoutCameraPreview.CustomMinimumSize.Y-height)>.5f)_layoutCameraPreview.CustomMinimumSize=new Vector2(0,height);}
-    void UpdateCompactChrome(){if(_finishPathButton!=null)_finishPathButton.Visible=_drawingPath;if(_selectToolButton!=null)_selectToolButton.ButtonPressed=!_poseEditing&&!_moveTool;if(_moveToolButton!=null)_moveToolButton.ButtonPressed=!_poseEditing&&_moveTool;}
+    void UpdateCompactChrome(){if(_finishPathButton!=null)_finishPathButton.Visible=_drawingPath;}
 
     /// <summary>Geometry-level checks for automated desktop layout validation.</summary>
     public async Task<int> RunResponsiveLayoutChecks()

@@ -21,7 +21,7 @@ public partial class PrevisApp
     static readonly Color[] ObjectGizmoColors={new("ef817d"),new("8ed0a3"),new("84acf4")};
     bool ObjectGizmoDragging=>_objectGizmoDrag!=ObjectGizmoOperation.None;
     Node3D? ObjectGizmoTarget=>_selectedCamera?.Rig??_selected?.Node;
-    bool ObjectGizmoAvailable=>!_poseEditing&&!_drawingPath&&!_moveTool&&ObjectGizmoTarget!=null;
+    bool ObjectGizmoAvailable=>!_poseEditing&&!_drawingPath&&ObjectGizmoTarget!=null;
     bool ObjectGizmoVisible=>ObjectGizmoAvailable&&(_viewportShift||ObjectGizmoDragging);
 
     void BuildObjectGizmoOverlay()

@@ -8,9 +8,6 @@ namespace Previs;
 public partial class PrevisApp
 {
     bool _viewportShift,_middleZoom,_zoomUndo,_sceneTransformGesture,_numericGesture,_numericUndoPushed;
-    bool _cameraMoveDrag,_cameraMoveStarted;
-    Vector3 _cameraMoveOrigin,_cameraMoveNormal,_cameraMoveStart;
-    Vector2 _cameraMoveMouse;
 
     void BeginNumericGesture(){_numericGesture=true;_numericUndoPushed=false;_playing=false;_play.Text="▶";}
     void EndNumericGesture(){_numericGesture=false;_numericUndoPushed=false;}
@@ -86,31 +83,6 @@ public partial class PrevisApp
         else UpdateOrbit();
         return true;
     }
-    bool CameraDragPlane(Vector2 position,out Vector3 point)
-    {
-        var origin=_editorCamera.ProjectRayOrigin(position);var direction=_editorCamera.ProjectRayNormal(position);float denominator=_cameraMoveNormal.Dot(direction);point=_cameraMoveOrigin;
-        if(Math.Abs(denominator)<.00001f)return false;float distance=_cameraMoveNormal.Dot(_cameraMoveOrigin-origin)/denominator;if(distance<0)return false;point=origin+direction*distance;return point.IsFinite();
-    }
-    void BeginCameraViewportMove(Vector2 mouse)
-    {
-        if(_selectedCamera==null)return;_cameraMoveOrigin=_selectedCamera.Rig.GlobalPosition;_cameraMoveNormal=_editorCamera.GlobalBasis.Z.Normalized();_cameraMoveMouse=mouse;
-        _cameraMoveDrag=CameraDragPlane(mouse,out _cameraMoveStart);_cameraMoveStarted=false;
-    }
-    bool HandleCameraViewportMove(InputEvent input)
-    {
-        if(!_cameraMoveDrag)return false;
-        if(input is InputEventMouseButton {ButtonIndex:MouseButton.Left,Pressed:false}){EndCameraViewportMove();return true;}
-        if(input is not InputEventMouseMotion motion)return false;
-        if(_selectedCamera==null){EndCameraViewportMove();return true;}
-        if(!_cameraMoveStarted){if(motion.Position.DistanceTo(_cameraMoveMouse)<2)return true;BeginSceneTransformGesture();_cameraMoveStarted=true;}
-        if(CameraDragPlane(motion.Position,out var point))
-        {
-            var world=_cameraMoveOrigin+point-_cameraMoveStart;if(motion.CtrlPressed)world=new Vector3(Mathf.Snapped(world.X,.01f),Mathf.Snapped(world.Y,.01f),Mathf.Snapped(world.Z,.01f));
-            var parent=_selectedCamera.Rig.GetParentNode3D();SetSelectedTransformFromGizmo("Position",parent==null?world:parent.GlobalTransform.AffineInverse()*world);
-        }
-        return true;
-    }
-    void EndCameraViewportMove(){_cameraMoveDrag=false;if(_cameraMoveStarted){_cameraMoveStarted=false;EndSceneTransformGesture();}}
     PhysicsRayQueryParameters3D ScenePickQuery(Vector3 from,Vector3 to)
     {
         var query=PhysicsRayQueryParameters3D.Create(from,to,1);query.Exclude=new Godot.Collections.Array<Rid>(_cameras.Where(c=>!c.Rig.IsVisibleInTree()).SelectMany(c=>Descendants(c.Rig).OfType<CollisionObject3D>()).Select(c=>c.GetRid()));return query;

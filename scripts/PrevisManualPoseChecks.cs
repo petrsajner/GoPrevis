@@ -149,20 +149,21 @@ public partial class PrevisApp
             Check(child.Node.Scale.IsEqualApprox(childScale)&&((RiggedActor)child.Node).GetPoseRootOffset().DistanceTo(offset)<.0001f,"custom edited pose retains target figure proportions");
             _entries.Remove(child);_world.RemoveChild(child.Node);child.Node.QueueFree();Select(entry);
 
-            // Starting a manual edit from mocap must freeze the visible frame without teleporting it.
+            // Entering corrections must preserve the live source and the visible frame.
             entry.Data.Position=new float[]{.5f,0,.5f};entry.Data.Rotation=new float[]{0,25,0};entry.Data.Scale=new float[]{1,1,1};entry.Data.Path=new();entry.Data.TransformAnimation=new();SetTime(0);DropMotion("cmu-02-01",entry,entry.Node.Position);SetTime(.9);Select(entry);
             var hipWorld=entry.Node.GlobalTransform*actor.GetPoseJointPosition("Hips");var liveBasis=entry.Node.GlobalBasis;var liveRotations=CaptureLibraryBonePose(entry).Select(p=>p.Basis.GetRotationQuaternion()).ToArray();
             rejected=false;try{actor.SetPoseBoneRotationDegrees("Head",Vector3.Zero);}catch(InvalidOperationException){rejected=true;}
-            Check(rejected,"the rig prevents editing an unfrozen motion source");
+            Check(rejected,"the rig prevents changing a live motion source outside correction staging");
+            var liveClips=JsonSerializer.Serialize(entry.Data.MotionClips);var livePath=entry.Data.MotionPath;var liveBase=JsonSerializer.Serialize(entry.Data.StaticPose);
             StartPoseEditing();if(entry.Data.MotionClips.Count>0){BeginPoseGesture();EndPoseGesture();}
-            Check(entry.Data.MotionClips.Count==0&&entry.Data.StaticPose!=null&&string.IsNullOrEmpty(entry.Data.MotionPath),"manual editing can freeze the current motion frame into an independent pose");
-            Check((entry.Node.GlobalTransform*actor.GetPoseJointPosition("Hips")).DistanceTo(hipWorld)<.001f&&entry.Node.GlobalBasis.IsEqualApprox(liveBasis),"freezing current mocap preserves the visible figure's world placement");
-            Check(liveRotations.Zip(CaptureLibraryBonePose(entry)).All(pair=>SameRotation(pair.First,pair.Second.Basis.GetRotationQuaternion())),"motion freeze retains every displayed local bone rotation");
+            Check(entry.Data.MotionClips.Count>0&&JsonSerializer.Serialize(entry.Data.MotionClips)==liveClips&&entry.Data.MotionPath==livePath&&JsonSerializer.Serialize(entry.Data.StaticPose)==liveBase,"entering the correction editor retains source clips, asset path and base pose unchanged");
+            Check((entry.Node.GlobalTransform*actor.GetPoseJointPosition("Hips")).DistanceTo(hipWorld)<.001f&&entry.Node.GlobalBasis.IsEqualApprox(liveBasis),"entering live corrections preserves the visible figure's world placement");
+            Check(liveRotations.Zip(CaptureLibraryBonePose(entry)).All(pair=>SameRotation(pair.First,pair.Second.Basis.GetRotationQuaternion())),"entering live corrections retains every displayed local bone rotation");
 
             entry.Data.Path=new ActorPathData{Enabled=true,OrientToPath=true,Duration=8,Points=new(){new float[]{-1,0,1},new float[]{1,0,2},new float[]{2,0,0}}};SetTime(0);DropMotion("cmu-02-01",entry,entry.Node.Position);SetTime(.75);Select(entry);
             var pathWorldJoints=actor.PoseBoneNames.ToDictionary(name=>name,name=>entry.Node.GlobalTransform*actor.GetPoseJointPosition(name));
             StartPoseEditing();if(entry.Data.MotionClips.Count>0){BeginPoseGesture();EndPoseGesture();}
-            Check(entry.Data.Path.Enabled&&pathWorldJoints.All(pair=>(entry.Node.GlobalTransform*actor.GetPoseJointPosition(pair.Key)).DistanceTo(pair.Value)<.001f),"freezing a path-driven frame preserves every displayed joint and the path layer");
+            Check(entry.Data.Path.Enabled&&pathWorldJoints.All(pair=>(entry.Node.GlobalTransform*actor.GetPoseJointPosition(pair.Key)).DistanceTo(pair.Value)<.001f),"entering path-driven corrections preserves every displayed joint, source clip and path layer");
             ApplyPoseToEntry(entry,source);SetTime(.75);Select(entry);StartPoseEditing();SelectPoseBone("Hips");_poseTool="Rotate";transform=entry.Node.Transform;
             Vector3 beforeFacing=entry.Node.GlobalBasis*(actor.GetPoseJointGlobalRotation("Hips")*Vector3.Forward);var hipsRotation=actor.GetPoseBoneRotationDegrees("Hips");
             BeginPoseGesture();UpdatePoseBoneRotation(hipsRotation+new Vector3(0,30,0));EndPoseGesture();Vector3 afterFacing=entry.Node.GlobalBasis*(actor.GetPoseJointGlobalRotation("Hips")*Vector3.Forward);

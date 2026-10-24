@@ -117,7 +117,7 @@ public partial class RiggedActor
     public void EvaluateTimeline(double sceneSeconds, bool forceInPlace = false)
     {
         EnsureRig();
-        if (_motionTrack.Length == 0) { if (_staticPose != null) ApplyStaticPose(); return; }
+        if (_motionTrack.Length == 0) { ApplyStaticPose(); return; }
         RestoreMotionPicker();
         if (!double.IsFinite(sceneSeconds)) sceneSeconds = 0;
         PreparedMotionClip first = _motionTrack[0];

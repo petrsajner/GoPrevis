@@ -168,7 +168,7 @@ public partial class PrevisApp
             string project = Path.Combine(directory, "library-roundtrip.previs");
             SaveTo(project);
             var saved = JsonSerializer.Deserialize<ProjectData>(File.ReadAllText(project))!;
-            Check(saved.Version == 4 && saved.Objects.Count == expected.Count, "content saves without changing project format 4");
+            Check(saved.Version == 5 && saved.Objects.Count == expected.Count, "content saves without changing project format 5");
             LoadProjectFromPath(project);
             SetTime(roundtripTime);
             for (int i = 0; i < 2; i++) await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);

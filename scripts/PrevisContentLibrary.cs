@@ -33,18 +33,8 @@ public partial class PrevisApp
         if(color?.Length==3)actor.SetBodyColor(new Color(color[0],color[1],color[2]));
     }
 
-    void BuildModelLibrary(string section)
-    {
-        var models=ContentCatalog.All.Where(m=>section switch
-        {
-            "People"=>m.Category=="People", "Animals"=>m.Category=="Animals",
-            "Environment"=>m.Category is "Architecture" or "Nature", _=>m.Category is "Furniture" or "Vehicles" or "Props"
-        }).ToArray();
-        var categories=new OptionButton{FitToLongestItem=false,ClipText=true};categories.AddItem("All categories");foreach(var category in models.Select(m=>m.Category).Distinct().Order())categories.AddItem(category);categories.Visible=categories.ItemCount>2;_library.AddChild(categories);
-        var search=new LineEdit{PlaceholderText="Search models…",ClearButtonEnabled=true};_library.AddChild(search);
-        BuildPagedCards(()=>models.Where(m=>(categories.Selected==0||m.Category==categories.GetItemText(categories.Selected))&&(search.Text==""||(m.Name+" "+m.Category).Contains(search.Text,StringComparison.OrdinalIgnoreCase))).Select(m=>new ContentCard(m.Id,m.Name,m.Category+" · "+m.License,m,null)).ToArray(),search,categories);
-        if(section=="People"){_library.AddChild(Button("Browse static poses",()=>ShowCategory("Poses")));_library.AddChild(Text("Prepared mannequin rigs",11,true));}
-    }
+    // Old category names remain an internal compatibility input, never extra tabs.
+    void BuildModelLibrary(string section)=>BuildUnifiedLibrary(UnifiedLibraryCategory(section));
 
     void BuildMotionLibrary()
     {
@@ -69,12 +59,17 @@ public partial class PrevisApp
             count.Text=items.Length+" items · drag into scene";pageLabel.Text=$"{page+1} / {pages}";previous.Disabled=page==0;next.Disabled=page==pages-1;
             foreach(var item in items.Skip(page*LibraryPageSize).Take(LibraryPageSize))
             {
-                var card=new LibraryCard{Kind=item.Pose!=null?"pose":item.Motion==null?"asset":"motion",Id=item.Id,Caption=item.Name,CustomMinimumSize=new Vector2(88,116),SizeFlagsHorizontal=SizeFlags.ExpandFill,ClipText=true,TooltipText=item.Name+"\n"+item.Detail};
-                card.Pressed+=()=>{try{if(item.Pose!=null)DropPose(item.Id,_selected?.Node is RiggedActor?_selected:null,Vector3.Zero);else if(item.Motion!=null)DropMotion(item.Id,_selected!=null&&CompatibleMotion(_selected,item.Motion)?_selected:null,Vector3.Zero);else DropAsset(item.Id,Vector3.Zero);}catch(Exception ex){Error(ex.Message);}};
-                AddContentThumbnail(card,item);grid.AddChild(card);
+                grid.AddChild(CreateContentCard(item));
             }
         }
         previous.Pressed+=()=>{page--;Populate(false);};next.Pressed+=()=>{page++;Populate(false);};search.TextChanged+=_=>Populate(true);foreach(var filter in filters)filter.ItemSelected+=_=>Populate(true);Populate(true);
+    }
+
+    LibraryCard CreateContentCard(ContentCard item)
+    {
+        var card=new LibraryCard{Kind=item.Pose!=null?"pose":item.Motion==null?"asset":"motion",Id=item.Id,Caption=item.Name,CustomMinimumSize=new Vector2(88,116),SizeFlagsHorizontal=SizeFlags.ExpandFill,ClipText=true,TooltipText=item.Name+"\n"+item.Detail};
+        card.Pressed+=()=>{try{if(item.Pose!=null)DropPose(item.Id,_selected?.Node is RiggedActor?_selected:null,Vector3.Zero);else if(item.Motion!=null)DropMotion(item.Id,_selected!=null&&CompatibleMotion(_selected,item.Motion)?_selected:null,Vector3.Zero);else DropAsset(item.Id,Vector3.Zero);}catch(Exception ex){Error(ex.Message);}};
+        AddContentThumbnail(card,item);return card;
     }
 
     void AddContentThumbnail(LibraryCard card,ContentCard item)

@@ -92,6 +92,8 @@ public partial class PrevisApp
         var rename=new LineEdit {Text=ActiveCameraName,PlaceholderText="Camera name",TooltipText="Press Enter to rename the active camera"};
         rename.TextSubmitted+=value=>{if(string.IsNullOrWhiteSpace(value))return;PushUndo();var entry=_cameras.First(c=>c.Rig==_shot);entry.Name=value.Trim();foreach(var label in entry.Rig.GetChildren().OfType<Label3D>())label.Text=entry.Name;RefreshCameraChoices();UpdatePreview();ShowCategory("Cameras");};_library.AddChild(rename);
         _library.AddChild(Text("FRAMING",12,true));foreach(var p in new[]{"Wide shot","Medium shot","Close-up","High angle","Current view"}){string choice=p;_library.AddChild(Button(p,()=>ApplyShot(choice)));}
+        _library.AddChild(Text("MOVEMENT",12,true));
+        foreach(string preset in new[]{"Static","Dolly in","Truck right","Crane up","Orbit"}){string move=preset;_library.AddChild(Button(move,()=>{PushUndo();_shot.SetPreset(move,_duration);SyncCameraFromRig(_cameras.First(c=>c.Rig==_shot));SetTime(0);SelectCamera(_cameras.First(c=>c.Rig==_shot));Status(move+" camera move applied.");}));}
         _library.AddChild(Button("Clear camera keys",ClearCameraAnimation));
     }
 
@@ -128,11 +130,12 @@ public partial class PrevisApp
     }
     void ShowInspectorSection(string section)
     {
+        if(section is "Motion" or "Path"&&_poseEditing)StopPoseEditing();
         if(_selectedCamera!=null||section=="Pose"&&_selected?.Node is not RiggedActor)section="Object";
         _inspectorSection=section;string current="Object";
         foreach(var node in _inspector.GetChildren().OfType<Control>()){if(node==_inspectorTabs){node.Visible=true;continue;}if(node==_motionHeader)current="Motion";if(node==_pathHeader)current="Path";if(node==_posePanel)current="Pose";node.Visible=current==section;}
         if(_animationChoice!=null)_animationChoice.Visible=section=="Motion"&&_selected?.Player!=null;
-        if(_clipChoice!=null)_clipChoice.Visible=section=="Motion"&&(_selected?.Node is RiggedActor||_selected?.NativeTrack!=null);UpdatePoseInspector();
+        if(_clipChoice!=null)_clipChoice.Visible=section=="Motion"&&(_selected?.Node is RiggedActor||_selected?.NativeTrack!=null);UpdatePoseInspector();RefreshUnifiedWorkflow();
     }
     void RefreshSequenceInspector()
     {
@@ -222,10 +225,5 @@ public partial class PrevisApp
         var path=entry.Data.Path;Vector3 facing=entry.Node is RiggedActor actor?actor.AnimatedForward:entry.NativeTrack?.AnimatedForward??Vector3.Forward;
         var value=TransformLayerRuntime.Evaluate(Vector(entry.Data.Position),Vector(entry.Data.Rotation),Vector(entry.Data.Scale,Vector3.One),entry.Data.TransformAnimation,path,_time,facing);
         entry.Node.Position=value.Position+(path.Enabled?Vector(entry.Data.PathOffset):Vector3.Zero);entry.Node.RotationDegrees=value.RotationDegrees;entry.Node.Scale=value.Scale;
-    }
-    void MoveEntryBase(Entry entry,Vector3 position)
-    {
-        Vector3 delta=position-Vector(entry.Data.Position);var desired=ManualValue(entry,"Position")+delta;var list=entry.Data.TransformAnimation.Position;var baseline=entry.Data.Path.Enabled?Vector(entry.Data.PathOffset):Vector(entry.Data.Position);
-        if(_autoKey||list.Count>0)TransformLayerRuntime.Upsert(list,_time,desired-baseline);else if(entry.Data.Path.Enabled)entry.Data.PathOffset=Array3(desired);else entry.Data.Position=Array3(desired);SetTime(_time);
     }
 }

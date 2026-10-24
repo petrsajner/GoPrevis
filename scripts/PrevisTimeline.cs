@@ -22,7 +22,7 @@ public partial class PrevisApp
         private int _dragPathIndex;
         private enum ClipDrag { Move, In, Out }
         private ClipDrag _clipDrag;
-        private bool _scrubbing, _hasDragged, _dragKey;
+        private bool _scrubbing, _hasDragged, _dragKey, _dragPoseKey;
         private double _start, _length, _offset, _pathKeyStart, _keyOriginalTime, _lastKeyTime;
         private float _dragX;
         private string _dragKeyChannel = "All";
@@ -36,7 +36,7 @@ public partial class PrevisApp
         private sealed record TrackRow(string Kind, string Label, Entry? Object = null,
             CameraEntry? Camera = null, string Channel = "All", bool Child = false)
         {
-            public string Target => Camera != null ? "camera:" + Camera.Id : "object:" + Object!.Data.Id;
+            public string Target => Kind=="Pose"?"pose:"+Object!.Data.Id:Camera != null ? "camera:" + Camera.Id : "object:" + Object!.Data.Id;
         }
 
         private List<TrackRow> Rows
@@ -54,7 +54,7 @@ public partial class PrevisApp
                 }
                 foreach (Entry entry in App._entries)
                 {
-                    bool motion = entry.Data.MotionClips.Count > 0 || entry.Node is RiggedActor || entry.Player != null;
+                    bool motion = entry.Data.MotionClips.Count > 0 || entry.Player != null;
                     if (motion) rows.Add(new TrackRow("Motion", entry.Data.Name + " · Motion", Object: entry));
                     if (entry.Data.Path.Points.Count > 0)
                         rows.Add(new TrackRow("Path", entry.Data.Name + " · Path", Object: entry));
@@ -63,6 +63,18 @@ public partial class PrevisApp
                     if (_expanded.Contains("object:" + entry.Data.Id))
                         foreach (string channel in new[] { "Position", "Rotation", "Scale" })
                             rows.Add(new TrackRow("Transform", channel, Object: entry, Channel: channel, Child: true));
+                    if(entry.Node is RiggedActor human)
+                    {
+                        rows.Add(new TrackRow("Pose","Pose corrections",Object:entry));
+                        if(_expanded.Contains("pose:"+entry.Data.Id))
+                        {
+                            var data=entry.Data.PoseCorrections;
+                            if(data.Root.Count>0)rows.Add(new TrackRow("Pose","Pelvis offset",Object:entry,Channel:"Root",Child:true));
+                            foreach(string bone in human.PoseBoneNames.Concat(data.Bones.Keys).Distinct())
+                                if(data.Bones.TryGetValue(bone,out var keys)&&keys.Count>0)
+                                    rows.Add(new TrackRow("Pose",PoseBoneLabel(bone),Object:entry,Channel:bone,Child:true));
+                        }
+                    }
                 }
                 return rows;
             }
@@ -76,9 +88,16 @@ public partial class PrevisApp
         }
         public void ExpandObject(string id)
         { _expanded.Add("object:"+id);UpdateMinimumHeight();ScrollGroupIntoView("object:"+id); }
+        public void ExpandPoseCorrections(string id)
+        { _expanded.Add("pose:"+id);UpdateMinimumHeight();ScrollGroupIntoView("pose:"+id); }
+        internal Rect2 PoseCorrectionRowRect(string entryId,string channel="All")
+        {
+            int row=Rows.FindIndex(r=>r.Kind=="Pose"&&r.Object?.Data.Id==entryId&&r.Channel==channel);
+            return row<0?new Rect2():new Rect2(Left,Top+row*RowHeight+2,TrackWidth,19);
+        }
         void ScrollGroupIntoView(string target)
         {
-            Callable.From(()=>{if(GetParent() is not ScrollContainer scroll)return;var rows=Rows;int start=rows.FindIndex(r=>r.Target==target&&r.Kind=="Transform"&&!r.Child);if(start<0)return;int count=rows[start].Camera!=null?5:4;scroll.ScrollVertical=(int)Math.Max(0,Top+(start+count)*RowHeight-scroll.Size.Y);}).CallDeferred();
+            Callable.From(()=>{if(GetParent() is not ScrollContainer scroll)return;var rows=Rows;int start=rows.FindIndex(r=>r.Target==target&&(r.Kind=="Transform"||r.Kind=="Pose")&&!r.Child);if(start<0)return;int count=rows[start].Kind=="Pose"?rows.Skip(start).TakeWhile(r=>r.Target==target).Count():rows[start].Camera!=null?5:4;scroll.ScrollVertical=(int)Math.Max(0,Top+(start+count)*RowHeight-scroll.Size.Y);}).CallDeferred();
         }
 
         public override void _Ready()
@@ -104,7 +123,7 @@ public partial class PrevisApp
         private void EndDrag()
         {
             _dragClip = null; _dragEntry = null; _dragPathEntry = null;
-            _dragKeyEntry = null; _dragKeyCamera = null; _dragKey = false;
+            _dragKeyEntry = null; _dragKeyCamera = null; _dragKey = false; _dragPoseKey=false;
             _scrubbing = false; _hasDragged = false;
         }
 
@@ -122,7 +141,8 @@ public partial class PrevisApp
                 if (!BeginMutation(x)) return;
                 double time = Snap(_keyOriginalTime + (x - _dragX) / TrackWidth * App._duration);
                 if (Math.Abs(time - _lastKeyTime) < KeyTolerance) return;
-                App.RetimeTransform(_dragKeyEntry, _dragKeyCamera, _dragKeyChannel, _lastKeyTime, time);
+                if(_dragPoseKey&&_dragKeyEntry!=null)App.RetimePoseCorrection(_dragKeyEntry,_dragKeyChannel,_lastKeyTime,time);
+                else App.RetimeTransform(_dragKeyEntry, _dragKeyCamera, _dragKeyChannel, _lastKeyTime, time);
                 _lastKeyTime = time; _selectedKeyTime = time;
                 App.SetTime(time); QueueRedraw();
             }
@@ -189,7 +209,9 @@ public partial class PrevisApp
         public override string _GetTooltip(Vector2 atPosition)
         {
             int index=(int)Math.Floor((atPosition.Y-Top)/RowHeight);var rows=Rows;
-            if(index<0||index>=rows.Count||rows[index].Kind!="Motion")return TooltipText;
+            if(index<0||index>=rows.Count)return TooltipText;
+            if(rows[index].Kind=="Pose")return "Pose corrections are added above motion. Expand to see keyed joints. Drag a diamond to retime it; right-click removes it. Double-click to add a key.";
+            if(rows[index].Kind!="Motion")return TooltipText;
             var entry=rows[index].Object!;var clip=SelectedClipEdge(entry,atPosition.X)??entry.Data.MotionClips.OrderByDescending(c=>c.Start).FirstOrDefault(c=>atPosition.X>=X(c.Start)&&atPosition.X<=X(c.Start+c.Duration));
             if(clip==null)return TooltipText;
             float left=atPosition.X-X(clip.Start),right=X(clip.Start+clip.Duration)-atPosition.X;
@@ -200,6 +222,7 @@ public partial class PrevisApp
         private TransformAnimationData Animation(TrackRow row) => row.Camera?.Animation ?? row.Object!.Data.TransformAnimation;
         private double[] KeyTimes(TrackRow row)
         {
+            if(row.Kind=="Pose")return App.PoseCorrectionTimes(row.Object!,row.Channel).Where(t=>double.IsFinite(t)&&t>=0&&t<=App._duration).Distinct().OrderBy(t=>t).ToArray();
             TransformAnimationData animation = Animation(row);
             IEnumerable<double> times = row.Channel switch
             {
@@ -245,10 +268,10 @@ public partial class PrevisApp
             {
                 TrackRow row = rows[index]; float y = Top + index * RowHeight;
                 bool selected = Selected(row);
-                Color text = row.Kind == "Path" ? new Color("9ed8df") : row.Child ? App._muted : App._text;
+                Color text = row.Kind == "Pose" ? new Color("dec99b") : row.Kind == "Path" ? new Color("9ed8df") : row.Child ? App._muted : App._text;
                 DrawRect(new Rect2(0, y, Left - 3, RowHeight - 1), selected ? new Color("30293c") : new Color("1b1b20"));
-                float labelX = row.Child ? 29 : row.Kind == "Transform" ? 24 : 8;
-                if (row.Kind == "Transform" && !row.Child)
+                float labelX = row.Child ? 29 : row.Kind is "Transform" or "Pose" ? 24 : 8;
+                if ((row.Kind is "Transform" or "Pose") && !row.Child)
                 {
                     bool expanded = _expanded.Contains(row.Target);
                     Vector2[] arrow = expanded
@@ -257,7 +280,8 @@ public partial class PrevisApp
                     DrawColoredPolygon(arrow, App._muted);
                 }
                 DrawString(font, new Vector2(labelX, y + 16), Fit(row.Label, Left - labelX - 7), fontSize: 11, modulate: text);
-                if (row.Kind == "Transform") DrawTransformRow(row, y, selected);
+                if(row.Kind=="Pose")DrawPoseCorrectionRow(row,y,selected);
+                else if (row.Kind == "Transform") DrawTransformRow(row, y, selected);
                 else if (row.Kind == "Path") DrawPathRow(row.Object!, y, selected);
                 else DrawMotionRow(row.Object!, y, selected);
             }
@@ -278,6 +302,18 @@ public partial class PrevisApp
             }
             if (times.Length == 0 && row.Child)
                 DrawString(ThemeDB.FallbackFont, new Vector2(Left + 7, y + 16), "Double-click to add key", fontSize: 11, modulate: new Color("77727e"));
+        }
+
+        private void DrawPoseCorrectionRow(TrackRow row,float y,bool selected)
+        {
+            DrawRect(new Rect2(Left,y+2,TrackWidth,RowHeight-5),row.Child?new Color("28251f"):new Color("302a21"));
+            var times=KeyTimes(row);
+            foreach(double time in times)
+            {
+                bool chosen=_selectedKeyTarget==row.Target&&Math.Abs(_selectedKeyTime-time)<KeyTolerance&&(_selectedKeyChannel==row.Channel||row.Channel=="All");
+                Diamond(X(time),y+11,chosen?new Color("fff0cd"):selected?new Color("e7c787"):new Color("b49b70"));
+            }
+            if(times.Length==0&&!row.Child)DrawString(ThemeDB.FallbackFont,new Vector2(Left+7,y+16),"Double-click to key the selected joint",fontSize:11,modulate:new Color("9d8f76"));
         }
 
         private void DrawMotionRow(Entry actor, float y, bool selected)
@@ -355,6 +391,7 @@ public partial class PrevisApp
                 }
                 TrackRow row = rows[index];
                 if (row.Kind == "Transform") { TransformInput(row, button); return; }
+                if(row.Kind=="Pose"){PoseCorrectionInput(row,button);return;}
                 if (button.ButtonIndex != MouseButton.Left) return;
                 Entry actor = row.Object!;
                 if (row.Kind == "Path")
@@ -389,6 +426,33 @@ public partial class PrevisApp
             { UpdatePointer(motion.Position.X); AcceptEvent(); }
         }
 
+        private void PoseCorrectionInput(TrackRow row,InputEventMouseButton button)
+        {
+            if(button.Position.X<Left)
+            {
+                if(button.ButtonIndex==MouseButton.Left)
+                {
+                    if(!row.Child&&button.Position.X<25){if(!_expanded.Add(row.Target))_expanded.Remove(row.Target);UpdateMinimumHeight();if(_expanded.Contains(row.Target))ScrollGroupIntoView(row.Target);}
+                    App.SelectPoseCorrectionTimeline(row.Object!,row.Channel,App._time);AcceptEvent();
+                }
+                return;
+            }
+            double nearest=double.NaN;float distance=8;
+            foreach(double time in KeyTimes(row)){float d=Math.Abs(button.Position.X-X(time));if(d<distance){nearest=time;distance=d;}}
+            if(double.IsFinite(nearest))
+            {
+                if(button.ButtonIndex==MouseButton.Right){App.RemovePoseCorrectionKey(row.Object!,row.Channel,nearest);QueueRedraw();AcceptEvent();return;}
+                App._playing=false;App._play.Text="▶";App.SelectPoseCorrectionTimeline(row.Object!,row.Channel,nearest);
+                _selectedKeyTarget=row.Target;_selectedKeyChannel=row.Channel;_selectedKeyTime=nearest;
+                _dragKey=true;_dragPoseKey=true;_dragKeyEntry=row.Object;_dragKeyCamera=null;_dragKeyChannel=row.Channel;_dragX=button.Position.X;_keyOriginalTime=_lastKeyTime=nearest;_hasDragged=false;AcceptEvent();return;
+            }
+            if(button.ButtonIndex!=MouseButton.Left)return;
+            App.SelectPoseCorrectionTimeline(row.Object!,row.Channel,Snap(Seconds(button.Position.X)));
+            if(button.DoubleClick){App.CapturePoseCorrectionKey(row.Channel);_selectedKeyTarget=row.Target;_selectedKeyChannel=row.Channel;_selectedKeyTime=App._time;UpdateMinimumHeight();}
+            else _scrubbing=true;
+            AcceptEvent();QueueRedraw();
+        }
+
         private void TransformInput(TrackRow row, InputEventMouseButton button)
         {
             if (button.Position.X < Left)
@@ -412,7 +476,7 @@ public partial class PrevisApp
                 App._playing = false; App._play.Text = "▶ Play";
                 App.SelectTransformTimeline(row.Object, row.Camera, row.Channel, nearest);
                 _selectedKeyTarget = row.Target; _selectedKeyChannel = row.Channel; _selectedKeyTime = nearest;
-                _dragKey = true; _dragKeyEntry = row.Object; _dragKeyCamera = row.Camera; _dragKeyChannel = row.Channel;
+                _dragKey = true; _dragPoseKey=false; _dragKeyEntry = row.Object; _dragKeyCamera = row.Camera; _dragKeyChannel = row.Channel;
                 _dragX = button.Position.X; _keyOriginalTime = _lastKeyTime = nearest; _hasDragged = false; AcceptEvent(); return;
             }
             if (button.ButtonIndex == MouseButton.Right) return;

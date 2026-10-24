@@ -94,8 +94,8 @@ public partial class RiggedActor
 
     /// <summary>
     /// Moves any prepared joint while keeping the rig's authored bone lengths.
-    /// Elbows and knees act as bend poles around their pinned hand or foot.
-    /// Other intermediate joints move on their parent's fixed-length sphere.
+    /// IK runs upwards toward the chain root. Children retain their local poses
+    /// and follow the moved joint; a hand or foot is never pinned by an elbow/knee drag.
     /// </summary>
     public Vector3 MovePoseJoint(string boneName,Vector3 targetActorLocal)
     {
@@ -107,11 +107,12 @@ public partial class RiggedActor
             Vector3 offset=new Vector3(pose.RootPosition[0],pose.RootPosition[1],pose.RootPosition[2])+targetActorLocal-original[joint].Origin;
             pose.RootPosition=new[]{offset.X,offset.Y,offset.Z};
         }
-        else if(boneName is "LeftLowerArm" or "RightLowerArm" or "LeftLowerLeg" or "RightLowerLeg")
+        else if(boneName is "LeftLowerArm" or "RightLowerArm")
         {
-            string effector=boneName.Replace("LowerArm","Hand",StringComparison.Ordinal).Replace("LowerLeg","Foot",StringComparison.Ordinal);
-            int end=EditableBoneIndex(effector);
-            SolvePoseLimb(pose,effector,original[end].Origin,targetActorLocal);
+            // Clavicle -> shoulder -> elbow is a genuine upward two-bone chain.
+            // Undo the solver's end-orientation compensation: the elbow's local
+            // pose and every descendant must follow its parents instead of holding the hand still.
+            var local=PoseCorrectionRuntime.ReadBone(pose,boneName);SolvePoseLimb(pose,boneName,targetActorLocal);SetEditingRotation(pose,joint,local);
         }
         else
         {
@@ -119,12 +120,12 @@ public partial class RiggedActor
             if(parent<0)throw new InvalidOperationException("This joint has no movable parent.");
             Vector3 current=original[joint].Origin-original[parent].Origin,desired=targetActorLocal-original[parent].Origin;
             if(desired.LengthSquared()<.000000001f)desired=current;
-            Quaternion oldJoint=original[joint].Basis.GetRotationQuaternion().Normalized();
             Quaternion rotatedParent=(EditingAlign(current,desired)*original[parent].Basis.GetRotationQuaternion()).Normalized();
             int ancestor=_bones[parent].Parent;
             Quaternion ancestorRotation=ancestor<0?Quaternion.Identity:original[ancestor].Basis.GetRotationQuaternion().Normalized();
             SetEditingRotation(pose,parent,(ancestorRotation.Inverse()*rotatedParent).Normalized());
-            SetEditingRotation(pose,joint,(rotatedParent.Inverse()*oldJoint).Normalized());
+            // Deliberately keep this joint and its descendants' LOCAL rotations.
+            // This includes knees: the hip turns, and the shin/foot follow rigidly.
         }
         Vector3 actual=EditingTransforms(pose)[joint].Origin;CommitEditedPose(pose);return actual;
     }
@@ -132,14 +133,17 @@ public partial class RiggedActor
     StaticPoseData EditablePoseSnapshot()
     {
         EnsureRig();
-        if(_motionTrack.Length!=0)throw new InvalidOperationException("Freeze the current frame before editing its static pose.");
+        if(_editingPoseOverride!=null)return CloneStaticPose(_editingPoseOverride);
+        if(_motionTrack.Length!=0)throw new InvalidOperationException("Begin a pose-correction edit before changing an animated joint.");
         return _staticPose==null?BakeCurrentPose("Edited pose"):CloneStaticPose(_staticPose);
     }
 
     void CommitEditedPose(StaticPoseData pose)
     {
         // SetStaticPose validates and clones before mutating the current playable state.
-        pose.CatalogId=null;SetStaticPose(pose);
+        pose.CatalogId=null;
+        if(_editingPoseOverride!=null){_editingPoseOverride=CopyValidatedStaticPose(pose);ApplyEvaluatedPoseSnapshot(_editingPoseOverride,_editingPoseFacing);}
+        else SetStaticPose(pose);
     }
 
     int EditableBoneIndex(string name)
