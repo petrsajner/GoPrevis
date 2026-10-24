@@ -61,9 +61,10 @@ public partial class PrevisApp : Control
     {
         TranslationServer.SetLocale("en");
         var window=GetWindow();float dpiScale=Math.Clamp(Math.Max(DisplayServer.ScreenGetScale(),DisplayServer.ScreenGetDpi()/96f),1,2.5f);window.ContentScaleMode=Window.ContentScaleModeEnum.CanvasItems;window.ContentScaleSize=Vector2I.Zero;window.ContentScaleFactor=dpiScale;
-        DisplayServer.WindowSetTitle("Previs 0.5.0 — Film shot planning");
+        DisplayServer.WindowSetTitle("Previs 0.6.0 — Film shot planning");
         BuildTheme(); BuildUi(); BuildWorld(); StarterScene();
-        if (OS.GetCmdlineUserArgs().Contains("--pose-test")) _ = RunPoseChecksAndQuit();
+        if (OS.GetCmdlineUserArgs().Contains("--manual-pose-test")) _ = RunManualPoseChecksAndQuit();
+        else if (OS.GetCmdlineUserArgs().Contains("--pose-test")) _ = RunPoseChecksAndQuit();
         else if (OS.GetCmdlineUserArgs().Contains("--content-test")) _ = RunContentChecksAndQuit();
         else if (OS.GetCmdlineUserArgs().Contains("--smoke-test")) _ = RunSmokeChecks();
         else {var open=OS.GetCmdlineUserArgs().FirstOrDefault(a=>a.StartsWith("--open=",StringComparison.Ordinal));if(open!=null){try{LoadProjectFromPath(open[7..]);if(_selected?.Data.Path.Points.Count>0)ShowInspectorSection("Path");}catch(Exception ex){Error(ex.Message);}}}
@@ -131,7 +132,7 @@ public partial class PrevisApp : Control
 
     void BuildInspector()
     {
-        _inspectorTabs=Row(Button("Object",()=>ShowInspectorSection("Object")),Button("Motion",()=>ShowInspectorSection("Motion")),Button("Path",()=>ShowInspectorSection("Path")));_inspector.AddChild(_inspectorTabs);
+        _inspectorTabs=Row(Button("Object",()=>ShowInspectorSection("Object")),Button("Motion",()=>ShowInspectorSection("Motion")),Button("Path",()=>ShowInspectorSection("Path")),_poseInspectorTab=Button("Pose",OpenPoseInspector));_inspector.AddChild(_inspectorTabs);
         _inspector.AddChild(Text("PROPERTIES", 12, true));
         _name = new LineEdit { PlaceholderText = "Select an object" }; _name.TextSubmitted += value => { if(string.IsNullOrWhiteSpace(value))return;PushUndo();if(_selectedCamera!=null){_selectedCamera.Name=value.Trim();foreach(var label in _selectedCamera.Rig.GetChildren().OfType<Label3D>())label.Text=_selectedCamera.Name;RefreshCameraChoices();}else if(_selected!=null)_selected.Data.Name=value.Trim();RefreshObjects(); }; _inspector.AddChild(_name);
         foreach (string group in new[] { "Position", "Rotation", "Scale" })
@@ -148,7 +149,8 @@ public partial class PrevisApp : Control
             _inspector.AddChild(row);
         }
         var autoKey=new CheckButton{Text="Auto key"};autoKey.Toggled+=v=>_autoKey=v;_inspector.AddChild(Row(Button("◆ Key transform",()=>CaptureSelectedTransformKey("All")),autoKey));
-        BuildSequenceInspector();
+        _editPoseShortcut=Button("Edit body pose",StartPoseEditing);_editPoseShortcut.TooltipText="Freeze the current frame as an editable static pose.";_inspector.AddChild(_editPoseShortcut);
+        BuildSequenceInspector();BuildPoseInspector();
     }
 
     void BuildWorld()
@@ -223,7 +225,7 @@ public partial class PrevisApp : Control
         if (entry?.Player is { } player) { foreach (string animation in player.GetAnimationList()) if (animation != "RESET") _animationChoice.AddItem(animation); for(int i=0;i<_animationChoice.ItemCount;i++)if(_animationChoice.GetItemText(i)==entry.Animation)_animationChoice.Select(i); }
         _clipInfo.Text = entry?.Node is RiggedActor actor ? (actor.DurationSeconds <= 0 ? "Prepared human rig · no motion loaded." : $"{entry.Data.MotionName ?? actor.MotionName}\n{actor.DurationSeconds:0.00} s · {actor.SourceFps:0.##} fps · {actor.JointCount} joints\n{actor.ImportSummary}") : entry?.Player != null ? "Imported model · native animation clips" : "Static blockout prop";
         if (entry != null) { int index = _entries.IndexOf(entry); if (index >= 0) _objectList.Select(index); }
-        _refreshing = false; ShowInspectorSection("Object");RefreshSequenceInspector();UpdateTransformFields();UpdateSelection();DrawPaths();
+        _refreshing = false; SyncPoseEditorSelection();ShowInspectorSection("Object");RefreshSequenceInspector();UpdateTransformFields();UpdateSelection();DrawPaths();
     }
     void RefreshObjects() { _objectList.Clear(); foreach (var e in _entries) _objectList.AddItem(e.Data.Name);foreach(var c in _cameras)_objectList.AddItem("[Camera] "+c.Name); if (_selected != null && _entries.Contains(_selected)) _objectList.Select(_entries.IndexOf(_selected));else if(_selectedCamera!=null&&_cameras.Contains(_selectedCamera))_objectList.Select(_entries.Count+_cameras.IndexOf(_selectedCamera)); }
     void ChangeTransform(string group, int axis, float value)
@@ -339,10 +341,12 @@ public partial class PrevisApp : Control
         }
         foreach(var camera in _cameras)EvaluateCamera(camera,_time); if(_pilot)_editorCamera.GlobalTransform = _shot.GlobalTransform;
         bool previous = _refreshing; _refreshing = true; _scrub.Value = _time; _lens.Value = _shot.FocalLengthMm; _refreshing = previous;
-        int frame = (int)Math.Floor(_time * _fps + .00001); _timeLabel.Text = $"{frame / _fps / 60:00}:{frame / _fps % 60:00}:{frame % _fps:00}"; _timeline.QueueRedraw();UpdateTransformFields(); UpdateSelection(); UpdatePreview();DrawPaths();
+        int frame = (int)Math.Floor(_time * _fps + .00001); _timeLabel.Text = $"{frame / _fps / 60:00}:{frame / _fps % 60:00}:{frame % _fps:00}"; _timeline.QueueRedraw();UpdateTransformFields(); UpdateSelection(); UpdatePreview();DrawPaths();UpdatePoseInspector();
     }
     void ViewportInput(InputEvent input)
     {
+        if(input is InputEventMouseButton {Pressed:true,ButtonIndex:MouseButton.Left or MouseButton.Right or MouseButton.Middle})GetViewport().GuiReleaseFocus();
+        if(HandlePoseViewportInput(input))return;
         if(HandlePathInput(input))return;
         if (input is InputEventMouseButton b)
         {
@@ -375,16 +379,17 @@ public partial class PrevisApp : Control
         if (input is not InputEventKey key || !key.Pressed || key.Echo) return;
         if(_drawingPath&&key.Keycode==Key.Escape){CancelDrawingPath();return;}if(_drawingPath&&key.Keycode==Key.Enter){FinishDrawingPath();return;}
         if (GetViewport().GuiGetFocusOwner() is LineEdit or TextEdit) return;
+        if(_poseEditing&&key.Keycode==Key.Escape){StopPoseEditing();ShowInspectorSection("Object");return;}
         if(key.Keycode==Key.K){CaptureSelectedTransformKey("All");return;}
         if (key.CtrlPressed && key.Keycode == Key.S) SaveProject(); else if (key.CtrlPressed && key.Keycode == Key.O) OpenProject(); else if (key.CtrlPressed && key.Keycode == Key.Z) Undo(); else if (key.CtrlPressed && key.Keycode == Key.Y) Redo(); else if (key.CtrlPressed && key.Keycode == Key.D) DuplicateSelected(); else if (key.Keycode == Key.Delete) DeleteSelected(); else if (key.Keycode == Key.F) FrameSelected(); else if (key.Keycode == Key.Space) { _playing = !_playing; _play.Text = _playing ? "Ⅱ Pause" : "▶ Play"; }
     }
     public override void _Input(InputEvent input)
     {
-        if(input is InputEventMouseButton { Pressed: false } button) { if(button.ButtonIndex==MouseButton.Right)_rightDown=false; if(button.ButtonIndex==MouseButton.Middle)_middleDown=false; if(button.ButtonIndex==MouseButton.Left)_dragging=false; }
+        if(input is InputEventMouseButton { Pressed: false } button) { if(button.ButtonIndex==MouseButton.Right)_rightDown=false; if(button.ButtonIndex==MouseButton.Middle)_middleDown=false; if(button.ButtonIndex==MouseButton.Left){_dragging=false;ReleasePoseViewportDrag();} }
     }
     void UpdateSelection()
     {
-        if (_selectionBox == null) return; _selectionBox.Visible = _selected != null; if (_selected == null) return;
+        if (_selectionBox == null) return; _selectionBox.Visible = _selected != null&&!_poseEditing; if (_selected == null||_poseEditing) return;
         var bounds = _selected.Node is RiggedActor actor ? actor.GetPreparedPoseBounds() : PropFactory.CalculateBounds(_selected.Node);
         var mesh = new ImmediateMesh(); mesh.SurfaceBegin(Mesh.PrimitiveType.Lines); Vector3[] corners = Enumerable.Range(0, 8).Select(i => bounds.Position + new Vector3((i & 1) != 0 ? bounds.Size.X : 0, (i & 2) != 0 ? bounds.Size.Y : 0, (i & 4) != 0 ? bounds.Size.Z : 0)).ToArray();
         foreach (int i in Enumerable.Range(0, 8)) foreach (int bit in new[] { 1, 2, 4 }) if ((i & bit) == 0) { mesh.SurfaceAddVertex(corners[i]); mesh.SurfaceAddVertex(corners[i | bit]); } mesh.SurfaceEnd();
@@ -398,8 +403,8 @@ public partial class PrevisApp : Control
     void NewScene() { if(_drawingPath)CancelDrawingPath();PushUndo(); ClearObjects(); ClearCameras();CreateCamera("Camera A",null,true);_shot.ClearKeys();_lighting.DirectionalEnabled=false; _projectPath = ""; SetTime(0); Status("New neutral scene. Add an actor or prop from the library."); }
     void ClearObjects() { foreach (var e in _entries) { _world.RemoveChild(e.Node); e.Node.QueueFree(); } _entries.Clear(); _selected = null; RefreshObjects(); Select(null); }
     void PushUndo() { if (_world == null) return; _undo.Push((Snapshot(),_projectPath)); _redo.Clear(); }
-    void Undo() { if (_undo.Count == 0) return; _redo.Push((Snapshot(),_projectPath)); var previous=_undo.Pop();Restore(previous.Document, "");_projectPath=previous.Path; Status("Undo."); }
-    void Redo() { if (_redo.Count == 0) return; _undo.Push((Snapshot(),_projectPath)); var next=_redo.Pop();Restore(next.Document, "");_projectPath=next.Path; Status("Redo."); }
+    void Undo() { if (_undo.Count == 0) return;string? poseId=_poseEditing?_selected?.Data.Id:null;ReleasePoseViewportDrag(); _redo.Push((Snapshot(),_projectPath)); var previous=_undo.Pop();Restore(previous.Document, "");_projectPath=previous.Path;RestorePoseEditorSelection(poseId); Status("Undo."); }
+    void Redo() { if (_redo.Count == 0) return;string? poseId=_poseEditing?_selected?.Data.Id:null;ReleasePoseViewportDrag(); _undo.Push((Snapshot(),_projectPath)); var next=_redo.Pop();Restore(next.Document, "");_projectPath=next.Path;RestorePoseEditorSelection(poseId); Status("Redo."); }
     static float[] Array3(Vector3 v) => new[] { v.X, v.Y, v.Z };
     static Vector3 Vector(float[] v, Vector3 fallback = default) => v.Length == 3 && v.All(float.IsFinite) ? new Vector3(v[0], v[1], v[2]) : fallback;
     ObjectData SnapshotObject(Entry e) {var d=JsonSerializer.Deserialize<ObjectData>(JsonSerializer.Serialize(e.Data))!;d.ModelAnimation=e.Animation;return d;}
@@ -457,7 +462,7 @@ public partial class PrevisApp : Control
         if (!path.EndsWith(".png",StringComparison.OrdinalIgnoreCase))path+=".png";
         var view = new SubViewport { Size = new Vector2I(1920,1080), World3D = _sceneViewport.World3D, RenderTargetUpdateMode = SubViewport.UpdateMode.Once, Msaa3D = Viewport.Msaa.Msaa4X };
         AddChild(view); var camera = new Camera3D { Current=true,CullMask=1,Near=.05f,Far=500,KeepAspect=Camera3D.KeepAspectEnum.Width,Fov=_shot.ShotCamera.Fov };view.AddChild(camera);camera.GlobalTransform=_shot.ShotCamera.GlobalTransform;
-        try { for(int i=0;i<2;i++)await ToSignal(GetTree(),SceneTree.SignalName.ProcessFrame);await ToSignal(RenderingServer.Singleton,RenderingServer.SignalName.FramePostDraw);var image=view.GetTexture().GetImage();var error=image.SavePng(path);if(error!=Godot.Error.Ok)throw new IOException("The frame could not be saved: "+error); File.WriteAllText(Path.ChangeExtension(path,".json"),JsonSerializer.Serialize(new {application="Previs",version="0.5.0",frame=(int)Math.Round(_time*_fps),timeSeconds=_time,fps=_fps,width=1920,height=1080,activeCameraId=ActiveCameraId,camera=Snapshot()},_json)); }
+        try { for(int i=0;i<2;i++)await ToSignal(GetTree(),SceneTree.SignalName.ProcessFrame);await ToSignal(RenderingServer.Singleton,RenderingServer.SignalName.FramePostDraw);var image=view.GetTexture().GetImage();var error=image.SavePng(path);if(error!=Godot.Error.Ok)throw new IOException("The frame could not be saved: "+error); File.WriteAllText(Path.ChangeExtension(path,".json"),JsonSerializer.Serialize(new {application="Previs",version="0.6.0",frame=(int)Math.Round(_time*_fps),timeSeconds=_time,fps=_fps,width=1920,height=1080,activeCameraId=ActiveCameraId,camera=Snapshot()},_json)); }
         finally { view.QueueFree(); }
     }
 

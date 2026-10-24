@@ -24,7 +24,7 @@ public partial class PrevisApp
         BuildPagedCards(()=>AllLibraryPoses.Where(p=>(filter.Selected==0||p.Category==filter.GetItemText(filter.Selected))&&(search.Text==""||(p.Name+" "+p.Description+" "+string.Join(' ',p.Tags)).Contains(search.Text,StringComparison.OrdinalIgnoreCase))).OrderBy(p=>p.Category switch{"My poses"=>0,"Sitting"=>1,"Floor sitting"=>2,"Kneeling"=>3,"Crouching"=>4,"Lying"=>5,_=>6}).Select(p=>new ContentCard(p.Id,p.Name,p.Category+" · static human pose\n"+p.Description+"\nDrop on a figure or empty ground. Replaces its motion clips.",null,null,p)).ToArray(),search,filter);
         var saved=new LineEdit{PlaceholderText="Name for saved pose",TooltipText="Capture the selected figure at the current frame, without changing its animation."};_library.AddChild(saved);
         _library.AddChild(Button("Save current pose",()=>{try{SaveCapturedPose(string.IsNullOrWhiteSpace(saved.Text)?DefaultPoseName():saved.Text);}catch(Exception ex){Error(ex.Message);}}));
-        _library.AddChild(Button("Reset pose",ClearSelectedPose));
+        _library.AddChild(Button("Edit selected pose",StartPoseEditing));_library.AddChild(Button("Reset pose",ClearSelectedPose));
     }
 
     void DropPose(string id,Entry? target,Vector3 position)
@@ -49,7 +49,7 @@ public partial class PrevisApp
     LibraryPose SaveCapturedPose(string name)
     {
         if(_selected?.Node is not RiggedActor actor)throw new InvalidDataException("Select a human figure to save its current pose.");
-        _playing=false;_play.Text="▶";SetTime(_time);var snapshot=actor.BakeCurrentPose(name);string id="pose-user-"+Guid.NewGuid().ToString("N");snapshot.CatalogId=id;
+        _playing=false;_play.Text="▶";SetTime(_time);var snapshot=actor.MotionTrackClipCount==0&&actor.HasStaticPose?actor.GetStaticPoseSnapshot()!:actor.BakeCurrentPose(name);snapshot.Name=string.IsNullOrWhiteSpace(name)?"Custom pose":name.Trim();string id="pose-user-"+Guid.NewGuid().ToString("N");snapshot.CatalogId=id;
         var pose=new LibraryPose{Id=id,Name=snapshot.Name,Category="My poses",Tags=new[]{"human","saved","static"},Description="Saved from the selected figure at frame "+(int)Math.Round(_time*_fps)+". Independent of its motion file.",Pose=snapshot};
         _=AllLibraryPoses.Count();SavedPoseLibrary.Save(pose);_userPoses.Add(pose);ShowCategory("Poses");_ = RenderSavedPoseCover(pose);Status("Saved "+pose.Name+" in My poses. The figure's animation is unchanged.");return pose;
     }

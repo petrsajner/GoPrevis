@@ -1,10 +1,10 @@
-# Previs 0.5.0 — film shot planning
+# Previs 0.6.0 — film shot planning
 
 Previs is a desktop blockout tool for preparing movement and camera references for AI video. It uses Godot 4.7.2 .NET, C# and .NET 10. The application UI, dialogs and authored errors are English.
 
 ## Run
 
-The Windows portable output is `build/Previs-0.5.0-Windows/Previs.exe`. Keep Previs.exe, Previs.pck and data_Previs_windows_x86_64 together. The portable Windows build includes its runtime; using it does not require the Godot editor or .NET SDK.
+The Windows portable output is `build/Previs-0.6.0-Windows/Previs.exe`. Keep Previs.exe, Previs.pck and data_Previs_windows_x86_64 together. The portable Windows build includes its runtime; using it does not require the Godot editor or .NET SDK.
 
 For development, open project.godot with Godot 4.7.2 .NET. Local tools are in the ignored .tools directory. The existing run.ps1 starts the source project; build.ps1 -Test builds, runs source checks and exports Windows x64.
 
@@ -54,11 +54,21 @@ Sources, licenses and preparation notes are in [LICENSES/PROP-CONTENT.md](LICENS
 
 A posed figure holds its shape for the entire scene without a motion clip. Applying a pose replaces that figure's current source clips; Undo restores the previous state. Position, Rotation, Scale, drawn paths and their manual correction keys remain available above the body pose.
 
-The Poses library can also **save the current body pose** from a selected figure, including a frame sampled from mocap. Saving a preset leaves the figure's existing animation intact. The saved preset can then be applied to another figure as a static pose. Custom presets are stored locally, and a project's applied body pose is embedded in the `.previs` file, so opening a static figure does not require its original motion source or the creator's preset library. Clear pose restores the default standing body; if source clips are present, they continue playing.
+The Poses library can also **save the current body pose** from a selected figure, including a frame sampled from mocap. Saving a preset leaves the figure's existing animation intact. The saved preset can then be applied to another figure as a static pose. Custom presets are stored locally, and a project's applied body pose is embedded in the `.previs` file, so opening a static figure does not require its original motion source or the creator's preset library. **Reset pose** in the library restores the default standing body; if source clips are present, they continue playing.
 
 The self-contained `samples/static-poses.previs` example includes a seated figure and chair, floor sitting, kneeling and lying figures. It contains no motion clips or external asset dependencies.
 
-Seating presets are prepared around practical blocking proportions. Match the figure's placement to the actual chair, stool or floor; smaller body variants scale the pose as well. These are prepared poses, with no automatic seat/contact fitting or per-joint pose editor. Existing animal animations retain their own rig compatibility.
+Seating presets are prepared around practical blocking proportions. Match the figure's placement to the actual chair, stool or floor; smaller body variants scale the pose as well. The manual pose editor below can adapt them to individual props; automatic seat/contact fitting is not provided. Existing animal animations retain their own rig compatibility.
+
+## Adjust a body pose
+
+Select a prepared human figure and choose **Pose** in the viewport toolbar (or **Edit body pose** in Object). The compact Pose inspector appears for humans only. If the figure is animated, entering an edit freezes the displayed frame into a static pose and keeps the figure at its visible world position. Undo can restore its source clips.
+
+Grab the actual hand or foot in the 3D view and drag: the whole arm or leg follows through its connected joints. The viewport also provides joint markers and XYZ handles for targeted adjustments. **Rotate** turns the head, spine, shoulders, elbows, knees or any other prepared joint; drag its center/rings. **Move** repositions hands, feet and pelvis using the mesh, center handle or world XYZ arrows. Expand **Precise values** only when numeric local angles or world coordinates are needed. Hand and foot moves use two-bone IK with fixed limb lengths and retain the chosen end-joint orientation. Shift makes a drag finer; Ctrl snaps movement or angles. Orbit, pan and zoom remain available while editing.
+
+To fit a particular chair, first place the whole figure with Object Position/Rotation. Move the pelvis directly, or expand **Precise values** and adjust **Hip height (m)**. **Keep feet in place** pins both feet while the pelvis moves within leg reach. If a requested position lies beyond that reach, the move is limited rather than stretching the legs; disable the pin to reposition the whole pose, then place each foot explicitly. Rotate the feet or hands separately when their angle needs correction.
+
+Enter a name and choose **Save to My poses** to store the adjusted pose as a reusable library item with a rendered thumbnail. Intentional XYZ pelvis offsets and local joint rotations are retained; the scene object's separate world placement and body proportions are not baked into the preset. Applying it to another prepared human keeps that target's proportions. **Reset edits** returns to the pose at the start of the editing session; **Done** leaves the adjusted static figure in the scene. Each continuous drag is one Undo/Redo step. `samples/manual-adjusted-pose.previs` contains a manually fitted figure and a real imported chair. Joint edits are static body-pose changes, not skeletal animation keys.
 
 ## Arrange motion, paths and corrections
 
@@ -110,7 +120,7 @@ The scene and library previews use neutral hemisphere illumination, with **no di
 ## Current limits
 
 - The recorded library is a curated CMU subset, not the complete database. Source quality and take lengths vary; no motion cleanup or seamless looping is implied.
-- Humanoid BVH retargeting uses a fixed 21-bone mannequin. There is no universal animal retargeting, finger animation, foot-contact IK, automatic foot-slip correction, collision avoidance or prop-contact solving.
+- Humanoid BVH retargeting uses a fixed 21-bone mannequin. There is no universal animal retargeting, finger animation, automatic animation foot-contact/foot-slip solving, collision avoidance or automatic prop-contact solving.
 - Match mocap Speed and path arrival times to the intended gait. Keyed path timing does not itself solve foot contacts.
 - Imported FBX/GLB/glTF models preserve their own rigs and embedded clips. Native skeletal sequencing works on supported skeletons; library compatibility is restricted to prepared actor families.
 - Use self-contained GLB for portable models. External glTF dependencies are not bundled; saving such a model is refused. FBX may require embedded textures.

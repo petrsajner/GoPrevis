@@ -1,0 +1,401 @@
+{
+  "Version": 4,
+  "Fps": 24,
+  "Duration": 8,
+  "Objects": [
+    {
+      "Id": "19371cfa95e441039c7ea2e841d6445f",
+      "Kind": "actor",
+      "Name": "Sit upright",
+      "Position": [
+        -0.19999999,
+        0,
+        0.20000002
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "human-average",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.055,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "Start": 0,
+        "Duration": 8,
+        "OrientToPath": true
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "human",
+      "StaticPose": {
+        "CatalogId": null,
+        "Name": "Sit upright",
+        "RootPosition": [
+          0,
+          -0.347,
+          0
+        ],
+        "Forward": [
+          0,
+          0,
+          -1
+        ],
+        "BoneRotations": {
+          "Hips": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "Spine": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "Chest": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "Neck": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "Head": [
+            -0.0426662,
+            0.20771381,
+            0.009068981,
+            0.97721666
+          ],
+          "LeftShoulder": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "LeftUpperArm": [
+            0,
+            0.50662374,
+            -0.55138385,
+            0.6628033
+          ],
+          "LeftLowerArm": [
+            -0.00280262,
+            0.01527791,
+            -0.01296111,
+            0.9997954
+          ],
+          "LeftHand": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "LeftUpperLeg": [
+            0.63616496,
+            -0.0003055627,
+            0.003670986,
+            0.7715443
+          ],
+          "LeftLowerLeg": [
+            -0.6094843,
+            0.010069789,
+            0.008214244,
+            0.79269165
+          ],
+          "LeftFoot": [
+            -0.03399905,
+            -6.405204E-05,
+            -0.01546742,
+            0.99930215
+          ],
+          "LeftToe": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "RightShoulder": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "RightUpperArm": [
+            -0.0278675,
+            -0.4956109,
+            0.57585645,
+            0.64960194
+          ],
+          "RightLowerArm": [
+            0.00037381053,
+            -0.064185694,
+            -0.1509668,
+            0.9864528
+          ],
+          "RightHand": [
+            -0.0007926525,
+            0.032872967,
+            0.12671813,
+            0.9913937
+          ],
+          "RightUpperLeg": [
+            0.63616496,
+            0.0003055627,
+            -0.003670986,
+            0.7715443
+          ],
+          "RightLowerLeg": [
+            -0.6094843,
+            -0.010069789,
+            -0.008214244,
+            0.79269165
+          ],
+          "RightFoot": [
+            -0.03399905,
+            6.405204E-05,
+            0.01546742,
+            0.99930215
+          ],
+          "RightToe": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      }
+    },
+    {
+      "Id": "b0c7db7604714a42a6fcd912c0b3740f",
+      "Kind": "imported",
+      "Name": "Chair",
+      "Position": [
+        0,
+        0,
+        0
+      ],
+      "Rotation": [
+        0,
+        180,
+        0
+      ],
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": "manual-adjusted-pose.assets/b0c7db7604714a42a6fcd912c0b3740f_model.glb",
+      "ModelAnimation": "",
+      "LibraryModelId": "kenney-furniture-chair",
+      "ModelUnitScale": 2,
+      "ModelGrounded": true,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "Start": 0,
+        "Duration": 8,
+        "OrientToPath": true
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null
+    }
+  ],
+  "CameraKeys": [],
+  "ShotPosition": [
+    2,
+    1.7,
+    -3
+  ],
+  "ShotRotation": [
+    -13.048598,
+    145.49147,
+    0
+  ],
+  "FocalLength": 35,
+  "Cameras": [
+    {
+      "Id": "619e800ba9a7455fbd1527bedb5af481",
+      "Name": "Camera A",
+      "Keys": [],
+      "Position": [
+        2,
+        1.7,
+        -3
+      ],
+      "Rotation": [
+        -13.048597,
+        145.49147,
+        0
+      ],
+      "FocalLength": 35,
+      "Scale": [
+        0.99999994,
+        1,
+        1
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "LensKeys": []
+    },
+    {
+      "Id": "4ca98c5c6f874e4e8c050e48d0ab74c4",
+      "Name": "Camera B",
+      "Keys": [],
+      "Position": [
+        6,
+        3.2,
+        7
+      ],
+      "Rotation": [
+        -13.421134,
+        40.601295,
+        -4.388723E-07
+      ],
+      "FocalLength": 35,
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "TransformAnimation": {
+        "Position": [
+          {
+            "Id": "75ca5d94e821471b972bae62f9ba5f23",
+            "Time": 0,
+            "Value": [
+              -1.5,
+              1.65,
+              4
+            ]
+          }
+        ],
+        "Rotation": [
+          {
+            "Id": "0d0ea72016314c86901c2b93b82c2e5d",
+            "Time": 0,
+            "Value": [
+              -9.229889,
+              0,
+              0
+            ]
+          }
+        ],
+        "Scale": []
+      },
+      "LensKeys": [
+        {
+          "Id": "b118595c6a794e0280bb2a6667e65c70",
+          "Time": 0,
+          "Value": 35
+        }
+      ]
+    },
+    {
+      "Id": "0e4c96dba0db49e38fb4370ec850cd5c",
+      "Name": "Camera C",
+      "Keys": [],
+      "Position": [
+        6,
+        3.2,
+        7
+      ],
+      "Rotation": [
+        -13.421134,
+        40.601295,
+        -4.388723E-07
+      ],
+      "FocalLength": 35,
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "TransformAnimation": {
+        "Position": [
+          {
+            "Id": "b78b965bc4624e93bba0211ca6b36048",
+            "Time": 0,
+            "Value": [
+              -6,
+              3.5,
+              -5
+            ]
+          }
+        ],
+        "Rotation": [
+          {
+            "Id": "f157962c6a0841c3bd7fbeb340290e3f",
+            "Time": 0,
+            "Value": [
+              -17.749466,
+              -129.80557,
+              -4.4822283E-07
+            ]
+          }
+        ],
+        "Scale": []
+      },
+      "LensKeys": [
+        {
+          "Id": "7be7ffb44bb84c87935d05dfbb4f345c",
+          "Time": 0,
+          "Value": 35
+        }
+      ]
+    }
+  ],
+  "ActiveCameraId": "619e800ba9a7455fbd1527bedb5af481",
+  "DirectionalLightEnabled": false
+}

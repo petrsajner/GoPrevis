@@ -128,11 +128,11 @@ public partial class PrevisApp
     }
     void ShowInspectorSection(string section)
     {
-        if(_selectedCamera!=null)section="Object";
+        if(_selectedCamera!=null||section=="Pose"&&_selected?.Node is not RiggedActor)section="Object";
         _inspectorSection=section;string current="Object";
-        foreach(var node in _inspector.GetChildren().OfType<Control>()){if(node==_inspectorTabs){node.Visible=true;continue;}if(node==_motionHeader)current="Motion";if(node==_pathHeader)current="Path";node.Visible=current==section;}
+        foreach(var node in _inspector.GetChildren().OfType<Control>()){if(node==_inspectorTabs){node.Visible=true;continue;}if(node==_motionHeader)current="Motion";if(node==_pathHeader)current="Path";if(node==_posePanel)current="Pose";node.Visible=current==section;}
         if(_animationChoice!=null)_animationChoice.Visible=section=="Motion"&&_selected?.Player!=null;
-        if(_clipChoice!=null)_clipChoice.Visible=section=="Motion"&&(_selected?.Node is RiggedActor||_selected?.NativeTrack!=null);
+        if(_clipChoice!=null)_clipChoice.Visible=section=="Motion"&&(_selected?.Node is RiggedActor||_selected?.NativeTrack!=null);UpdatePoseInspector();
     }
     void RefreshSequenceInspector()
     {
@@ -183,6 +183,7 @@ public partial class PrevisApp
     void EditPath(Action<ActorPathData> edit){if(_refreshing||_selected==null)return;PushUndo();edit(_selected.Data.Path);EnsureDuration(_selected.Data.Path.Start+_selected.Data.Path.Duration);SetTime(_time);RefreshSequenceInspector();}
     void StartDrawingPath()
     {
+        StopPoseEditing();
         if(_drawingPath){FinishDrawingPath();return;}
         if(_selected?.Node is not RiggedActor&&_selected?.Player==null){_drawPathButton.ButtonPressed=false;Status("Select a character before drawing a path.");return;}
         if(_pilot)TogglePilot();_playing=false;_play.Text="▶ Play";PushUndo();_pathEntry=_selected;_pathBackup=JsonSerializer.Deserialize<ActorPathData>(JsonSerializer.Serialize(_selected.Data.Path));_selected.Data.Path=new ActorPathData{Duration=_duration};_drawingPath=true;_drawPathButton.ButtonPressed=true;ShowInspectorSection("Path");DrawPaths();Status("Draw path · click ground points · Enter / Finish path to apply · Esc to cancel.");

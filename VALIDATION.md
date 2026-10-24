@@ -1,4 +1,4 @@
-# Previs 0.5.0 validation
+# Previs 0.6.0 validation
 
 Validation date: **2026-10-24**. Development/verified platform: **Windows x64**.
 
@@ -13,7 +13,7 @@ This revision adds static human poses, source-independent body snapshots and a r
 
 ## Responsive layout
 
-The actual integrated source, without test stubs, passed LayoutProbe with **24 checks**. Evidence: output/layout-0.3.log.
+The actual integrated source, without test stubs, passed LayoutProbe with **24 checks**. Evidence: output/layout-0.6.0.log.
 
 | Logical window | Header height | Play-button height | 3D viewport | Library / inspector |
 | --- | --- | --- | --- | --- |
@@ -85,12 +85,26 @@ The integrated source and independent rendered Windows executable validate **118
 - Capturing a mocap frame preserves local bone rotations in a reusable source-independent snapshot. Saving a custom preset leaves the selected actor's source clips intact; tests remove only their own GUID-named temporary presets.
 - Path placement, heading and final manual keys remain above the body pose. Duplication and project-format-4 save/reopen retain bone poses and final transforms. Older projects without pose fields remain valid inputs.
 
-Pose contact geometry is reviewed visually through rendered covers. These checks do not claim automatic chair/foot-contact solving, universal animal pose retargeting or a per-joint pose editor.
+The original static-pose checks review contact geometry through rendered covers. Manual joint and IK editing is covered separately below; automatic chair/contact fitting and universal animal pose retargeting remain outside the scope.
 
-## Delivery verification
+## Previous 0.5.0 delivery verification
 
 The independent portable executable is `build/Previs-0.5.0-Windows/Previs.exe`. Its content workflow uses the exported PCK and its bundled .NET runtime, including raw-safe model loading and project asset copies. The rendered packaged smoke verifies the previous layer/camera/path regressions and a clean full-HD camera export. Logs: `output/packaged-0.5.0-poses.log` (278 pose assertions), `output/packaged-0.5.0-content.log` (225 library assertions), and `output/packaged-0.5.0-render.log` (full-HD smoke). All three stderr logs are empty. A rendered source UI probe verifies the actual Poses tab and search narrowing to one Sit upright card, then restoring all 118 entries; evidence is in `output/pose-ui-probe.log` and `output/pose-library-ui.png`.
 
 `BUILD-INFO.json` records source revision, catalog counts and executable/resource/managed-assembly hashes. The final portable ZIP is checked by reading all entries and verifying CRCs. Only Windows x64 has been exercised; no macOS/Linux runtime result is claimed. Current output remains active-camera PNG/JSON, with video/control-pass export outside this revision.
 
 All **118 authored poses** were independently rendered with the actual rig and neutral studio environment. Their poses remain identical after a 100-second seek. `output/pose-content-validation.json` reports 118 passed, zero failures; the chair reference and contact sheets verify seated support, grounded feet and horizontal lying shapes. `samples/static-poses.previs` is a self-contained static scene example.
+
+## Manual pose validation for 0.6.0
+
+The source headless `RunManualPoseChecks` run passes **70 assertions**. Evidence: `output/manual-pose-source-0.6.0.log` and `output/manual-pose-workflow-report.json`. It exercises the actual rig and application editing callbacks. Its scope includes local head/torso rotations, all four hand/foot IK chains, fixed limb lengths and end orientations, attainable and fully folded/extended target limits, feet-pinned pelvis motion, finite/atomic invalid-input handling, scaled/rotated world-space edits, one Undo/Redo item per gesture, the viewport marker-drag route and real hand/foot mesh grabs through the scene viewport GuiInput signal (including visible geometry overlapped by other x-ray joint markers), current-frame mocap freezing, path-layer placement, reusable custom-preset XYZ pelvis offsets, duplication and project-format-4 save/reopen.
+
+A real imported Kenney chair supplies a measured seat surface through a physics ray. The regression places the hips at that surface while retaining both foot positions and produces a clean full-HD chair reference on a rendering display. Its temporary custom library items use unique GUID IDs; cleanup removes only those items.
+
+The real palm/foot-body drags are sent through the scene viewport `GuiInput` signal, outside their own joint markers. They verify cursor tracking, upper/lower/end joint changes, fixed limb lengths, unchanged scene-object placement and one Undo item. The fixture deliberately includes unrelated projected joint markers over visible hands, so the visible mesh must win the pick. The rendered source pass also verifies full-HD output, passing **71 assertions** with an empty stderr log (`output/manual-pose-render-0.6.0.log`). A separate rendered UI probe grabs the actual palm through scene `GuiInput` events and confirms that shoulder, elbow and wrist all change while the whole figure stays fixed; it also drags the head to turn it. Evidence: `output/manual-pose-ui.log` and `output/manual-pose-ui-after.png`. The precision fields remain collapsed during this direct manipulation.
+
+## Independent 0.6.0 delivery
+
+The self-contained Windows executable passes **71 manual-pose checks**, **278 static-pose checks**, **225 model/motion library checks**, and the rendered smoke test including clean full-HD export. Evidence: `output/packaged-0.6.0-{manual,poses,content,render}.log`; all four stderr logs are empty. The actual exported resource inventory confirms 567 bundled sources, 859 covers and 118 poses with zero missing files (`output/package-inventory-0.6.0.log`). LayoutProbe passes 24 geometry checks at logical 1280x800, 1920x1080 and 2560x1440.
+
+The portable package contains `examples/manual-adjusted-pose.previs` with its own imported chair asset. `BUILD-INFO.json` records source revision, resource/executable/managed-assembly hashes and test counts. The ZIP is read back completely for CRC verification.
