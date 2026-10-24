@@ -92,6 +92,43 @@ public partial class RiggedActor
         CommitEditedPose(pose);return actual;
     }
 
+    /// <summary>
+    /// Moves any prepared joint while keeping the rig's authored bone lengths.
+    /// Elbows and knees act as bend poles around their pinned hand or foot.
+    /// Other intermediate joints move on their parent's fixed-length sphere.
+    /// </summary>
+    public Vector3 MovePoseJoint(string boneName,Vector3 targetActorLocal)
+    {
+        ValidateEditVector(targetActorLocal,1000,"Joint target");int joint=EditableBoneIndex(boneName);
+        if(boneName is "LeftHand" or "RightHand" or "LeftFoot" or "RightFoot")return MovePoseEndEffector(boneName,targetActorLocal);
+        var pose=EditablePoseSnapshot();var original=EditingTransforms(pose);
+        if(boneName=="Hips")
+        {
+            Vector3 offset=new Vector3(pose.RootPosition[0],pose.RootPosition[1],pose.RootPosition[2])+targetActorLocal-original[joint].Origin;
+            pose.RootPosition=new[]{offset.X,offset.Y,offset.Z};
+        }
+        else if(boneName is "LeftLowerArm" or "RightLowerArm" or "LeftLowerLeg" or "RightLowerLeg")
+        {
+            string effector=boneName.Replace("LowerArm","Hand",StringComparison.Ordinal).Replace("LowerLeg","Foot",StringComparison.Ordinal);
+            int end=EditableBoneIndex(effector);
+            SolvePoseLimb(pose,effector,original[end].Origin,targetActorLocal);
+        }
+        else
+        {
+            int parent=_bones[joint].Parent;
+            if(parent<0)throw new InvalidOperationException("This joint has no movable parent.");
+            Vector3 current=original[joint].Origin-original[parent].Origin,desired=targetActorLocal-original[parent].Origin;
+            if(desired.LengthSquared()<.000000001f)desired=current;
+            Quaternion oldJoint=original[joint].Basis.GetRotationQuaternion().Normalized();
+            Quaternion rotatedParent=(EditingAlign(current,desired)*original[parent].Basis.GetRotationQuaternion()).Normalized();
+            int ancestor=_bones[parent].Parent;
+            Quaternion ancestorRotation=ancestor<0?Quaternion.Identity:original[ancestor].Basis.GetRotationQuaternion().Normalized();
+            SetEditingRotation(pose,parent,(ancestorRotation.Inverse()*rotatedParent).Normalized());
+            SetEditingRotation(pose,joint,(rotatedParent.Inverse()*oldJoint).Normalized());
+        }
+        Vector3 actual=EditingTransforms(pose)[joint].Origin;CommitEditedPose(pose);return actual;
+    }
+
     StaticPoseData EditablePoseSnapshot()
     {
         EnsureRig();
@@ -136,7 +173,7 @@ public partial class RiggedActor
         rotation=rotation.Normalized();pose.BoneRotations[_bones[index].Name]=new[]{rotation.X,rotation.Y,rotation.Z,rotation.W};
     }
 
-    Vector3 SolvePoseLimb(StaticPoseData pose,string effectorName,Vector3 target)
+    Vector3 SolvePoseLimb(StaticPoseData pose,string effectorName,Vector3 target,Vector3? bendTarget=null)
     {
         int end=EditableBoneIndex(effectorName),middle=_bones[end].Parent,start=_bones[middle].Parent;
         var fk=EditingTransforms(pose);Vector3 origin=fk[start].Origin;
@@ -149,7 +186,7 @@ public partial class RiggedActor
         Vector3 clampedTarget=origin+direction*distance;
 
         // Retain the current bend as the pole, projected into the new target plane.
-        Vector3 bend=fk[middle].Origin-origin;
+        Vector3 bend=(bendTarget??fk[middle].Origin)-origin;
         bend-=direction*bend.Dot(direction);
         if(bend.LengthSquared()<.0000000001f)
         {

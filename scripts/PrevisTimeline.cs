@@ -18,9 +18,12 @@ public partial class PrevisApp
         private Entry? _dragEntry, _dragPathEntry, _dragKeyEntry;
         private CameraEntry? _dragKeyCamera;
         private MotionClipData? _dragClip;
+        private readonly Dictionary<string,double> _clipBlendSnapshot=new();
         private int _dragPathIndex;
-        private bool _trim, _scrubbing, _hasDragged, _dragKey;
-        private double _start, _length, _pathKeyStart, _keyOriginalTime, _lastKeyTime;
+        private enum ClipDrag { Move, In, Out }
+        private ClipDrag _clipDrag;
+        private bool _scrubbing, _hasDragged, _dragKey;
+        private double _start, _length, _offset, _pathKeyStart, _keyOriginalTime, _lastKeyTime;
         private float _dragX;
         private string _dragKeyChannel = "All";
         private string _selectedKeyTarget = "", _selectedKeyChannel = "";
@@ -80,7 +83,7 @@ public partial class PrevisApp
 
         public override void _Ready()
         {
-            TooltipText = "Expand Transform to see Position, Rotation and Scale. Drag diamonds to retime; right-click removes a key. Double-click an empty parameter lane to add a key.";
+            TooltipText = "Drag a clip's left edge to trim IN and its right edge to trim OUT. Drag its body to move it. Expand Transform for Position, Rotation and Scale keys.";
             UpdateMinimumHeight();
         }
 
@@ -133,21 +136,65 @@ public partial class PrevisApp
             {
                 if (!BeginMutation(x)) return;
                 double change = (x - _dragX) / TrackWidth * App._duration;
-                if (_trim)
+                if (_clipDrag==ClipDrag.In)
+                {
+                    double minimum=Math.Min(1.0/App._fps,_length),outPoint=_start+_length;
+                    double low=Math.Max(0,_start-_offset/Math.Max(.000001,_dragClip.Speed));
+                    double start=Math.Clamp(Snap(_start+change),low,Math.Max(low,outPoint-minimum));
+                    _dragClip.Start=start;_dragClip.Duration=outPoint-start;
+                    _dragClip.SourceOffset=Math.Max(0,_offset+(start-_start)*_dragClip.Speed);
+                    UpdateClipBlend(_dragEntry,_dragClip,true);
+                }
+                else if (_clipDrag==ClipDrag.Out)
+                {
                     _dragClip.Duration = Math.Clamp(Snap(_length + change), 1.0 / App._fps,
                         Math.Max(1.0 / App._fps, App._duration - _dragClip.Start));
+                    UpdateClipBlend(_dragEntry,_dragClip,true);
+                }
                 else
                 {
                     _dragClip.Start = Math.Clamp(Snap(_start + change), 0, Math.Max(0, App._duration - _dragClip.Duration));
-                    var previous = _dragEntry.Data.MotionClips.Where(c => c != _dragClip && c.Start <= _dragClip.Start)
-                        .OrderBy(c => c.Start).LastOrDefault();
-                    _dragClip.BlendIn = previous == null ? 0 : Math.Max(0,
-                        Math.Min(_dragClip.Duration, previous.Start + previous.Duration - _dragClip.Start));
+                    UpdateClipBlend(_dragEntry,_dragClip);
                 }
                 try { App.RebuildTrack(_dragEntry); App.SetTime(App._time); App.RefreshSequenceInspector(); }
                 catch (Exception ex) { App.Status(ex.Message); }
             }
             else if (_scrubbing) App.SetTime(Snap(Seconds(x)));
+        }
+
+        private void UpdateClipBlend(Entry entry,MotionClipData clip,bool retainFade=false)
+        {
+            var previous=entry.Data.MotionClips.Where(c=>c!=clip&&c.Start<=clip.Start).OrderBy(c=>c.Start).LastOrDefault();
+            double overlap=previous==null?0:Math.Max(0,Math.Min(clip.Duration,previous.Start+previous.Duration-clip.Start));
+            clip.BlendIn=retainFade?Math.Min(_clipBlendSnapshot.GetValueOrDefault(clip.Id,clip.BlendIn),overlap):overlap;
+            // Trimming the outgoing end also changes the following overlap.
+            var next=entry.Data.MotionClips.Where(c=>c!=clip&&c.Start>=clip.Start).OrderBy(c=>c.Start).FirstOrDefault();
+            if(next!=null)next.BlendIn=Math.Max(0,Math.Min(_clipBlendSnapshot.GetValueOrDefault(next.Id,next.BlendIn),Math.Min(next.Duration,clip.Start+clip.Duration-next.Start)));
+        }
+
+        internal Rect2 MotionClipRect(string entryId,string clipId)
+        {
+            var rows=Rows;int row=rows.FindIndex(r=>r.Kind=="Motion"&&r.Object?.Data.Id==entryId);
+            var clip=rows.ElementAtOrDefault(row)?.Object?.Data.MotionClips.FirstOrDefault(c=>c.Id==clipId);
+            return clip==null?new Rect2():new Rect2(X(clip.Start),Top+row*RowHeight+2,Math.Max(2,X(clip.Start+clip.Duration)-X(clip.Start)),19);
+        }
+
+        private MotionClipData? SelectedClipEdge(Entry entry,float x)
+        {
+            if(App._selected!=entry)return null;
+            var selected=entry.Data.MotionClips.FirstOrDefault(c=>c.Id==App._selectedClipId);
+            return selected!=null&&x>=X(selected.Start)&&x<=X(selected.Start+selected.Duration)&&Math.Min(x-X(selected.Start),X(selected.Start+selected.Duration)-x)<8?selected:null;
+        }
+
+        public override string _GetTooltip(Vector2 atPosition)
+        {
+            int index=(int)Math.Floor((atPosition.Y-Top)/RowHeight);var rows=Rows;
+            if(index<0||index>=rows.Count||rows[index].Kind!="Motion")return TooltipText;
+            var entry=rows[index].Object!;var clip=SelectedClipEdge(entry,atPosition.X)??entry.Data.MotionClips.OrderByDescending(c=>c.Start).FirstOrDefault(c=>atPosition.X>=X(c.Start)&&atPosition.X<=X(c.Start+c.Duration));
+            if(clip==null)return TooltipText;
+            float left=atPosition.X-X(clip.Start),right=X(clip.Start+clip.Duration)-atPosition.X;
+            string action=left<8&&left<=right?"Trim IN · drag to choose a later or earlier source start":right<8?"Trim OUT · drag to change the clip end":"Drag to move this clip";
+            return $"{clip.Name}\n{action}\nTimeline {clip.Start:0.###}–{clip.Start+clip.Duration:0.###} s\nSource IN {clip.SourceOffset:0.###} s · OUT {clip.SourceOffset+clip.Duration*clip.Speed:0.###} s";
         }
 
         private TransformAnimationData Animation(TrackRow row) => row.Camera?.Animation ?? row.Object!.Data.TransformAnimation;
@@ -257,8 +304,19 @@ public partial class PrevisApp
                     DrawRect(new Rect2(start, y + 2, blendEnd - start, 19), new Color("8a72a6"));
                     DrawLine(new Vector2(start, y + 20), new Vector2(blendEnd, y + 3), new Color("c6afe5"));
                 }
-                DrawLine(new Vector2(finish - 3, y + 5), new Vector2(finish - 3, y + 18), new Color("bdaec8"), 2);
-                DrawString(font, new Vector2(start + 7, y + 16), Fit(clip.Name, rect.Size.X - 18), fontSize: 11, modulate: App._text);
+                DrawLine(new Vector2(start + 3, y + 5), new Vector2(start + 3, y + 18), new Color("d3c2df"), 2);
+                DrawLine(new Vector2(finish - 3, y + 5), new Vector2(finish - 3, y + 18), new Color("d3c2df"), 2);
+                DrawString(font, new Vector2(start + 9, y + 16), Fit(clip.Name+(clip.SourceOffset>1.0/App._fps?$" · IN {clip.SourceOffset:0.##} s":""), rect.Size.X - 24), fontSize: 11, modulate: App._text);
+            }
+            // Selected trim handles remain visible and reachable when an
+            // overlapping incoming clip is drawn above the outgoing clip.
+            var selectedClip=selected?clips.FirstOrDefault(c=>c.Id==App._selectedClipId):null;
+            if(selectedClip!=null)
+            {
+                float begin=X(selectedClip.Start),end=X(Math.Min(App._duration,selectedClip.Start+selectedClip.Duration));
+                DrawRect(new Rect2(begin,y+2,Math.Max(2,end-begin),19),App._accent,false,1);
+                DrawLine(new Vector2(begin+3,y+5),new Vector2(begin+3,y+18),new Color("f0e0ff"),2);
+                DrawLine(new Vector2(end-3,y+5),new Vector2(end-3,y+18),new Color("f0e0ff"),2);
             }
         }
 
@@ -313,13 +371,16 @@ public partial class PrevisApp
                     AcceptEvent(); return;
                 }
                 if (button.Position.X < Left) { App.Select(actor); AcceptEvent(); return; }
-                var clip = actor.Data.MotionClips.OrderByDescending(c => c.Start)
+                var clip = SelectedClipEdge(actor,button.Position.X)??actor.Data.MotionClips.OrderByDescending(c => c.Start)
                     .FirstOrDefault(c => button.Position.X >= X(c.Start) && button.Position.X <= X(c.Start + c.Duration));
                 if (clip != null)
                 {
                     App._playing = false; App._play.Text = "▶ Play"; App.SelectTimelineClip(actor, clip);
                     _hasDragged = false; _dragEntry = actor; _dragClip = clip; _dragX = button.Position.X;
-                    _start = clip.Start; _length = clip.Duration; _trim = X(clip.Start + clip.Duration) - button.Position.X < 8;
+                    _start = clip.Start; _length = clip.Duration; _offset=clip.SourceOffset;
+                    _clipBlendSnapshot.Clear();foreach(var source in actor.Data.MotionClips)_clipBlendSnapshot[source.Id]=source.BlendIn;
+                    float fromStart=button.Position.X-X(clip.Start),fromEnd=X(clip.Start+clip.Duration)-button.Position.X;
+                    _clipDrag=fromStart<8&&fromStart<=fromEnd?ClipDrag.In:fromEnd<8?ClipDrag.Out:ClipDrag.Move;
                     AcceptEvent(); return;
                 }
                 _scrubbing = true; App.SetTime(Snap(Seconds(button.Position.X))); AcceptEvent();

@@ -88,26 +88,11 @@ public partial class PrevisApp
     }
     void EditSelectedTransform(string group,int axis,float value)
     {
-        if(_refreshing)return;
-        if(_selectedCamera is {} camera)
-        {
-            PushUndo();EnsureCameraAnimation(camera);var list=TransformLayerRuntime.Channel(camera.Animation,group);
-            Vector3 vector=group=="Position"?camera.Rig.GlobalPosition:group=="Rotation"?camera.Rig.GlobalRotationDegrees:camera.Rig.Scale;vector[axis]=value;
-            if(_autoKey||list.Count>0)TransformLayerRuntime.Upsert(list,_time,vector);
-            else if(group=="Position")camera.BasePosition=vector;else if(group=="Rotation")camera.BaseRotation=vector;else camera.BaseScale=vector;
-            SetTime(_time);return;
-        }
-        if(_selected is not {} entry)return;PushUndo();var channel=TransformLayerRuntime.Channel(entry.Data.TransformAnimation,group);var manual=ManualValue(entry,group);manual[axis]=value;
-        Vector3 baseline=group=="Position"?(entry.Data.Path.Enabled?Vector(entry.Data.PathOffset):Vector(entry.Data.Position)):group=="Rotation"?Vector(entry.Data.Rotation):Vector(entry.Data.Scale,Vector3.One);
-        if(_autoKey||channel.Count>0)
-        {
-            Vector3 correction=group=="Scale"?new Vector3(manual.X/baseline.X,manual.Y/baseline.Y,manual.Z/baseline.Z):manual-baseline;
-            TransformLayerRuntime.Upsert(channel,_time,correction);
-        }
-        else if(group=="Position"){if(entry.Data.Path.Enabled)entry.Data.PathOffset=Array3(manual);else entry.Data.Position=Array3(manual);}
-        else if(group=="Rotation")entry.Data.Rotation=Array3(manual);else entry.Data.Scale=Array3(manual);
-        SetTime(_time);
+        if(_refreshing||_selected==null&&_selectedCamera==null)return;
+        var vector=_selectedCamera is {} camera?group=="Position"?camera.Rig.GlobalPosition:group=="Rotation"?camera.Rig.GlobalRotationDegrees:camera.Rig.Scale:ManualValue(_selected!,group);
+        vector[axis]=value;PushUndo();ApplySelectedManualTransform(group,vector);
     }
+
     void CaptureSelectedTransformKey(string group)
     {
         if(_selected==null&&_selectedCamera==null){Status("Select an object or camera to add a key.");return;}PushUndo();

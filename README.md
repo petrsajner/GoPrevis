@@ -1,10 +1,10 @@
-# Previs 0.6.0 — film shot planning
+# Previs 0.7.0 — film shot planning
 
 Previs is a desktop blockout tool for preparing movement and camera references for AI video. It uses Godot 4.7.2 .NET, C# and .NET 10. The application UI, dialogs and authored errors are English.
 
 ## Run
 
-The Windows portable output is `build/Previs-0.6.0-Windows/Previs.exe`. Keep Previs.exe, Previs.pck and data_Previs_windows_x86_64 together. The portable Windows build includes its runtime; using it does not require the Godot editor or .NET SDK.
+The Windows portable output is `build/Previs-0.7.0-Windows/Previs.exe`. Keep Previs.exe, Previs.pck and data_Previs_windows_x86_64 together. The portable Windows build includes its runtime; using it does not require the Godot editor or .NET SDK.
 
 For development, open project.godot with Godot 4.7.2 .NET. Local tools are in the ignored .tools directory. The existing run.ps1 starts the source project; build.ps1 -Test builds, runs source checks and exports Windows x64.
 
@@ -13,6 +13,8 @@ For development, open project.godot with Godot 4.7.2 .NET. Local tools are in th
 1. **Drag from a library.** Drag a person, animal or prop into the scene. Drag a card from Motions onto a compatible actor to append that motion. Dropping a motion on empty ground creates its matching actor there. Clicking a card is also available.
 2. **Place it and key it.** Select an object or camera in SCENE, in the viewport, or through its timeline track. Adjust Position, Rotation and Scale in Object. Press **K** or **Key transform** to capture them together; the **◇** button beside a parameter captures all three axes of that parameter.
 3. **Move in time and adjust.** Scrub to another frame and change the values. A channel that already has keys creates or updates a key at the current frame. Auto key also allows this on a previously unkeyed channel. Play to review the shot.
+
+In **Select** mode, hold **Shift** to show the complete transform gizmo for the selected object or camera: **arrows move**, **cubes scale**, and **rings rotate**. The Y arrow changes height freely; this is not a floor-constrained drag. The active drag continues until mouse release even if Shift is released first. Each drag is one Undo/Redo action. Existing transform keys and path corrections remain the values being edited.
 
 Transform tracks are collapsed by default. Expand an object's **Transform** row to reveal **Position, Rotation and Scale**; a camera also exposes **Focal length**. Each Position/Rotation/Scale diamond stores XYZ together. Drag a diamond to retime it, right-click one to remove it, or double-click an empty parameter lane to add a key.
 
@@ -64,7 +66,9 @@ Seating presets are prepared around practical blocking proportions. Match the fi
 
 Select a prepared human figure and choose **Pose** in the viewport toolbar (or **Edit body pose** in Object). The compact Pose inspector appears for humans only. If the figure is animated, entering an edit freezes the displayed frame into a static pose and keeps the figure at its visible world position. Undo can restore its source clips.
 
-Grab the actual hand or foot in the 3D view and drag: the whole arm or leg follows through its connected joints. The viewport also provides joint markers and XYZ handles for targeted adjustments. **Rotate** turns the head, spine, shoulders, elbows, knees or any other prepared joint; drag its center/rings. **Move** repositions hands, feet and pelvis using the mesh, center handle or world XYZ arrows. Expand **Precise values** only when numeric local angles or world coordinates are needed. Hand and foot moves use two-bone IK with fixed limb lengths and retain the chosen end-joint orientation. Shift makes a drag finer; Ctrl snaps movement or angles. Orbit, pan and zoom remain available while editing.
+Grab the actual hand or foot in the 3D view and drag: the whole arm or leg follows through its connected joints. The viewport also provides joint markers and XYZ handles for targeted adjustments. **Rotate** turns the head, spine, shoulders, elbows, knees or any other prepared joint; drag its center/rings. **Move** repositions hands, feet and pelvis using the mesh, center handle or world XYZ arrows. Hold **Shift before grabbing** to temporarily switch the current **Move/Rotate** operation: a hand or foot normally moves, so Shift rotates its wrist/ankle; an intermediate joint normally rotates, so Shift moves it. The chosen operation is latched when the mouse is pressed and remains stable until release. **W** explicitly chooses Move and **E** chooses Rotate for the selected part. Selecting that same hand again retains an explicit Rotate choice.
+
+Elbow and knee movement changes the limb's bend while retaining the hand or foot target. Other intermediate joints move within their parent connection's fixed length. Hand and foot moves use two-bone IK with fixed limb lengths and retain the chosen end-joint orientation. Expand **Precise values** only when numeric local angles or world coordinates are needed. **Alt** makes a pose drag finer; **Ctrl** snaps movement or angles. Orbit, pan and zoom remain available while editing.
 
 To fit a particular chair, first place the whole figure with Object Position/Rotation. Move the pelvis directly, or expand **Precise values** and adjust **Hip height (m)**. **Keep feet in place** pins both feet while the pelvis moves within leg reach. If a requested position lies beyond that reach, the move is limited rather than stretching the legs; disable the pin to reposition the whole pose, then place each foot explicitly. Rotate the feet or hands separately when their angle needs correction.
 
@@ -80,7 +84,7 @@ Mocap or native skeletal sources blend before the final object transform. Path h
 
 ### Clips
 
-Click a motion clip to open Motion. Drag its body to move it or its right edge to trim duration. Overlap neighbouring clips to crossfade. Start, Duration, Source offset, Blend in, Speed, Loop source and In-place clip are available for detailed editing. Prepared animals' native clips can also be sequenced and blended within their compatible family. Scene duration can be extended to **600 seconds**.
+Click a motion clip to open Motion. Drag its body to move it. Drag the **left edge to trim IN**, or the **right edge to trim OUT**. Trimming IN advances the source offset by the removed timeline interval multiplied by clip Speed, while retaining both its timeline OUT and source OUT. Extending the left edge stops at source time zero; IN cannot cross OUT or leave less than one scene frame. Moving the clip body leaves its source IN unchanged. Selected trim handles remain available through an overlapping crossfade. Hover a handle to see its source IN/OUT times. Overlap neighbouring clips to crossfade. Start, Duration, Source offset, Blend in, Speed, Loop source and In-place clip are available for detailed editing. Prepared animals' native clips can also be sequenced and blended within their compatible family. Scene duration can be extended to **600 seconds**.
 
 ### Paths
 
@@ -90,7 +94,7 @@ Face travel direction can stay enabled while manual Rotation offsets or keys add
 
 ## Cameras are scene objects
 
-Camera A/B/C appear in the unified SCENE list and can be picked in the viewport. Selecting their timeline track also opens their Object inspector. Position, Rotation, Scale and Lens can be changed and animated.
+Camera A/B/C appear in the unified SCENE list. Click a visible camera body or helper line in the viewport to select it, including while leaving human pose editing. Selecting its timeline track also opens its Object inspector. **Move** can drag the camera in the current view plane, including vertically. For constrained positioning, select **Select**, hold **Shift**, then use its XYZ arrows, scale cubes or rotation rings. These controls also work above existing camera animation channels. Position, Rotation, Scale and Lens can be changed and animated.
 
 Choose a framing or movement preset from the camera libraries, or use the working view and camera controls. Preset/legacy camera animation is converted into editable channels. Camera keys and lenses are independent of other cameras. Camera view pilots the active shot; its 16:9 guide matches the preview. The small Preview control can hide the preview when more inspector room is needed.
 
@@ -100,6 +104,12 @@ The interface responds to available window space rather than stretching a tablet
 
 Layout measurements are in **logical UI pixels**. At 2560 × 1440 the checked header is 35 px high, the play button is 31 px, and the 3D viewport is 1967 × 1136 with default docks. OS DPI remains respected; a 3840-pixel physical width at 150% scale corresponds to a 2560-pixel logical width. Growing the window enlarges the work area rather than every button.
 
+## Precise numeric fields
+
+The arrow area of a numeric field is also a vertical scrub control: **click for one small step, or hold and drag up/down**. Up increases the value and down decreases it at a constant sensitivity; horizontal travel does not accelerate it. Typical arrow steps are **0.001 m for position**, **0.1 degrees for rotation**, and **0.001 for scale**. Values remain rounded to that field's step. **Alt** gives a finer drag, and **Escape** cancels the current scrub.
+
+A continuous numeric scrub creates one Undo action. After reaching a minimum or maximum, dragging the other way works immediately; excess mouse travel is not accumulated beyond the bound. Right-clicking the arrow area does not jump to the minimum or maximum. Direct text and expression entry remain available in the main text area.
+
 ## Save, reopen and export
 
 Save creates a **version 4 .previs** project and neighbouring .assets folder containing used sources. Keep both together when moving a project. It preserves embedded static body poses, motion tracks, paths and path keys, final transform channels, camera channels/lenses, active camera and lighting. Version 1/2/3 scenes are migrated on opening. Overwriting an existing project keeps the previous JSON as .previs.bak.
@@ -108,9 +118,10 @@ Export frame produces a clean **1920 × 1080 PNG from the active camera**, with 
 
 ## Navigation and lighting
 
-- LMB selects; Move drags on the ground. Ctrl snaps to 0.25 metres.
+- LMB selects. Move drags ordinary scene objects on the ground and cameras in the view plane. In Select, hold Shift for unrestricted XYZ move/scale/rotation handles; the Y arrow lifts an object or camera. Ctrl snaps the ordinary ground move to 0.25 metres.
 - RMB orbits; RMB + WASD/QE flies, with Shift for faster travel.
-- MMB pans; Wheel dollies/zooms; F frames selection.
+- MMB pans; **Alt + MMB drag zooms** without a mouse wheel. Drag up to move closer and down to move farther away. Wheel zoom also remains available; F frames selection.
+- In Pose: **Shift** temporarily swaps Move/Rotate; **W/E** choose Move/Rotate explicitly. **Alt** is fine adjustment.
 - Space plays/pauses. K captures the selected transform.
 - Ctrl+S/O saves/opens. Ctrl+D duplicates. Ctrl+Z/Y undoes/redoes. Delete removes selection.
 - Draw path uses LMB points, Enter to finish and Esc to cancel.

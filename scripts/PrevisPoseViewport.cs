@@ -19,7 +19,18 @@ public partial class PrevisApp
     Quaternion _poseViewportStartRotation=Quaternion.Identity;
     float _poseViewportAxisStart,_poseViewportHandleLength;
     bool _poseViewportAxisStartValid,_poseViewportPlaneStartValid,_poseViewportRotateStartValid;
+    bool _poseShiftHeld;
     bool PoseViewportDragging=>_poseViewportDrag!=PoseViewportDrag.None;
+    bool PoseShiftActive=>_poseShiftHeld||Input.IsPhysicalKeyPressed(Key.Shift);
+    string EffectivePoseTool=>_poseViewportDrag is PoseViewportDrag.ScreenMove or PoseViewportDrag.AxisMove?"Move":_poseViewportDrag is PoseViewportDrag.FreeRotate or PoseViewportDrag.AxisRotate?"Rotate":PoseShiftActive?(_poseTool=="Move"?"Rotate":"Move"):_poseTool;
+    void UpdatePoseModifierState(InputEvent input)
+    {
+        bool before=_poseShiftHeld;
+        if(!_poseEditing)_poseShiftHeld=false;
+        else if(input is InputEventKey key&&((key.Keycode==Key.Shift)||(key.PhysicalKeycode==Key.Shift)))_poseShiftHeld=key.Pressed;
+        else if(input is InputEventWithModifiers modifiers)_poseShiftHeld=modifiers.ShiftPressed;
+        if(before!=_poseShiftHeld){UpdatePoseInspector();_poseViewportOverlay?.QueueRedraw();}
+    }
     static readonly string[] PoseViewportBones={"Hips","Chest","Neck","Head","LeftUpperArm","LeftLowerArm","LeftHand","RightUpperArm","RightLowerArm","RightHand","LeftUpperLeg","LeftLowerLeg","LeftFoot","RightUpperLeg","RightLowerLeg","RightFoot"};
     static readonly (string,string)[] PoseViewportLinks={
         ("Hips","Chest"),("Chest","Neck"),("Neck","Head"),
@@ -40,7 +51,7 @@ public partial class PrevisApp
         public override void _Process(double delta){Visible=App._poseEditing&&App._selected?.Node is RiggedActor;if(Visible)QueueRedraw();}
         public override void _Draw()=>App.DrawPoseViewport(this);
     }
-    static bool PoseViewportCanMove(string bone)=>bone is "Hips" or "LeftHand" or "RightHand" or "LeftFoot" or "RightFoot";
+    static bool PoseViewportCanMove(string bone)=>PoseCanMove(bone);
     static bool PoseViewportDirectBody(string? bone)=>bone is "Head" or "LeftHand" or "RightHand" or "LeftFoot" or "RightFoot";
     static Vector3 PoseViewportAxisVector(int index)=>index==0?Vector3.Right:index==1?Vector3.Up:Vector3.Back;
     Vector2 PoseViewportToInput(Vector2 point)=>point*_sceneContainer.Size/new Vector2(Math.Max(1,_sceneViewport.Size.X),Math.Max(1,_sceneViewport.Size.Y));
@@ -83,7 +94,7 @@ public partial class PrevisApp
             canvas.DrawCircle(pair.Value,selected?5.2f:hovered?4.6f:3.2f,selected?new Color("f2d291"):hovered?Colors.White:new Color("c9bff0"));
         }
         Vector3 origin=PoseViewportWorldJoint(actor,_poseBone);if(!PoseViewportProject(origin,out var center))return;
-        float length=PoseViewportLength(origin);bool move=_poseTool=="Move"&&PoseViewportCanMove(_poseBone);
+        float length=PoseViewportLength(origin);bool move=EffectivePoseTool=="Move"&&PoseViewportCanMove(_poseBone);
         if(move)
         {
             for(int axis=0;axis<3;axis++)
@@ -108,7 +119,7 @@ public partial class PrevisApp
         }
         canvas.DrawString(ThemeDB.FallbackFont,center+new Vector2(12,-15),PoseViewportBoneLabel(_poseBone),fontSize:12,modulate:new Color("f2dfb7"));
         canvas.DrawString(ThemeDB.FallbackFont,new Vector2(12,22),"POSE EDIT · "+PoseViewportBoneLabel(_poseBone),fontSize:12,modulate:new Color("e1d7f7"));
-        canvas.DrawString(ThemeDB.FallbackFont,new Vector2(12,41),move?"Grab a hand or foot and drag · XYZ arrows constrain · Shift: fine · Ctrl: snap":"Grab a body part to edit · Drag head to turn · Colored rings rotate",fontSize:11,modulate:new Color("b7b2c4"));
+        canvas.DrawString(ThemeDB.FallbackFont,new Vector2(12,41),(move?"MOVE · XYZ arrows constrain":"ROTATE · colored rings constrain")+" · Shift: alternate tool · Alt: fine · Ctrl: snap",fontSize:11,modulate:new Color("b7b2c4"));
     }
     Vector2?[] PoseViewportRing(Vector3 origin,Basis basis,int axis,float radius)
     {
@@ -225,28 +236,28 @@ public partial class PrevisApp
 
     bool HandlePoseViewportInput(InputEvent input)
     {
+        UpdatePoseModifierState(input);
         if(!_poseEditing||_selected?.Node is not RiggedActor actor){ReleasePoseViewportDrag();return false;}
         if(input is InputEventMouseButton {ButtonIndex:MouseButton.Left} button)
         {
             if(!button.Pressed){ReleasePoseViewportDrag();return true;}
-            ReleasePoseViewportDrag();bool move=_poseTool=="Move"&&PoseViewportCanMove(_poseBone);
-            string? body=PoseViewportHitBody(actor,button.Position),bone;int axis=-1;bool bodyHit=false;
+            ReleasePoseViewportDrag();bool move=EffectivePoseTool=="Move"&&PoseViewportCanMove(_poseBone);
+            string? body=PoseViewportHitBody(actor,button.Position),bone;int axis=-1;
             if(PoseViewportDirectBody(body))
             {
                 // A visible palm, foot or head must beat unrelated x-ray joint
                 // markers projected over it (for example a hip behind the hand).
                 int selectedAxis=body==_poseBone?PoseViewportHitAxis(actor,button.Position,move):-1;
-                bool ownMarker=PoseViewportProject(PoseViewportWorldJoint(actor,body!),out var marker)&&marker.DistanceTo(button.Position)<12;
                 if(selectedAxis>=0){bone=_poseBone;axis=selectedAxis;}
-                else{bone=body;bodyHit=!ownMarker;}
+                else{bone=body;}
             }
             else
             {
                 bone=PoseViewportHitBone(actor,button.Position);
-                if(bone==null){axis=PoseViewportHitAxis(actor,button.Position,move);bone=axis>=0?_poseBone:body;bodyHit=axis<0&&bone!=null;}
+                if(bone==null){axis=PoseViewportHitAxis(actor,button.Position,move);bone=axis>=0?_poseBone:body;}
             }
             if(bone==null)return true; // Pose mode must never start the ordinary whole-object Move drag.
-            if(bone!=_poseBone||bodyHit)SelectPoseBone(bone);move=_poseTool=="Move"&&PoseViewportCanMove(bone);
+            if(bone!=_poseBone)SelectPoseBone(bone);move=EffectivePoseTool=="Move"&&PoseViewportCanMove(bone);
             _poseViewportActorId=_selected.Data.Id;_poseViewportDragBone=bone;_poseViewportDragMouse=button.Position;_poseViewportAxis=axis;
             _poseViewportDrag=move?(axis<0?PoseViewportDrag.ScreenMove:PoseViewportDrag.AxisMove):(axis<0?PoseViewportDrag.FreeRotate:PoseViewportDrag.AxisRotate);
             return true;
@@ -264,7 +275,7 @@ public partial class PrevisApp
         }
         try
         {
-            float fine=motion.ShiftPressed ? .2f : 1f;
+            float fine=motion.AltPressed ? .2f : 1f;
             if(_poseViewportDrag is PoseViewportDrag.ScreenMove or PoseViewportDrag.AxisMove)
             {
                 Vector3 target=_poseViewportOrigin;

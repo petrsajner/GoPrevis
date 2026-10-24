@@ -48,7 +48,7 @@ public partial class PrevisApp : Control
     FileDialog _fileDialog = null!;
     AcceptDialog _message = null!;
     Action<string>? _fileAction;
-    bool _refreshing, _playing, _pilot, _rightDown, _middleDown, _dragging, _moveTool = true;
+    bool _refreshing, _playing, _pilot, _rightDown, _middleDown, _dragging, _moveTool = false;
     double _time, _duration = 8;
     int _fps = 24;
     int _loadingVersion=4;
@@ -61,9 +61,10 @@ public partial class PrevisApp : Control
     {
         TranslationServer.SetLocale("en");
         var window=GetWindow();float dpiScale=Math.Clamp(Math.Max(DisplayServer.ScreenGetScale(),DisplayServer.ScreenGetDpi()/96f),1,2.5f);window.ContentScaleMode=Window.ContentScaleModeEnum.CanvasItems;window.ContentScaleSize=Vector2I.Zero;window.ContentScaleFactor=dpiScale;
-        DisplayServer.WindowSetTitle("Previs 0.6.0 — Film shot planning");
+        DisplayServer.WindowSetTitle("Previs 0.7.0 — Film shot planning");
         BuildTheme(); BuildUi(); BuildWorld(); StarterScene();
-        if (OS.GetCmdlineUserArgs().Contains("--manual-pose-test")) _ = RunManualPoseChecksAndQuit();
+        if (OS.GetCmdlineUserArgs().Contains("--interaction-test")) _ = RunInteractionChecksAndQuit();
+        else if (OS.GetCmdlineUserArgs().Contains("--manual-pose-test")) _ = RunManualPoseChecksAndQuit();
         else if (OS.GetCmdlineUserArgs().Contains("--pose-test")) _ = RunPoseChecksAndQuit();
         else if (OS.GetCmdlineUserArgs().Contains("--content-test")) _ = RunContentChecksAndQuit();
         else if (OS.GetCmdlineUserArgs().Contains("--smoke-test")) _ = RunSmokeChecks();
@@ -128,7 +129,10 @@ public partial class PrevisApp : Control
     void BuildUi() => BuildResponsiveUi();
 
     SpinBox Spin(double min, double max, double step, double value)
-        => new() { MinValue = min, MaxValue = max, Step = step, Value = value, CustomMinimumSize = new Vector2(70, 0), SizeFlagsHorizontal = SizeFlags.ExpandFill };
+        {
+        var field=new PrecisionSpinBox{MinValue=min,MaxValue=max,Step=step,Value=value,DragUnitsPerPixel=step<=.01?step:Math.Min(step*.5,.05),CustomMinimumSize=new Vector2(70,0),SizeFlagsHorizontal=SizeFlags.ExpandFill};
+        field.GestureStarted+=BeginNumericGesture;field.GestureEnded+=EndNumericGesture;return field;
+    }
 
     void BuildInspector()
     {
@@ -142,7 +146,7 @@ public partial class PrevisApp : Control
             var row = new HBoxContainer(); row.AddThemeConstantOverride("separation", 3);
             for (int i = 0; i < 3; i++)
             {
-                int axis = i; var field = Spin(group == "Scale" ? .05 : -1000, 1000, group == "Rotation" ? 1 : .05, group == "Scale" ? 1 : 0);
+                int axis = i; var field = Spin(group == "Scale" ? .05 : -1000, 1000, group == "Rotation" ? .1 : .001, group == "Scale" ? 1 : 0);
                 field.TooltipText = $"{group} {"XYZ"[i]}"; field.CustomMinimumSize = new Vector2(76, 0); _fields[group + i] = field;
                 field.ValueChanged += value => ChangeTransform(group, axis, (float)value); row.AddChild(field);
             }
@@ -346,6 +350,15 @@ public partial class PrevisApp : Control
     void ViewportInput(InputEvent input)
     {
         if(input is InputEventMouseButton {Pressed:true,ButtonIndex:MouseButton.Left or MouseButton.Right or MouseButton.Middle})GetViewport().GuiReleaseFocus();
+        UpdateViewportModifiers(input);
+        if(HandleViewportZoom(input))return;
+        if(HandleObjectGizmoInput(input))return;
+        if(HandleCameraViewportMove(input))return;
+        if(input is InputEventMouseButton {ButtonIndex:MouseButton.Left,Pressed:true} cameraClick&&!_drawingPath)
+        {
+            var camera=PickViewportCamera(cameraClick.Position);
+            if(camera!=null){if(_pilot)TogglePilot();StopPoseEditing();SelectCamera(camera);if(_moveTool)BeginCameraViewportMove(cameraClick.Position);return;}
+        }
         if(HandlePoseViewportInput(input))return;
         if(HandlePathInput(input))return;
         if (input is InputEventMouseButton b)
@@ -356,7 +369,7 @@ public partial class PrevisApp : Control
             if (b.ButtonIndex == MouseButton.WheelDown && b.Pressed) { _distance = Math.Min(100, _distance / .88f); if (_pilot) {PushUndo(); _editorCamera.Position += _editorCamera.Basis.Z * .35f; _shot.GlobalTransform = _editorCamera.GlobalTransform;StorePilotedCameraPose(); } else UpdateOrbit(); }
             if (b.ButtonIndex == MouseButton.Left)
             {
-                if (b.Pressed) {var camera=PickCamera(b.Position);if(camera!=null){SelectCamera(camera);return;} var picked = Pick(b.Position); Select(picked); if (picked != null && _moveTool) { PushUndo(); _dragging = true;var origin=_editorCamera.ProjectRayOrigin(b.Position);var ray=_editorCamera.ProjectRayNormal(b.Position);_dragGrabOffset=Math.Abs(ray.Y)>.001f?picked.Node.Position-(origin+ray*((picked.Node.Position.Y-origin.Y)/ray.Y)):Vector3.Zero; } }
+                if (b.Pressed) {var picked = Pick(b.Position); Select(picked); if (picked != null && _moveTool) { PushUndo(); _dragging = true;var origin=_editorCamera.ProjectRayOrigin(b.Position);var ray=_editorCamera.ProjectRayNormal(b.Position);_dragGrabOffset=Math.Abs(ray.Y)>.001f?picked.Node.Position-(origin+ray*((picked.Node.Position.Y-origin.Y)/ray.Y)):Vector3.Zero; } }
                 else { _dragging = false; if (_selected != null) Select(_selected); }
             }
         }
@@ -370,7 +383,7 @@ public partial class PrevisApp : Control
     Entry? Pick(Vector2 point)
     {
         var origin = _editorCamera.ProjectRayOrigin(point); var ray = _editorCamera.ProjectRayNormal(point);
-        var hit = _world.GetWorld3D().DirectSpaceState.IntersectRay(PhysicsRayQueryParameters3D.Create(origin, origin + ray * 500, 1));
+        var hit = _world.GetWorld3D().DirectSpaceState.IntersectRay(ScenePickQuery(origin, origin + ray * 500));
         if (hit.Count == 0) return null; Node? n = hit["collider"].AsGodotObject() as Node;
         while (n != null) { if (n.HasMeta("scene_root") && n.GetMeta("scene_root").AsGodotObject() is Node3D r) return _entries.FirstOrDefault(e => e.Node == r); var e = _entries.FirstOrDefault(e => e.Node == n); if (e != null) return e; n = n.GetParent(); } return null;
     }
@@ -380,12 +393,14 @@ public partial class PrevisApp : Control
         if(_drawingPath&&key.Keycode==Key.Escape){CancelDrawingPath();return;}if(_drawingPath&&key.Keycode==Key.Enter){FinishDrawingPath();return;}
         if (GetViewport().GuiGetFocusOwner() is LineEdit or TextEdit) return;
         if(_poseEditing&&key.Keycode==Key.Escape){StopPoseEditing();ShowInspectorSection("Object");return;}
+        if(_poseEditing&&!_rightDown&&!_middleDown&&!_middleZoom&&(key.Keycode==Key.W||key.Keycode==Key.E)){SetPoseTool(key.Keycode==Key.W?"Move":"Rotate");return;}
         if(key.Keycode==Key.K){CaptureSelectedTransformKey("All");return;}
         if (key.CtrlPressed && key.Keycode == Key.S) SaveProject(); else if (key.CtrlPressed && key.Keycode == Key.O) OpenProject(); else if (key.CtrlPressed && key.Keycode == Key.Z) Undo(); else if (key.CtrlPressed && key.Keycode == Key.Y) Redo(); else if (key.CtrlPressed && key.Keycode == Key.D) DuplicateSelected(); else if (key.Keycode == Key.Delete) DeleteSelected(); else if (key.Keycode == Key.F) FrameSelected(); else if (key.Keycode == Key.Space) { _playing = !_playing; _play.Text = _playing ? "Ⅱ Pause" : "▶ Play"; }
     }
     public override void _Input(InputEvent input)
     {
-        if(input is InputEventMouseButton { Pressed: false } button) { if(button.ButtonIndex==MouseButton.Right)_rightDown=false; if(button.ButtonIndex==MouseButton.Middle)_middleDown=false; if(button.ButtonIndex==MouseButton.Left){_dragging=false;ReleasePoseViewportDrag();} }
+        UpdateViewportModifiers(input);
+        if(input is InputEventMouseButton { Pressed: false } button) { if(button.ButtonIndex==MouseButton.Right)_rightDown=false; if(button.ButtonIndex==MouseButton.Middle){_middleDown=false;_middleZoom=false;_zoomUndo=false;} if(button.ButtonIndex==MouseButton.Left){_dragging=false;ReleasePoseViewportDrag();ReleaseObjectGizmoDrag();EndCameraViewportMove();} }
     }
     void UpdateSelection()
     {
@@ -402,9 +417,9 @@ public partial class PrevisApp : Control
     void Error(string message) { Status(message); _message.Title = "Previs — action could not be completed"; _message.DialogText = message; _message.PopupCentered(new Vector2I(640, 230)); GD.PushWarning(message); }
     void NewScene() { if(_drawingPath)CancelDrawingPath();PushUndo(); ClearObjects(); ClearCameras();CreateCamera("Camera A",null,true);_shot.ClearKeys();_lighting.DirectionalEnabled=false; _projectPath = ""; SetTime(0); Status("New neutral scene. Add an actor or prop from the library."); }
     void ClearObjects() { foreach (var e in _entries) { _world.RemoveChild(e.Node); e.Node.QueueFree(); } _entries.Clear(); _selected = null; RefreshObjects(); Select(null); }
-    void PushUndo() { if (_world == null) return; _undo.Push((Snapshot(),_projectPath)); _redo.Clear(); }
-    void Undo() { if (_undo.Count == 0) return;string? poseId=_poseEditing?_selected?.Data.Id:null;ReleasePoseViewportDrag(); _redo.Push((Snapshot(),_projectPath)); var previous=_undo.Pop();Restore(previous.Document, "");_projectPath=previous.Path;RestorePoseEditorSelection(poseId); Status("Undo."); }
-    void Redo() { if (_redo.Count == 0) return;string? poseId=_poseEditing?_selected?.Data.Id:null;ReleasePoseViewportDrag(); _undo.Push((Snapshot(),_projectPath)); var next=_redo.Pop();Restore(next.Document, "");_projectPath=next.Path;RestorePoseEditorSelection(poseId); Status("Redo."); }
+    void PushUndo() { if (_world == null) return;if(_numericGesture){if(_numericUndoPushed)return;_numericUndoPushed=true;} _undo.Push((Snapshot(),_projectPath)); _redo.Clear(); }
+    void Undo() { if (_undo.Count == 0) return;string? poseId=_poseEditing?_selected?.Data.Id:null;string? objectId=_selected?.Data.Id,cameraId=_selectedCamera?.Id;ReleasePoseViewportDrag();ReleaseObjectGizmoDrag();EndCameraViewportMove(); _redo.Push((Snapshot(),_projectPath)); var previous=_undo.Pop();Restore(previous.Document, "");_projectPath=previous.Path;RestoreInteractionSelection(objectId,cameraId);RestorePoseEditorSelection(poseId); Status("Undo."); }
+    void Redo() { if (_redo.Count == 0) return;string? poseId=_poseEditing?_selected?.Data.Id:null;string? objectId=_selected?.Data.Id,cameraId=_selectedCamera?.Id;ReleasePoseViewportDrag();ReleaseObjectGizmoDrag();EndCameraViewportMove(); _undo.Push((Snapshot(),_projectPath)); var next=_redo.Pop();Restore(next.Document, "");_projectPath=next.Path;RestoreInteractionSelection(objectId,cameraId);RestorePoseEditorSelection(poseId); Status("Redo."); }
     static float[] Array3(Vector3 v) => new[] { v.X, v.Y, v.Z };
     static Vector3 Vector(float[] v, Vector3 fallback = default) => v.Length == 3 && v.All(float.IsFinite) ? new Vector3(v[0], v[1], v[2]) : fallback;
     ObjectData SnapshotObject(Entry e) {var d=JsonSerializer.Deserialize<ObjectData>(JsonSerializer.Serialize(e.Data))!;d.ModelAnimation=e.Animation;return d;}
@@ -462,7 +477,7 @@ public partial class PrevisApp : Control
         if (!path.EndsWith(".png",StringComparison.OrdinalIgnoreCase))path+=".png";
         var view = new SubViewport { Size = new Vector2I(1920,1080), World3D = _sceneViewport.World3D, RenderTargetUpdateMode = SubViewport.UpdateMode.Once, Msaa3D = Viewport.Msaa.Msaa4X };
         AddChild(view); var camera = new Camera3D { Current=true,CullMask=1,Near=.05f,Far=500,KeepAspect=Camera3D.KeepAspectEnum.Width,Fov=_shot.ShotCamera.Fov };view.AddChild(camera);camera.GlobalTransform=_shot.ShotCamera.GlobalTransform;
-        try { for(int i=0;i<2;i++)await ToSignal(GetTree(),SceneTree.SignalName.ProcessFrame);await ToSignal(RenderingServer.Singleton,RenderingServer.SignalName.FramePostDraw);var image=view.GetTexture().GetImage();var error=image.SavePng(path);if(error!=Godot.Error.Ok)throw new IOException("The frame could not be saved: "+error); File.WriteAllText(Path.ChangeExtension(path,".json"),JsonSerializer.Serialize(new {application="Previs",version="0.6.0",frame=(int)Math.Round(_time*_fps),timeSeconds=_time,fps=_fps,width=1920,height=1080,activeCameraId=ActiveCameraId,camera=Snapshot()},_json)); }
+        try { for(int i=0;i<2;i++)await ToSignal(GetTree(),SceneTree.SignalName.ProcessFrame);await ToSignal(RenderingServer.Singleton,RenderingServer.SignalName.FramePostDraw);var image=view.GetTexture().GetImage();var error=image.SavePng(path);if(error!=Godot.Error.Ok)throw new IOException("The frame could not be saved: "+error); File.WriteAllText(Path.ChangeExtension(path,".json"),JsonSerializer.Serialize(new {application="Previs",version="0.7.0",frame=(int)Math.Round(_time*_fps),timeSeconds=_time,fps=_fps,width=1920,height=1080,activeCameraId=ActiveCameraId,camera=Snapshot()},_json)); }
         finally { view.QueueFree(); }
     }
 

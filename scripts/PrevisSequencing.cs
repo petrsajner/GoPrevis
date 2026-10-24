@@ -106,7 +106,7 @@ public partial class PrevisApp
         _clipLength=Spin(.04,MaxSceneDuration,1.0/_fps,3);Field("Duration (s)",_clipLength);
         _clipOffset=Spin(0,3600,1.0/_fps,0);Field("Source offset (s)",_clipOffset);
         _clipBlend=Spin(0,30,.05,.3);Field("Blend in (s)",_clipBlend);
-        _speed=Spin(.1,4,.1,1);Field("Speed",_speed);
+        _speed=Spin(.1,4,.01,1);Field("Speed",_speed);
         _sourceScale=Spin(.0001,10,.001,.01);Field("Source metres/unit",_sourceScale);
         _clipStart.ValueChanged+=v=>EditClip(c=>c.Start=v);_clipLength.ValueChanged+=v=>EditClip(c=>c.Duration=v);_clipOffset.ValueChanged+=v=>EditClip(c=>c.SourceOffset=v);
         _clipBlend.ValueChanged+=v=>EditClip(c=>{c.BlendIn=v;var prev=_selected!.Data.MotionClips.Where(p=>p.Id!=c.Id&&p.Start<=c.Start).OrderBy(p=>p.Start).LastOrDefault();if(prev!=null)c.Start=Math.Max(0,prev.Start+prev.Duration-Math.Min(v,Math.Min(prev.Duration,c.Duration)));});

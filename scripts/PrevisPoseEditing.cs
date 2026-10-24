@@ -27,9 +27,9 @@ public partial class PrevisApp
         _poseEditInfo=Text("Select a human figure.",11,true);_poseEditInfo.AutowrapMode=TextServer.AutowrapMode.WordSmart;_posePanel.AddChild(_poseEditInfo);
         _poseStartButton=Button("Edit pose",StartPoseEditing);_poseStartButton.TooltipText="Freeze the current frame for manual editing. Undo restores motion clips.";_posePanel.AddChild(_poseStartButton);
         _poseJointChoice=new OptionButton{FitToLongestItem=false,ClipText=true};_poseJointChoice.ItemSelected+=i=>{if(!_refreshing&&i>=0)SelectPoseBone(_poseJointChoice.GetItemMetadata((int)i).AsString());};_posePanel.AddChild(_poseJointChoice);
-        _poseMoveButton=Button("Move",()=>{_poseTool="Move";UpdatePoseInspector();},true);_poseRotateButton=Button("Rotate",()=>{_poseTool="Rotate";UpdatePoseInspector();},true);_posePanel.AddChild(Row(_poseMoveButton,_poseRotateButton));
+        _poseMoveButton=Button("Move",()=>SetPoseTool("Move"),true);_poseRotateButton=Button("Rotate",()=>SetPoseTool("Rotate"),true);_posePanel.AddChild(Row(_poseMoveButton,_poseRotateButton));
         var precise=Button("Precise values",()=>_posePreciseBox.Visible=!_posePreciseBox.Visible,true);_posePanel.AddChild(precise);_posePreciseBox=new VBoxContainer{Visible=false};_posePanel.AddChild(_posePreciseBox);
-        _posePreciseBox.AddChild(Text("Rotation (local degrees)",11,true));_posePreciseBox.AddChild(PoseVectorFields(_poseRotationFields,-180,180,1,axis=>EditPoseNumber(()=>{var value=((RiggedActor)_selected!.Node).GetPoseBoneRotationDegrees(_poseBone);value[axis]=(float)_poseRotationFields[axis].Value;UpdatePoseBoneRotation(value);})));
+        _posePreciseBox.AddChild(Text("Rotation (local degrees)",11,true));_posePreciseBox.AddChild(PoseVectorFields(_poseRotationFields,-180,180,.1,axis=>EditPoseNumber(()=>{var value=((RiggedActor)_selected!.Node).GetPoseBoneRotationDegrees(_poseBone);value[axis]=(float)_poseRotationFields[axis].Value;UpdatePoseBoneRotation(value);})));
         _posePositionLabel=Text("Target position (world metres)",11,true);_posePreciseBox.AddChild(_posePositionLabel);_posePreciseBox.AddChild(PoseVectorFields(_posePositionFields,-1000,1000,.001,axis=>EditPoseNumber(()=>{var actor=(RiggedActor)_selected!.Node;var value=actor.GlobalTransform*actor.GetPoseJointPosition(_poseBone);value[axis]=(float)_posePositionFields[axis].Value;UpdatePoseEffectorWorld(_poseBone,value);})));
         _poseHipHeight=Spin(-1000,1000,.001,1);_poseHipHeight.ValueChanged+=v=>EditPoseNumber(()=>{var actor=(RiggedActor)_selected!.Node;var world=actor.GlobalTransform*actor.GetPoseJointPosition("Hips");world.Y=(float)v;UpdatePoseEffectorWorld("Hips",world);});_posePreciseBox.AddChild(Row(Text("Hip height (m)",11,true),_poseHipHeight));
         _poseKeepFeet=new CheckButton{Text="Keep feet in place",TooltipText="Keep both feet planted when moving the pelvis.",ButtonPressed=true};_poseKeepFeet.Toggled+=v=>_posePinFeet=v;_posePanel.AddChild(_poseKeepFeet);
@@ -47,7 +47,12 @@ public partial class PrevisApp
     {
         "Hips"=>"Pelvis","Spine"=>"Lower spine","LeftLowerArm"=>"Left forearm","RightLowerArm"=>"Right forearm","LeftUpperLeg"=>"Left thigh","RightUpperLeg"=>"Right thigh","LeftLowerLeg"=>"Left knee","RightLowerLeg"=>"Right knee",_=>System.Text.RegularExpressions.Regex.Replace(bone,"(?<!^)([A-Z])"," $1")
     };
-    static bool PoseCanMove(string bone)=>bone is "Hips" or "LeftHand" or "RightHand" or "LeftFoot" or "RightFoot";
+    static bool PoseCanMove(string bone)=>bone is "Hips" or "Spine" or "Chest" or "Neck" or "Head" or "LeftShoulder" or "RightShoulder" or "LeftUpperArm" or "RightUpperArm" or "LeftLowerArm" or "RightLowerArm" or "LeftHand" or "RightHand" or "LeftUpperLeg" or "RightUpperLeg" or "LeftLowerLeg" or "RightLowerLeg" or "LeftFoot" or "RightFoot" or "LeftToe" or "RightToe";
+    static string DefaultPoseTool(string bone)=>bone is "Hips" or "LeftHand" or "RightHand" or "LeftFoot" or "RightFoot"?"Move":"Rotate";
+    void SetPoseTool(string tool)
+    {
+        if(tool is not ("Move" or "Rotate"))return;_poseTool=tool;UpdatePoseInspector();_poseViewportOverlay?.QueueRedraw();
+    }
     void OpenPoseInspector(){ShowInspectorSection("Pose");UpdatePoseInspector();}
     void StartPoseEditing()
     {
@@ -64,7 +69,7 @@ public partial class PrevisApp
             FrameSelected();var facing=actor.GlobalBasis*actor.AnimatedForward;facing.Y=0;
             if(facing.LengthSquared()>.00001f){_yaw=Mathf.Atan2(facing.X,facing.Z)+.45f;_pitch=.25f;UpdateOrbit();}
         }
-        ShowInspectorSection("Pose");UpdatePoseInspector();UpdateSelection();Status("Edit pose · grab a hand or foot to move the whole limb.");
+        ShowInspectorSection("Pose");UpdatePoseInspector();UpdateSelection();Status("Edit pose · drag a body part · Shift switches Move / Rotate · W / E choose a tool.");
     }
     void StopPoseEditing()
     {
@@ -88,13 +93,14 @@ public partial class PrevisApp
     void EndPoseGesture(){_poseGestureActive=false;UpdatePoseInspector();}
     void SelectPoseBone(string bone)
     {
-        if(_selected?.Node is not RiggedActor actor||!actor.PoseBoneNames.Contains(bone))return;_poseBone=bone;_poseTool=PoseCanMove(bone)?"Move":"Rotate";UpdatePoseInspector();
+        if(_selected?.Node is not RiggedActor actor||!actor.PoseBoneNames.Contains(bone))return;
+        if(_poseBone!=bone){_poseBone=bone;_poseTool=DefaultPoseTool(bone);}UpdatePoseInspector();
     }
     void UpdatePoseEffectorWorld(string bone,Vector3 world)
     {
         if(_selected?.Node is not RiggedActor actor||!PoseCanMove(bone))return;
         var local=actor.GlobalTransform.AffineInverse()*world;
-        if(bone=="Hips")actor.MovePosePelvis(actor.GetPoseRootOffset()+local-actor.GetPoseJointPosition("Hips"),_posePinFeet);else actor.MovePoseEndEffector(bone,local);
+        if(bone=="Hips")actor.MovePosePelvis(actor.GetPoseRootOffset()+local-actor.GetPoseJointPosition("Hips"),_posePinFeet);else actor.MovePoseJoint(bone,local);
         CommitEditedPose();
     }
     void UpdatePoseBoneRotation(Vector3 degrees)
@@ -136,7 +142,7 @@ public partial class PrevisApp
         if(_posePanel==null)return;bool old=_refreshing;_refreshing=true;
         var actor=_selected?.Node as RiggedActor;bool human=actor!=null;
         _poseToolbarButton.Disabled=!human;_poseToolbarButton.ButtonPressed=_poseEditing&&human;_poseInspectorTab.Visible=human;_editPoseShortcut.Visible=human&&_inspectorSection=="Object";
-        _poseStartButton.Visible=human&&!_poseEditing;_poseEditInfo.Text=!human?"Select a prepared human figure.":_poseEditing?"Drag a hand or foot: the whole limb follows. Drag the head to turn it.":actor!.MotionTrackClipCount>0?"Edit pose freezes this frame. Undo restores its motion clips.":"Edit this figure's head, body, arms and legs.";
+        _poseStartButton.Visible=human&&!_poseEditing;_poseEditInfo.Text=!human?"Select a prepared human figure.":_poseEditing?"Drag a body part. Shift switches Move / Rotate; W / E choose a tool.":actor!.MotionTrackClipCount>0?"Edit pose freezes this frame. Undo restores its motion clips.":"Edit this figure's head, body, arms and legs.";
         if(human&&_poseJointChoice.ItemCount!=actor!.PoseBoneNames.Count){_poseJointChoice.Clear();foreach(string bone in actor.PoseBoneNames){_poseJointChoice.AddItem(PoseBoneLabel(bone));_poseJointChoice.SetItemMetadata(_poseJointChoice.ItemCount-1,bone);}}
         Vector3 rotation=Vector3.Zero,position=Vector3.Zero;float hip=0;
         if(human)
@@ -148,7 +154,7 @@ public partial class PrevisApp
         bool editable=human&&_poseEditing;
         for(int i=0;i<3;i++){_poseRotationFields[i].Value=rotation[i];_poseRotationFields[i].Editable=editable;_posePositionFields[i].Value=position[i];_posePositionFields[i].Editable=editable&&PoseCanMove(_poseBone);}
         _poseHipHeight.Value=hip;_poseHipHeight.Editable=editable;_poseKeepFeet.Disabled=!editable;_poseKeepFeet.ButtonPressed=_posePinFeet;
-        _poseJointChoice.Disabled=!human;_poseMoveButton.Disabled=!editable||!PoseCanMove(_poseBone);_poseRotateButton.Disabled=!editable;_poseMoveButton.ButtonPressed=_poseTool=="Move";_poseRotateButton.ButtonPressed=_poseTool=="Rotate";
+        _poseJointChoice.Disabled=!human;_poseMoveButton.Disabled=!editable||!PoseCanMove(_poseBone);_poseRotateButton.Disabled=!editable;_poseMoveButton.ButtonPressed=EffectivePoseTool=="Move";_poseRotateButton.ButtonPressed=EffectivePoseTool=="Rotate";
         _poseSaveButton.Disabled=!human;_poseResetButton.Disabled=!editable;_poseDoneButton.Disabled=!editable;_refreshing=old;
     }
     async Task RunManualPoseChecksAndQuit()

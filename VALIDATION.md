@@ -1,8 +1,8 @@
-# Previs 0.6.0 validation
+# Previs 0.7.0 validation
 
-Validation date: **2026-10-24**. Development/verified platform: **Windows x64**.
+Validation date: **2026-10-25**. Development/verified platform: **Windows x64**.
 
-This revision adds static human poses, source-independent body snapshots and a reusable custom-pose library above the populated model and motion libraries. Compact desktop layout, final transform layers and unified camera selection remain in place. Application UI and authored messages are English. See README.md for feature limits.
+This revision improves interaction: temporary pose-tool switching, intermediate-joint movement, camera picking, complete scene transform handles, wheel-free zoom, source-IN trimming and precise numeric scrubbing. Compact desktop layout, final transform layers and unified camera selection remain in place. Application UI and authored messages are English. See README.md for feature limits.
 
 ## Toolchain
 
@@ -10,6 +10,26 @@ This revision adds static human poses, source-independent body snapshots and a r
 - C# targeting .NET 10; local SDK **10.0.402**.
 - Rendered source checks use the Compatibility renderer on the development Windows machine.
 - Godot locale and fallback locale are en.
+
+## Interaction changes for 0.7.0 — current source evidence
+
+The integrated source builds with zero warnings and errors. `RunInteractionChecks` passes **31 application assertions**, and invokes **15 precision-numeric checks** plus **14 timeline-trim checks**. Evidence: `output/interaction-source-0.7.0.log` ends in `INTERACTION_OK checks=31 numeric=15 timeline=14`. The standalone precision and trim probes also pass. This section records source execution; independent 0.7.0 packaged/rendered delivery results are added only after that execution.
+
+- Shift switches a hand from Move to Rotate before pointer motion; releasing Shift during the drag retains the latched rotation until mouse release. Wrist orientation changes without moving the wrist position, and explicit Rotate selection survives reselecting that hand. W/E select Move/Rotate while posing.
+- Shift-moved elbows and knees change their bend positions while retaining the hand/foot endpoint and fixed limb lengths.
+- A visible camera body can be selected through actual viewport callbacks, including leaving pose mode. Camera Move can change height, and a complete Shift-in-Select gizmo exposes XYZ movement, axis scale cubes and rotation rings. Camera Y translation and rotation are exercised; one drag creates one undo action and remains active after Shift is released.
+- Ordinary objects can be lifted with the Y arrow and scaled on a chosen axis. Path-driven vertical corrections leave the drawn curve unchanged.
+- Alt+MMB zoom changes working-view distance without panning its orbit target.
+- Real numeric arrow-area scrubbing stays fine and creates one undo action. Boundary tests cover a huge over-drag to both limits followed by an immediate opposite pixel, including sub-step resolution. Right-click does not jump to 1000; typed numbers/expressions and programmatic-value/text synchronization remain correct. Disabled fields and Escape cancellation are checked.
+- Real timeline-widget IN trimming advances source offset by timeline delta times Speed and preserves both OUT values. A retargeted skeleton comparison proves the new source IN is actually played. Limits, loop state, reversible fade intersections, selected OUT handles through overlaps, Undo/Redo and handle tooltips are checked.
+
+The report is `output/interaction-report.json`. Source probes: `scripts/Testing/PrecisionSpinProbe.cs`, `scripts/Testing/TimelineTrimProbe.cs`, and `scripts/PrevisInteractionChecks.cs`.
+
+A rendered source UI probe also passes: the actual camera body is selected, its height changes by 0.35 m, a precision-field scrub changes the value by 0.006, and the full Shift transform gizmo is rendered. Evidence: `output/interaction-ui-0.7.0.log` and `output/interaction-ui-0.7.0.png`. Current source regression reruns pass 70 manual-pose, 278 static-pose, 225 content-library and 24 responsive-layout assertions. These source results do not yet claim a new portable-package run.
+
+## Historical regression evidence (0.4–0.6)
+
+The following sections retain prior verification and content provenance. Their versioned logs are historical evidence, not claims that a 0.7.0 portable executable has already passed those runs.
 
 ## Responsive layout
 
@@ -103,8 +123,12 @@ A real imported Kenney chair supplies a measured seat surface through a physics 
 
 The real palm/foot-body drags are sent through the scene viewport `GuiInput` signal, outside their own joint markers. They verify cursor tracking, upper/lower/end joint changes, fixed limb lengths, unchanged scene-object placement and one Undo item. The fixture deliberately includes unrelated projected joint markers over visible hands, so the visible mesh must win the pick. The rendered source pass also verifies full-HD output, passing **71 assertions** with an empty stderr log (`output/manual-pose-render-0.6.0.log`). A separate rendered UI probe grabs the actual palm through scene `GuiInput` events and confirms that shoulder, elbow and wrist all change while the whole figure stays fixed; it also drags the head to turn it. Evidence: `output/manual-pose-ui.log` and `output/manual-pose-ui-after.png`. The precision fields remain collapsed during this direct manipulation.
 
-## Independent 0.6.0 delivery
+## Previous independent 0.6.0 delivery
 
 The self-contained Windows executable passes **71 manual-pose checks**, **278 static-pose checks**, **225 model/motion library checks**, and the rendered smoke test including clean full-HD export. Evidence: `output/packaged-0.6.0-{manual,poses,content,render}.log`; all four stderr logs are empty. The actual exported resource inventory confirms 567 bundled sources, 859 covers and 118 poses with zero missing files (`output/package-inventory-0.6.0.log`). LayoutProbe passes 24 geometry checks at logical 1280x800, 1920x1080 and 2560x1440.
 
 The portable package contains `examples/manual-adjusted-pose.previs` with its own imported chair asset. `BUILD-INFO.json` records source revision, resource/executable/managed-assembly hashes and test counts. The ZIP is read back completely for CRC verification.
+
+## Independent 0.7.0 delivery
+
+The exported Windows executable passes **31 integrated interaction assertions, 15 precision-number assertions and 14 IN/OUT timeline assertions** in one rendered run. It also passes 71 rendered manual-pose checks, 278 static-pose checks, 225 model/motion library checks and the clean full-HD smoke render. Logs: `output/packaged-0.7.0-{interaction,manual,poses,content,render}.log`; all five stderr logs are empty. The exported resource inventory confirms 567 sources, 859 covers and 118 poses without missing files. `BUILD-INFO.json` records the exact source revision, binary hashes and counts. The portable ZIP is fully read back for CRC verification.
