@@ -10,4 +10,6 @@ Official source: https://github.com/dotnet/runtime
 
 The included real CMU walk is attributed with its original source and conversion conditions in `samples/real/SOURCE-AND-LICENSE.md`. Its original data are unchanged. The synthetic BVH is authored test data created for this project.
 
+The bundled animated Fox model and its Walk/Run/Survey animation use the attributions and licences in `LICENSES/Fox-NOTICE.md` (CC0 model; CC-BY-4.0 rig, animation and conversion). The source GLB is unchanged, including its raw-safe packaging copy.
+
 Procedural mannequin, blockout props, project logic and UI are project assets; no Topview source, images or models were copied.

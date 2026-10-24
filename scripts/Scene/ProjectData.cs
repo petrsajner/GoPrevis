@@ -5,7 +5,7 @@ namespace Previs;
 
 public sealed class ProjectData
 {
-    public int Version { get; set; } = 2;
+    public int Version { get; set; } = 3;
     public int Fps { get; set; } = 24;
     public double Duration { get; set; } = 8;
     public List<ObjectData> Objects { get; set; } = new();
@@ -36,6 +36,9 @@ public sealed class ObjectData
     public double Speed { get; set; } = 1;
     public List<MotionClipData> MotionClips { get; set; } = new();
     public ActorPathData Path { get; set; } = new();
+    public float[] PathOffset { get; set; } = new float[3];
+    public TransformAnimationData TransformAnimation { get; set; } = new();
+    public string ActorFamily { get; set; } = "";
 }
 
 public sealed class MotionClipData
@@ -51,6 +54,7 @@ public sealed class MotionClipData
     public bool Loop { get; set; } = true;
     public bool InPlace { get; set; }
     public float SourceScale { get; set; } = .01f;
+    public string? SourceAnimation { get; set; }
 }
 
 public sealed class ActorPathData
@@ -71,6 +75,16 @@ public sealed class CameraTrackData
     public float[] Position { get; set; } = new float[] { 6, 3.2f, 7 };
     public float[] Rotation { get; set; } = new float[3];
     public float FocalLength { get; set; } = 35;
+    public float[] Scale { get; set; } = new float[]{1,1,1};
+    public TransformAnimationData TransformAnimation { get; set; } = new();
+    public List<LensKeyData> LensKeys { get; set; } = new();
+}
+
+public sealed class LensKeyData
+{
+    public string Id { get; set; } = Guid.NewGuid().ToString("N");
+    public double Time { get; set; }
+    public float Value { get; set; } = 35;
 }
 
 public sealed class CameraData

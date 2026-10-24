@@ -3,7 +3,7 @@ config_version=5
 
 [application]
 config/name="Previs"
-config/version="0.2.1"
+config/version="0.3.1"
 run/main_scene="res://Main.tscn"
 config/features=PackedStringArray("4.7", "C#", "GL Compatibility")
 config/icon="res://assets/previs.svg"
@@ -16,7 +16,7 @@ window/size/window_height_override=900
 window/size/min_width=1100
 window/size/min_height=700
 window/size/mode=2
-window/stretch/mode="canvas_items"
+window/stretch/mode="disabled"
 
 [dotnet]
 project/assembly_name="Previs"

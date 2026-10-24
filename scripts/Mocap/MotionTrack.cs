@@ -122,8 +122,6 @@ public partial class RiggedActor
         PreparedMotionClip first = _motionTrack[0];
         SampleTrackPose(first, sceneSeconds, _trackPose);
         Vector3 root = SampleClipRoot(first, sceneSeconds) + first.Alignment;
-        Vector3 facing = ClipFacing(first);
-        Vector3 restForward = first.Source.RestForward;
         for (int i = 1; i < _motionTrack.Length; i++)
         {
             PreparedMotionClip clip = _motionTrack[i];
@@ -133,15 +131,17 @@ public partial class RiggedActor
             for (int bone = 0; bone < _bones.Count; bone++)
                 _trackPose[bone] = _trackPose[bone].Slerp(_trackIncomingPose[bone], weight).Normalized();
             root = root.Lerp(SampleClipRoot(clip, sceneSeconds) + clip.Alignment, weight);
-            facing = BlendFacing(facing, ClipFacing(clip), weight);
-            restForward = BlendFacing(restForward, clip.Source.RestForward, weight);
         }
         if (forceInPlace) { root.X = 0; root.Z = 0; }
-        AnimatedForward = facing;
+        // Derive locomotion alignment from the FINAL blended prepared-rig pose.
+        // Interpolating separate source-facing metadata here fights path/manual layers.
+        Vector3 facing=_trackPose[0]*Vector3.Forward;facing.Y=0;
+        if(facing.LengthSquared()<.00001f){var right=_trackPose[0]*Vector3.Right;right.Y=0;facing=Vector3.Up.Cross(right);}
+        AnimatedForward=HorizontalFacing(facing);
         if (_faceMarker != null)
         {
-            _faceMarker.Position = restForward * .101f + Vector3.Up * .10f;
-            _faceMarker.Quaternion = Align(Vector3.Forward, restForward);
+            _faceMarker.Position = Vector3.Forward * .101f + Vector3.Up * .10f;
+            _faceMarker.Quaternion = Quaternion.Identity;
         }
         ApplyTrackPose(root);
     }
