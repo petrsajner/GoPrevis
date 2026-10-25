@@ -4,7 +4,7 @@ Set-Location -LiteralPath $PSScriptRoot
 $env:DOTNET_ROOT = Join-Path $PSScriptRoot '.tools\dotnet'
 $env:PATH = $env:DOTNET_ROOT + ';' + $env:PATH
 $previsGodot = Join-Path $PSScriptRoot '.tools\godot\Godot_v4.7.2-stable_mono_win64\Godot_v4.7.2-stable_mono_win64_console.exe'
-& (Join-Path $env:DOTNET_ROOT 'dotnet.exe') build GenPrevis.csproj
+& (Join-Path $env:DOTNET_ROOT 'dotnet.exe') build GoPrevis.csproj
 if ($LASTEXITCODE -ne 0) { throw 'C# build failed.' }
 & $previsGodot --headless --editor --path $PSScriptRoot --import --quit
 if ($LASTEXITCODE -ne 0) { throw 'Godot asset import failed.' }
@@ -12,16 +12,16 @@ if ($Test) {
     & $previsGodot --headless --path $PSScriptRoot -- --smoke-test
     if ($LASTEXITCODE -ne 0) { throw 'Headless smoke checks failed.' }
 }
-$previsOutput = Join-Path $PSScriptRoot 'build\GenPrevis-0.16.0-Windows'
+$previsOutput = Join-Path $PSScriptRoot 'build\GoPrevis-0.17.0-Windows'
 New-Item -ItemType Directory -Path $previsOutput -Force | Out-Null
 New-Item -ItemType Directory -Path (Join-Path $PSScriptRoot 'output') -Force | Out-Null
 $previsLog = Join-Path $PSScriptRoot 'output\export.log'
 & $previsGodot --headless --path $PSScriptRoot --export-release 'Windows Desktop' *> $previsLog
 if ($LASTEXITCODE -ne 0 -or (Select-String -LiteralPath $previsLog -Pattern '^ERROR:' -Quiet)) { Get-Content -LiteralPath $previsLog -Tail 25; throw 'Windows export failed.' }
-Copy-Item -LiteralPath 'README.md', 'THIRD-PARTY-NOTICES.md', 'NAVRH-GENPREVIS.md' -Destination $previsOutput -Force
+Copy-Item -LiteralPath 'README.md', 'THIRD-PARTY-NOTICES.md', 'NAVRH-GOPREVIS.md' -Destination $previsOutput -Force
 $previsBrandAssets=Join-Path $previsOutput 'assets'
 New-Item -ItemType Directory -Path $previsBrandAssets -Force | Out-Null
-Copy-Item -LiteralPath 'assets\genprevis.png', 'assets\genprevis.ico', 'assets\genprevis-icon-notes.md' -Destination $previsBrandAssets -Force
+Copy-Item -LiteralPath 'assets\goprevis.png', 'assets\goprevis.ico', 'assets\goprevis-icon-notes.md' -Destination $previsBrandAssets -Force
 if (Test-Path -LiteralPath 'VALIDATION.md') { Copy-Item -LiteralPath 'VALIDATION.md' -Destination $previsOutput -Force }
 Copy-Item -LiteralPath 'LICENSES' -Destination $previsOutput -Recurse -Force
 Copy-Item -LiteralPath 'samples' -Destination $previsOutput -Recurse -Force
@@ -37,4 +37,4 @@ $previsVideoTools = Join-Path $previsOutput 'tools\ffmpeg'
 New-Item -ItemType Directory -Path $previsVideoTools -Force | Out-Null
 Get-ChildItem -LiteralPath '.tools\ffmpeg' -File | Copy-Item -Destination $previsVideoTools -Force
 Copy-Item -LiteralPath 'tools\launchers\Open car chase demo.cmd' -Destination $previsOutput -Force
-Write-Output ('Built: ' + (Join-Path $previsOutput 'GenPrevis.exe'))
+Write-Output ('Built: ' + (Join-Path $previsOutput 'GoPrevis.exe'))

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace GenPrevis;
+namespace GoPrevis;
 
 /// <summary>Run with Godot --headless --path . --script res://scripts/Testing/TransformLayerProbe.cs.</summary>
 public partial class TransformLayerProbe : SceneTree

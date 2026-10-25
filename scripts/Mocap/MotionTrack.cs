@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace GenPrevis;
+namespace GoPrevis;
 
 public partial class RiggedActor
 {
@@ -33,6 +33,7 @@ public partial class RiggedActor
         public required float Scale;
         public float GroundCorrection;
         public Vector3 RestForward;
+        public bool ReflectZ;
     }
 
     private sealed class PreparedMotionClip
@@ -107,7 +108,7 @@ public partial class RiggedActor
         PreparedMotion first = _motionTrack[0].Source;
         _motion = first.Motion; _sourceMap = first.Mapping; _corrections = first.Corrections;
         _rootCurve = first.RootCurve; _sourceRotations = first.SourceRotations;
-        _sourceScale = first.Scale; _initialGroundCorrection = first.GroundCorrection; _sourceForward = first.RestForward;
+        _sourceScale = first.Scale; _initialGroundCorrection = first.GroundCorrection; _sourceForward = first.RestForward;_legacyReflectZ=first.ReflectZ;
         MotionName = _motionTrack[0].Name;
         ImportSummary = MotionTrackSummary;
         EvaluateTimeline(0);
@@ -154,21 +155,23 @@ public partial class RiggedActor
         if (map[0] < 0) throw new FormatException("No humanoid hips/pelvis joint was found. Use a humanoid BVH with recognizable joint names.");
         int mapped = map.Count(index => index >= 0);
         if (mapped < 7) throw new FormatException($"Only {mapped} humanoid joints could be mapped. At least seven recognizable spine and limb joints are required.");
+        Vector3 authoredForward=HorizontalFacing(SourceAim(motion,map,FindBone("LeftFoot"))+SourceAim(motion,map,FindBone("RightFoot")));
+        bool reflectZ=authoredForward.Z>.5f&&Math.Abs(authoredForward.X)<.5f;
         var corrections = new Quaternion[_bones.Count];
         for (int i = 0; i < map.Length; i++)
         {
             corrections[i] = Quaternion.Identity;
             if (map[i] < 0) continue;
-            Vector3 aim = SourceAim(motion, map, i);
+            Vector3 aim = CanonicalMotionVector(SourceAim(motion, map, i),reflectZ);
             if (aim.LengthSquared() > .00001f && _bones[i].Aim.LengthSquared() > .00001f)
                 corrections[i] = Align(_bones[i].Aim.Normalized(), aim.Normalized());
         }
         var source = new PreparedMotion
         {
             Motion = motion, Mapping = map, Corrections = corrections, Scale = scale,
-            RootCurve = motion.BuildRootCurve(map[0]), SourceRotations = new Quaternion[motion.Joints.Count],
+            RootCurve = motion.BuildRootCurve(map[0]).Select(point=>CanonicalMotionVector(point,reflectZ)).ToArray(), SourceRotations = new Quaternion[motion.Joints.Count],ReflectZ=reflectZ,
             GlobalRotations = new Quaternion[_bones.Count],
-            RestForward = HorizontalFacing(SourceAim(motion, map, FindBone("LeftFoot")) + SourceAim(motion, map, FindBone("RightFoot")))
+            RestForward = CanonicalMotionVector(authoredForward,reflectZ)
         };
         // Ground calibration uses temporary math only. Preparing a failed track cannot change
         // the currently displayed skeleton, its picker, or any playable legacy motion.
@@ -204,7 +207,7 @@ public partial class RiggedActor
             int parent = _bones[i].Parent;
             Quaternion parentRotation = parent < 0 ? Quaternion.Identity : source.GlobalRotations[parent];
             source.GlobalRotations[i] = source.Mapping[i] >= 0
-                ? (source.SourceRotations[source.Mapping[i]] * source.Corrections[i]).Normalized() : parentRotation;
+                ? (CanonicalMotionRotation(source.SourceRotations[source.Mapping[i]],source.ReflectZ) * source.Corrections[i]).Normalized() : parentRotation;
             locals[i] = (parentRotation.Inverse() * source.GlobalRotations[i]).Normalized();
         }
     }
@@ -238,6 +241,8 @@ public partial class RiggedActor
         direction.Y = 0;
         return direction.LengthSquared() > .00001f ? direction.Normalized() : Vector3.Forward;
     }
+    static Vector3 CanonicalMotionVector(Vector3 value,bool reflectZ)=>reflectZ?new Vector3(value.X,value.Y,-value.Z):value;
+    static Quaternion CanonicalMotionRotation(Quaternion value,bool reflectZ)=>reflectZ?new Quaternion(-value.X,-value.Y,value.Z,value.W):value;
 
     private static Vector3 BlendFacing(Vector3 from, Vector3 to, float weight)
     {

@@ -1,4 +1,4 @@
-namespace GenPrevis;
+namespace GoPrevis;
 
 /// <summary>Optional sketch color and editor label settings, independent of the model's source materials.</summary>
 public sealed class ObjectAppearanceData

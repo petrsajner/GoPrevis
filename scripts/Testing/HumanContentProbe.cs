@@ -8,7 +8,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
-namespace GenPrevis;
+namespace GoPrevis;
 
 /// <summary>
 /// Validates every bundled CMU take with the application's strict BVH reader and

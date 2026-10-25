@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Threading.Tasks;
 
-namespace GenPrevis;
+namespace GoPrevis;
 
 /// <summary>Real arrow-overlay input, linear precision and reversibility at range limits.</summary>
 public partial class PrecisionSpinProbe:SceneTree

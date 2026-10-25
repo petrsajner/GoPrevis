@@ -1,8 +1,8 @@
 [gd_scene load_steps=2 format=3]
 
-[ext_resource type="Script" path="res://scripts/GenPrevisApp.cs" id="1_app"]
+[ext_resource type="Script" path="res://scripts/GoPrevisApp.cs" id="1_app"]
 
-[node name="GenPrevis" type="Control"]
+[node name="GoPrevis" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

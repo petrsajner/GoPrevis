@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.IO;
 
-namespace GenPrevis;
+namespace GoPrevis;
 
 /// <summary>Run with Godot --headless --path . --script res://scripts/Mocap/MocapProbe.cs.</summary>
 public partial class MocapProbe : SceneTree

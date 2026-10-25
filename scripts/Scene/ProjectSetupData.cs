@@ -1,6 +1,6 @@
 using System;
 
-namespace GenPrevis;
+namespace GoPrevis;
 
 /// <summary>Shot format and editor-only framing reference. FPS is stored by ProjectData.</summary>
 public sealed class ProjectSetupData

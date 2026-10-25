@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace GenPrevis;
+namespace GoPrevis;
 
 /// <summary>
 /// A self-contained prepared-humanoid pose. The hip offset is relative to the

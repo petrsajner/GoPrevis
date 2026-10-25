@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Globalization;
 
-namespace GenPrevis;
+namespace GoPrevis;
 
 /// <summary>
 /// A normal editable SpinBox with a bounded, linear scrub area over its arrows.

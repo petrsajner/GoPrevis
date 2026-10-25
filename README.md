@@ -1,51 +1,59 @@
-<img src="assets/genprevis.png" width="120" alt="GenPrevis icon">
+<img src="assets/goprevis.png" width="120" alt="GoPrevis icon">
 
-# GenPrevis 0.16.0 — 3D control clips for AI video
+# GoPrevis 0.17.0 — 3D control clips for AI video
 
-GenPrevis prepares 3D control clips for AI video generation. Build the scene, direct character and object motion, frame the camera, and export synchronized color, depth and pose guidance. It uses Godot 4.7.2 .NET, C# and .NET 10. The application UI, dialogs and authored errors are English.
+GoPrevis prepares 3D control clips for AI video generation. Build the scene, direct character and object motion, frame the camera, and export synchronized color, depth and pose guidance. It uses Godot 4.7.2 .NET, C# and .NET 10. The application UI, dialogs and authored errors are English.
 
 ## Run
 
-The Windows portable output is `build/GenPrevis-0.16.0-Windows/GenPrevis.exe`. Keep GenPrevis.exe, GenPrevis.pck and data_GenPrevis_windows_x86_64 together. The portable Windows build includes its runtime; using it does not require the Godot editor or .NET SDK.
+The Windows portable output is `build/GoPrevis-0.17.0-Windows/GoPrevis.exe`. Keep GoPrevis.exe, GoPrevis.pck and data_GoPrevis_windows_x86_64 together. The portable Windows build includes its runtime; using it does not require the Godot editor or .NET SDK.
 
 For development, open project.godot with Godot 4.7.2 .NET. Local tools are in the ignored .tools directory. The existing run.ps1 starts the source project; build.ps1 -Test builds, runs source checks and exports Windows x64.
 
-## AI Director in 0.16.0
+## AI Director
+
+**0.17.0: program-aware planning.** The product is now **GoPrevis**, including the C# assembly, Windows executable, GitHub repository and `.goprevis` default project extension. GenPrevis/Previs projects remain readable. The previous GenPrevis user's settings/poses are imported once without overwriting GoPrevis files; VIVIDIA connection preferences and read-only access to previous GenPrevis OS credentials remain available.
+
+The director now uses **High reasoning** and explicit operation knowledge. `get_program_guide` explains animation layers and optimal workflows; `get_asset_details` measures actual asset bounds and rig bones in an isolated staging world. The model must propose a full shot through `inspect_scene_plan`, correct semantic errors, rehearse the real program, inspect actual camera/gait filmstrips, explicitly `assess_preview`, then commit the accepted `planId` through `apply_scene_plan`. Unreviewed/invalid plans cannot be committed. Computed operations appear in the result UI.
+
+Normal character/car travel requires a timed **Path**, **Orient to path**, in-place locomotion and the intended facing. The reviewer catches world travel approximated with transform keys, disabled tangent orientation, a forward actor rotated backward, duplicate root/path translation, sparse camera curves and conflicting motion ownership. Explicit backward/sideways/manual actions remain possible. `pathTiming=Constant speed` distributes arrival times by curve arc length; authored timing retains intentional pauses/acceleration.
+
+Camera **Orbit** is evaluated analytically at every time, with radius, start angle, angular sweep, height, duration/easing and a live aim target. A 360° orbit has no baked position/rotation keys. Camera **Path** handles continuous dollies/cranes; Follow/Look at remains available for subject tracking. Select a camera and open **Camera movement** to edit parameters; the trajectory appears in the viewport and a labeled motion span appears on the timeline. Shift transforms adjust the complete motion. Orbit presets from the camera library use the same native motion. Format **12** stores these parameters; formats 1–11 remain supported.
 
 Click **AI Director** in the top bar, choose **New scene** or **Edit current scene**, describe the shot in English or Czech, then click **Build shot** (Ctrl+Enter). **View shot** enters the active camera; Space plays its timeline. The complete request is one Undo step, including object creation, animation and cameras. Subsequent prompts can modify the same scene while preserving unrelated objects and animation.
 
-The default is **GPT-6 Luna through OpenRouter** (`openai/gpt-6-luna`). Also available: direct OpenAI Responses (`gpt-6-luna`), direct Google **Gemini 3.8 Flash** (`gemini-3.8-flash`), and a **Custom model / OpenRouter** field for later model changes. A custom model must support function calling. All providers use the same validated scene plan and existing Godot animation runtime.
+The default is **GPT-6 Luna / High reasoning through OpenRouter** (`openai/gpt-6-luna`). Also available: direct OpenAI Responses (`gpt-6-luna`), direct Google **Gemini 3.8 Flash** (`gemini-3.8-flash`), a **Custom model / OpenRouter** field for later model changes, and optional **GPT-6.1 Sol / OpenRouter (quality)**. Sol is selectable rather than enabled automatically; its Standard token rates are $2 input / $10 output per million. A custom model must support function calling. All providers use the same validated scene plan and existing Godot animation runtime.
 
-Use **Connection…** to connect your provider key. On Windows the app can also read the existing **VIVIDIA** Google/OpenRouter entries from the current user's Windows Credential Manager when **Use existing VIVIDIA key** is selected. It does not modify those entries or copy them into a project or distribution. Manually entered Windows keys use GenPrevis's own OS credential entry; on macOS/Linux manual keys are session-only and provider environment variables can reconnect them. No key is bundled. Only nonsecret model/source preferences are saved in the local user profile. The Windows build is the tested delivery.
+Use **Connection…** to connect your provider key. On Windows the app can also read the existing **VIVIDIA** Google/OpenRouter entries from the current user's Windows Credential Manager when **Use existing VIVIDIA key** is selected. It does not modify those entries or copy them into a project or distribution. Manually entered Windows keys use GoPrevis's own OS credential entry; on macOS/Linux manual keys are session-only and provider environment variables can reconnect them. No key is bundled. Only nonsecret model/source preferences are saved in the local user profile. The Windows build is the tested delivery.
 
 Supported scene instructions include library models and static poses, exact placement on a chair or ground, compatible human/animal mocap sequences and crossfades, timed paths, object XYZ transform keys, additive pose corrections, cameras with live Follow/Look at, keyed dolly/crane moves, lenses, lights, scene display settings, aspect/resolution and FPS. Bone corrections and source clips stay separate and editable. An animated dog resolves to the actual Husky/Shiba Inu rigs; the older built-in Dog prop is static.
 
-The model can read the current scene and search actual library IDs. Plans validate IDs, rig compatibility, values, timing, limits and target references. New-scene mode presents an empty target while retaining project format/FPS defaults. The model cannot execute scripts, choose arbitrary files, save projects, render exports or alter credentials. Validation/cancellation/runtime failures preserve the scene and history; successful changes stay fully editable.
+The model can read the program guide and current scene, search actual library IDs, and inspect real prepared asset geometry. Plans validate IDs, rig compatibility, values, timing, limits and target references. New-scene mode presents an empty target while retaining project format/FPS defaults. The model cannot execute scripts, choose arbitrary files, save projects, render exports or alter credentials. Validation/cancellation/runtime failures preserve the scene and history; successful changes stay fully editable.
 
-Planning is capped at eight provider requests, 45000 output tokens and 100 object changes per request. Existing scene context is limited to 180000 characters in this first prototype. Token use and estimated cost are shown after success. GPT-6 Luna Standard is $0.10 input / $0.50 output per million tokens; Gemini 3.8 Flash Standard is $0.75/$3.75 through December 31, 2026 and $1.50/$7.50 from January 1, 2027. OpenRouter account fees and caching can change actual billed cost. See [OpenAI](https://developers.openai.com/api/docs/models/gpt-6-luna), [Google](https://ai.google.dev/gemini-api/docs/pricing#gemini-3.8-flash) and your provider usage records.
+Planning is capped at twelve provider requests, 45000 output tokens and 100 object changes per request. Existing scene context is limited to 180000 characters in this first prototype. Token use and estimated cost are shown after success. GPT-6 Luna Standard is $0.10 input / $0.50 output per million tokens; Gemini 3.8 Flash Standard is $0.75/$3.75 through December 31, 2026 and $1.50/$7.50 from January 1, 2027. OpenRouter account fees and caching can change actual billed cost. See [OpenAI](https://developers.openai.com/api/docs/models/gpt-6-luna), [Google](https://ai.google.dev/gemini-api/docs/pricing#gemini-3.8-flash) and your provider usage records.
 
-This first AI release plans from structured geometry/library data. It does not visually inspect rendered camera frames or guarantee collision-free blocking, composition or acting quality. Review the shot and refine it with another prompt or the regular tools. Built-in Examples provide prompts for a car shot, cafe blocking and a dog in a park. Portable examples and real API/render evidence are included in the delivery.
+AI planning uses structured geometry plus actual rendered camera and side-view gait sequences. It rehearses a proposal through the same scene/runtime as final playback and restores the original document/history afterward. Actual skeletal foot/hip/toe/front measurements reject backward sliding independently of internal heading metadata. The model must visually accept or revise each rehearsed proposal before commit. This does not guarantee collision-free blocking, composition or acting quality for every prompt. Review the shot and refine it with another prompt or the regular tools. Built-in Examples provide prompts for a car shot, cafe blocking and a dog in a park. Portable examples and real API/render evidence are included in the delivery.
 
 ## Editor improvements in 0.15.0
 
-- **Save:** enter only a project name. `.genprevis` is appended automatically, including names such as `Shot 01.v2`. Explicit `.genprevis` names are not doubled; existing `.previs` projects remain supported.
+- **Save:** enter only a project name. `.goprevis` is appended automatically, including names such as `Shot 01.v2`. Explicit `.goprevis` names are not doubled; existing `.previs` projects remain supported.
 - **Timeline selection:** drag a rectangle from empty track space to select keys across objects, cameras, paths, lens and additive pose tracks. Ctrl/Shift adds another region; Ctrl-click toggles a key. Expanded parameter rows select only their own XYZ key. **Delete** removes the selected keys in one Undo step. Drag the time ruler or the scrub slider to scrub; clip bodies and trim handles keep their existing behavior. Deleting a path diamond removes its waypoint and matching arrival time.
 - **Proportional scale:** hold Shift to reveal the transform axes, then hold Ctrl while dragging a scale cube to scale XYZ together. All scale cubes turn yellow while Ctrl is held. Existing nonuniform proportions are retained. Ctrl still snaps move/rotate operations; Alt gives fine adjustment.
 - **Lights:** open **Objects → 3D scene → Global lighting**, then choose **+ Point light** or **+ Directional light**. Select the light in the scene list to change **Enabled, Color, Intensity, Range** (point only) and **Cast shadows**. Shift exposes move/rotate controls. Lights are ordinary project objects with transform keys, duplication, Undo/Redo and portable save/reopen. Their handles are editor-only. Real-time shadows appear in the working view, camera preview, RGB frames and RGB video exports. The default scene remains neutral, with no explicit light. Shadows use raster shadow maps; this is not a path-traced renderer.
 
-The portable example **examples/lights.genprevis** contains a box, a point light with shadows and a disabled directional light. Select either light and edit its properties to compare the setup.
+The portable example **examples/lights.goprevis** contains a box, a point light with shadows and a disabled directional light. Select either light and edit its properties to compare the setup.
 
 Project format **11** stores independently editable lights; project formats **1–10** remain readable. Older app versions reject format 11 rather than reopening a light as a box.
 
-AI Director is available in 0.16.0. Its typed scene commands and remaining design scope are documented in section 12 of NAVRH-GENPREVIS.md. Requests run only when Build shot is clicked.
+AI Director is available in GoPrevis. Its typed scene commands and remaining design scope are documented in section 12 of NAVRH-GOPREVIS.md. Requests run only when Build shot is clicked.
 
 ## Rename and existing projects
 
-The product and GitHub repository are now **GenPrevis**: [petrsajner/GenPrevis](https://github.com/petrsajner/GenPrevis). The Windows executable is **GenPrevis.exe**; the C# solution, assembly and source namespace use the same name. The app UI remains entirely English.
+The product and GitHub repository are now **GoPrevis**: [petrsajner/GoPrevis](https://github.com/petrsajner/GoPrevis). The Windows executable is **GoPrevis.exe**; the C# solution, assembly and source namespace use the same name. The app UI remains entirely English.
 
-New projects use **.genprevis**. Existing **.previs** files, including source asset folders, still open directly. On the first regular start, GenPrevis imports saved user poses and file-picker preferences from the previous **Previs** user profile. Existing GenPrevis files are kept, the source profile is untouched, and a one-time marker prevents re-importing deliberately deleted presets. Bundled source caches are recreated on demand.
+New projects use **.goprevis**. Existing **.genprevis** and **.previs** files, including source asset folders, still open directly. On the first regular start, GoPrevis imports saved user poses and file-picker preferences from the previous **GenPrevis** user profile (falling back to Previs). Existing GoPrevis files are kept, the source profile is untouched, and a one-time marker prevents re-importing deliberately deleted presets. Bundled source caches are recreated on demand.
 
-The approved Windows icon is a blue shaded 3D mannequin on a light perspective grid floor, viewed obliquely from above. The PNG source and multi-size ICO are in `assets/genprevis.png` and `assets/genprevis.ico`.
+The approved Windows icon is a blue shaded 3D mannequin on a light perspective grid floor, viewed obliquely from above. The PNG source and multi-size ICO are in `assets/goprevis.png` and `assets/goprevis.ico`.
 
 ## Repaired animal feet and motion placement
 
@@ -55,9 +63,9 @@ A newly placed animal's automatic Idle is a replaceable placeholder. The first l
 
 ## Ready-made car shot
 
-Double-click **Open car chase demo.cmd** beside GenPrevis.exe, or choose **File → Open car chase demo**. The example opens at frame zero in its following camera. Press **Space** to play. Saving prompts for your own project, preserving the supplied example.
+Double-click **Open car chase demo.cmd** beside GoPrevis.exe, or choose **File → Open car chase demo**. The example opens at frame zero in its following camera. Press **Space** to play. Saving prompts for your own project, preserving the supplied example.
 
-The self-contained **examples/car-chase.genprevis** shot is 12 seconds at 25 fps: a parked blue car accelerates, follows a sweeping 90-degree road turn, decelerates and holds still with the camera for the final two seconds. **Car follow** uses live Follow + Look at bindings to the car, with no baked position/rotation keys; **Wide overview** shows the complete route. Select the car's Path track to inspect arrival keys and Bezier acceleration/deceleration. Changing the car’s path, arrival timing or manual transforms updates the following camera automatically. Every scene object is a built-in prop, so the project needs no imported model or motion file.
+The self-contained **examples/car-chase.goprevis** shot is 12 seconds at 25 fps: a parked blue car accelerates, follows a sweeping 90-degree road turn, decelerates and holds still with the camera for the final two seconds. **Car follow** uses live Follow + Look at bindings to the car, with no baked position/rotation keys; **Wide overview** shows the complete route. Select the car's Path track to inspect arrival keys and Bezier acceleration/deceleration. Changing the car’s path, arrival timing or manual transforms updates the following camera automatically. Every scene object is a built-in prop, so the project needs no imported model or motion file.
 
 ## One placement workflow
 
@@ -184,7 +192,7 @@ A posed figure holds its shape for the entire scene without a motion clip. Apply
 
 The Poses library can also **save the current body pose** from a selected figure, including a frame sampled from mocap. Saving a preset leaves the figure's existing animation intact. The saved preset can then be applied to another figure as a static pose. Custom presets are stored locally, and a project's applied body pose is embedded in the `.previs` file, so opening a static figure does not require its original motion source or the creator's preset library. **Reset pose** in the library restores the default standing body; if source clips are present, they continue playing.
 
-The self-contained `samples/static-poses.genprevis` example includes a seated figure and chair, floor sitting, kneeling and lying figures. It contains no motion clips or external asset dependencies.
+The self-contained `samples/static-poses.goprevis` example includes a seated figure and chair, floor sitting, kneeling and lying figures. It contains no motion clips or external asset dependencies.
 
 Seating presets are prepared around practical blocking proportions. Match the figure's placement to the actual chair, stool or floor; smaller body variants scale the pose as well. Use Place on object to position a seated pose on the chosen support, then use the manual pose editor below to adjust individual limbs. Existing animal animations retain their own rig compatibility.
 
@@ -204,7 +212,7 @@ The blend order is **blended mocap or static base → local pose corrections →
 
 Enter a name and use **Save to My poses** to store the currently visible corrected body as a reusable static library item. Saving does not replace the scene's mocap. The preset retains intentional body offsets and local joint rotations, while separate scene-object placement and proportions remain with the target figure. **Reset edits** restores the correction layer from the start of the editing session; **Done** leaves its keys active.
 
-`samples/manual-adjusted-pose.genprevis` contains a fitted figure and imported chair. For a specific seat, use Place on object or Arrange, then adjust pelvis and limbs in Pose. Placement preserves the body pose; animation foot-contact solving is not provided.
+`samples/manual-adjusted-pose.goprevis` contains a fitted figure and imported chair. For a specific seat, use Place on object or Arrange, then adjust pelvis and limbs in Pose. Placement preserves the body pose; animation foot-contact solving is not provided.
 
 ## Arrange motion, paths and corrections
 
@@ -266,7 +274,7 @@ A continuous numeric scrub creates one Undo action. After reaching a minimum or 
 
 ## Save, reopen and export
 
-Save creates a **version 11 .genprevis** project and neighbouring .assets folder containing used sources. Keep both together when moving a project. It preserves embedded static body poses and keyed additive pose corrections, motion tracks, paths and path keys, final transform channels, camera channels/lenses and live constraints, active camera, scene display settings, per-object colors/labels, lighting, interpolation curves, native poses and project setup. Every camera’s original image/video source is bundled under a separate safe content-addressed filename in the neighbouring assets folder; decoded preview frames are disposable cache data. Version 1/2/3/4/5/6/7/8/9/10 scenes are accepted on opening. Version 7 projects migrate their former global reference to the saved active camera. Other cameras start without a reference. Legacy .previs projects remain accepted without renaming; their project data and neighbouring assets retain their existing layout. Format 10 introduced repaired native-foot hierarchy snapshots. Format 11 adds independent light objects and their properties. Earlier releases reject newer schemas instead of silently discarding those fields. Overwriting an existing project keeps the previous JSON as .genprevis.bak.
+Save creates a **version 12 .goprevis** project and neighbouring .assets folder containing used sources. Keep both together when moving a project. It preserves embedded static body poses and keyed additive pose corrections, motion tracks, paths and path keys, final transform channels, camera channels/lenses and live constraints, active camera, scene display settings, per-object colors/labels, lighting, interpolation curves, native poses and project setup. Every camera’s original image/video source is bundled under a separate safe content-addressed filename in the neighbouring assets folder; decoded preview frames are disposable cache data. Version 1/2/3/4/5/6/7/8/9/10/11 scenes are accepted on opening. Version 7 projects migrate their former global reference to the saved active camera. Other cameras start without a reference. Legacy .previs projects remain accepted without renaming; their project data and neighbouring assets retain their existing layout. Format 10 introduced repaired native-foot hierarchy snapshots. Format 11 adds independent light objects and their properties; format 12 adds native procedural camera motion. Earlier releases reject newer schemas instead of silently discarding those fields. Overwriting an existing project keeps the previous JSON as .goprevis.bak.
 
 ### Export a complete shot
 

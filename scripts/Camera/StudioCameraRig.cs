@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-namespace GenPrevis;
+namespace GoPrevis;
 
 /// <summary>A shot key stores a world-space pose and a full-frame lens length.</summary>
 public sealed class ShotCameraKey

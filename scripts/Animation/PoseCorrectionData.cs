@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace GenPrevis;
+namespace GoPrevis;
 
 /// <summary>One additive local-bone rotation. Identity leaves the source pose unchanged.</summary>
 public sealed class PoseCorrectionKeyData

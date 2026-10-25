@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-namespace GenPrevis;
+namespace GoPrevis;
 
 public partial class RiggedActor
 {

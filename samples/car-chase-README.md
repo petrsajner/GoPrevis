@@ -1,6 +1,6 @@
 # Car chase demo
 
-Choose **File → Open car chase demo**, or launch **Open car chase demo.cmd** beside GenPrevis.exe. The shot opens in Camera view at frame zero; press **Space** to play. You can also open **car-chase.genprevis** manually and enter **Camera view**. The file is a self-contained 12-second, 1920 × 1080 shot at **25 fps**, requiring no motion file or downloaded model.
+Choose **File → Open car chase demo**, or launch **Open car chase demo.cmd** beside GoPrevis.exe. The shot opens in Camera view at frame zero; press **Space** to play. You can also open **car-chase.goprevis** manually and enter **Camera view**. The file is a self-contained 12-second, 1920 × 1080 shot at **25 fps**, requiring no motion file or downloaded model.
 
 - **0–1 s:** the blue car waits.
 - **1–3 s:** it accelerates smoothly from rest.

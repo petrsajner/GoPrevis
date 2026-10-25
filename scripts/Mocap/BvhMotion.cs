@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 
-namespace GenPrevis;
+namespace GoPrevis;
 
 /// <summary>A strict BVH reader. Channel order is retained; no engine importer or executable data is used.</summary>
 public sealed class BvhMotion

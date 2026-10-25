@@ -1,0 +1,223 @@
+using Godot;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
+
+namespace GoPrevis;
+
+public partial class GoPrevisApp
+{
+    sealed class CameraEntry
+    {
+        public string Id=Guid.NewGuid().ToString("N");
+        public string Name="Camera";
+        public bool ShowLabel=true;
+        public CameraReferenceData Reference=new();
+        public CameraTrackingData Tracking=new();public CameraMovementData Movement=new();
+        public StudioCameraRig Rig=null!;
+        public TransformAnimationData Animation=new();
+        public List<LensKeyData> LensKeys=new();
+        public Vector3 BasePosition,BaseRotation,BaseScale=Vector3.One;
+        public float BaseLens=35;
+        public bool AnimationInitialized;
+    }
+    readonly List<CameraEntry> _cameras=new();
+    string ActiveCameraId=>_cameras.FirstOrDefault(c=>c.Rig==_shot)?.Id??"";
+    string ActiveCameraName=>_cameras.FirstOrDefault(c=>c.Rig==_shot)?.Name??"Camera";
+    OptionButton _cameraChoice=null!,_clipChoice=null!;
+    StudioLighting _lighting=null!;
+    SpinBox _clipStart=null!,_clipLength=null!,_clipOffset=null!,_clipBlend=null!,_pathStart=null!,_pathDuration=null!;
+    CheckButton _usePath=null!,_facePath=null!;
+    Label _pathInfo=null!;
+    Label _motionHeader=null!,_pathHeader=null!;
+    HBoxContainer _inspectorTabs=null!;
+    OptionButton _pathKeyChoice=null!;
+    SpinBox _pathKeyTime=null!;
+    int _selectedPathPoint;
+    string _inspectorSection="Object";
+    Button _drawPathButton=null!;
+    string _selectedClipId="";
+    bool _drawingPath;
+    Entry? _pathEntry;
+    ActorPathData? _pathBackup;
+    MeshInstance3D? _pathLines;
+    MotionClipData? SelectedClip=>_selected?.Data.MotionClips.FirstOrDefault(c=>c.Id==_selectedClipId);
+
+    CameraEntry CreateCamera(string name,CameraTrackData? data,bool activate)
+    {
+        var item=new CameraEntry {Name=name,Id=data?.Id??Guid.NewGuid().ToString("N"),ShowLabel=data?.ShowLabel??true,Reference=(data?.Reference??new()).ValidatedCopy(),Movement=(data?.Movement??new()).ValidatedCopy(),Tracking=(data?.Tracking??new()).ValidatedCopy(),Rig=new StudioCameraRig()};
+        _world.AddChild(item.Rig);item.Rig.ShotCamera.Current=false;
+        item.BasePosition=item.Rig.GlobalPosition;item.BaseRotation=item.Rig.GlobalRotationDegrees;
+        if(data!=null)
+        {
+            item.Rig.GlobalPosition=Vector(data.Position,new Vector3(6,3,7));item.Rig.GlobalRotationDegrees=Vector(data.Rotation);item.Rig.FocalLengthMm=data.FocalLength;
+            foreach(var k in data.Keys)if(k.Quaternion.Length==4)item.Rig.Keys.Add(new ShotCameraKey(k.Time,Vector(k.Position),new Quaternion(k.Quaternion[0],k.Quaternion[1],k.Quaternion[2],k.Quaternion[3]).Normalized(),k.FocalLength));
+            item.Rig.Keys.Sort((a,b)=>a.TimeSeconds.CompareTo(b.TimeSeconds));
+            item.BasePosition=Vector(data.Position,new Vector3(6,3,7));item.BaseRotation=Vector(data.Rotation);item.BaseScale=Vector(data.Scale,Vector3.One);item.BaseLens=data.FocalLength;
+            item.Animation=data.TransformAnimation;item.LensKeys=data.LensKeys;
+        }
+        var label=new Label3D {Text=name,Position=new Vector3(0,.45f,0),FontSize=28,PixelSize=.0025f,Billboard=BaseMaterial3D.BillboardModeEnum.Enabled,Layers=2,NoDepthTest=false};item.Rig.AddChild(label);
+        var picker=new StaticBody3D{CollisionLayer=1,CollisionMask=0};picker.SetMeta("camera_id",item.Id);picker.AddChild(new CollisionShape3D{Shape=new BoxShape3D{Size=new Vector3(.55f,.4f,.6f)},Position=new Vector3(0,0,.05f)});item.Rig.AddChild(picker);
+        _cameras.Add(item);if(activate||_shot==null)_shot=item.Rig;RefreshCameraChoices();RefreshObjects();return item;
+    }
+    void RefreshCameraChoices()
+    {
+        if(_cameraChoice==null)return;bool old=_refreshing;_refreshing=true;_cameraChoice.Clear();
+        for(int i=0;i<_cameras.Count;i++){_cameraChoice.AddItem(_cameras[i].Name);if(_cameras[i].Rig==_shot)_cameraChoice.Select(i);}
+        _refreshing=old;RefreshTimelineSize();
+    }
+    void SetActiveCamera(string id)
+    {
+        var camera=_cameras.FirstOrDefault(c=>c.Id==id);if(camera==null)return;
+        _shot=camera.Rig;RefreshCameraChoices();if(_previewCamera!=null){SetTime(_time);if(_pilot)_editorCamera.GlobalTransform=_shot.GlobalTransform;UpdatePreview();}
+    }
+    void AddCameraFromView(bool duplicate)
+    {
+        PushUndo();string name="Camera "+NextCameraName();CameraTrackData? copy=duplicate?SnapshotCamera(_cameras.First(c=>c.Rig==_shot)):null;
+        if(copy!=null){copy.Id=Guid.NewGuid().ToString("N");copy.Name=name;}
+        var item=CreateCamera(name,copy,true);if(copy==null){item.Rig.GlobalTransform=_editorCamera.GlobalTransform;item.Rig.CaptureKey(_time);}
+        if(copy==null)SyncCameraFromRig(item);SelectCamera(item);if(_category=="Cameras")ShowCategory("Cameras");Status(name+" added.");
+    }
+    string NextCameraName(){int n=_cameras.Count;string value;do{value=n<26?((char)('A'+n)).ToString():(n+1).ToString();n++;}while(_cameras.Any(c=>c.Name=="Camera "+value));return value;}
+    void RemoveActiveCamera()
+    {
+        if(_cameras.Count<=1){Status("A scene must keep at least one camera.");return;}PushUndo();var item=_cameras.First(c=>c.Rig==_shot);_cameras.Remove(item);_world.RemoveChild(item.Rig);item.Rig.QueueFree();RefreshObjects();SelectCamera(_cameras[0]);if(_category=="Cameras")ShowCategory("Cameras");Status(item.Name+" removed.");
+    }
+    void ClearCameras(){foreach(var c in _cameras){_world.RemoveChild(c.Rig);c.Rig.QueueFree();}_cameras.Clear();}
+    CameraTrackData SnapshotCamera(CameraEntry item){EnsureCameraAnimation(item);return JsonSerializer.Deserialize<CameraTrackData>(JsonSerializer.Serialize(new CameraTrackData{Id=item.Id,Name=item.Name,ShowLabel=item.ShowLabel,Reference=item.Reference.ValidatedCopy(),Tracking=item.Tracking.ValidatedCopy(),Movement=item.Movement.ValidatedCopy(),Position=Array3(item.BasePosition),Rotation=Array3(item.BaseRotation),Scale=Array3(item.BaseScale),FocalLength=item.BaseLens,TransformAnimation=item.Animation,LensKeys=item.LensKeys,Keys=new()}))!;}
+    void BuildCameraLibrary()=>BuildIllustratedCameraLibrary();
+
+    void BuildSequenceInspector()
+    {
+        BuildKeyInterpolationInspector();
+        _motionHeader=Text("MOTION CLIPS",12,true);_inspector.AddChild(_motionHeader);
+        _clipInfo=Text("Select a human actor to append motion clips.",11,true);_clipInfo.AutowrapMode=TextServer.AutowrapMode.WordSmart;_inspector.AddChild(_clipInfo);
+        _clipChoice=new OptionButton{FitToLongestItem=false,ClipText=true};_clipChoice.ItemSelected+=i=>{if(_refreshing||_selected==null||i<0||i>=_selected.Data.MotionClips.Count)return;_selectedClipId=_selected.Data.MotionClips[(int)i].Id;RefreshSequenceInspector();_timeline.QueueRedraw();};_inspector.AddChild(_clipChoice);
+        _inspector.AddChild(Row(Button("Append BVH…",ImportMotion),Button("Remove clip",RemoveSelectedClip)));
+        void Field(string name,SpinBox field){_inspector.AddChild(Row(Text(name,11,true),field));}
+        _clipStart=Spin(0,MaxSceneDuration,1.0/_fps,0);Field("Start (s)",_clipStart);
+        _clipLength=Spin(.04,MaxSceneDuration,1.0/_fps,3);Field("Duration (s)",_clipLength);
+        _clipOffset=Spin(0,3600,1.0/_fps,0);Field("Source offset (s)",_clipOffset);
+        _clipBlend=Spin(0,30,.05,.3);Field("Blend in (s)",_clipBlend);
+        _speed=Spin(.1,4,.01,1);Field("Speed",_speed);
+        _sourceScale=Spin(.0001,10,.001,.01);Field("Source metres/unit",_sourceScale);
+        _clipStart.ValueChanged+=v=>EditClip(c=>c.Start=v);_clipLength.ValueChanged+=v=>EditClip(c=>c.Duration=v);_clipOffset.ValueChanged+=v=>EditClip(c=>c.SourceOffset=v);
+        _clipBlend.ValueChanged+=v=>EditClip(c=>{c.BlendIn=v;var prev=_selected!.Data.MotionClips.Where(p=>p.Id!=c.Id&&p.Start<=c.Start).OrderBy(p=>p.Start).LastOrDefault();if(prev!=null)c.Start=Math.Max(0,prev.Start+prev.Duration-Math.Min(v,Math.Min(prev.Duration,c.Duration)));});
+        _speed.ValueChanged+=v=>{if(SelectedClip!=null)EditClip(c=>c.Speed=v);else if(!_refreshing&&_selected!=null){_selected.Data.Speed=v;SetTime(_time);}};
+        _sourceScale.ValueChanged+=v=>EditClip(c=>c.SourceScale=(float)v);
+        _loop=new CheckButton {Text="Loop source"};_inPlace=new CheckButton {Text="In-place clip"};_loop.Toggled+=v=>{if(SelectedClip!=null)EditClip(c=>c.Loop=v);else if(!_refreshing&&_selected!=null){_selected.Data.Loop=v;SetTime(_time);}};_inPlace.Toggled+=v=>EditClip(c=>c.InPlace=v);_inspector.AddChild(_loop);_inspector.AddChild(_inPlace);
+        _animationChoice=new OptionButton();_animationChoice.ItemSelected+=i=>{if(_refreshing||_selected?.Player==null)return;PushUndo();_selected.Animation=_animationChoice.GetItemText((int)i);if(_selected.NativeTrack!=null){var clip=SelectedClip;if(clip!=null){clip.IsPlaceholder=false;clip.SourceAnimation=_selected.Animation;clip.Name=_selected.Animation;clip.SourceOffset=0;RebuildTrack(_selected);}else InitializeNativeClip(_selected);}else _selected.Player.Play(_selected.Animation);SetTime(_time);};_inspector.AddChild(_animationChoice);
+        _pathHeader=Text("OBJECT PATH",12,true);_inspector.AddChild(_pathHeader);
+        _pathInfo=Text("No path drawn.",11,true);_pathInfo.AutowrapMode=TextServer.AutowrapMode.WordSmart;_inspector.AddChild(_pathInfo);
+        _usePath=new CheckButton{Text="Move along path"};_usePath.Toggled+=v=>{if(_refreshing||_selected==null)return;PushUndo();_selected.Data.Path.Enabled=v;SetTime(_time);RefreshSequenceInspector();};_inspector.AddChild(_usePath);
+        _inspector.AddChild(Row(Button("Draw / replace",StartDrawingPath),Button("Clear",ClearSelectedPath)));
+        _pathStart=Spin(0,MaxSceneDuration,1.0/_fps,0);Field("Path start (s)",_pathStart);_pathDuration=Spin(.1,MaxSceneDuration,.1,8);Field("Travel time (s)",_pathDuration);
+        _pathStart.ValueChanged+=v=>EditPath(p=>p.Start=v);_pathDuration.ValueChanged+=v=>EditPath(p=>{var times=ActorPathRuntime.PointTimes(p);double old=Math.Max(.0001,p.Duration);p.PointTimes=times.Select(t=>t*v/old).ToList();p.Duration=v;});
+        _facePath=new CheckButton{Text="Face travel direction"};_facePath.Toggled+=v=>EditPath(p=>p.OrientToPath=v);_inspector.AddChild(_facePath);
+        _inspector.AddChild(Text("PATH KEYFRAMES",12,true));_pathKeyChoice=new OptionButton{FitToLongestItem=false,ClipText=true};_pathKeyChoice.ItemSelected+=i=>{if(!_refreshing&&_selected!=null)SelectPathKey(_selected,(int)i);};_inspector.AddChild(_pathKeyChoice);
+        _pathKeyTime=Spin(0,MaxSceneDuration,1.0/_fps,0);Field("Arrival time (s)",_pathKeyTime);_pathKeyTime.ValueChanged+=v=>{if(!_refreshing&&_selected!=null)SetPathKeyTime(_selected,_selectedPathPoint,v,true);};
+        _inspector.AddChild(Text("Drag the diamond keys on the Path track to change arrival times.",11,true));
+        ShowInspectorSection("Object");
+    }
+    void ShowInspectorSection(string section)
+    {
+        if(section is "Motion" or "Path"&&_poseEditing)StopPoseEditing();
+        if(_selectedCamera!=null||section=="Pose"&&_selected?.Node is not RiggedActor&&_selected?.NativeTrack==null)section="Object";
+        _inspectorSection=section;string current="Object";
+        foreach(var node in _inspector.GetChildren().OfType<Control>()){if(node==_inspectorTabs){node.Visible=true;continue;}if(node==_motionHeader)current="Motion";if(node==_pathHeader)current="Path";if(node==_posePanel)current="Pose";node.Visible=current==section;}
+        if(_animationChoice!=null)_animationChoice.Visible=section=="Motion"&&_selected?.Player!=null;
+        if(_clipChoice!=null)_clipChoice.Visible=section=="Motion"&&(_selected?.Node is RiggedActor||_selected?.NativeTrack!=null);UpdatePoseInspector();RefreshUnifiedWorkflow();UpdateObjectAppearanceInspector();UpdatePlacementInspector();RefreshKeyInterpolationInspector();RefreshCameraBackgroundControls();RefreshCameraTrackingInspector();RefreshLightInspector();RefreshCameraMovementInspector();
+    }
+    void RefreshSequenceInspector()
+    {
+        if(_clipChoice==null)return;bool old=_refreshing;_refreshing=true;var entry=_selected;bool human=entry?.Node is RiggedActor||entry?.NativeTrack!=null;var clips=entry?.Data.MotionClips;
+        _clipChoice.Clear();if(clips!=null)for(int i=0;i<clips.Count;i++){var c=clips[i];_clipChoice.AddItem($"{i+1}. {c.Name}");if(c.Id==_selectedClipId)_clipChoice.Select(i);}
+        if(clips?.Count>0&&clips.All(c=>c.Id!=_selectedClipId)){_selectedClipId=clips[0].Id;_clipChoice.Select(0);}
+        var clip=SelectedClip;_clipChoice.Visible=human;_animationChoice.Visible=entry?.Player!=null;
+        _clipStart.Value=clip?.Start??0;_clipLength.Value=clip?.Duration??3;_clipOffset.Value=clip?.SourceOffset??0;_clipBlend.Value=clip?.BlendIn??0;_sourceScale.Value=clip?.SourceScale??entry?.Data.SourceScale??.01f;
+        _speed.Value=clip?.Speed??entry?.Data.Speed??1;_loop.ButtonPressed=clip?.Loop??entry?.Data.Loop??true;_inPlace.ButtonPressed=clip?.InPlace??false;
+        foreach(var f in new[]{_clipStart,_clipLength,_clipOffset,_clipBlend,_sourceScale})f.Editable=clip!=null;
+        _sourceScale.Editable=clip!=null&&entry?.Node is RiggedActor;
+        _clipInfo.Text=entry?.Node is RiggedActor {HasStaticPose:true} posed&&clips?.Count==0?"Static pose · "+posed.StaticPoseName+"\nNo animation clip. Browse Poses to replace it.":human?$"{clips!.Count} clip(s) · overlap to crossfade\n"+(clip==null?"Append a BVH motion to begin.":$"{clip.Name}\n{clip.Start:0.##}–{clip.Start+clip.Duration:0.##} s · blend {clip.BlendIn:0.##} s") : entry?.Player!=null?"Imported rig · native animation":"Static blockout prop";
+        var path=entry?.Data.Path;_pathInfo.Text=path?.Points.Count>0?$"{path.Points.Count} points · {ActorPathRuntime.Length(path):0.00} m\nPath controls travel; transform keys add manual corrections.":"No path drawn. Click Draw path, place ground points, then Finish.";
+        _usePath.ButtonPressed=path?.Enabled??false;_facePath.ButtonPressed=path?.OrientToPath??true;_pathStart.Value=path?.Start??0;_pathDuration.Value=path?.Duration??_duration;
+        _pathKeyChoice.Clear();if(path!=null){var times=ActorPathRuntime.PointTimes(path);_selectedPathPoint=Math.Clamp(_selectedPathPoint,0,Math.Max(0,path.Points.Count-1));for(int i=0;i<times.Length;i++)_pathKeyChoice.AddItem($"Point {i+1} · {path.Start+times[i]:0.##} s");if(times.Length>0){_pathKeyChoice.Select(_selectedPathPoint);_pathKeyTime.Value=path.Start+times[_selectedPathPoint];}}_pathKeyTime.Editable=path?.Points.Count>1;
+        _usePath.Disabled=entry==null||path?.Points.Count<2;_drawPathButton.ButtonPressed=_drawingPath;
+        _refreshing=old;
+        ShowInspectorSection(_inspectorSection);
+    }
+    void EditClip(Action<MotionClipData> edit)
+    {
+        if(_refreshing||_selected==null||SelectedClip==null)return;PushUndo();var before=JsonSerializer.Deserialize<List<MotionClipData>>(JsonSerializer.Serialize(_selected.Data.MotionClips))!;
+        try{edit(SelectedClip);SelectedClip.IsPlaceholder=false;RebuildTrack(_selected);EnsureDuration(_selected.Data.MotionClips.Max(c=>c.Start+c.Duration));SetTime(_time);RefreshSequenceInspector();}catch(Exception ex){_selected.Data.MotionClips=before;RebuildTrack(_selected);Error(ex.Message);RefreshSequenceInspector();}
+    }
+    void RemoveSelectedClip(){if(_selected==null||SelectedClip==null)return;PushUndo();_selected.Data.MotionClips.Remove(SelectedClip);_selectedClipId="";RebuildTrack(_selected);SetTime(_time);RefreshSequenceInspector();RefreshTimelineSize();}
+    void RebuildTrack(Entry entry){if(entry.Node is RiggedActor actor)actor.SetMotionClips(entry.Data.MotionClips);else if(entry.NativeTrack!=null)entry.NativeTrack.SetClips(entry.Data.MotionClips);entry.Data.MotionPath=entry.Data.MotionClips.FirstOrDefault()?.MotionPath;entry.Data.MotionName=entry.Data.MotionClips.FirstOrDefault()?.Name;RefreshTimelineSize();}
+    void AppendMotion(Entry entry,string path,float scale)
+    {
+        var source=BvhMotion.FromFile(path);var previous=entry.Data.MotionClips.OrderBy(c=>c.Start).LastOrDefault();double duration=source.DurationSeconds;
+        double blend=previous==null?0:Math.Min(.3,Math.Min(previous.Duration,duration)*.25);
+        var clip=new MotionClipData{MotionPath=System.IO.Path.GetFullPath(path),Name=System.IO.Path.GetFileNameWithoutExtension(path),Duration=duration,Start=previous==null?Math.Max(0,_time):Math.Max(0,previous.Start+previous.Duration-blend),BlendIn=blend,SourceScale=scale};
+        var candidate=new List<MotionClipData>(entry.Data.MotionClips){clip};((RiggedActor)entry.Node).SetMotionClips(candidate);entry.Data.MotionClips=candidate;entry.Data.MotionPath=clip.MotionPath;entry.Data.MotionName=clip.Name;entry.Data.SourceScale=scale;_selectedClipId=clip.Id;EnsureDuration(clip.Start+clip.Duration);RefreshTimelineSize();
+    }
+    void EnsureDuration(double end){if(end<=_duration)return;_duration=Math.Min(MaxSceneDuration,Math.Ceiling(end));_scrub.MaxValue=_duration;bool old=_refreshing;_refreshing=true;_durationField.Value=_duration;_refreshing=old;}
+    void SelectTimelineClip(Entry entry,MotionClipData clip){_selectedClipId=clip.Id;Select(entry);ShowInspectorSection("Motion");RefreshSequenceInspector();}
+    void RefreshTimelineSize(){if(_timeline!=null){_timeline.UpdateMinimumHeight();_timeline.QueueRedraw();}}
+    void SelectPathKey(Entry entry,int index)
+    {
+        Select(entry);_selectedPathPoint=Math.Clamp(index,0,Math.Max(0,entry.Data.Path.Points.Count-1));ShowInspectorSection("Path");var times=ActorPathRuntime.PointTimes(entry.Data.Path);if(times.Length>0)SetTime(entry.Data.Path.Start+times[_selectedPathPoint]);RefreshSequenceInspector();SelectKeyInterpolation("Path",entry,null,"Path",_time,_selectedPathPoint);Status($"Path point {_selectedPathPoint+1} · drag its diamond to change arrival time.");
+    }
+    void SetPathKeyTime(Entry entry,int index,double absoluteTime,bool pushUndo)
+    {
+        var path=entry.Data.Path;var times=ActorPathRuntime.PointTimes(path);if(index<0||index>=times.Length)return;if(pushUndo)PushUndo();double step=1.0/_fps;
+        double low=index==0?0:times[index-1]+step;double high=index==times.Length-1?Math.Max(low,_duration-path.Start):times[index+1]-step;if(high<low)high=low;
+        times[index]=Math.Clamp(Math.Round((absoluteTime-path.Start)*_fps)/_fps,low,high);path.PointTimes=times.ToList();if(index==times.Length-1)path.Duration=Math.Max(step,times[^1]);_selectedPathPoint=index;SetTime(path.Start+times[index]);RefreshSequenceInspector();SelectKeyInterpolation("Path",entry,null,"Path",_time,index);
+    }
+
+    void EditPath(Action<ActorPathData> edit){if(_refreshing||_selected==null)return;PushUndo();edit(_selected.Data.Path);EnsureDuration(_selected.Data.Path.Start+_selected.Data.Path.Duration);SetTime(_time);RefreshSequenceInspector();}
+    void StartDrawingPath()
+    {
+        StopPoseEditing();
+        if(_drawingPath){FinishDrawingPath();return;}
+        if(_selected==null){_drawPathButton.ButtonPressed=false;Status("Select an object before drawing a path.");return;}
+        if(_pilot)TogglePilot();_playing=false;_play.Text="▶ Play";PushUndo();_pathEntry=_selected;_pathBackup=JsonSerializer.Deserialize<ActorPathData>(JsonSerializer.Serialize(_selected.Data.Path));_selected.Data.Path=new ActorPathData{Duration=_duration};_drawingPath=true;_drawPathButton.ButtonPressed=true;ShowInspectorSection("Path");DrawPaths();Status("Draw path · click ground points · Enter / Finish path to apply · Esc to cancel.");
+    }
+    void FinishDrawingPath()
+    {
+        if(!_drawingPath)return;_drawingPath=false;_drawPathButton.ButtonPressed=false;
+        if(_pathEntry!=null){if(_pathEntry.Data.Path.Points.Count>=2){_pathEntry.Data.Path.Enabled=true;_pathEntry.Data.Path.PointTimes=ActorPathRuntime.PointTimes(_pathEntry.Data.Path).ToList();Status("Path applied. Drag its timeline keys to change arrival times.");}else{_pathEntry.Data.Path=_pathBackup??new();Status("A path needs at least two points; the previous path was kept.");}}
+        _pathEntry=null;_pathBackup=null;RefreshTimelineSize();SetTime(_time);ShowInspectorSection("Path");RefreshSequenceInspector();
+    }
+    void CancelDrawingPath(){if(!_drawingPath)return;if(_pathEntry!=null)_pathEntry.Data.Path=_pathBackup??new();_drawingPath=false;_drawPathButton.ButtonPressed=false;_pathEntry=null;_pathBackup=null;SetTime(_time);RefreshSequenceInspector();Status("Path drawing cancelled.");}
+    void ClearSelectedPath(){if(_selected==null)return;PushUndo();_selected.Data.Path=new ActorPathData{Duration=_duration};SetTime(_time);RefreshSequenceInspector();}
+    bool HandlePathInput(InputEvent input)
+    {
+        if(!_drawingPath)return false;
+        if(input is InputEventMouseButton{ButtonIndex:MouseButton.Left,Pressed:false})return true;
+        if(input is InputEventMouseButton {Pressed:true,ButtonIndex:MouseButton.Left} button)
+        {
+            Vector3 origin=_editorCamera.ProjectRayOrigin(button.Position),ray=_editorCamera.ProjectRayNormal(button.Position);if(Math.Abs(ray.Y)>.0001f){float t=(SceneGroundHeight-origin.Y)/ray.Y;if(t>0&&_pathEntry!=null){var p=origin+ray*t;p.Y=SceneGroundHeight;if(Input.IsPhysicalKeyPressed(Key.Ctrl)){p.X=Mathf.Snapped(p.X,.25f);p.Z=Mathf.Snapped(p.Z,.25f);}_pathEntry.Data.Path.Points.Add(Array3(p));RefreshTimelineSize();DrawPaths();RefreshSequenceInspector();if(button.DoubleClick&&_pathEntry.Data.Path.Points.Count>=2)FinishDrawingPath();}}return true;
+        }
+        return false;
+    }
+    void DrawPaths()
+    {
+        if(_world==null)return;if(_pathLines==null){_pathLines=new MeshInstance3D{Layers=2,CastShadow=GeometryInstance3D.ShadowCastingSetting.Off,MaterialOverride=new StandardMaterial3D{AlbedoColor=new Color("b4a1f1"),ShadingMode=BaseMaterial3D.ShadingModeEnum.Unshaded,CullMode=BaseMaterial3D.CullModeEnum.Disabled}};_world.AddChild(_pathLines);}
+        var mesh=new ImmediateMesh();bool any=false;
+        foreach(var entry in _entries.Where(e=>e.Data.Path.Points.Count>0&&(e==_selected||e==_pathEntry)))
+        {
+            var points=ActorPathRuntime.SamplePolyline(entry.Data.Path,100);if(!any){mesh.SurfaceBegin(Mesh.PrimitiveType.Triangles);any=true;}for(int i=1;i<points.Length;i++){var a=points[i-1]+Vector3.Up*.035f;var b=points[i]+Vector3.Up*.035f;var side=(b-a).Cross(Vector3.Up).Normalized()*.027f;foreach(var p in new[]{a-side,a+side,b+side,a-side,b+side,b-side})mesh.SurfaceAddVertex(p);}
+            foreach(var raw in entry.Data.Path.Points){var p=Vector(raw)+Vector3.Up*.04f;float s=.1f;foreach(var v in new[]{p+new Vector3(-s,0,-s),p+new Vector3(s,0,-s),p+new Vector3(s,0,s),p+new Vector3(-s,0,-s),p+new Vector3(s,0,s),p+new Vector3(-s,0,s)})mesh.SurfaceAddVertex(v);}
+        }
+        DrawCameraTrajectory(mesh,ref any);if(any)mesh.SurfaceEnd();_pathLines.Mesh=mesh;
+    }
+    void ApplyEntryPath(Entry entry)
+    {
+        var path=entry.Data.Path;Vector3 facing=entry.Node is RiggedActor actor?actor.AnimatedForward:entry.NativeTrack?.AnimatedForward??Vector3.Forward;
+        var value=TransformLayerRuntime.Evaluate(Vector(entry.Data.Position),Vector(entry.Data.Rotation),Vector(entry.Data.Scale,Vector3.One),entry.Data.TransformAnimation,path,_time,facing);
+        entry.Node.Position=value.Position+(path.Enabled?Vector(entry.Data.PathOffset):Vector3.Zero);entry.Node.RotationDegrees=value.RotationDegrees;entry.Node.Scale=value.Scale;
+    }
+}

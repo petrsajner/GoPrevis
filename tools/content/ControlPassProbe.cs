@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace GenPrevis;
+namespace GoPrevis;
 
 /// <summary>Actual GPU depth calibration, posed skeleton alignment and material restoration.</summary>
 public partial class ControlPassProbe:SceneTree

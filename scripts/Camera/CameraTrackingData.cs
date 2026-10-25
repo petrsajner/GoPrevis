@@ -1,6 +1,6 @@
 using System;
 
-namespace GenPrevis;
+namespace GoPrevis;
 
 /// <summary>Live object constraints. Existing absolute camera keys are retained beneath controlled channels.</summary>
 public sealed class CameraTrackingData

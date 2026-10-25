@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 
-namespace GenPrevis;
+namespace GoPrevis;
 
 /// <summary>Local UI preferences, deliberately independent of project files and Undo.</summary>
 public sealed class EditorFileLocations

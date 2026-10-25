@@ -1,12 +1,12 @@
-; GenPrevis standalone prototype. Open with Godot 4.7.2 .NET.
+; GoPrevis standalone prototype. Open with Godot 4.7.2 .NET.
 config_version=5
 
 [application]
-config/name="GenPrevis"
-config/version="0.16.0"
+config/name="GoPrevis"
+config/version="0.17.0"
 run/main_scene="res://Main.tscn"
 config/features=PackedStringArray("4.7", "C#", "GL Compatibility")
-config/icon="res://assets/genprevis.png"
+config/icon="res://assets/goprevis.png"
 
 [display]
 window/size/viewport_width=1440
@@ -19,7 +19,7 @@ window/size/mode=2
 window/stretch/mode="disabled"
 
 [dotnet]
-project/assembly_name="GenPrevis"
+project/assembly_name="GoPrevis"
 
 [internationalization]
 locale/fallback="en"

@@ -1,4 +1,4 @@
-"""Reproduce GenPrevis' bundled CC0 Quaternius animal content from the creator's links.
+"""Reproduce GoPrevis' bundled CC0 Quaternius animal content from the creator's links.
 
 Self-contained glTF buffers are repacked losslessly as GLB. The .bytes suffix keeps
 Godot's editor from importing the whole library; the app materializes a cached GLB
@@ -39,7 +39,7 @@ ANIMALS = [
 
 
 def fetch(url: str) -> bytes:
-    request = urllib.request.Request(url, headers={"User-Agent": "GenPrevis-content-import/1.0"})
+    request = urllib.request.Request(url, headers={"User-Agent": "GoPrevis-content-import/1.0"})
     with urllib.request.urlopen(request, timeout=90) as response:
         return response.read()
 

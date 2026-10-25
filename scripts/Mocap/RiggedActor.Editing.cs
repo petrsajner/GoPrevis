@@ -3,11 +3,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace GenPrevis;
+namespace GoPrevis;
 
 /// <summary>Static rig editing in actor-local metres; scene transforms remain a separate layer.</summary>
 public partial class RiggedActor
 {
+    public Vector3 VisibleFaceDirectionWorld()
+    {
+        EnsureRig();if(_faceMarker==null)return GlobalBasis*Vector3.Forward;
+        return(GlobalBasis*(GetPoseJointGlobalRotation("Head")*_faceMarker.Position)).Normalized();
+    }
     IReadOnlyList<string>? _poseBoneNames;
     public IReadOnlyList<string> PoseBoneNames
     {

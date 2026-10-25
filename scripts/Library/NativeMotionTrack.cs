@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Godot;
 
-namespace GenPrevis;
+namespace GoPrevis;
 
 /// <summary>
 /// Sequences animations belonging to one imported rig. It samples and blends native local

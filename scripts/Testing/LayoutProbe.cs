@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-namespace GenPrevis;
+namespace GoPrevis;
 
 /// <summary>Run with --headless --script res://scripts/Testing/LayoutProbe.cs.</summary>
 public partial class LayoutProbe:SceneTree
@@ -10,7 +10,7 @@ public partial class LayoutProbe:SceneTree
     {
         try
         {
-            var app=new GenPrevisApp();app.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.FullRect);Root.AddChild(app);
+            var app=new GoPrevisApp();app.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.FullRect);Root.AddChild(app);
             for(int i=0;i<5;i++)await ToSignal(this,SignalName.ProcessFrame);
             int checks=await app.RunResponsiveLayoutChecks();
             if(checks<24)throw new InvalidOperationException("Not all desktop layout sizes were checked.");

@@ -1,6 +1,6 @@
 using System;
 
-namespace GenPrevis;
+namespace GoPrevis;
 
 /// <summary>Timing of the interval leaving this key. Old scenes default to linear.</summary>
 public sealed class KeyInterpolationData

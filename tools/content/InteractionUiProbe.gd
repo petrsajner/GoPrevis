@@ -10,7 +10,7 @@ func run():
  for i in range(6):await process_frame
  var surface=nodes(app).filter(func(n):return n is SubViewportContainer and n.get_children().any(func(c):return c is SubViewport and c.has_node('World')))[0]
  var view=surface.get_children().filter(func(n):return n is SubViewport)[0];var camera=view.get_camera_3d();var world=view.get_node('World')
- var document=JSON.parse_string(FileAccess.get_file_as_string('res://samples/manual-adjusted-pose.genprevis'))
+ var document=JSON.parse_string(FileAccess.get_file_as_string('res://samples/manual-adjusted-pose.goprevis'))
  var pos=document.Cameras[0].Position;var expected=Vector3(pos[0],pos[1],pos[2])
  var rigs=world.get_children().filter(func(n):return n is Node3D and n.has_node('CameraBody'))
  rigs.sort_custom(func(a,b):return a.global_position.distance_to(expected)<b.global_position.distance_to(expected))

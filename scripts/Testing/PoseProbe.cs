@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-namespace GenPrevis;
+namespace GoPrevis;
 
 /// <summary>Run --headless --script res://scripts/Testing/PoseProbe.cs for integrated static-pose checks.</summary>
 public partial class PoseProbe:SceneTree
@@ -10,7 +10,7 @@ public partial class PoseProbe:SceneTree
     {
         try
         {
-            var app=new GenPrevisApp();app.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.FullRect);Root.AddChild(app);
+            var app=new GoPrevisApp();app.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.FullRect);Root.AddChild(app);
             for(int frame=0;frame<5;frame++)await ToSignal(this,SignalName.ProcessFrame);
             await app.RunPoseLibraryChecks();Quit(0);
         }

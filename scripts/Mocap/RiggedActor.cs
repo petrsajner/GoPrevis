@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace GenPrevis;
+namespace GoPrevis;
 
 /// <summary>The prototype's prepared humanoid. BVH motion is retargeted to its fixed proportions.</summary>
 public partial class RiggedActor : Node3D
@@ -32,6 +32,7 @@ public partial class RiggedActor : Node3D
     private float _sourceScale = 0.01f;
     private float _initialGroundCorrection;
     private Vector3 _sourceForward = Vector3.Forward;
+    bool _legacyReflectZ;
     private readonly List<BoneDefinition> _bones = new();
     private StandardMaterial3D? _bodyMaterial;
     private StandardMaterial3D? _jointMaterial;
@@ -52,16 +53,18 @@ public partial class RiggedActor : Node3D
         if (map[0] < 0) throw new FormatException("No humanoid hips/pelvis joint was found. Use a humanoid BVH with Hips, Pelvis, or a standard Mixamo/CMU equivalent.");
         int mapped = map.Count(index => index >= 0);
         if (mapped < 7) throw new FormatException($"Only {mapped} humanoid joints could be mapped. This prototype requires a humanoid BVH with recognizable spine and limb names.");
+        Vector3 authoredForward=SourceAim(candidate,map,FindBone("LeftFoot"))+SourceAim(candidate,map,FindBone("RightFoot"));authoredForward.Y=0;
+        bool reflectZ=authoredForward.LengthSquared()>.00001f&&authoredForward.Normalized().Z>.5f&&Math.Abs(authoredForward.Normalized().X)<.5f;
         var corrections = new Quaternion[_bones.Count];
         for (int i = 0; i < map.Length; i++)
         {
             corrections[i] = Quaternion.Identity;
             if (map[i] < 0) continue;
-            Vector3 sourceAim = SourceAim(candidate, map, i);
+            Vector3 sourceAim = CanonicalMotionVector(SourceAim(candidate, map, i),reflectZ);
             if (sourceAim.LengthSquared() > 0.00001f && _bones[i].Aim.LengthSquared() > 0.00001f)
                 corrections[i] = Align(_bones[i].Aim.Normalized(), sourceAim.Normalized());
         }
-        Vector3[] rootCurve = candidate.BuildRootCurve(map[0]);
+        Vector3[] rootCurve = candidate.BuildRootCurve(map[0]).Select(point=>CanonicalMotionVector(point,reflectZ)).ToArray();
         var mappedSources = map.Where(index => index >= 0).ToHashSet();
         string[] unmapped = candidate.Joints.Select((joint, index) => (joint, index))
             .Where(item => !item.joint.IsEndSite && !mappedSources.Contains(item.index))
@@ -77,10 +80,11 @@ public partial class RiggedActor : Node3D
         _rootCurve = rootCurve;
         _sourceRotations = new Quaternion[candidate.Joints.Count];
         _sourceScale = sourceScale;
+        _legacyReflectZ=reflectZ;
         _initialGroundCorrection = 0;
         // BVH collections use both +Z and -Z as character forward. Match the
         // small heading marker to the foot-rest direction rather than reversing the motion.
-        Vector3 sourceForward = SourceAim(candidate, map, FindBone("LeftFoot")) + SourceAim(candidate, map, FindBone("RightFoot"));
+        Vector3 sourceForward = CanonicalMotionVector(authoredForward,reflectZ);
         sourceForward.Y = 0;
         _sourceForward = sourceForward.LengthSquared() > 0.00001f ? sourceForward.Normalized() : Vector3.Forward;
         if (_faceMarker != null && sourceForward.LengthSquared() > 0.00001f)
@@ -135,7 +139,7 @@ public partial class RiggedActor : Node3D
             int parent = _bones[i].Parent;
             Quaternion parentRotation = parent >= 0 ? _targetRotations[parent] : Quaternion.Identity;
             _targetRotations[i] = _sourceMap[i] >= 0
-                ? (_sourceRotations[_sourceMap[i]] * _corrections[i]).Normalized()
+                ? (CanonicalMotionRotation(_sourceRotations[_sourceMap[i]],_legacyReflectZ) * _corrections[i]).Normalized()
                 : parentRotation;
             Quaternion localRotation = (parentRotation.Inverse() * _targetRotations[i]).Normalized();
             Vector3 localPosition = _bones[i].Offset;

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
-namespace GenPrevis;
+namespace GoPrevis;
 
 /// <summary>User presets stay separate from the bundled library; projects embed their own pose snapshot.</summary>
 public static class SavedPoseLibrary

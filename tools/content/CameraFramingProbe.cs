@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-namespace GenPrevis;
+namespace GoPrevis;
 
 public partial class CameraFramingProbe:SceneTree
 {
@@ -9,7 +9,7 @@ public partial class CameraFramingProbe:SceneTree
     {
         try
         {
-            var app=new GenPrevisApp();app.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.FullRect);Root.AddChild(app);
+            var app=new GoPrevisApp();app.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.FullRect);Root.AddChild(app);
             for(int i=0;i<5;i++)await ToSignal(this,SignalName.ProcessFrame);
             int count=await app.RunCameraFramingChecks();if(count<65)throw new InvalidOperationException("Camera framing checks were incomplete.");
             app.QueueFree();await ToSignal(this,SignalName.ProcessFrame);GD.Print("CAMERA_FRAMING_PROBE_OK checks="+count);Quit(0);

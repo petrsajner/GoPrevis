@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 
-namespace GenPrevis;
+namespace GoPrevis;
 
 public sealed class ProjectData
 {
-    public const int CurrentVersion=11;
+    public const int CurrentVersion=12;
     public int Version { get; set; } = CurrentVersion;
     public int Fps { get; set; } = 24;
     public double Duration { get; set; } = 8;
@@ -81,6 +81,7 @@ public sealed class ActorPathData
 
 public sealed class CameraTrackData
 {
+    public CameraMovementData Movement {get;set;}=new();
     public CameraTrackingData Tracking { get; set; } = new();
     public CameraReferenceData Reference { get; set; } = new();
     public string Id { get; set; } = Guid.NewGuid().ToString("N");

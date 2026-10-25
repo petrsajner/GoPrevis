@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Godot;
 
-namespace GenPrevis;
+namespace GoPrevis;
 
 /// <summary>
 /// Evaluates the final object layer after mocap blending. Path locomotion provides

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace GenPrevis;
+namespace GoPrevis;
 
 public sealed class AiScenePlan
 {
@@ -18,6 +18,8 @@ public sealed class AiScenePlan
 }
 public sealed class AiObject
 {
+    public string TravelFacing {get;set;}="Forward";
+    public string PathTiming {get;set;}="Authored";
     public string Id {get;set;}="";
     public string AssetId {get;set;}="";
     public string Name {get;set;}="";
@@ -72,6 +74,8 @@ public sealed class AiMotion
 }
 public sealed class AiCamera
 {
+    public string Intent {get;set;}="Auto";
+    public AiCameraMovement? Movement {get;set;}
     public string Id {get;set;}="";
     public string Name {get;set;}="";
     public float[] Position {get;set;}=Array.Empty<float>();
@@ -87,4 +91,23 @@ public sealed class AiCamera
     public double Smoothness {get;set;}
     public bool ReplaceKeys {get;set;}
     public List<AiKey> Keys {get;set;}=new();
+}
+
+public sealed class AiCameraMovement
+{
+    public string Mode {get;set;}="Orbit";
+    public string TargetId {get;set;}="";
+    public float[] TargetPosition {get;set;}=new float[3];
+    public float[] TargetOffset {get;set;}=new[]{0f,.8f,0f};
+    public bool AimAtTarget {get;set;}=true;
+    public double Start {get;set;}
+    public double Duration {get;set;}=8;
+    public float Radius {get;set;}=8;
+    public float StartAngleDegrees {get;set;}
+    public float OrbitDegrees {get;set;}=360;
+    public float StartHeight {get;set;}=2;
+    public float EndHeight {get;set;}=2;
+    public string Easing {get;set;}="Linear";
+    public string PathTiming {get;set;}="Constant speed";
+    public List<AiPathPoint> Path {get;set;}=new();
 }

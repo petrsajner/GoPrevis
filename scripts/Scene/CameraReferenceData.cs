@@ -1,6 +1,6 @@
 using System;
 
-namespace GenPrevis;
+namespace GoPrevis;
 
 /// <summary>Editor-only image/video background belonging to one camera.</summary>
 public sealed class CameraReferenceData

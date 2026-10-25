@@ -1,4 +1,4 @@
-"""Generate project-authored static blocking poses for GenPrevis' 21-bone mannequin.
+"""Generate project-authored static blocking poses for GoPrevis' 21-bone mannequin.
 
 There are no animation clips or third-party captures in this catalog. Limb
 orientations are solved analytically at fixed lengths, then stored as local

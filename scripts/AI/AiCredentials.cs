@@ -4,12 +4,12 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace GenPrevis;
+namespace GoPrevis;
 
 /// <summary>Local credentials only. Neither the project document nor portable builds contain keys.</summary>
 public static class AiCredentials
 {
-    const string Service="com.petrsajner.genprevis.ai.v1";
+    const string Service="com.petrsajner.goprevis.ai.v1";
     const string Vividia="com.vividia.personal-providers.v1";
     static readonly Dictionary<string,string> Session=new(StringComparer.Ordinal);
     public static string? Read(string provider,bool useVividia)
@@ -18,6 +18,7 @@ public static class AiCredentials
         foreach(string variable in variables){string? value=Environment.GetEnvironmentVariable(variable);if(!string.IsNullOrWhiteSpace(value))return value.Trim();}
         if(Session.TryGetValue(provider,out string? session))return session;
         string? own=ReadWindows(provider+"."+Service);if(!string.IsNullOrWhiteSpace(own))return own;
+        string? legacy=ReadWindows(provider+".com.petrsajner.genprevis.ai.v1");if(!string.IsNullOrWhiteSpace(legacy))return legacy;
         if(useVividia&&provider is "openrouter" or "gemini")return ReadWindows((provider=="gemini"?"gis_apikey":"gis_openrouter_apikey")+"."+Vividia);
         return null;
     }

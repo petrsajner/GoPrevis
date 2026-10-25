@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Godot;
 
-namespace GenPrevis;
+namespace GoPrevis;
 
 /// <summary>Real bundled Fox animation sequencing and layer-isolation regression probe.</summary>
 public partial class NativeMotionTrackProbe : SceneTree

@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-namespace GenPrevis;
+namespace GoPrevis;
 
 public sealed class SceneLightData
 {
