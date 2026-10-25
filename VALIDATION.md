@@ -1,8 +1,30 @@
-# Previs 0.9.0 validation
+# Previs 0.10.0 validation
 
 Validation date: **2026-10-25**. Development/verified platform: **Windows x64**.
 
-This revision adds complete active-camera shot export, synchronized depth and pose guidance, and illustrated camera movements. Ordinary object/camera dragging preserves Y; Shift transform handles retain unrestricted 3D adjustment. Application UI and authored messages are English. See README.md for output semantics and limits.
+This revision adds persistent scene display and object appearance settings, support-surface placement, and fifteen subject-relative framing presets. Existing full-shot export, synchronized depth/pose guidance and twenty-four camera movement presets remain in place. Ordinary dragging preserves Y; Shift transform handles retain unrestricted 3D adjustment. Application UI and authored messages are English. See README.md for output semantics and limits.
+
+## Scene, appearance, placement and framing for 0.10.0 — source evidence
+
+The integrated source builds with zero warnings and errors. Current source evidence comprises **20 scene-setting assertions in the headless run**, **21 in the rendered run**, **27 object-appearance/placement assertions** and **72 camera-framing assertions**. Evidence: `output/scene-settings-source-0.10.0.log`, `output/scene-settings-render-0.10.0.log` and `output/scene-settings-report.json`. These results are source/runtime checks; the final exported-package run is recorded separately after it executes.
+
+Scene coverage includes background color, neutral-light brightness, ground visibility/height/opacity, global labels, validation and persistence. Appearance/placement coverage includes independent instance colors, original-material restoration, per-object/camera label state, real supporting-surface queries, evaluated posed bounds, seated pelvis/thigh support and saved state. Labels use editor layer 2 and remain excluded from rendered exports.
+
+The source GPU suite additionally passes **13 actual image/depth assertions**. Full-HD active-camera pixels verify two chosen background colors, fill brightness without a directional light, ground visibility and opacity, unchanged exports when editor labels are toggled, and the configured ground height in both color and measured camera-Z depth. Evidence: `output/scene-display-render-report.json`, `output/scene-settings-render-0.10.0.log` and its empty stderr file.
+
+**CameraFramingProbe passes 72 assertions for all 15 types** (`output/camera-framing-probe.log`), including finite normalized composition, intended 16:9 subject-region containment, matching front/back/side direction, portrait-vs-wide scale, low cameras above support height, vertical top views, child-sized subjects, rotated subjects, quadruped bounds, over-shoulder matching, invalid-ID atomicity, application-channel reset and unchanged mocap. The previous **CameraMoveProbe passes 124 assertions** (`output/camera-move-regression-framing.log`).
+
+The actual rendered camera library contains all fifteen framing cards. Its UI probe selects Front wide on the chosen subject and renders both the application and a contact sheet from the original live vector cards. Evidence: `output/camera-framing-ui.log`, `output/camera-framing-ui-err.log` (zero bytes), `output/camera-framing-library.png` and `output/camera-framings-contact.png`. The last contact sheet includes the final waist-up medium/profile illustrations.
+
+Project format **6** stores scene display and appearance data. Versions 1–5 remain migration inputs. Framing/placement operate on existing transforms and keep source motion and keyed pose corrections intact. Placement positions the evaluated support point; it is not a body-contact or animation foot-locking solver.
+
+## Independent 0.10.0 Windows delivery
+
+The exported executable passes **21 scene-setting/placement checks, 27 appearance checks, 72 framing checks and 13 GPU image/depth checks**. The separate rendered application probe operates the actual scene controls and object inspector, including background, brightness, ground opacity, color, rename and Place on ground. Evidence: `output/packaged-0.10.0-scene.log`, its empty stderr file, `output/scene-settings-ui-0.10.0.log` and `output/scene-settings-ui-0.10.0.png`.
+
+The same executable passes **31 whole-shot export checks** at **1920 × 1080, 24 fps and 192 frames / eight seconds**, with all three H.264 videos independently inspected by FFprobe and matching Color/Depth/Pose PNG sequences. Regression runs pass 38 workflow + 15 numeric + 14 clip-trim checks, 55 correction + 13 pose-key timeline checks, 71 rendered manual-pose checks, 278 static-pose checks, 225 model/motion checks and the rendered full-HD smoke test. Logs: `output/packaged-0.10.0-{export,workflow,corrections,manual,pose,content,rendered-smoke}.log`. All eight packaged stderr logs are empty.
+
+The independent PCK inventory confirms **567 source files, 859 covers and 118 poses**, without missing resources (`output/package-inventory-0.10.0.log`). The portable package includes validation reports, actual UI images, representative exported frames/videos and the three portable example scenes. `BUILD-INFO.json` records project format 6, the exact source commit, test counts and binary hashes. The packaging audit reads every ZIP entry to verify its CRC and writes a SHA-256 sidecar. Only Windows x64 has been exercised.
 
 ## Toolchain
 
@@ -11,7 +33,7 @@ This revision adds complete active-camera shot export, synchronized depth and po
 - Rendered source checks use the Compatibility renderer on the development Windows machine.
 - Godot locale and fallback locale are en.
 
-## Whole-shot export and control passes for 0.9.0 — source evidence
+## Historical whole-shot export and control passes for 0.9.0 — source evidence
 
 The rendered source whole-shot suite passes **31 assertions**. Evidence: `output/shot-export-source-0.9.0.log` and `output/shot-export-report.json`. It exports a complete 8-second shot from **Camera B**, with 192 frames at 640×360/24 fps in color, depth and pose. Each H.264 MP4 is independently checked using ffprobe for codec, dimensions, frame count, rate and duration. The PNG sequences include frame 000191 and match the end-exclusive timestamp array. The fixture includes mocap, a keyed head correction, a path, animated camera keys and a native animal rig.
 

@@ -20,8 +20,8 @@ public partial class PrevisApp
     }
     void SelectCamera(CameraEntry camera)
     {
-        if(_drawingPath)CancelDrawingPath();_selected=null;SyncPoseEditorSelection();_selectedCamera=camera;SetActiveCamera(camera.Id);_refreshing=true;_name.Text=camera.Name;
-        _cameraQuickControls.Visible=true;ShowInspectorSection("Object");UpdateTransformFields();int i=_cameras.IndexOf(camera);if(i>=0)_objectList.Select(_entries.Count+i);_refreshing=false;UpdateSelection();
+        if(_drawingPath)CancelDrawingPath();CancelPlacement();_selected=null;SyncPoseEditorSelection();_selectedCamera=camera;SetActiveCamera(camera.Id);_refreshing=true;_name.Text=camera.Name;
+        _cameraQuickControls.Visible=true;ShowInspectorSection("Object");UpdateTransformFields();int i=_cameras.IndexOf(camera);if(i>=0)_objectList.Select(_entries.Count+i);_refreshing=false;UpdateSelection();RefreshAllObjectLabels();UpdateObjectAppearanceInspector();UpdatePlacementInspector();
     }
     void EnsureCameraAnimation(CameraEntry camera)
     {

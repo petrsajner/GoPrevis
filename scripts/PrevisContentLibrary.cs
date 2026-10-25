@@ -25,7 +25,7 @@ public partial class PrevisApp
             entry=ImportModelData(data);entry.Node.Position=position;
             if(defaultMotion&&entry.NativeTrack!=null){InitializeNativeClip(entry);if(entry.Data.MotionClips.Count>0){entry.Data.MotionClips[0].Duration=_duration;RebuildTrack(entry);}}
         }
-        RefreshObjects();return entry;
+        ApplyObjectAppearance(entry);RefreshObjects();return entry;
     }
     void ApplyHumanAppearance(RiggedActor actor,string? modelId)
     {
@@ -68,7 +68,7 @@ public partial class PrevisApp
     LibraryCard CreateContentCard(ContentCard item)
     {
         var card=new LibraryCard{Kind=item.Pose!=null?"pose":item.Motion==null?"asset":"motion",Id=item.Id,Caption=item.Name,CustomMinimumSize=new Vector2(88,116),SizeFlagsHorizontal=SizeFlags.ExpandFill,ClipText=true,TooltipText=item.Name+"\n"+item.Detail};
-        card.Pressed+=()=>{try{if(item.Pose!=null)DropPose(item.Id,_selected?.Node is RiggedActor?_selected:null,Vector3.Zero);else if(item.Motion!=null)DropMotion(item.Id,_selected!=null&&CompatibleMotion(_selected,item.Motion)?_selected:null,Vector3.Zero);else DropAsset(item.Id,Vector3.Zero);}catch(Exception ex){Error(ex.Message);}};
+        card.Pressed+=()=>{try{if(item.Pose!=null)DropPose(item.Id,_selected?.Node is RiggedActor?_selected:null,new Vector3(0,SceneGroundHeight,0));else if(item.Motion!=null)DropMotion(item.Id,_selected!=null&&CompatibleMotion(_selected,item.Motion)?_selected:null,new Vector3(0,SceneGroundHeight,0));else DropAsset(item.Id,new Vector3(0,SceneGroundHeight,0));}catch(Exception ex){Error(ex.Message);}};
         AddContentThumbnail(card,item);return card;
     }
 

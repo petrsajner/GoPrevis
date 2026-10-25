@@ -5,7 +5,7 @@ namespace Previs;
 
 public sealed class ProjectData
 {
-    public int Version { get; set; } = 5;
+    public int Version { get; set; } = 6;
     public int Fps { get; set; } = 24;
     public double Duration { get; set; } = 8;
     public List<ObjectData> Objects { get; set; } = new();
@@ -16,6 +16,7 @@ public sealed class ProjectData
     public List<CameraTrackData> Cameras { get; set; } = new();
     public string ActiveCameraId { get; set; } = "";
     public bool DirectionalLightEnabled { get; set; }
+    public SceneSettingsData SceneSettings { get; set; } = new();
 }
 
 public sealed class ObjectData
@@ -44,6 +45,7 @@ public sealed class ObjectData
     public string ActorFamily { get; set; } = "";
     public StaticPoseData? StaticPose { get; set; }
     public PoseCorrectionAnimationData PoseCorrections { get; set; } = new();
+    public ObjectAppearanceData Appearance { get; set; } = new();
 }
 
 public sealed class MotionClipData
@@ -76,6 +78,7 @@ public sealed class CameraTrackData
 {
     public string Id { get; set; } = Guid.NewGuid().ToString("N");
     public string Name { get; set; } = "Camera A";
+    public bool ShowLabel { get; set; } = true;
     public List<CameraData> Keys { get; set; } = new();
     public float[] Position { get; set; } = new float[] { 6, 3.2f, 7 };
     public float[] Rotation { get; set; } = new float[3];

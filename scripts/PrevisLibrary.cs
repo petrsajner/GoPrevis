@@ -34,7 +34,7 @@ public partial class PrevisApp
     }
     Vector3 GroundPoint(Vector2 screen)
     {
-        var origin=_editorCamera.ProjectRayOrigin(screen);var direction=_editorCamera.ProjectRayNormal(screen);if(Math.Abs(direction.Y)<.0001f)return Vector3.Zero;float distance=-origin.Y/direction.Y;return distance>0?origin+direction*distance:Vector3.Zero;
+        var origin=_editorCamera.ProjectRayOrigin(screen);var direction=_editorCamera.ProjectRayNormal(screen);if(Math.Abs(direction.Y)<.0001f)return Vector3.Zero;float distance=(SceneGroundHeight-origin.Y)/direction.Y;return distance>0?origin+direction*distance:Vector3.Zero;
     }
     CameraEntry? PickCamera(Vector2 point)
     {

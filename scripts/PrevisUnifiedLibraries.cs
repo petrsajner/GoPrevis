@@ -22,7 +22,7 @@ public partial class PrevisApp
         if(category=="Cameras"){BuildCameraLibrary();return;}
         if(category is not ("Models" or "Objects"))return;
 
-        bool models=category=="Models";
+        bool models=category=="Models";if(!models)BuildObjectLightingSection();
         string[] groups=models?new[]{"People","Animals"}:new[]{"Furniture","Vehicles","Architecture","Nature","Props"};
         var catalog=ContentCatalog.All.Where(model=>groups.Contains(model.Category,StringComparer.Ordinal)).ToArray();
         var filter=new OptionButton{FitToLongestItem=false,ClipText=true,TooltipText="Choose a group or browse all sections below."};
@@ -55,17 +55,8 @@ public partial class PrevisApp
             if(matching.Length==0)sections.AddChild(Text("No matching items.",11,true));
         }
         filter.ItemSelected+=_=>Populate();search.TextChanged+=_=>Populate();Populate();
-        if(!models)BuildObjectLightingSection();
+
     }
 
-    void BuildObjectLightingSection()
-    {
-        var section=new VBoxContainer{SizeFlagsHorizontal=SizeFlags.ExpandFill};section.AddThemeConstantOverride("separation",4);_library.AddChild(section);
-        var content=new VBoxContainer{Visible=false};
-        var header=Button("▸ Lighting",()=>{},true);header.Alignment=HorizontalAlignment.Left;header.AddThemeFontSizeOverride("font_size",11);header.TooltipText="Optional lighting. The neutral studio needs no lights.";
-        header.Pressed+=()=>{content.Visible=!content.Visible;header.Text=(content.Visible?"▾ ":"▸ ")+"Lighting";header.ButtonPressed=content.Visible;};section.AddChild(header);section.AddChild(content);
-        var light=new CheckButton{Text="Directional light",ButtonPressed=_lighting.DirectionalEnabled};
-        light.Toggled+=value=>{PushUndo();_lighting.DirectionalEnabled=value;Status(value?"Directional light enabled.":"Neutral studio · no directional light.");};content.AddChild(light);
-        var note=Text("Neutral studio is the default.",11,true);note.AutowrapMode=TextServer.AutowrapMode.WordSmart;content.AddChild(note);
-    }
+    void BuildObjectLightingSection()=>BuildSceneSettingsControls(_library);
 }

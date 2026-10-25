@@ -14,6 +14,7 @@ public partial class PrevisApp
     {
         public string Id=Guid.NewGuid().ToString("N");
         public string Name="Camera";
+        public bool ShowLabel=true;
         public StudioCameraRig Rig=null!;
         public TransformAnimationData Animation=new();
         public List<LensKeyData> LensKeys=new();
@@ -45,7 +46,7 @@ public partial class PrevisApp
 
     CameraEntry CreateCamera(string name,CameraTrackData? data,bool activate)
     {
-        var item=new CameraEntry {Name=name,Id=data?.Id??Guid.NewGuid().ToString("N"),Rig=new StudioCameraRig()};
+        var item=new CameraEntry {Name=name,Id=data?.Id??Guid.NewGuid().ToString("N"),ShowLabel=data?.ShowLabel??true,Rig=new StudioCameraRig()};
         _world.AddChild(item.Rig);item.Rig.ShotCamera.Current=false;
         item.BasePosition=item.Rig.GlobalPosition;item.BaseRotation=item.Rig.GlobalRotationDegrees;
         if(data!=null)
@@ -84,7 +85,7 @@ public partial class PrevisApp
         if(_cameras.Count<=1){Status("A scene must keep at least one camera.");return;}PushUndo();var item=_cameras.First(c=>c.Rig==_shot);_cameras.Remove(item);_world.RemoveChild(item.Rig);item.Rig.QueueFree();RefreshObjects();SelectCamera(_cameras[0]);if(_category=="Cameras")ShowCategory("Cameras");Status(item.Name+" removed.");
     }
     void ClearCameras(){foreach(var c in _cameras){_world.RemoveChild(c.Rig);c.Rig.QueueFree();}_cameras.Clear();}
-    CameraTrackData SnapshotCamera(CameraEntry item){EnsureCameraAnimation(item);return JsonSerializer.Deserialize<CameraTrackData>(JsonSerializer.Serialize(new CameraTrackData{Id=item.Id,Name=item.Name,Position=Array3(item.BasePosition),Rotation=Array3(item.BaseRotation),Scale=Array3(item.BaseScale),FocalLength=item.BaseLens,TransformAnimation=item.Animation,LensKeys=item.LensKeys,Keys=new()}))!;}
+    CameraTrackData SnapshotCamera(CameraEntry item){EnsureCameraAnimation(item);return JsonSerializer.Deserialize<CameraTrackData>(JsonSerializer.Serialize(new CameraTrackData{Id=item.Id,Name=item.Name,ShowLabel=item.ShowLabel,Position=Array3(item.BasePosition),Rotation=Array3(item.BaseRotation),Scale=Array3(item.BaseScale),FocalLength=item.BaseLens,TransformAnimation=item.Animation,LensKeys=item.LensKeys,Keys=new()}))!;}
     void BuildCameraLibrary()=>BuildIllustratedCameraLibrary();
 
     void BuildSequenceInspector()
@@ -125,7 +126,7 @@ public partial class PrevisApp
         _inspectorSection=section;string current="Object";
         foreach(var node in _inspector.GetChildren().OfType<Control>()){if(node==_inspectorTabs){node.Visible=true;continue;}if(node==_motionHeader)current="Motion";if(node==_pathHeader)current="Path";if(node==_posePanel)current="Pose";node.Visible=current==section;}
         if(_animationChoice!=null)_animationChoice.Visible=section=="Motion"&&_selected?.Player!=null;
-        if(_clipChoice!=null)_clipChoice.Visible=section=="Motion"&&(_selected?.Node is RiggedActor||_selected?.NativeTrack!=null);UpdatePoseInspector();RefreshUnifiedWorkflow();
+        if(_clipChoice!=null)_clipChoice.Visible=section=="Motion"&&(_selected?.Node is RiggedActor||_selected?.NativeTrack!=null);UpdatePoseInspector();RefreshUnifiedWorkflow();UpdateObjectAppearanceInspector();UpdatePlacementInspector();
     }
     void RefreshSequenceInspector()
     {
@@ -195,7 +196,7 @@ public partial class PrevisApp
         if(input is InputEventMouseButton{ButtonIndex:MouseButton.Left,Pressed:false})return true;
         if(input is InputEventMouseButton {Pressed:true,ButtonIndex:MouseButton.Left} button)
         {
-            Vector3 origin=_editorCamera.ProjectRayOrigin(button.Position),ray=_editorCamera.ProjectRayNormal(button.Position);if(Math.Abs(ray.Y)>.0001f){float t=-origin.Y/ray.Y;if(t>0&&_pathEntry!=null){var p=origin+ray*t;p.Y=0;if(Input.IsPhysicalKeyPressed(Key.Ctrl)){p.X=Mathf.Snapped(p.X,.25f);p.Z=Mathf.Snapped(p.Z,.25f);}_pathEntry.Data.Path.Points.Add(Array3(p));RefreshTimelineSize();DrawPaths();RefreshSequenceInspector();if(button.DoubleClick&&_pathEntry.Data.Path.Points.Count>=2)FinishDrawingPath();}}return true;
+            Vector3 origin=_editorCamera.ProjectRayOrigin(button.Position),ray=_editorCamera.ProjectRayNormal(button.Position);if(Math.Abs(ray.Y)>.0001f){float t=(SceneGroundHeight-origin.Y)/ray.Y;if(t>0&&_pathEntry!=null){var p=origin+ray*t;p.Y=SceneGroundHeight;if(Input.IsPhysicalKeyPressed(Key.Ctrl)){p.X=Mathf.Snapped(p.X,.25f);p.Z=Mathf.Snapped(p.Z,.25f);}_pathEntry.Data.Path.Points.Add(Array3(p));RefreshTimelineSize();DrawPaths();RefreshSequenceInspector();if(button.DoubleClick&&_pathEntry.Data.Path.Points.Count>=2)FinishDrawingPath();}}return true;
         }
         return false;
     }

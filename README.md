@@ -1,10 +1,10 @@
-# Previs 0.9.0 — film shot planning
+# Previs 0.10.0 — film shot planning
 
 Previs is a desktop blockout tool for preparing movement and camera references for AI video. It uses Godot 4.7.2 .NET, C# and .NET 10. The application UI, dialogs and authored errors are English.
 
 ## Run
 
-The Windows portable output is `build/Previs-0.9.0-Windows/Previs.exe`. Keep Previs.exe, Previs.pck and data_Previs_windows_x86_64 together. The portable Windows build includes its runtime; using it does not require the Godot editor or .NET SDK.
+The Windows portable output is `build/Previs-0.10.0-Windows/Previs.exe`. Keep Previs.exe, Previs.pck and data_Previs_windows_x86_64 together. The portable Windows build includes its runtime; using it does not require the Godot editor or .NET SDK.
 
 For development, open project.godot with Godot 4.7.2 .NET. Local tools are in the ignored .tools directory. The existing run.ps1 starts the source project; build.ps1 -Test builds, runs source checks and exports Windows x64.
 
@@ -62,6 +62,25 @@ The CMU cards use a source offset that skips the conversion's first calibration 
 
 Sources, licenses and preparation notes are in [LICENSES/PROP-CONTENT.md](LICENSES/PROP-CONTENT.md), [LICENSES/ANIMAL-CONTENT.md](LICENSES/ANIMAL-CONTENT.md) and [LICENSES/CMU-MOTION-CONTENT.md](LICENSES/CMU-MOTION-CONTENT.md). The original Fox has separate attributions in [LICENSES/Fox-NOTICE.md](LICENSES/Fox-NOTICE.md); the original walk sample is documented in [samples/real/SOURCE-AND-LICENSE.md](samples/real/SOURCE-AND-LICENSE.md).
 
+## Scene display and object appearance
+
+Open **Objects → 3D scene** for scene-wide settings. Its existing scrollable library contains the collapsible **Background**, **Global lighting** and **Display** groups; no additional library tab is needed.
+
+- **Background → Color** changes the working-view and rendered-shot background.
+- **Global lighting → Brightness** adjusts the neutral hemisphere fill from 0–400%. The default is 100%; a directional light remains optional.
+- **Display → Ground** controls visibility, **Height** sets the ground plane in metres, and **Opacity** adjusts its display opacity. The editor grid follows the same height and visibility.
+- **Object labels** is the global label switch. A selected object or camera also has its own **Show label** switch in Properties. Names update after renaming and remain excluded from PNG/MP4, depth and pose renders.
+
+A selected object has a **Material** section with a color picker, RGB hex entry and a small swatch palette. The sketch-color override affects that instance's rendered materials; **Original materials** restores its authored palette. Model geometry, rigging and source files are preserved. Scene display, per-object colors and label switches are saved in the project and participate in Undo/Redo.
+
+### Place on a support surface
+
+**Place on ground** moves the selected object's currently evaluated lower bounds to the configured Ground height, including a posed or animated figure at the playhead. It works with the configured height even when the ground display is hidden.
+
+**Place on object** enters a one-click placement operation: click an upward-facing supporting surface in the scene; Esc cancels. It uses the target's real mesh surface rather than the top of a broad object box. For a seated human, the support reference is the pelvis/thigh contact area, so the figure sits on the seat instead of placing its feet on it. Other poses and objects use their lower bounds.
+
+Placement translates the object and preserves its orientation, body pose, source clips and pose corrections. Existing transform keys/Auto key are respected at the playhead. It does not reshape a body or run an automatic contact/foot-locking solver; use Pose to adjust individual limbs after placing the figure.
+
 ## Static poses
 
 **Poses** contains **118 ready-made human body poses** in nine categories: standing and gestures, chair and floor sitting, kneeling, crouching, lying down and action/interaction positions. Search by name or category and drag a pose onto a prepared human figure. Dropping a pose onto empty ground creates a posed average-adult figure there. The other human body variants retain their proportions when a pose is applied.
@@ -72,7 +91,7 @@ The Poses library can also **save the current body pose** from a selected figure
 
 The self-contained `samples/static-poses.previs` example includes a seated figure and chair, floor sitting, kneeling and lying figures. It contains no motion clips or external asset dependencies.
 
-Seating presets are prepared around practical blocking proportions. Match the figure's placement to the actual chair, stool or floor; smaller body variants scale the pose as well. The manual pose editor below can adapt them to individual props; automatic seat/contact fitting is not provided. Existing animal animations retain their own rig compatibility.
+Seating presets are prepared around practical blocking proportions. Match the figure's placement to the actual chair, stool or floor; smaller body variants scale the pose as well. Use Place on object to position a seated pose on the chosen support, then use the manual pose editor below to adjust individual limbs. Existing animal animations retain their own rig compatibility.
 
 ## Keyed body corrections above motion
 
@@ -90,7 +109,7 @@ The blend order is **blended mocap or static base → local pose corrections →
 
 Enter a name and use **Save to My poses** to store the currently visible corrected body as a reusable static library item. Saving does not replace the scene's mocap. The preset retains intentional body offsets and local joint rotations, while separate scene-object placement and proportions remain with the target figure. **Reset edits** restores the correction layer from the start of the editing session; **Done** leaves its keys active.
 
-`samples/manual-adjusted-pose.previs` contains a fitted figure and imported chair. For a specific seat, move the whole figure with Arrange, then adjust its pelvis and limbs in Pose. Automatic prop-contact fitting and animation foot-contact solving are not provided.
+`samples/manual-adjusted-pose.previs` contains a fitted figure and imported chair. For a specific seat, use Place on object or Arrange, then adjust pelvis and limbs in Pose. Placement preserves the body pose; animation foot-contact solving is not provided.
 
 ## Arrange motion, paths and corrections
 
@@ -116,6 +135,21 @@ Camera A/B/C appear in the SCENE list and can be picked through their visible bo
 
 The **Cameras** library contains the camera list, framing presets and camera movement presets together. **Camera view** pilots the active shot; the 16:9 guide matches the preview. Position, Rotation, Scale and Lens are keyable. **Preview** can hide the small shot view to provide more inspector space.
 
+### Camera framing presets
+
+The **Cameras** library now begins with **15 illustrated framing cards** and retains all 24 movement cards below. Use its shared filter/search to browse Framing, Basic movements or Aerial movements.
+
+| Framing family | Presets |
+| --- | --- |
+| Working view and front | Current view, Front medium, Front close-up, Front wide |
+| Side and back | Side follow, Side close, Back medium |
+| Elevated and low | Top wide, 45° high angle, Low angle, Low wide, Bird's-eye |
+| Over shoulder and roll | Over shoulder left, Over shoulder right, Dutch angle |
+
+Select the subject before choosing a framing card. The camera uses that subject's actual world-space dimensions, pose and facing direction rather than a fixed global scene origin; human head, shoulder and pelvis joints refine its portrait and over-shoulder compositions. Smaller figures receive proportionally fitted distances. The chosen subject is remembered while switching camera cards. If no subject is selected, the active view's nearest aimed-at figure is preferred, then another scene object.
+
+**Current view** copies the working camera's position, angle and field of view. Other cards create a static camera base and replace that camera's existing movement keys; Undo restores them. Wide framings fit the whole subject, medium/close framings intentionally crop to their intended region, and over-shoulder views look past the matching shoulder. **Side follow** is a side composition ready for a following move; the framing card itself does not add an actor-tracking constraint. Framing preserves the subject's motion and pose layers.
+
 ### Illustrated camera movement presets
 
 The Cameras library includes **24 movement cards**, grouped into **Basic** and **Aerial**. Each card has an original diagram showing the camera, subject, viewing frustum and movement direction. Static shot, tilt, pan, crane, truck, dolly, lens zoom, handheld, reveal, push-through, whip pan and crash zoom are available alongside orbit, ascending/descending orbit, aerial establishing, dive and pull-away moves.
@@ -137,7 +171,7 @@ A continuous numeric scrub creates one Undo action. After reaching a minimum or 
 
 ## Save, reopen and export
 
-Save creates a **version 5 .previs** project and neighbouring .assets folder containing used sources. Keep both together when moving a project. It preserves embedded static body poses and keyed additive pose corrections, motion tracks, paths and path keys, final transform channels, camera channels/lenses, active camera and lighting. Version 1/2/3/4 scenes are accepted on opening. Older releases refuse version 5 instead of silently dropping its correction keys. Overwriting an existing project keeps the previous JSON as .previs.bak.
+Save creates a **version 6 .previs** project and neighbouring .assets folder containing used sources. Keep both together when moving a project. It preserves embedded static body poses and keyed additive pose corrections, motion tracks, paths and path keys, final transform channels, camera channels/lenses, active camera, scene display settings, per-object colors/labels and lighting. Version 1/2/3/4/5 scenes are accepted on opening. Older releases refuse version 6 instead of silently dropping its scene display or appearance data. Overwriting an existing project keeps the previous JSON as .previs.bak.
 
 ### Export a complete shot
 

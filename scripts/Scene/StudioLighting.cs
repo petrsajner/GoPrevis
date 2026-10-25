@@ -11,8 +11,20 @@ public partial class StudioLighting : Node3D
 {
     private DirectionalLight3D? _directional;
     private bool _directionalEnabled;
+    private float _brightness=1;
 
     public Godot.Environment Environment { get; } = CreateEnvironment();
+
+    public float Brightness=>_brightness;
+
+    /// <summary>Adjusts neutral sky fill and reflections without introducing a key light.</summary>
+    public void SetBrightness(float brightness)
+    {
+        if(!float.IsFinite(brightness)||brightness<0||brightness>4)throw new System.ArgumentOutOfRangeException(nameof(brightness),"Brightness must be between zero and four.");
+        _brightness=brightness;
+        if(Environment.Sky?.SkyMaterial is ProceduralSkyMaterial material)material.EnergyMultiplier=brightness;
+        if(_directional!=null)_directional.LightEnergy=.2f*brightness;
+    }
 
     /// <summary>
     /// The optional artistic key light. It is absent in the neutral default setup.
@@ -84,7 +96,7 @@ public partial class StudioLighting : Node3D
             Name = "Directional_light",
             RotationDegrees = new Vector3(-48, -28, 0),
             LightColor = Colors.White,
-            LightEnergy = 0.2f,
+            LightEnergy = 0.2f*_brightness,
             ShadowEnabled = true,
             DirectionalShadowMaxDistance = 60,
             SkyMode = DirectionalLight3D.SkyModeEnum.LightOnly
