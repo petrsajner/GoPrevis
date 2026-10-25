@@ -51,7 +51,7 @@ public partial class PrevisApp : Control
     bool _refreshing, _playing, _pilot, _rightDown, _middleDown;
     double _time, _duration = 8;
     int _fps = 24;
-    int _loadingVersion=6;
+    int _loadingVersion=7;
     Vector3 _orbitTarget = new(0, .9f, 0);
     float _yaw = .65f, _pitch = .42f, _distance = 12;
     string _category = "Models", _projectPath = "";
@@ -60,9 +60,13 @@ public partial class PrevisApp : Control
     {
         TranslationServer.SetLocale("en");
         var window=GetWindow();float dpiScale=Math.Clamp(Math.Max(DisplayServer.ScreenGetScale(),DisplayServer.ScreenGetDpi()/96f),1,2.5f);window.ContentScaleMode=Window.ContentScaleModeEnum.CanvasItems;window.ContentScaleSize=Vector2I.Zero;window.ContentScaleFactor=dpiScale;
-        DisplayServer.WindowSetTitle("Previs 0.10.0 — Film shot planning");
+        DisplayServer.WindowSetTitle("Previs 0.11.0 — Film shot planning");
         BuildTheme(); BuildUi(); BuildWorld(); StarterScene();
-        if (OS.GetCmdlineUserArgs().Contains("--scene-settings-test")) _ = RunSceneSettingsChecksAndQuit();
+        if (OS.GetCmdlineUserArgs().Contains("--project-workflow-test")) _ = RunProjectWorkflowChecksAndQuit();
+        else if (OS.GetCmdlineUserArgs().Contains("--history-test")) _ = RunHistoryChecksAndQuit();
+        else if (OS.GetCmdlineUserArgs().Contains("--project-setup-test")) _ = RunProjectSetupChecksAndQuit();
+        else if (OS.GetCmdlineUserArgs().Contains("--animal-pose-test")) _ = RunAnimalPoseChecksAndQuit();
+        else if (OS.GetCmdlineUserArgs().Contains("--scene-settings-test")) _ = RunSceneSettingsChecksAndQuit();
         else if (OS.GetCmdlineUserArgs().Contains("--shot-export-test")) _ = RunShotExportChecksAndQuit();
         else if (OS.GetCmdlineUserArgs().Contains("--correction-test")) _ = RunPoseCorrectionChecksAndQuit();
         else if (OS.GetCmdlineUserArgs().Contains("--interaction-test")) _ = RunInteractionChecksAndQuit();
@@ -72,6 +76,8 @@ public partial class PrevisApp : Control
         else if (OS.GetCmdlineUserArgs().Contains("--smoke-test")) _ = RunSmokeChecks();
         else {var open=OS.GetCmdlineUserArgs().FirstOrDefault(a=>a.StartsWith("--open=",StringComparison.Ordinal));if(open!=null){try{LoadProjectFromPath(open[7..]);if(_selected?.Data.Path.Points.Count>0)ShowInspectorSection("Path");}catch(Exception ex){Error(ex.Message);}}}
     }
+
+    public override void _ExitTree()=>DisposeCameraReference();
 
     async Task RunContentChecksAndQuit()
     {
@@ -297,11 +303,17 @@ public partial class PrevisApp : Control
     void ResetEditorView() { _orbitTarget = new Vector3(0, .9f, 0); _yaw = .65f; _pitch = .42f; _distance = 12; UpdateOrbit(); }
     void UpdateOrbit() { if (_editorCamera == null) return; _editorCamera.Position = _orbitTarget + new Vector3(Mathf.Sin(_yaw) * Mathf.Cos(_pitch), Mathf.Sin(_pitch), Mathf.Cos(_yaw) * Mathf.Cos(_pitch)) * _distance; _editorCamera.LookAt(_orbitTarget); }
     void FrameSelected() { if(_selectedCamera!=null){if(_pilot)TogglePilot();_orbitTarget=_selectedCamera.Rig.GlobalPosition;_distance=4;UpdateOrbit();return;}if (_selected == null) return; if (_pilot) TogglePilot(); var bounds=_selected.Node is RiggedActor actor?actor.GetPreparedPoseBounds():PropFactory.CalculateBounds(_selected.Node);_orbitTarget=_selected.Node.GlobalTransform*bounds.GetCenter();_distance=Math.Max(2.5f,(bounds.Size*_selected.Node.Scale).Length()*1.65f);UpdateOrbit(); }
-    void UpdatePreview() { if (_previewCamera == null || _shot == null) return; _previewCamera.GlobalTransform = _shot.ShotCamera.GlobalTransform; _previewCamera.Fov = _shot.ShotCamera.Fov; _cameraInfo.Text = $"{ActiveCameraName} · {_shot.FocalLengthMm:0} mm · 16:9 · {ActiveCameraKeyCount()} keys"; foreach(var camera in _cameras)camera.Rig.Visible=camera.Rig.GlobalPosition.DistanceTo(_editorCamera.GlobalPosition)>.55f;if(_pilot){_editorCamera.KeepAspect=Camera3D.KeepAspectEnum.Width;float aspect=_sceneViewport.Size.X/(float)Math.Max(1,_sceneViewport.Size.Y);_editorCamera.Fov=Mathf.RadToDeg(2*Mathf.Atan(Mathf.Tan(Mathf.DegToRad(_shot.ShotCamera.Fov)*.5f)*Math.Max(1,aspect/(16f/9))));} _framing?.QueueRedraw(); }
+    void UpdatePreview()
+    {
+        if(_previewCamera==null||_shot==null)return;
+        _previewCamera.GlobalTransform=_shot.ShotCamera.GlobalTransform;_previewCamera.Fov=_shot.ShotCamera.Fov;
+        foreach(var camera in _cameras)camera.Rig.Visible=camera.Rig.GlobalPosition.DistanceTo(_editorCamera.GlobalPosition)>.55f;
+        UpdateProjectCameraView();_framing?.QueueRedraw();
+    }
 
     public override void _Process(double delta)
     {
-        UpdateCompactChrome();
+        UpdateCompactChrome();RefreshHistoryControls();
         if (_playing) { double next = _time + delta; if (next >= _duration) { next = _duration; _playing = false; _play.Text = "▶ Play"; } SetTime(next); }
         if (_rightDown)
         {
@@ -325,7 +337,7 @@ public partial class PrevisApp : Control
                 actor.EvaluateTimeline(_time,e.Data.Path.Enabled&&e.Data.Path.Points.Count>=2);
                 var source=actor.CaptureEvaluatedPose();_poseBaseSnapshots[e.Data.Id]=source;actor.ApplyPoseCorrections(e.Data.PoseCorrections,_time,source);
             }
-            else if(e.NativeTrack!=null)e.NativeTrack.Evaluate(_time,e.Data.Path.Enabled&&e.Data.Path.Points.Count>=2);
+            else if(e.NativeTrack!=null)e.NativeTrack.Evaluate(_time,e.Data.Path.Enabled&&e.Data.Path.Points.Count>=2,e.Data.PoseCorrections,e.Data.StaticPose);
             else if (e.Player != null && e.Animation != "") { var anim = e.Player.GetAnimation(e.Animation); double t = _time * e.Data.Speed; if (anim.Length > 0) t = e.Data.Loop ? t % anim.Length : Math.Min(t, anim.Length); e.Player.Seek(t, true); e.Player.Advance(0); }
             ApplyEntryPath(e);
         }
@@ -385,7 +397,7 @@ public partial class PrevisApp : Control
         if(_poseEditing&&key.Keycode==Key.Escape){StopPoseEditing();ShowInspectorSection("Object");return;}
         if(_poseEditing&&!_rightDown&&!_middleDown&&!_middleZoom&&(key.Keycode==Key.W||key.Keycode==Key.E)){SetPoseTool(key.Keycode==Key.W?"Move":"Rotate");return;}
         if(key.Keycode==Key.K){if(_poseEditing)CapturePoseCorrectionKey("All");else CaptureSelectedTransformKey("All");return;}
-        if (key.CtrlPressed && key.Keycode == Key.S) SaveProject(); else if (key.CtrlPressed && key.Keycode == Key.O) OpenProject(); else if (key.CtrlPressed && key.Keycode == Key.Z) Undo(); else if (key.CtrlPressed && key.Keycode == Key.Y) Redo(); else if (key.CtrlPressed && key.Keycode == Key.D) DuplicateSelected(); else if (key.Keycode == Key.Delete) DeleteSelected(); else if (key.Keycode == Key.F) FrameSelected(); else if (key.Keycode == Key.Space) { _playing = !_playing; _play.Text = _playing ? "Ⅱ Pause" : "▶ Play"; }
+        if (key.CtrlPressed && key.Keycode == Key.S) SaveProject(); else if (key.CtrlPressed && key.Keycode == Key.O) OpenProject(); else if (key.CtrlPressed && key.Keycode == Key.Z) {if(key.ShiftPressed)Redo();else Undo();} else if (key.CtrlPressed && key.Keycode == Key.Y) Redo(); else if (key.CtrlPressed && key.Keycode == Key.D) DuplicateSelected(); else if (key.Keycode == Key.Delete) DeleteSelected(); else if (key.Keycode == Key.F) FrameSelected(); else if (key.Keycode == Key.Space) { _playing = !_playing; _play.Text = _playing ? "Ⅱ Pause" : "▶ Play"; }
     }
     public override void _Input(InputEvent input)
     {
@@ -405,15 +417,15 @@ public partial class PrevisApp : Control
     { _playing = false; _play.Text = "▶ Play"; _fileAction = action; _fileDialog.Title = title; _fileDialog.FileMode = mode; _fileDialog.Filters = filters; _fileDialog.PopupCentered(new Vector2I(900, 600)); }
     void Status(string text) { if (_status != null) _status.Text = text; }
     void Error(string message) { Status(message); _message.Title = "Previs — action could not be completed"; _message.DialogText = message; _message.PopupCentered(new Vector2I(640, 230)); GD.PushWarning(message); }
-    void NewScene() { if(_drawingPath)CancelDrawingPath();PushUndo(); ClearObjects(); ClearCameras();CreateCamera("Camera A",null,true);_shot.ClearKeys();_lighting.DirectionalEnabled=false;ApplySceneSettings(new()); _projectPath = ""; SetTime(0); Status("New neutral scene. Add an actor or prop from the library."); }
+    void NewScene() { if(_drawingPath)CancelDrawingPath();PushUndo(); ClearObjects(); ClearCameras();CreateCamera("Camera A",null,true);_shot.ClearKeys();_lighting.DirectionalEnabled=false;ApplySceneSettings(new());ApplyProjectSetup(new()); _projectPath = ""; SetTime(0); Status("New neutral scene. Add an actor or prop from the library."); }
     void ClearObjects() {CancelPlacement();ClearObjectAppearanceStates();_poseBaseSnapshots.Clear(); foreach (var e in _entries) { _world.RemoveChild(e.Node); e.Node.QueueFree(); } _entries.Clear(); _selected = null; RefreshObjects(); Select(null); }
-    void PushUndo() { if (_world == null) return;if(_numericGesture){if(_numericUndoPushed)return;_numericUndoPushed=true;} _undo.Push((Snapshot(),_projectPath)); _redo.Clear(); }
-    void Undo() { if (_undo.Count == 0) return;string? poseId=_poseEditing?_selected?.Data.Id:null;string? objectId=_selected?.Data.Id,cameraId=_selectedCamera?.Id;ReleasePoseViewportDrag();ReleaseObjectGizmoDrag();EndArrangeDrag(); _redo.Push((Snapshot(),_projectPath)); var previous=_undo.Pop();Restore(previous.Document, "");_projectPath=previous.Path;RestoreInteractionSelection(objectId,cameraId);RestorePoseEditorSelection(poseId); Status("Undo."); }
-    void Redo() { if (_redo.Count == 0) return;string? poseId=_poseEditing?_selected?.Data.Id:null;string? objectId=_selected?.Data.Id,cameraId=_selectedCamera?.Id;ReleasePoseViewportDrag();ReleaseObjectGizmoDrag();EndArrangeDrag(); _undo.Push((Snapshot(),_projectPath)); var next=_redo.Pop();Restore(next.Document, "");_projectPath=next.Path;RestoreInteractionSelection(objectId,cameraId);RestorePoseEditorSelection(poseId); Status("Redo."); }
+    void PushUndo() { if (_world == null) return;if(_numericGesture){if(_numericUndoPushed)return;_numericUndoPushed=true;} _undo.Push((Snapshot(),_projectPath)); _redo.Clear();RefreshHistoryControls(); }
+    void Undo() { if (_undo.Count == 0||_exportBusy) return;StopHistoryPlayback();string? poseId=_poseEditing?_selected?.Data.Id:null;string? objectId=_selected?.Data.Id,cameraId=_selectedCamera?.Id;ReleasePoseViewportDrag();ReleaseObjectGizmoDrag();EndArrangeDrag(); _redo.Push((Snapshot(),_projectPath)); var previous=_undo.Pop();Restore(previous.Document, "");_projectPath=previous.Path;RestoreInteractionSelection(objectId,cameraId);RestorePoseEditorSelection(poseId); RefreshHistoryControls();Status("Undo."); }
+    void Redo() { if (_redo.Count == 0||_exportBusy) return;StopHistoryPlayback();string? poseId=_poseEditing?_selected?.Data.Id:null;string? objectId=_selected?.Data.Id,cameraId=_selectedCamera?.Id;ReleasePoseViewportDrag();ReleaseObjectGizmoDrag();EndArrangeDrag(); _undo.Push((Snapshot(),_projectPath)); var next=_redo.Pop();Restore(next.Document, "");_projectPath=next.Path;RestoreInteractionSelection(objectId,cameraId);RestorePoseEditorSelection(poseId); RefreshHistoryControls();Status("Redo."); }
     static float[] Array3(Vector3 v) => new[] { v.X, v.Y, v.Z };
     static Vector3 Vector(float[] v, Vector3 fallback = default) => v.Length == 3 && v.All(float.IsFinite) ? new Vector3(v[0], v[1], v[2]) : fallback;
     ObjectData SnapshotObject(Entry e) {var d=JsonSerializer.Deserialize<ObjectData>(JsonSerializer.Serialize(e.Data))!;d.ModelAnimation=e.Animation;return d;}
-    ProjectData Snapshot() => new() { Fps = _fps, Duration = _duration, Objects = _entries.Select(SnapshotObject).ToList(), CameraKeys = _shot.Keys.Select(k => new CameraData { Time = k.TimeSeconds, Position = Array3(k.Position), Quaternion = new[] { k.Rotation.X, k.Rotation.Y, k.Rotation.Z, k.Rotation.W }, FocalLength = k.FocalLengthMm }).ToList(), ShotPosition = Array3(_shot.GlobalPosition), ShotRotation = Array3(_shot.GlobalRotationDegrees), FocalLength = _shot.FocalLengthMm,Cameras=_cameras.Select(SnapshotCamera).ToList(),ActiveCameraId=ActiveCameraId,DirectionalLightEnabled=_lighting.DirectionalEnabled,SceneSettings=SnapshotSceneSettings() };
+    ProjectData Snapshot() => new() { Fps = _fps, Duration = _duration, Objects = _entries.Select(SnapshotObject).ToList(), CameraKeys = _shot.Keys.Select(k => new CameraData { Time = k.TimeSeconds, Position = Array3(k.Position), Quaternion = new[] { k.Rotation.X, k.Rotation.Y, k.Rotation.Z, k.Rotation.W }, FocalLength = k.FocalLengthMm }).ToList(), ShotPosition = Array3(_shot.GlobalPosition), ShotRotation = Array3(_shot.GlobalRotationDegrees), FocalLength = _shot.FocalLengthMm,Cameras=_cameras.Select(SnapshotCamera).ToList(),ActiveCameraId=ActiveCameraId,DirectionalLightEnabled=_lighting.DirectionalEnabled,SceneSettings=SnapshotSceneSettings(),Setup=SnapshotProjectSetup() };
     Entry RestoreObject(ObjectData data, string baseDirectory)
     {
         var copy = JsonSerializer.Deserialize<ObjectData>(JsonSerializer.Serialize(data))!;
@@ -426,12 +438,15 @@ public partial class PrevisApp : Control
     }
     void Restore(ProjectData data, string baseDirectory)
     {
-        if ((data.Version <1||data.Version>6) || data.Objects.Count > 500 || data.CameraKeys.Count > 10000||data.Cameras.Count>100) throw new InvalidDataException("Unsupported project version or project size.");
+        if ((data.Version <1||data.Version>7) || data.Objects.Count > 500 || data.CameraKeys.Count > 10000||data.Cameras.Count>100) throw new InvalidDataException("Unsupported project version or project size.");
         _loadingVersion=data.Version;ClearObjects(); _fps = Math.Clamp(data.Fps, 1, 120); _duration = Math.Clamp(data.Duration, 1, MaxSceneDuration); _scrub.MaxValue = _duration; _scrub.Step = 1.0 / _fps; _refreshing=true;_durationField.Value=_duration;for(int i=0;i<_fpsChoice.ItemCount;i++)if(_fpsChoice.GetItemId(i)==_fps)_fpsChoice.Select(i);_refreshing=false;
         foreach (var obj in data.Objects) RestoreObject(obj, baseDirectory);
         ClearCameras();if(data.Cameras.Count>0){foreach(var camera in data.Cameras)CreateCamera(camera.Name,camera,false);SetActiveCamera(data.Cameras.Any(c=>c.Id==data.ActiveCameraId)?data.ActiveCameraId:data.Cameras[0].Id);}else{var legacy=new CameraTrackData{Name="Camera A",Position=data.ShotPosition.Length==3?data.ShotPosition:new float[]{6,3,7},Rotation=data.ShotRotation,FocalLength=data.FocalLength,Keys=data.CameraKeys};CreateCamera("Camera A",legacy,true);}
-        _lighting.DirectionalEnabled=data.DirectionalLightEnabled;ApplySceneSettings(data.SceneSettings??new());RefreshCameraChoices();RefreshTimelineSize();
-        _loadingVersion=6;SetTime(_time); Select(_entries.FirstOrDefault());
+        _lighting.DirectionalEnabled=data.DirectionalLightEnabled;ApplySceneSettings(data.SceneSettings??new());
+        var setup=JsonSerializer.Deserialize<ProjectSetupData>(JsonSerializer.Serialize(data.Setup??new()))!;
+        if(!string.IsNullOrEmpty(setup.ReferencePath)&&!Path.IsPathRooted(setup.ReferencePath))setup.ReferencePath=Path.GetFullPath(Path.Combine(baseDirectory,setup.ReferencePath));
+        ApplyProjectSetup(setup);RefreshCameraChoices();RefreshTimelineSize();
+        _loadingVersion=7;SetTime(_time); Select(_entries.FirstOrDefault());
     }
     void SaveProject()
     {
@@ -442,6 +457,12 @@ public partial class PrevisApp : Control
     {
         if (!Path.HasExtension(path)) path += ".previs"; var document = Snapshot(); string baseDirectory = Path.GetDirectoryName(Path.GetFullPath(path))!;
         string assetFolder = Path.GetFileNameWithoutExtension(path) + ".assets"; string assetDirectory = Path.Combine(baseDirectory, assetFolder); Directory.CreateDirectory(assetDirectory);
+        if(!string.IsNullOrEmpty(document.Setup.ReferencePath))
+        {
+            string source=document.Setup.ReferencePath;string target=Path.Combine(assetDirectory,"camera-reference"+Path.GetExtension(source));
+            if(!Path.GetFullPath(source).Equals(Path.GetFullPath(target),StringComparison.OrdinalIgnoreCase))File.Copy(source,target,true);
+            document.Setup.ReferencePath=Path.Combine(assetFolder,Path.GetFileName(target)).Replace('\\','/');
+        }
         foreach (var item in document.Objects)
         {
             foreach(var clip in item.MotionClips){string target=Path.Combine(assetDirectory,item.Id+"_"+clip.Id+Path.GetExtension(clip.MotionPath));if(!Path.GetFullPath(clip.MotionPath).Equals(Path.GetFullPath(target),StringComparison.OrdinalIgnoreCase))File.Copy(clip.MotionPath,target,true);clip.MotionPath=Path.Combine(assetFolder,Path.GetFileName(target)).Replace('\\','/');}
@@ -459,15 +480,15 @@ public partial class PrevisApp : Control
         var document = JsonSerializer.Deserialize<ProjectData>(File.ReadAllText(path)) ?? throw new InvalidDataException("The project is empty."); var before = Snapshot();
         try { Restore(document, Path.GetDirectoryName(path)!); PushUndoSnapshot(before); _projectPath = path; Status("Opened " + Path.GetFileName(path)); } catch { Restore(before, ""); throw; }
     }
-    void PushUndoSnapshot(ProjectData document) { _undo.Push((document,_projectPath)); _redo.Clear(); }
-    void ExportFrame() => ChooseFile("Export "+ActiveCameraName+" frame (1920 × 1080)", FileDialog.FileModeEnum.SaveFile, new[] { "*.png ; PNG image" }, path => { _ = ExportFrameSafe(path); });
-    async Task ExportFrameSafe(string path) { try { await RenderFrame(path); Status("Exported clean 1920 × 1080 camera frame and shot metadata."); } catch(Exception ex) { Error(ex.Message); } }
+    void PushUndoSnapshot(ProjectData document) { _undo.Push((document,_projectPath)); _redo.Clear();RefreshHistoryControls(); }
+    void ExportFrame() => ChooseFile("Export "+ActiveCameraName+" frame ("+ProjectResolution.X+" × "+ProjectResolution.Y+")", FileDialog.FileModeEnum.SaveFile, new[] { "*.png ; PNG image" }, path => { _ = ExportFrameSafe(path); });
+    async Task ExportFrameSafe(string path) { try { await RenderFrame(path); Status("Exported clean "+ProjectResolution.X+" × "+ProjectResolution.Y+" camera frame and shot metadata."); } catch(Exception ex) { Error(ex.Message); } }
     async Task RenderFrame(string path)
     {
         if (!path.EndsWith(".png",StringComparison.OrdinalIgnoreCase))path+=".png";
-        var view = new SubViewport { Size = new Vector2I(1920,1080), World3D = _sceneViewport.World3D, RenderTargetUpdateMode = SubViewport.UpdateMode.Once, Msaa3D = Viewport.Msaa.Msaa4X };
+        var view = new SubViewport { Size = ProjectResolution, World3D = _sceneViewport.World3D, RenderTargetUpdateMode = SubViewport.UpdateMode.Once, Msaa3D = Viewport.Msaa.Msaa4X };
         AddChild(view); var camera = new Camera3D { Current=true,CullMask=1,Near=.05f,Far=500,KeepAspect=Camera3D.KeepAspectEnum.Width,Fov=_shot.ShotCamera.Fov };view.AddChild(camera);camera.GlobalTransform=_shot.ShotCamera.GlobalTransform;
-        try { for(int i=0;i<2;i++)await ToSignal(GetTree(),SceneTree.SignalName.ProcessFrame);await ToSignal(RenderingServer.Singleton,RenderingServer.SignalName.FramePostDraw);var image=view.GetTexture().GetImage();var error=image.SavePng(path);if(error!=Godot.Error.Ok)throw new IOException("The frame could not be saved: "+error); File.WriteAllText(Path.ChangeExtension(path,".json"),JsonSerializer.Serialize(new {application="Previs",version="0.10.0",frame=(int)Math.Round(_time*_fps),timeSeconds=_time,fps=_fps,width=1920,height=1080,activeCameraId=ActiveCameraId,camera=Snapshot()},_json)); }
+        try { for(int i=0;i<2;i++)await ToSignal(GetTree(),SceneTree.SignalName.ProcessFrame);await ToSignal(RenderingServer.Singleton,RenderingServer.SignalName.FramePostDraw);var image=view.GetTexture().GetImage();var error=image.SavePng(path);if(error!=Godot.Error.Ok)throw new IOException("The frame could not be saved: "+error); File.WriteAllText(Path.ChangeExtension(path,".json"),JsonSerializer.Serialize(new {application="Previs",version="0.11.0",frame=(int)Math.Round(_time*_fps),timeSeconds=_time,fps=_fps,width=ProjectResolution.X,height=ProjectResolution.Y,activeCameraId=ActiveCameraId,camera=Snapshot()},_json)); }
         finally { view.QueueFree(); }
     }
 
@@ -494,7 +515,7 @@ public partial class PrevisApp : Control
             AddCameraFromView(false);Require(_cameras.Count==4&&!_shot.Visible,"Added camera from current view does not occlude working view");RemoveActiveCamera();Require(_cameras.Count==3,"Removing camera retains other tracks");
             var before = Snapshot(); var extra = AddObject("box",new Vector3(2,0,2)); Select(extra); Require(_selected==extra,"Object selection"); Restore(before, ""); Require(_entries.Count==before.Objects.Count,"Scene restore");
             string output = ProjectSettings.GlobalizePath("res://output/smoke"); Directory.CreateDirectory(output); SaveTo(Path.Combine(output,"roundtrip.previs")); var data = JsonSerializer.Deserialize<ProjectData>(File.ReadAllText(_projectPath))!; Restore(data,output); Require(_entries.Count==before.Objects.Count,"Project roundtrip");
-            Require(data.Version==6&&_cameras.Count==3&&_entries[0].Data.MotionClips.Count==2&&_entries[0].Data.Path.Points.Count==3,"Version 6 roundtrip retains all cameras clips and path");
+            Require(data.Version==7&&_cameras.Count==3&&_entries[0].Data.MotionClips.Count==2&&_entries[0].Data.Path.Points.Count==3,"Version 7 roundtrip retains all cameras clips and path");
             Require(_entries[0].Data.Path.PointTimes.Count==3&&Math.Abs(_entries[0].Data.Path.PointTimes[1]-3)<.001,"Edited path key times survive save and reopen");
             var savedV2=Snapshot();var legacy=JsonSerializer.Deserialize<ProjectData>(JsonSerializer.Serialize(savedV2))!;legacy.Version=1;legacy.Cameras.Clear();legacy.ActiveCameraId="";foreach(var obj in legacy.Objects){if(obj.MotionClips.Count>0){var clip=obj.MotionClips[0];obj.MotionPath=clip.MotionPath;obj.MotionName=clip.Name;obj.SourceScale=clip.SourceScale;obj.MotionClips.Clear();}obj.Path=new();}Restore(legacy,"");Require(_cameras.Count==1&&_entries[0].Data.MotionClips.Count==1,"Version 1 scene migration");Restore(savedV2,"");
             var deletionEntry=_entries[0];deletionEntry.Data.MotionClips.Clear();RebuildTrack(deletionEntry);var deleted=Snapshot();Restore(deleted,"");Require(_entries[0].Data.MotionClips.Count==0,"Removing last clip survives restore");Restore(savedV2,"");
@@ -513,7 +534,7 @@ public partial class PrevisApp : Control
     partial class CameraFrameOverlay : Control
     {
         public PrevisApp App = null!;
-        public override void _Draw(){if(App==null||!App._pilot)return;float w=Size.X,h=Size.Y,target=16f/9;if(w/h<target){float bar=(h-w/target)/2;DrawRect(new Rect2(0,0,w,bar),Colors.Black);DrawRect(new Rect2(0,h-bar,w,bar),Colors.Black);}else{float bar=(w-h*target)/2;DrawRect(new Rect2(0,0,bar,h),Colors.Black);DrawRect(new Rect2(w-bar,0,bar,h),Colors.Black);}DrawString(ThemeDB.FallbackFont,new Vector2(12,20),App.ActiveCameraName.ToUpperInvariant()+" · 16:9",fontSize:12,modulate:Colors.White);}
+        public override void _Draw()=>DrawProjectFrame();
     }
 
 }

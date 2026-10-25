@@ -24,12 +24,16 @@ public static class ActorPathRuntime
         if (ValidPointTimes(path.PointTimes, curve.WaypointFractions.Length))
         {
             double localTime = double.IsNaN(seconds) ? double.NegativeInfinity : seconds - start;
-            return curve.AtDistance(TimedFraction(path.PointTimes, curve.WaypointFractions, localTime) * curve.TotalLength);
+            return curve.AtDistance(TimedFraction(path.PointTimes, curve.WaypointFractions, path.PointInterpolation,localTime) * curve.TotalLength);
         }
         double fraction;
         if (double.IsNaN(seconds) || seconds < start) fraction = 0;
         else if (!double.IsFinite(path.Duration) || path.Duration <= 0) fraction = 1;
         else fraction = Math.Clamp((seconds - start) / path.Duration, 0, 1);
+        // Missing authored arrival times still use each waypoint's constant-speed defaults,
+        // so a newly drawn path can be eased before its timing keys are edited.
+        if(curve.WaypointFractions.Length>1&&path.PointInterpolation?.Count>0)
+            fraction=TimedFraction(new List<double>(PointTimes(path)),curve.WaypointFractions,path.PointInterpolation,double.IsNaN(seconds)?double.NegativeInfinity:seconds-start);
         return curve.AtDistance(fraction * curve.TotalLength);
     }
 
@@ -67,7 +71,7 @@ public static class ActorPathRuntime
         return true;
     }
 
-    private static double TimedFraction(List<double> times, double[] fractions, double seconds)
+    private static double TimedFraction(List<double> times, double[] fractions, List<KeyInterpolationData>? interpolation,double seconds)
     {
         if (seconds < times[0]) return fractions[0];
         if (seconds >= times[^1]) return fractions[^1];
@@ -81,7 +85,7 @@ public static class ActorPathRuntime
             else high = middle;
         }
         int before = low - 1;
-        double alpha = (seconds - times[before]) / (times[low] - times[before]);
+        double alpha = KeyInterpolation.Weight(interpolation!=null&&before<interpolation.Count?interpolation[before]:null,(seconds - times[before]) / (times[low] - times[before]));
         return fractions[before] + (fractions[low] - fractions[before]) * alpha;
     }
 

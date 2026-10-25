@@ -90,7 +90,7 @@ public partial class PrevisApp
             Check(JsonSerializer.Serialize(entry.Data.MotionClips)==sourceMetadata&&JsonSerializer.Serialize(entry.Data.PoseCorrections)==correctionMetadata,"saving a pose leaves source clips and correction animation intact");
             var finalPose=CaptureLibraryBonePose(entry);var finalTransform=entry.Node.Transform;
             string directory=ProjectSettings.GlobalizePath("res://output/pose-corrections");Directory.CreateDirectory(directory);string project=Path.Combine(directory,"keyed-pose.previs");SaveTo(project);
-            var document=JsonSerializer.Deserialize<ProjectData>(File.ReadAllText(project))!;Check(document.Version==6&&document.Objects.Single(o=>o.Id==actorId).PoseCorrections.Bones.Count>=4,"project format 6 stores source-independent correction tracks alongside mocap");
+            var document=JsonSerializer.Deserialize<ProjectData>(File.ReadAllText(project))!;Check(document.Version==7&&document.Objects.Single(o=>o.Id==actorId).PoseCorrections.Bones.Count>=4,"project format 7 stores source-independent correction tracks alongside mocap");
             LoadProjectFromPath(project);SetTime(2);await Settle();entry=_entries.Single(e=>e.Data.Id==actorId);actor=(RiggedActor)entry.Node;
             Check(entry.Data.MotionClips.Count==2&&LibraryPoseEqual(finalPose,CaptureLibraryBonePose(entry))&&entry.Node.Transform.IsEqualApprox(finalTransform),"source blends, corrections, paths and final object keys survive portable save/reopen");
             var legacy=Snapshot();foreach(var item in legacy.Objects)item.PoseCorrections=new();

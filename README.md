@@ -1,10 +1,10 @@
-# Previs 0.10.0 — film shot planning
+# Previs 0.11.0 — film shot planning
 
 Previs is a desktop blockout tool for preparing movement and camera references for AI video. It uses Godot 4.7.2 .NET, C# and .NET 10. The application UI, dialogs and authored errors are English.
 
 ## Run
 
-The Windows portable output is `build/Previs-0.10.0-Windows/Previs.exe`. Keep Previs.exe, Previs.pck and data_Previs_windows_x86_64 together. The portable Windows build includes its runtime; using it does not require the Godot editor or .NET SDK.
+The Windows portable output is `build/Previs-0.11.0-Windows/Previs.exe`. Keep Previs.exe, Previs.pck and data_Previs_windows_x86_64 together. The portable Windows build includes its runtime; using it does not require the Godot editor or .NET SDK.
 
 For development, open project.godot with Godot 4.7.2 .NET. Local tools are in the ignored .tools directory. The existing run.ps1 starts the source project; build.ps1 -Test builds, runs source checks and exports Windows x64.
 
@@ -12,7 +12,7 @@ For development, open project.godot with Godot 4.7.2 .NET. Local tools are in th
 
 **Arrange** combines selection and movement. Click an object or camera, then drag its visible body or selection box across the horizontal plane at its current height. Ordinary dragging preserves its Y position. Hold **Shift** to use the complete XYZ transform gizmo: arrows move, cubes scale and rings rotate. There is no separate Select/Move workflow. Free vertical and spatial adjustments are available through the Shift handles. Each continuous drag is one Undo/Redo action.
 
-Use **Pose** on a selected human to edit its body at the playhead. The inspector shows the current task and a back control rather than separate Object/Motion/Path/Pose tabs. Selecting a clip, path key, camera or figure opens the relevant context.
+Use **Pose** on a selected human or rigged animal to edit its body at the playhead. The inspector shows the current task and a back control rather than separate Object/Motion/Path/Pose tabs. Selecting a clip, path key, camera or figure opens the relevant context.
 
 The left library has exactly five sections:
 
@@ -29,6 +29,36 @@ The SCENE object list remains available below the library; Scene is no longer a 
 Drag a model or object into the scene, adjust it with Arrange, and drag a compatible motion onto a figure when animation is needed. Dropping a motion onto empty space creates its matching figure. The application remains entirely English.
 
 Object **Transform** tracks remain collapsed by default. Expand one to see grouped XYZ **Position, Rotation and Scale**; cameras also expose **Focal length**. Outside Pose mode, **K** or **Key transform** captures object transforms. Drag timeline diamonds to retime them or right-click to remove them.
+
+## Project setup and camera references
+
+Use the **Project** button in the header to open **Project setup**. Aspect presets include **16:9, 9:16, 1:1, 4:3, 3:2 and 2.39:1**, with custom even pixel dimensions from 64 to 8192. Choose **12, 15, 24, 25, 30, 48, 50 or 60 fps**, or a custom whole rate from 1 to 120. The timeline fps control remains available and edits the same project frame rate. Frame times and key snapping follow it; changing fps preserves keys in seconds.
+
+The camera preview, main **Camera view** gate, camera-frustum drawings and framing presets use the selected aspect ratio. Clean still output uses the project dimensions; whole-shot export starts with that size and fps. Half/double export sizes retain the project ratio.
+
+**Load image / video…** adds a camera reference with opacity, Fit / Fill cropping and video time offset. It appears behind 3D objects in camera views only. The working perspective remains unchanged. Video is muted and seeks to scene time, including reverse scrubbing; its last frame holds beyond the end. Decoding uses the bundled FFmpeg asynchronously with a bounded in-memory frame cache. A cold seek can take a moment to display its matching guide frame. Reference pixels are never included in clean stills, MP4, PNG sequences, depth or pose passes.
+
+## Object paths and key timing
+
+Select any object, including a car or static prop, and choose **Draw path**. Click points and finish with Enter / **Finish**. Its path has arrival-time diamonds on the timeline; drag them to adjust travel timing. Key **Position, Rotation and Scale** using the inspector diamonds or K, then change frame and edit again. Manual corrections remain above path motion, so a turn or height adjustment can be combined with driving along the curve.
+
+Click a timeline diamond to open its **Interpolation** controls. Timing is attached to the selected key and affects the interval to the next key:
+
+| Mode | Behavior |
+| --- | --- |
+| Linear | Constant interpolation rate |
+| Ease in/out | Smooth acceleration and deceleration |
+| Curved | Editable Bezier timing graph; drag its two handles |
+| Stop | Zero speed and acceleration at both ends |
+| Hold | Keep the current value until the next key, then jump |
+
+The same timing data applies to object/camera transforms, camera lens keys, path arrivals and manual pose-correction keys. Group keys change all channels keyed at that time. Each curve-handle gesture is one Undo action. Timing controls stay hidden until a key is selected.
+
+## Animal pose adjustments
+
+Select a rigged animal and choose **Pose** or **Edit body pose**. The existing joint selector, Move / Rotate tools, Shift alternate tool and viewport handles work on its native skeleton. Moving a joint solves its ancestor chain with IK; descendants follow it. Root movement translates the skeleton. Rotation edits preserve the joint hierarchy. Head, spine, tail and limbs remain on the animal's own rig.
+
+Edits create additive correction keys above the blended native clips. Expand **Pose corrections** on the timeline to inspect and retime keyed joints. **Save to My poses** captures a reusable static pose for that exact prepared animal model; dropping it on empty ground creates that model. Incompatible rigs reject the drop. Applying a stored pose replaces source clips, while entering the editor or saving a pose keeps them. Native IK preserves rig segment lengths but does not impose veterinary joint limits or automatically pin all four feet.
 
 ## Model and motion libraries
 
@@ -133,7 +163,7 @@ Face travel direction can stay enabled while manual Rotation offsets or keys add
 
 Camera A/B/C appear in the SCENE list and can be picked through their visible bodies or helper lines. Arrange selects and drags cameras horizontally at their current height, using the same placement interaction as other objects. Hold Shift for constrained XYZ movement, scale and rotation. Existing camera animation channels remain editable.
 
-The **Cameras** library contains the camera list, framing presets and camera movement presets together. **Camera view** pilots the active shot; the 16:9 guide matches the preview. Position, Rotation, Scale and Lens are keyable. **Preview** can hide the small shot view to provide more inspector space.
+The **Cameras** library contains the camera list, framing presets and camera movement presets together. **Camera view** pilots the active shot; the project aspect-ratio guide matches the preview. Position, Rotation, Scale and Lens are keyable. **Preview** can hide the small shot view to provide more inspector space.
 
 ### Camera framing presets
 
@@ -171,13 +201,13 @@ A continuous numeric scrub creates one Undo action. After reaching a minimum or 
 
 ## Save, reopen and export
 
-Save creates a **version 6 .previs** project and neighbouring .assets folder containing used sources. Keep both together when moving a project. It preserves embedded static body poses and keyed additive pose corrections, motion tracks, paths and path keys, final transform channels, camera channels/lenses, active camera, scene display settings, per-object colors/labels and lighting. Version 1/2/3/4/5 scenes are accepted on opening. Older releases refuse version 6 instead of silently dropping its scene display or appearance data. Overwriting an existing project keeps the previous JSON as .previs.bak.
+Save creates a **version 7 .previs** project and neighbouring .assets folder containing used sources. Keep both together when moving a project. It preserves embedded static body poses and keyed additive pose corrections, motion tracks, paths and path keys, final transform channels, camera channels/lenses, active camera, scene display settings, per-object colors/labels, lighting, interpolation curves, native poses and project setup. Reference image/video sources are bundled in the neighbouring assets folder; decoded preview frames are disposable cache data. Version 1/2/3/4/5/6 scenes are accepted on opening. Older releases refuse version 7 instead of silently dropping its timing curves, project format, references or native poses. Overwriting an existing project keeps the previous JSON as .previs.bak.
 
 ### Export a complete shot
 
 Choose **Export shot** and confirm the active camera shown in the dialog. Export uses the **whole scene range**, sampled from time zero to the end of the shot with an end-exclusive frame interval. For example, an 8-second shot at 24 fps produces 192 frames at times 0 through 7.95833 seconds, and an 8-second video.
 
-Choose **MP4 + PNG sequences**, **MP4 videos**, or **PNG sequences**; select 1920×1080, 1280×720 or 3840×2160 and 24/25/30/60 fps. Color, Depth and Pose can be selected independently. A uniquely named output folder preserves earlier exports. The export dialog reports progress and offers cancellation. After success, failure or cancellation, the application restores the working time, selection, playback state and original scene materials.
+Choose **MP4 + PNG sequences**, **MP4 videos**, or **PNG sequences**; use the project resolution or half/double size at the same aspect ratio and choose the frame rate. Project fps is selected initially, including 12/15/24/25/30 fps. Color, Depth and Pose can be selected independently. A uniquely named output folder preserves earlier exports. The export dialog reports progress and offers cancellation. After success, failure or cancellation, the application restores the working time, selection, playback state and original scene materials.
 
 All selected passes use the **same evaluated frame time, active-camera transform and lens**. This includes mocap blends, keyed body corrections, paths, final object transforms, native animation and camera/lens keys. Editor grid, joint/transform handles, paths, camera helpers and selection outlines are excluded.
 
@@ -194,7 +224,7 @@ For **Pose**, choose **Human body · COCO-18** for prepared humanoids, or **All 
 
 MP4-only export removes its temporary PNG cache after encoding but retains pose JSON. PNG-only export creates no MP4 files. Cancellation records a `cancelled` manifest for any completed frames rather than marking an incomplete shot as successful. Encoding uses the separately bundled FFmpeg tools; no system installation or network access is needed during export. The tool provenance and license are recorded in [LICENSES/FFMPEG-NOTICE.md](LICENSES/FFMPEG-NOTICE.md).
 
-The existing **Export frame** action remains available for a clean **1920×1080 PNG from the active camera** with JSON shot data.
+The existing **Export frame** action remains available for a clean **PNG at the project resolution from the active camera** with JSON shot data.
 
 ## Navigation and lighting
 
@@ -203,7 +233,7 @@ The existing **Export frame** action remains available for a clean **1920×1080 
 - MMB pans; **Alt + MMB drag zooms** without a mouse wheel. Drag up to move closer and down to move farther away. Wheel zoom also remains available; F frames selection.
 - In Pose: **Shift** temporarily swaps Move/Rotate; **W/E** choose Move/Rotate explicitly. **Alt** is fine adjustment.
 - Space plays/pauses. K captures pose corrections in Pose mode, or the selected object transform in Arrange.
-- Ctrl+S/O saves/opens. Ctrl+D duplicates. Ctrl+Z/Y undoes/redoes. Delete removes selection.
+- Ctrl+S/O saves/opens. Ctrl+D duplicates. Ctrl+Z undoes. Ctrl+Shift+Z or Ctrl+Y redoes. The header also has visible Undo and Redo buttons, disabled when their history is empty. Delete removes selection.
 - Draw path uses LMB points, Enter to finish and Esc to cancel.
 
 The scene and library previews use neutral hemisphere illumination, with **no directional light enabled by default**. The Objects library includes an optional **Directional light** control. The project saves that choice.

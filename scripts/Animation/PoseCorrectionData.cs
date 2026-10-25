@@ -10,6 +10,7 @@ public sealed class PoseCorrectionKeyData
 {
     public string Id { get; set; } = Guid.NewGuid().ToString("N");
     public double Time { get; set; }
+    public KeyInterpolationData Interpolation { get; set; } = new();
     public float[] Rotation { get; set; } = new float[] { 0,0,0,1 };
 }
 
@@ -43,7 +44,7 @@ public static class PoseCorrectionRuntime
         if(after==null)return ReadRotation(before.Rotation);
         var from=ReadRotation(before.Rotation);var to=ReadRotation(after.Rotation);
         if(from.Dot(to)<0)to=new Quaternion(-to.X,-to.Y,-to.Z,-to.W);
-        float weight=(float)Math.Clamp((time-before.Time)/(after.Time-before.Time),0,1);
+        float weight=KeyInterpolation.Weight(before.Interpolation,(time-before.Time)/(after.Time-before.Time));
         return from.Slerp(to,weight).Normalized();
     }
 

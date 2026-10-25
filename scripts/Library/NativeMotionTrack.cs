@@ -9,14 +9,14 @@ namespace Previs;
 /// Sequences animations belonging to one imported rig. It samples and blends native local
 /// poses first; it never writes to the outer scene-object wrapper used by path and manual layers.
 /// </summary>
-public sealed class NativeMotionTrack
+public sealed partial class NativeMotionTrack
 {
     readonly Node _modelRoot;
     readonly AnimationPlayer _player;
     readonly Node3D[] _nodes;
     readonly Bone[] _bones;
     readonly int[] _roots;
-    readonly Pose _rest, _result, _incoming;
+    readonly Pose _rest, _result, _incoming, _source;
     readonly Quaternion _restRootRotation;
     Clip[] _clips = Array.Empty<Clip>();
     readonly Dictionary<string,Cycle> _cycles=new(StringComparer.Ordinal);
@@ -64,7 +64,7 @@ public sealed class NativeMotionTrack
         _player.PlaybackDefaultBlendTime=0;
         _player.Stop(true);
         foreach(var skeleton in skeletons)skeleton.ResetBonePoses();
-        _rest=new Pose(_bones.Length,_nodes.Length);_result=new Pose(_bones.Length,_nodes.Length);_incoming=new Pose(_bones.Length,_nodes.Length);
+        _rest=new Pose(_bones.Length,_nodes.Length);_result=new Pose(_bones.Length,_nodes.Length);_incoming=new Pose(_bones.Length,_nodes.Length);_source=new Pose(_bones.Length,_nodes.Length);
         Capture(_rest);_restRootRotation=_rest.Rotation[_roots[0]];
         foreach(string name in _player.GetAnimationList())if(name!="RESET")
         {
@@ -103,19 +103,21 @@ public sealed class NativeMotionTrack
         _clips=prepared.ToArray();Evaluate(0);
     }
 
-    public void Evaluate(double sceneSeconds, bool forceInPlace=false)
+    public void Evaluate(double sceneSeconds, bool forceInPlace=false, PoseCorrectionAnimationData? corrections=null, StaticPoseData? staticPose=null)
     {
         if(!double.IsFinite(sceneSeconds))sceneSeconds=0;
-        if(_clips.Length==0)Copy(_rest,_result);else EvaluatePrepared(_clips,sceneSeconds,_result);
+        if(_clips.Length==0){Copy(_rest,_result);ApplyStaticPose(_result,staticPose);}else EvaluatePrepared(_clips,sceneSeconds,_result);
         if(forceInPlace)
         {
             foreach(int root in _roots){_result.Position[root].X=_rest.Position[root].X;_result.Position[root].Z=_rest.Position[root].Z;}
             if(_nodes.Length>0){_result.NodePosition[0].X=_rest.NodePosition[0].X;_result.NodePosition[0].Z=_rest.NodePosition[0].Z;}
         }
-        Apply(_result);
+        Copy(_result,_source);ApplyCorrections(_result,corrections,sceneSeconds);Apply(_result);
         // Derive heading from the FINAL blended root, never by blending source headings separately.
-        Quaternion rootDelta=(_result.Rotation[_roots[0]]*_restRootRotation.Inverse()).Normalized();
-        Quaternion nodeDelta=_nodes.Length>0?(_result.NodeRotation[0]*_rest.NodeRotation[0].Inverse()).Normalized():Quaternion.Identity;
+        // Path alignment uses uncorrected source facing. A manual root turn is a
+        // correction above locomotion and must not be cancelled by path heading.
+        Quaternion rootDelta=(_source.Rotation[_roots[0]]*_restRootRotation.Inverse()).Normalized();
+        Quaternion nodeDelta=_nodes.Length>0?(_source.NodeRotation[0]*_rest.NodeRotation[0].Inverse()).Normalized():Quaternion.Identity;
         var forward=Horizontal(nodeDelta*rootDelta*Vector3.Back);
         AnimatedForward=forward.LengthSquared()>.000001f?forward.Normalized():Vector3.Back;
     }

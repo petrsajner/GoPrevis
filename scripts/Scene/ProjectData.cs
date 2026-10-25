@@ -5,7 +5,7 @@ namespace Previs;
 
 public sealed class ProjectData
 {
-    public int Version { get; set; } = 6;
+    public int Version { get; set; } = 7;
     public int Fps { get; set; } = 24;
     public double Duration { get; set; } = 8;
     public List<ObjectData> Objects { get; set; } = new();
@@ -17,6 +17,7 @@ public sealed class ProjectData
     public string ActiveCameraId { get; set; } = "";
     public bool DirectionalLightEnabled { get; set; }
     public SceneSettingsData SceneSettings { get; set; } = new();
+    public ProjectSetupData Setup { get; set; } = new();
 }
 
 public sealed class ObjectData
@@ -69,6 +70,7 @@ public sealed class ActorPathData
     public bool Enabled { get; set; }
     public List<float[]> Points { get; set; } = new();
     public List<double> PointTimes { get; set; } = new();
+    public List<KeyInterpolationData> PointInterpolation { get; set; } = new();
     public double Start { get; set; }
     public double Duration { get; set; } = 8;
     public bool OrientToPath { get; set; } = true;
@@ -93,6 +95,7 @@ public sealed class LensKeyData
     public string Id { get; set; } = Guid.NewGuid().ToString("N");
     public double Time { get; set; }
     public float Value { get; set; } = 35;
+    public KeyInterpolationData Interpolation { get; set; } = new();
 }
 
 public sealed class CameraData

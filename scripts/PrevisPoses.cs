@@ -21,7 +21,7 @@ public partial class PrevisApp
     {
         var filter=new OptionButton{FitToLongestItem=false,ClipText=true};filter.AddItem("All poses");foreach(string category in AllLibraryPoses.Select(p=>p.Category).Distinct().Order())filter.AddItem(category);_library.AddChild(filter);
         var search=new LineEdit{PlaceholderText="Search poses…",ClearButtonEnabled=true};_library.AddChild(search);
-        BuildPagedCards(()=>AllLibraryPoses.Where(p=>(filter.Selected==0||p.Category==filter.GetItemText(filter.Selected))&&(search.Text==""||(p.Name+" "+p.Description+" "+string.Join(' ',p.Tags)).Contains(search.Text,StringComparison.OrdinalIgnoreCase))).OrderBy(p=>p.Category switch{"My poses"=>0,"Sitting"=>1,"Floor sitting"=>2,"Kneeling"=>3,"Crouching"=>4,"Lying"=>5,_=>6}).Select(p=>new ContentCard(p.Id,p.Name,p.Category+" · static human pose\n"+p.Description+"\nDrop on a figure or empty ground. Replaces its motion clips.",null,null,p)).ToArray(),search,filter);
+        BuildPagedCards(()=>AllLibraryPoses.Where(p=>(filter.Selected==0||p.Category==filter.GetItemText(filter.Selected))&&(search.Text==""||(p.Name+" "+p.Description+" "+string.Join(' ',p.Tags)).Contains(search.Text,StringComparison.OrdinalIgnoreCase))).OrderBy(p=>p.Category switch{"My poses"=>0,"Sitting"=>1,"Floor sitting"=>2,"Kneeling"=>3,"Crouching"=>4,"Lying"=>5,_=>6}).Select(p=>new ContentCard(p.Id,p.Name,p.Category+(p.Pose.RigModelId==null?" · static human pose":" · static animal pose")+"\n"+p.Description+"\nDrop on a matching figure or empty ground. Replaces its motion clips.",null,null,p)).ToArray(),search,filter);
         var saved=new LineEdit{PlaceholderText="Name for saved pose",TooltipText="Capture the selected figure at the current frame, without changing its animation."};_library.AddChild(saved);
         _library.AddChild(Button("Save current pose",()=>{try{SaveCapturedPose(string.IsNullOrWhiteSpace(saved.Text)?DefaultPoseName():saved.Text);}catch(Exception ex){Error(ex.Message);}}));
         _library.AddChild(Button("Edit selected pose",StartPoseEditing));_library.AddChild(Button("Reset pose",ClearSelectedPose));
@@ -30,17 +30,19 @@ public partial class PrevisApp
     void DropPose(string id,Entry? target,Vector3 position)
     {
         var pose=FindLibraryPose(id)??throw new InvalidDataException("This pose is not available.");
-        if(target!=null&&target.Node is not RiggedActor){Status("Static human poses apply to prepared human figures.");return;}
-        PushUndo();if(target==null){target=AddCatalogModel(ContentCatalog.Find("human-average")!,position,false);target.Data.Name=pose.Name;}
+        if(target!=null&&!CompatiblePose(target,pose)){Status("This pose requires its matching human or animal rig.");return;}
+        PushUndo();if(target==null){target=AddCatalogModel(ContentCatalog.Find(pose.Pose.RigModelId??"human-average")!,position,false);target.Data.Name=pose.Name;}
         ApplyPoseToEntry(target,pose);Select(target);SetTime(_time);Status(pose.Name+" applied · static pose, no motion clip.");
     }
     void ApplyPoseToEntry(Entry target,LibraryPose pose)
     {
+        if(pose.Pose.RigModelId!=null){ApplyAnimalLibraryPose(target,pose);return;}
         if(target.Node is not RiggedActor actor)throw new InvalidDataException("Choose a prepared human figure for this pose.");
         actor.EndPoseCorrectionEdit();target.Data.PoseCorrections=new();actor.SetStaticPose(pose.Pose);target.Data.StaticPose=actor.GetStaticPoseSnapshot();target.Data.MotionClips.Clear();target.Data.MotionPath=null;target.Data.MotionName=null;_selectedClipId="";RebuildTrack(target);
     }
     void ClearSelectedPose()
     {
+        if(_selected?.NativeTrack!=null){PushUndo();_selected.Data.PoseCorrections=new();_selected.Data.StaticPose=null;SetTime(_time);Select(_selected);Status("Animal pose restored; motion clips remain active.");return;}
         if(_selected?.Node is not RiggedActor actor){Status("Select a human figure to reset its pose.");return;}
         PushUndo();actor.EndPoseCorrectionEdit();_selected.Data.PoseCorrections=new();_selected.Data.StaticPose=null;actor.SetStaticPose(null);SetTime(_time);Select(_selected);Status(_selected.Data.MotionClips.Count==0?"Standing pose restored.":"Stored pose cleared; motion clips remain active.");
     }
@@ -48,6 +50,7 @@ public partial class PrevisApp
     void CaptureSelectedPose(){try{SaveCapturedPose(DefaultPoseName());}catch(Exception ex){Error(ex.Message);}}
     LibraryPose SaveCapturedPose(string name)
     {
+        if(_selected?.NativeTrack!=null)return SaveAnimalCapturedPose(name);
         if(_selected?.Node is not RiggedActor actor)throw new InvalidDataException("Select a human figure to save its current pose.");
         _playing=false;_play.Text="▶";SetTime(_time);var snapshot=actor.CaptureEvaluatedPose(name);
         if(actor.MotionTrackClipCount>0&&_poseBaseSnapshots.TryGetValue(_selected.Data.Id,out var source)){snapshot.RootPosition[0]-=source.RootPosition[0];snapshot.RootPosition[2]-=source.RootPosition[2];}
@@ -57,6 +60,7 @@ public partial class PrevisApp
     }
     async Task RenderSavedPoseCover(LibraryPose pose)
     {
+        if(pose.Pose.RigModelId!=null){await RenderAnimalPoseCover(pose);return;}
         if(DisplayServer.GetName()=="headless")return;
         var view=new SubViewport{Size=new Vector2I(160,128),OwnWorld3D=true,RenderTargetUpdateMode=SubViewport.UpdateMode.Once};AddChild(view);
         try

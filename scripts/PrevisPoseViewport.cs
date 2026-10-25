@@ -48,7 +48,7 @@ public partial class PrevisApp
     partial class PoseViewportOverlay:Control
     {
         public PrevisApp App=null!;
-        public override void _Process(double delta){Visible=App._poseEditing&&App._selected?.Node is RiggedActor;if(Visible)QueueRedraw();}
+        public override void _Process(double delta){Visible=App._poseEditing&&(App._selected?.Node is RiggedActor||App._selected?.NativeTrack!=null);if(Visible)QueueRedraw();}
         public override void _Draw()=>App.DrawPoseViewport(this);
     }
     static bool PoseViewportCanMove(string bone)=>PoseCanMove(bone);
@@ -81,6 +81,7 @@ public partial class PrevisApp
 
     void DrawPoseViewport(Control canvas)
     {
+        if(_poseEditing&&_selected?.NativeTrack is {} native){DrawAnimalPoseViewport(canvas,native);return;}
         if(!_poseEditing||_selected?.Node is not RiggedActor actor)return;
         string highlighted=PoseViewportDragging?_poseViewportDragBone:_poseViewportHoverBone;
         if(highlighted!="")DrawPoseViewportBodyHighlight(canvas,actor,highlighted);
@@ -237,6 +238,7 @@ public partial class PrevisApp
     bool HandlePoseViewportInput(InputEvent input)
     {
         UpdatePoseModifierState(input);
+        if(_poseEditing&&_selected?.NativeTrack is {} native)return HandleAnimalPoseViewportInput(input,native);
         if(!_poseEditing||_selected?.Node is not RiggedActor actor){ReleasePoseViewportDrag();return false;}
         if(input is InputEventMouseButton {ButtonIndex:MouseButton.Left} button)
         {

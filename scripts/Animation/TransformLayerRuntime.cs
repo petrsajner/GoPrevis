@@ -73,7 +73,7 @@ public static class TransformLayerRuntime
         }
         if (before == null) return after == null ? fallback : Value(after);
         if (after == null) return Value(before);
-        float weight = (float)Math.Clamp((time - before.Time) / (after.Time - before.Time), 0, 1);
+        float weight = KeyInterpolation.Weight(before.Interpolation,(time - before.Time) / (after.Time - before.Time));
         Vector3 from = Value(before), to = Value(after);
         if (!angle) return from.Lerp(to, weight);
         return new Vector3(

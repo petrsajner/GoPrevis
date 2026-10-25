@@ -59,7 +59,7 @@ public partial class PrevisApp
         {
             float aspect=_sceneViewport.Size.X/(float)Math.Max(1,_sceneViewport.Size.Y);fov=Mathf.RadToDeg(2*Mathf.Atan(Mathf.Tan(Mathf.DegToRad(fov)*.5f)*aspect));
         }
-        PushUndo();_playing=false;_play.Text="▶";var camera=_cameras.First(c=>c.Rig==_shot);camera.Rig.ClearKeys();CameraFramingCatalog.Apply(camera.Rig,preset.Id,subject,working,fov);SyncCameraFromRig(camera);SetTime(_time);SelectCamera(camera);UpdatePreview();
+        PushUndo();_playing=false;_play.Text="▶";var camera=_cameras.First(c=>c.Rig==_shot);camera.Rig.ClearKeys();CameraFramingCatalog.Apply(camera.Rig,preset.Id,subject,working,fov,ProjectAspect);SyncCameraFromRig(camera);SetTime(_time);SelectCamera(camera);UpdatePreview();
         Status(preset.Name+" framing applied to "+camera.Name+".");
     }
     FramingSubject CameraFramingSubject()

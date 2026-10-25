@@ -44,7 +44,7 @@ public partial class PrevisApp
     float EvaluateLens(CameraEntry camera,double time)
     {
         var keys=camera.LensKeys.OrderBy(k=>k.Time).ToList();if(keys.Count==0)return camera.BaseLens;if(time<=keys[0].Time)return keys[0].Value;
-        for(int i=1;i<keys.Count;i++)if(time<=keys[i].Time){var a=keys[i-1];var b=keys[i];return Mathf.Lerp(a.Value,b.Value,(float)((time-a.Time)/Math.Max(.00001,b.Time-a.Time)));}return keys[^1].Value;
+        for(int i=1;i<keys.Count;i++)if(time<=keys[i].Time){var a=keys[i-1];var b=keys[i];return Mathf.Lerp(a.Value,b.Value,KeyInterpolation.Weight(a.Interpolation,(time-a.Time)/Math.Max(.00001,b.Time-a.Time)));}return keys[^1].Value;
     }
     void SyncCameraFromRig(CameraEntry camera)
     {
@@ -77,7 +77,7 @@ public partial class PrevisApp
             pair.Value.Text=keyed?"◆":"◇";pair.Value.Disabled=animation==null;
         }
         foreach(var pair in _parameterLabels){bool offset=_selectedCamera==null&&_selected?.Data.Path.Enabled==true;pair.Value.Text=pair.Key+(offset&&pair.Key!="Scale"?" offset":"")+(pair.Key=="Position"?" (m)":pair.Key=="Rotation"?" (°)":"");}
-        _refreshing=old;
+        _refreshing=old;RefreshKeyInterpolationInspector();
     }
     void StorePilotedCameraPose()
     {
@@ -102,7 +102,7 @@ public partial class PrevisApp
             else if(_selected is {} entry){var list=TransformLayerRuntime.Channel(entry.Data.TransformAnimation,channel);var correction=TransformLayerRuntime.EvaluateVector(list,_time,channel=="Scale"?Vector3.One:Vector3.Zero,channel=="Rotation");TransformLayerRuntime.Upsert(list,_time,correction);}
         }
         if(_selectedCamera is {} cam&&(group=="All"||group=="Lens"))UpsertLens(cam,_time,cam.Rig.FocalLengthMm);
-        _timeline.QueueRedraw();UpdateTransformFields();Status(group+" key added at "+_time.ToString("0.###")+" s.");
+        _timeline.QueueRedraw();if(_selected!=null)_timeline.ExpandObject(_selected.Data.Id);UpdateTransformFields();SelectKeyInterpolation("Transform",_selected,_selectedCamera,group,_time);Status(group+" key added at "+_time.ToString("0.###")+" s.");
     }
     void UpsertLens(CameraEntry camera,double time,float value){var existing=camera.LensKeys.FirstOrDefault(k=>Math.Abs(k.Time-time)<.00001);if(existing==null)camera.LensKeys.Add(new LensKeyData{Time=time,Value=value});else existing.Value=value;}
     void ChangeCameraLens(double value)
@@ -110,7 +110,7 @@ public partial class PrevisApp
         if(_refreshing||_shot==null)return;var camera=_cameras.FirstOrDefault(c=>c.Rig==_shot);if(camera==null)return;PushUndo();EnsureCameraAnimation(camera);if(_autoKey||camera.LensKeys.Count>0)UpsertLens(camera,_time,(float)value);else camera.BaseLens=(float)value;SetTime(_time);
     }
     void SelectTransformTimeline(Entry? entry,CameraEntry? camera,string channel,double time)
-    {if(camera!=null)SelectCamera(camera);else Select(entry);SetTime(time);ShowInspectorSection("Object");}
+    {if(camera!=null)SelectCamera(camera);else Select(entry);SetTime(time);ShowInspectorSection("Object");SelectKeyInterpolation("Transform",entry,camera,channel,time);}
     void RetimeTransform(Entry? entry,CameraEntry? camera,string channel,double from,double to)
     {
         var animation=camera?.Animation??entry?.Data.TransformAnimation;if(animation==null)return;

@@ -37,8 +37,8 @@ public partial class PrevisApp
         _poseMoveButton=Button("Move",()=>SetPoseTool("Move"),true);_poseRotateButton=Button("Rotate",()=>SetPoseTool("Rotate"),true);_posePanel.AddChild(Row(_poseMoveButton,_poseRotateButton));
         _poseKeyJoint=Button("◇ Key joint",()=>CapturePoseCorrectionKey(_poseBone));_poseKeyAll=Button("◆ Key pose",()=>CapturePoseCorrectionKey("All"));_posePanel.AddChild(Row(_poseKeyJoint,_poseKeyAll));
         var precise=Button("Precise values",()=>_posePreciseBox.Visible=!_posePreciseBox.Visible,true);_posePanel.AddChild(precise);_posePreciseBox=new VBoxContainer{Visible=false};_posePanel.AddChild(_posePreciseBox);
-        _posePreciseBox.AddChild(Text("Rotation (local degrees)",11,true));_posePreciseBox.AddChild(PoseVectorFields(_poseRotationFields,-180,180,.1,axis=>EditPoseNumber(()=>{var value=((RiggedActor)_selected!.Node).GetPoseBoneRotationDegrees(_poseBone);value[axis]=(float)_poseRotationFields[axis].Value;UpdatePoseBoneRotation(value);})));
-        _posePositionLabel=Text("Target position (world metres)",11,true);_posePreciseBox.AddChild(_posePositionLabel);_posePreciseBox.AddChild(PoseVectorFields(_posePositionFields,-1000,1000,.001,axis=>EditPoseNumber(()=>{var actor=(RiggedActor)_selected!.Node;var value=actor.GlobalTransform*actor.GetPoseJointPosition(_poseBone);value[axis]=(float)_posePositionFields[axis].Value;UpdatePoseEffectorWorld(_poseBone,value);})));
+        _posePreciseBox.AddChild(Text("Rotation (local degrees)",11,true));_posePreciseBox.AddChild(PoseVectorFields(_poseRotationFields,-180,180,.1,axis=>EditPoseNumber(()=>{var value=SelectedPoseRotation();value[axis]=(float)_poseRotationFields[axis].Value;UpdatePoseBoneRotation(value);})));
+        _posePositionLabel=Text("Target position (world metres)",11,true);_posePreciseBox.AddChild(_posePositionLabel);_posePreciseBox.AddChild(PoseVectorFields(_posePositionFields,-1000,1000,.001,axis=>EditPoseNumber(()=>{var value=SelectedPoseWorldPosition();value[axis]=(float)_posePositionFields[axis].Value;UpdatePoseEffectorWorld(_poseBone,value);})));
         _poseHipHeight=Spin(-1000,1000,.001,1);_poseHipHeight.ValueChanged+=v=>EditPoseNumber(()=>{var actor=(RiggedActor)_selected!.Node;var world=actor.GlobalTransform*actor.GetPoseJointPosition("Hips");world.Y=(float)v;UpdatePoseEffectorWorld("Hips",world);});_posePreciseBox.AddChild(Row(Text("Hip height (m)",11,true),_poseHipHeight));
         _poseKeepFeet=new CheckButton{Text="Keep feet in place",TooltipText="Keep both feet planted when moving the pelvis.",ButtonPressed=true};_poseKeepFeet.Toggled+=v=>_posePinFeet=v;_posePanel.AddChild(_poseKeepFeet);
         _posePanel.AddChild(new HSeparator());_poseSaveName=new LineEdit{PlaceholderText="Pose name"};_posePanel.AddChild(_poseSaveName);
@@ -65,6 +65,7 @@ public partial class PrevisApp
     static PoseCorrectionAnimationData CopyPoseCorrections(PoseCorrectionAnimationData data)=>JsonSerializer.Deserialize<PoseCorrectionAnimationData>(JsonSerializer.Serialize(data))!;
     void StartPoseEditing()
     {
+        if(_selected?.NativeTrack!=null){StartAnimalPoseEditing();return;}
         if(_selected?.Node is not RiggedActor actor){Status("Select a human figure to edit pose corrections.");return;}
         _playing=false;_play.Text="▶";SetTime(_time);
         if(!_poseEditing||_poseSelectionId!=_selected.Data.Id)
@@ -84,20 +85,24 @@ public partial class PrevisApp
     }
     void BeginPoseGesture()
     {
+        if(_selected?.NativeTrack!=null){BeginAnimalPoseGesture();return;}
         if(_poseGestureActive)return;if(!_poseEditing)StartPoseEditing();if(!_poseEditing||_selected?.Node is not RiggedActor actor)return;
         _playing=false;_play.Text="▶";PushUndo();SetTime(_time);_poseGestureActive=true;_poseGestureActor=actor;actor.BeginPoseCorrectionEdit();_poseGestureInitial=actor.GetPoseCorrectionEditSnapshot();_poseGestureBones.Clear();_poseGestureRoot=false;
     }
     void EndPoseGesture()
     {
+        _animalGestureTrack=null;
         _poseGestureActor?.EndPoseCorrectionEdit();_poseGestureActor=null;_poseGestureInitial=null;_poseGestureActive=false;_poseGestureBones.Clear();_poseGestureRoot=false;UpdatePoseInspector();
     }
     void SelectPoseBone(string bone)
     {
+        if(_selected?.NativeTrack is {} native){if(!native.PoseBoneNames.Contains(bone))return;if(_poseBone!=bone){_poseBone=bone;_poseTool=native.IsEndJoint(bone)?"Move":"Rotate";}UpdatePoseInspector();return;}
         if(_selected?.Node is not RiggedActor actor||!actor.PoseBoneNames.Contains(bone))return;
         if(_poseBone!=bone){_poseBone=bone;_poseTool=DefaultPoseTool(bone);}UpdatePoseInspector();
     }
     void UpdatePoseEffectorWorld(string bone,Vector3 world)
     {
+        if(_selected?.NativeTrack is {} native){native.MovePoseJointWorld(bone,world);CommitAnimalPose();return;}
         if(_selected?.Node is not RiggedActor actor||!PoseCanMove(bone))return;
         var local=actor.GlobalTransform.AffineInverse()*world;
         if(bone=="Hips")actor.MovePosePelvis(actor.GetPoseRootOffset()+local-actor.GetPoseJointPosition("Hips"),_posePinFeet);else actor.MovePoseJoint(bone,local);
@@ -105,6 +110,7 @@ public partial class PrevisApp
     }
     void UpdatePoseBoneRotation(Vector3 degrees)
     {
+        if(_selected?.NativeTrack is {} native){native.SetPoseBoneRotationDegrees(_poseBone,degrees);CommitAnimalPose();return;}
         if(_selected?.Node is not RiggedActor actor)return;actor.SetPoseBoneRotationDegrees(_poseBone,degrees);CommitEditedPose();
     }
     void CommitEditedPose()
@@ -118,6 +124,7 @@ public partial class PrevisApp
     }
     void CapturePoseCorrectionKey(string channel)
     {
+        if(_selected?.NativeTrack!=null){CaptureAnimalPoseCorrectionKey(channel);return;}
         if(_selected?.Node is not RiggedActor actor)return;ReleasePoseViewportDrag();EndPoseGesture();SetTime(_time);
         if(!_poseBaseSnapshots.TryGetValue(_selected.Data.Id,out var source))return;PushUndo();var displayed=actor.CaptureEvaluatedPose();
         var bones=channel=="All"?actor.PoseBoneNames:channel=="Root"?Array.Empty<string>():new[]{channel};
@@ -131,29 +138,32 @@ public partial class PrevisApp
     }
     void EditPoseNumber(Action update)
     {
-        if(_refreshing||!_poseEditing||_selected?.Node is not RiggedActor)return;
+        if(_refreshing||!_poseEditing||(_selected?.Node is not RiggedActor&&_selected?.NativeTrack==null))return;
         bool own=!_poseGestureActive;try{if(own)BeginPoseGesture();update();}catch(Exception ex){Error(ex.Message);}finally{if(own)EndPoseGesture();}
     }
     void ResetManualPoseEdits()
     {
-        if(_selected?.Node is not RiggedActor||_poseCorrectionBaseline==null)return;ReleasePoseViewportDrag();EndPoseGesture();PushUndo();_selected.Data.PoseCorrections=CopyPoseCorrections(_poseCorrectionBaseline);SetTime(_time);RefreshTimelineSize();
+        if((_selected?.Node is not RiggedActor&&_selected?.NativeTrack==null)||_poseCorrectionBaseline==null)return;ReleasePoseViewportDrag();EndPoseGesture();PushUndo();_selected!.Data.PoseCorrections=CopyPoseCorrections(_poseCorrectionBaseline);SetTime(_time);RefreshTimelineSize();
     }
     void SyncPoseEditorSelection()
     {
-        if(_poseEditing&&(_selected?.Data.Id!=_poseSelectionId||_selected?.Node is not RiggedActor)){ReleasePoseViewportDrag();EndPoseGesture();_poseEditing=false;_poseCorrectionBaseline=null;}
+        if(_poseEditing&&(_selected?.Data.Id!=_poseSelectionId||(_selected?.Node is not RiggedActor&&_selected?.NativeTrack==null))){ReleasePoseViewportDrag();EndPoseGesture();_poseEditing=false;_poseCorrectionBaseline=null;}
         UpdatePoseInspector();
     }
     void RestorePoseEditorSelection(string? id)
     {
-        if(id==null)return;var entry=_entries.FirstOrDefault(e=>e.Data.Id==id&&e.Node is RiggedActor);if(entry==null)return;Select(entry);_poseEditing=true;_poseSelectionId=id;_poseCorrectionBaseline=CopyPoseCorrections(entry.Data.PoseCorrections);OpenPoseInspector();
+        if(id==null)return;var entry=_entries.FirstOrDefault(e=>e.Data.Id==id&&(e.Node is RiggedActor||e.NativeTrack!=null));if(entry==null)return;Select(entry);_poseEditing=true;_poseSelectionId=id;_poseCorrectionBaseline=CopyPoseCorrections(entry.Data.PoseCorrections);OpenPoseInspector();
     }
     void UpdatePoseInspector()
     {
+        if(_selected?.NativeTrack!=null&&_posePanel!=null){UpdateAnimalPoseInspector();return;}
         if(_posePanel==null)return;bool old=_refreshing;_refreshing=true;
         var actor=_selected?.Node as RiggedActor;bool human=actor!=null;
+        _poseHipHeight.GetParent<Control>().Visible=true;_poseKeepFeet.Visible=true;
+        if(human&&!actor!.PoseBoneNames.Contains(_poseBone))_poseBone="Head";
         _poseToolbarButton.Disabled=!human;_poseToolbarButton.ButtonPressed=_poseEditing&&human;_editPoseShortcut.Visible=human&&_inspectorSection=="Object";
         _poseStartButton.Visible=human&&!_poseEditing;_poseEditInfo.Text=!human?"Select a prepared human figure.":_poseEditing?"Edits add correction keys at the playhead. Existing motion stays active.":actor!.MotionTrackClipCount>0?"Adjust this motion with an additive pose correction.":"Edit this figure's head, body, arms and legs.";
-        if(human&&_poseJointChoice.ItemCount!=actor!.PoseBoneNames.Count){_poseJointChoice.Clear();foreach(string bone in actor.PoseBoneNames){_poseJointChoice.AddItem(PoseBoneLabel(bone));_poseJointChoice.SetItemMetadata(_poseJointChoice.ItemCount-1,bone);}}
+        if(human&&(_poseJointChoice.ItemCount!=actor!.PoseBoneNames.Count||Enumerable.Range(0,_poseJointChoice.ItemCount).Any(i=>_poseJointChoice.GetItemMetadata(i).AsString()!=actor.PoseBoneNames[i]))){_poseJointChoice.Clear();foreach(string bone in actor.PoseBoneNames){_poseJointChoice.AddItem(PoseBoneLabel(bone));_poseJointChoice.SetItemMetadata(_poseJointChoice.ItemCount-1,bone);}}
         Vector3 rotation=Vector3.Zero,position=Vector3.Zero;float hip=0;
         if(human)
         {

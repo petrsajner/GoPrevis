@@ -8,6 +8,7 @@ public sealed class TransformKeyData
 {
     public string Id { get; set; } = Guid.NewGuid().ToString("N");
     public double Time { get; set; }
+    public KeyInterpolationData Interpolation { get; set; } = new();
     public float[] Value { get; set; } = new float[3];
 }
 

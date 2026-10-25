@@ -31,6 +31,8 @@ public partial class PrevisApp
         if(_exportBusy)return;
         if(_shotExportDialog==null)BuildShotExportDialog();
         _shotExportName.Text=string.IsNullOrEmpty(_projectPath)?"Shot":Path.GetFileNameWithoutExtension(_projectPath);
+        _shotExportResolution.SetItemText(0,"Project · "+ProjectResolution.X+" × "+ProjectResolution.Y);_shotExportResolution.Select(0);
+        EnsureOptionId(_shotExportFps,_fps,_fps+" fps");
         _shotExportFps.Select(Enumerable.Range(0,_shotExportFps.ItemCount).FirstOrDefault(i=>_shotExportFps.GetItemId(i)==_fps));
         _shotExportPoseLayout.Select(_entries.Any(e=>e.NativeTrack!=null)?1:0);
         UpdateShotExportSummary();_shotExportDialog!.Size=new Vector2I(550,590);
@@ -48,10 +50,10 @@ public partial class PrevisApp
         _shotExportSummary=Text("",12,true);_shotExportSummary.AutowrapMode=TextServer.AutowrapMode.WordSmart;box.AddChild(_shotExportSummary);
         _shotExportName=new LineEdit{PlaceholderText="Shot name"};box.AddChild(_shotExportName);
         _shotExportFolder=new LineEdit{Text=Path.Combine(OS.GetSystemDir(OS.SystemDir.Documents),"Previs Exports"),SizeFlagsHorizontal=SizeFlags.ExpandFill};box.AddChild(Row(_shotExportFolder,Button("Browse…",()=>_shotExportFolderDialog!.PopupCentered(new Vector2I(900,600)))));
-        _shotExportFolderDialog=new FileDialog{Title="Choose export folder",Access=FileDialog.AccessEnum.Filesystem,FileMode=FileDialog.FileModeEnum.OpenDir,UseNativeDialog=false};_shotExportFolderDialog.DirSelected+=path=>_shotExportFolder.Text=path;AddChild(_shotExportFolderDialog);
+        _shotExportFolderDialog=new FileDialog{Access=FileDialog.AccessEnum.Filesystem,FileMode=FileDialog.FileModeEnum.OpenDir,UseNativeDialog=false,Title="Choose export folder"};_shotExportFolderDialog.DirSelected+=path=>_shotExportFolder.Text=path;_shotExportDialog.AddChild(_shotExportFolderDialog);
         _shotExportFormat=new OptionButton{FitToLongestItem=false};foreach(string format in new[]{"MP4 + PNG sequences","MP4 videos","PNG sequences"})_shotExportFormat.AddItem(format);box.AddChild(_shotExportFormat);
-        _shotExportResolution=new OptionButton{SizeFlagsHorizontal=SizeFlags.ExpandFill};foreach(string resolution in new[]{"1920 × 1080","1280 × 720","3840 × 2160"})_shotExportResolution.AddItem(resolution);
-        _shotExportFps=new OptionButton();foreach(int fps in new[]{24,25,30,60})_shotExportFps.AddItem(fps+" fps",fps);box.AddChild(Row(_shotExportResolution,_shotExportFps));
+        _shotExportResolution=new OptionButton{SizeFlagsHorizontal=SizeFlags.ExpandFill};foreach(string resolution in new[]{"Project resolution","Half resolution","Double resolution"})_shotExportResolution.AddItem(resolution);
+        _shotExportFps=new OptionButton();foreach(int fps in ProjectFrameRates)_shotExportFps.AddItem(fps+" fps",fps);box.AddChild(Row(_shotExportResolution,_shotExportFps));
         _shotExportColor=new CheckButton{Text="Color",ButtonPressed=true};_shotExportDepth=new CheckButton{Text="Depth",ButtonPressed=true};_shotExportPose=new CheckButton{Text="Pose",ButtonPressed=true};box.AddChild(Row(_shotExportColor,_shotExportDepth,_shotExportPose));
         _shotExportPoseLayout=new OptionButton{FitToLongestItem=false};_shotExportPoseLayout.AddItem("Human body · COCO-18");_shotExportPoseLayout.AddItem("All scene rigs · humans + animals");box.AddChild(_shotExportPoseLayout);
         var poseNote=Text("Animal poses use their native skeleton topology. Human facial anchors are inferred from the head rig.",11,true);poseNote.AutowrapMode=TextServer.AutowrapMode.WordSmart;box.AddChild(poseNote);
@@ -66,9 +68,16 @@ public partial class PrevisApp
     {
         if(_shotExportDialog==null)return;int fps=_shotExportFps.GetSelectedId();_shotExportSummary.Text=ActiveCameraName+" · "+_duration.ToString("0.###")+" s · "+(int)Math.Ceiling(_duration*fps-1e-8)+" frames";
     }
+    Vector2I ShotExportDimensions(int choice)
+    {
+        if(choice==0)return ProjectResolution;
+        int a=ProjectResolution.X,b=ProjectResolution.Y;while(b!=0){int remainder=a%b;a=b;b=remainder;}
+        int units=Math.Max(2,2*(int)Math.Round(a*(choice==1?.5:2)/2));
+        return new Vector2I(ProjectResolution.X/a*units,ProjectResolution.Y/a*units);
+    }
     async void StartShotExportFromDialog()
     {
-        var dimensions=_shotExportResolution.Selected switch{1=>new Vector2I(1280,720),2=>new Vector2I(3840,2160),_=>new Vector2I(1920,1080)};
+        var dimensions=ShotExportDimensions(_shotExportResolution.Selected);
         string name=_shotExportName.Text.Trim();foreach(char invalid in Path.GetInvalidFileNameChars())name=name.Replace(invalid,'_');if(string.IsNullOrWhiteSpace(name))name="Shot";
         var settings=new ShotExportSettings{OutputDirectory=Path.Combine(_shotExportFolder.Text,name+"-"+Guid.NewGuid().ToString("N")[..6]),Width=dimensions.X,Height=dimensions.Y,Fps=_shotExportFps.GetSelectedId(),EndSeconds=_duration,ExportMp4=_shotExportFormat.Selected!=2,ExportPngSequence=_shotExportFormat.Selected!=1,IncludeColor=_shotExportColor.ButtonPressed,IncludeDepth=_shotExportDepth.ButtonPressed,IncludePose=_shotExportPose.ButtonPressed,IncludeNativeRigs=_shotExportPoseLayout.Selected==1,DepthNear=(float)_shotExportDepthNear.Value,DepthFar=(float)_shotExportDepthFar.Value};
         try
@@ -111,7 +120,7 @@ public partial class PrevisApp
         var frameDirectories=passes.ToDictionary(pass=>pass,pass=>Path.Combine(settings.ExportPngSequence?directory:scratch,pass));foreach(var folder in frameDirectories.Values)Directory.CreateDirectory(folder);
         string poseAnnotations=Path.Combine(directory,"pose");if(settings.IncludePose)Directory.CreateDirectory(poseAnnotations);
         var frames=new List<object>();var videos=new Dictionary<string,VideoProbeInfo>();string status="rendering";string? failure=null;SubViewport? view=null;ControlPassRenderer? controls=null;
-        void WriteManifest()=>File.WriteAllText(manifestPath,JsonSerializer.Serialize(new{application="Previs",version="0.10.0",status,failure,createdUtc=DateTime.UtcNow,camera=new{id=cameraId,name=cameraName},settings,frameCount=settings.FrameCount,completedFrames=frames.Count,mediaDurationSeconds=settings.MediaDuration,timeSampling="start + frameIndex / fps; end exclusive",depthEncoding="linear camera-Z: white near, black far/background; RGB8",poseFormat=settings.IncludeNativeRigs?"human COCO-18 + native animal rigs":"human COCO-18 body",editorHelpersExcluded=true,frames,videos},_json));
+        void WriteManifest()=>File.WriteAllText(manifestPath,JsonSerializer.Serialize(new{application="Previs",version="0.11.0",status,failure,createdUtc=DateTime.UtcNow,camera=new{id=cameraId,name=cameraName},settings,frameCount=settings.FrameCount,completedFrames=frames.Count,mediaDurationSeconds=settings.MediaDuration,timeSampling="start + frameIndex / fps; end exclusive",depthEncoding="linear camera-Z: white near, black far/background; RGB8",poseFormat=settings.IncludeNativeRigs?"human COCO-18 + native animal rigs":"human COCO-18 body",editorHelpersExcluded=true,frames,videos},_json));
         _exportBusy=true;_playing=false;_play.Text="▶";
         try
         {

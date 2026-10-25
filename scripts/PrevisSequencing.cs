@@ -90,6 +90,7 @@ public partial class PrevisApp
 
     void BuildSequenceInspector()
     {
+        BuildKeyInterpolationInspector();
         _motionHeader=Text("MOTION CLIPS",12,true);_inspector.AddChild(_motionHeader);
         _clipInfo=Text("Select a human actor to append motion clips.",11,true);_clipInfo.AutowrapMode=TextServer.AutowrapMode.WordSmart;_inspector.AddChild(_clipInfo);
         _clipChoice=new OptionButton{FitToLongestItem=false,ClipText=true};_clipChoice.ItemSelected+=i=>{if(_refreshing||_selected==null||i<0||i>=_selected.Data.MotionClips.Count)return;_selectedClipId=_selected.Data.MotionClips[(int)i].Id;RefreshSequenceInspector();_timeline.QueueRedraw();};_inspector.AddChild(_clipChoice);
@@ -107,7 +108,7 @@ public partial class PrevisApp
         _sourceScale.ValueChanged+=v=>EditClip(c=>c.SourceScale=(float)v);
         _loop=new CheckButton {Text="Loop source"};_inPlace=new CheckButton {Text="In-place clip"};_loop.Toggled+=v=>{if(SelectedClip!=null)EditClip(c=>c.Loop=v);else if(!_refreshing&&_selected!=null){_selected.Data.Loop=v;SetTime(_time);}};_inPlace.Toggled+=v=>EditClip(c=>c.InPlace=v);_inspector.AddChild(_loop);_inspector.AddChild(_inPlace);
         _animationChoice=new OptionButton();_animationChoice.ItemSelected+=i=>{if(_refreshing||_selected?.Player==null)return;PushUndo();_selected.Animation=_animationChoice.GetItemText((int)i);if(_selected.NativeTrack!=null){var clip=SelectedClip;if(clip!=null){clip.SourceAnimation=_selected.Animation;clip.Name=_selected.Animation;clip.SourceOffset=0;RebuildTrack(_selected);}else InitializeNativeClip(_selected);}else _selected.Player.Play(_selected.Animation);SetTime(_time);};_inspector.AddChild(_animationChoice);
-        _pathHeader=Text("CHARACTER PATH",12,true);_inspector.AddChild(_pathHeader);
+        _pathHeader=Text("OBJECT PATH",12,true);_inspector.AddChild(_pathHeader);
         _pathInfo=Text("No path drawn.",11,true);_pathInfo.AutowrapMode=TextServer.AutowrapMode.WordSmart;_inspector.AddChild(_pathInfo);
         _usePath=new CheckButton{Text="Move along path"};_usePath.Toggled+=v=>{if(_refreshing||_selected==null)return;PushUndo();_selected.Data.Path.Enabled=v;SetTime(_time);RefreshSequenceInspector();};_inspector.AddChild(_usePath);
         _inspector.AddChild(Row(Button("Draw / replace",StartDrawingPath),Button("Clear",ClearSelectedPath)));
@@ -122,11 +123,11 @@ public partial class PrevisApp
     void ShowInspectorSection(string section)
     {
         if(section is "Motion" or "Path"&&_poseEditing)StopPoseEditing();
-        if(_selectedCamera!=null||section=="Pose"&&_selected?.Node is not RiggedActor)section="Object";
+        if(_selectedCamera!=null||section=="Pose"&&_selected?.Node is not RiggedActor&&_selected?.NativeTrack==null)section="Object";
         _inspectorSection=section;string current="Object";
         foreach(var node in _inspector.GetChildren().OfType<Control>()){if(node==_inspectorTabs){node.Visible=true;continue;}if(node==_motionHeader)current="Motion";if(node==_pathHeader)current="Path";if(node==_posePanel)current="Pose";node.Visible=current==section;}
         if(_animationChoice!=null)_animationChoice.Visible=section=="Motion"&&_selected?.Player!=null;
-        if(_clipChoice!=null)_clipChoice.Visible=section=="Motion"&&(_selected?.Node is RiggedActor||_selected?.NativeTrack!=null);UpdatePoseInspector();RefreshUnifiedWorkflow();UpdateObjectAppearanceInspector();UpdatePlacementInspector();
+        if(_clipChoice!=null)_clipChoice.Visible=section=="Motion"&&(_selected?.Node is RiggedActor||_selected?.NativeTrack!=null);UpdatePoseInspector();RefreshUnifiedWorkflow();UpdateObjectAppearanceInspector();UpdatePlacementInspector();RefreshKeyInterpolationInspector();
     }
     void RefreshSequenceInspector()
     {
@@ -139,7 +140,7 @@ public partial class PrevisApp
         foreach(var f in new[]{_clipStart,_clipLength,_clipOffset,_clipBlend,_sourceScale})f.Editable=clip!=null;
         _sourceScale.Editable=clip!=null&&entry?.Node is RiggedActor;
         _clipInfo.Text=entry?.Node is RiggedActor {HasStaticPose:true} posed&&clips?.Count==0?"Static pose · "+posed.StaticPoseName+"\nNo animation clip. Browse Poses to replace it.":human?$"{clips!.Count} clip(s) · overlap to crossfade\n"+(clip==null?"Append a BVH motion to begin.":$"{clip.Name}\n{clip.Start:0.##}–{clip.Start+clip.Duration:0.##} s · blend {clip.BlendIn:0.##} s") : entry?.Player!=null?"Imported rig · native animation":"Static blockout prop";
-        var path=entry?.Data.Path;_pathInfo.Text=path?.Points.Count>0?$"{path.Points.Count} points · {ActorPathRuntime.Length(path):0.00} m\nPath controls travel; mocap controls body motion.":"No path drawn. Click Draw, place ground points, then Finish path.";
+        var path=entry?.Data.Path;_pathInfo.Text=path?.Points.Count>0?$"{path.Points.Count} points · {ActorPathRuntime.Length(path):0.00} m\nPath controls travel; transform keys add manual corrections.":"No path drawn. Click Draw path, place ground points, then Finish.";
         _usePath.ButtonPressed=path?.Enabled??false;_facePath.ButtonPressed=path?.OrientToPath??true;_pathStart.Value=path?.Start??0;_pathDuration.Value=path?.Duration??_duration;
         _pathKeyChoice.Clear();if(path!=null){var times=ActorPathRuntime.PointTimes(path);_selectedPathPoint=Math.Clamp(_selectedPathPoint,0,Math.Max(0,path.Points.Count-1));for(int i=0;i<times.Length;i++)_pathKeyChoice.AddItem($"Point {i+1} · {path.Start+times[i]:0.##} s");if(times.Length>0){_pathKeyChoice.Select(_selectedPathPoint);_pathKeyTime.Value=path.Start+times[_selectedPathPoint];}}_pathKeyTime.Editable=path?.Points.Count>1;
         _usePath.Disabled=entry==null||path?.Points.Count<2;_drawPathButton.ButtonPressed=_drawingPath;
@@ -165,13 +166,13 @@ public partial class PrevisApp
     void RefreshTimelineSize(){if(_timeline!=null){_timeline.UpdateMinimumHeight();_timeline.QueueRedraw();}}
     void SelectPathKey(Entry entry,int index)
     {
-        Select(entry);_selectedPathPoint=Math.Clamp(index,0,Math.Max(0,entry.Data.Path.Points.Count-1));ShowInspectorSection("Path");var times=ActorPathRuntime.PointTimes(entry.Data.Path);if(times.Length>0)SetTime(entry.Data.Path.Start+times[_selectedPathPoint]);RefreshSequenceInspector();Status($"Path point {_selectedPathPoint+1} · drag its diamond to change arrival time.");
+        Select(entry);_selectedPathPoint=Math.Clamp(index,0,Math.Max(0,entry.Data.Path.Points.Count-1));ShowInspectorSection("Path");var times=ActorPathRuntime.PointTimes(entry.Data.Path);if(times.Length>0)SetTime(entry.Data.Path.Start+times[_selectedPathPoint]);RefreshSequenceInspector();SelectKeyInterpolation("Path",entry,null,"Path",_time,_selectedPathPoint);Status($"Path point {_selectedPathPoint+1} · drag its diamond to change arrival time.");
     }
     void SetPathKeyTime(Entry entry,int index,double absoluteTime,bool pushUndo)
     {
         var path=entry.Data.Path;var times=ActorPathRuntime.PointTimes(path);if(index<0||index>=times.Length)return;if(pushUndo)PushUndo();double step=1.0/_fps;
         double low=index==0?0:times[index-1]+step;double high=index==times.Length-1?Math.Max(low,_duration-path.Start):times[index+1]-step;if(high<low)high=low;
-        times[index]=Math.Clamp(Math.Round((absoluteTime-path.Start)*_fps)/_fps,low,high);path.PointTimes=times.ToList();if(index==times.Length-1)path.Duration=Math.Max(step,times[^1]);_selectedPathPoint=index;SetTime(path.Start+times[index]);RefreshSequenceInspector();
+        times[index]=Math.Clamp(Math.Round((absoluteTime-path.Start)*_fps)/_fps,low,high);path.PointTimes=times.ToList();if(index==times.Length-1)path.Duration=Math.Max(step,times[^1]);_selectedPathPoint=index;SetTime(path.Start+times[index]);RefreshSequenceInspector();SelectKeyInterpolation("Path",entry,null,"Path",_time,index);
     }
 
     void EditPath(Action<ActorPathData> edit){if(_refreshing||_selected==null)return;PushUndo();edit(_selected.Data.Path);EnsureDuration(_selected.Data.Path.Start+_selected.Data.Path.Duration);SetTime(_time);RefreshSequenceInspector();}
@@ -179,7 +180,7 @@ public partial class PrevisApp
     {
         StopPoseEditing();
         if(_drawingPath){FinishDrawingPath();return;}
-        if(_selected?.Node is not RiggedActor&&_selected?.Player==null){_drawPathButton.ButtonPressed=false;Status("Select a character before drawing a path.");return;}
+        if(_selected==null){_drawPathButton.ButtonPressed=false;Status("Select an object before drawing a path.");return;}
         if(_pilot)TogglePilot();_playing=false;_play.Text="▶ Play";PushUndo();_pathEntry=_selected;_pathBackup=JsonSerializer.Deserialize<ActorPathData>(JsonSerializer.Serialize(_selected.Data.Path));_selected.Data.Path=new ActorPathData{Duration=_duration};_drawingPath=true;_drawPathButton.ButtonPressed=true;ShowInspectorSection("Path");DrawPaths();Status("Draw path · click ground points · Enter / Finish path to apply · Esc to cancel.");
     }
     void FinishDrawingPath()

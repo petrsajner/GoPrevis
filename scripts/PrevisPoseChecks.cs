@@ -115,7 +115,7 @@ public partial class PrevisApp
             string directory=ProjectSettings.GlobalizePath("user://pose-checks");Directory.CreateDirectory(directory);string project=Path.Combine(directory,"static-poses.previs");
             SaveTo(project);var saved=JsonSerializer.Deserialize<ProjectData>(File.ReadAllText(project))!;
             var savedEntry=saved.Objects.First(o=>o.Id==id);
-            Check(saved.Version==6&&savedEntry.StaticPose!=null&&savedEntry.MotionClips.Count==0&&string.IsNullOrEmpty(savedEntry.MotionPath),"static pose serializes inside the version 6 project format without source assets");
+            Check(saved.Version==7&&savedEntry.StaticPose!=null&&savedEntry.MotionClips.Count==0&&string.IsNullOrEmpty(savedEntry.MotionPath),"static pose serializes inside the version 7 project format without source assets");
             LoadProjectFromPath(project);SetTime(4);await Settle();entry=_entries.First(e=>e.Data.Id==id);
             Check(LibraryPoseEqual(expectedBones,CaptureLibraryBonePose(entry)),"static bone pose survives portable save and reopen");
             Check(entry.Node.Transform.IsEqualApprox(finalTransform)&&PropFactory.CalculateBounds(entry.Node).Size.DistanceTo(expectedBounds.Size)<.005f,"static pose dimensions and final world transform survive reopen");

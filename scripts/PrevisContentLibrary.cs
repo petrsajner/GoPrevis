@@ -68,7 +68,7 @@ public partial class PrevisApp
     LibraryCard CreateContentCard(ContentCard item)
     {
         var card=new LibraryCard{Kind=item.Pose!=null?"pose":item.Motion==null?"asset":"motion",Id=item.Id,Caption=item.Name,CustomMinimumSize=new Vector2(88,116),SizeFlagsHorizontal=SizeFlags.ExpandFill,ClipText=true,TooltipText=item.Name+"\n"+item.Detail};
-        card.Pressed+=()=>{try{if(item.Pose!=null)DropPose(item.Id,_selected?.Node is RiggedActor?_selected:null,new Vector3(0,SceneGroundHeight,0));else if(item.Motion!=null)DropMotion(item.Id,_selected!=null&&CompatibleMotion(_selected,item.Motion)?_selected:null,new Vector3(0,SceneGroundHeight,0));else DropAsset(item.Id,new Vector3(0,SceneGroundHeight,0));}catch(Exception ex){Error(ex.Message);}};
+        card.Pressed+=()=>{try{if(item.Pose!=null)DropPose(item.Id,_selected!=null&&CompatiblePose(_selected,item.Pose)?_selected:null,new Vector3(0,SceneGroundHeight,0));else if(item.Motion!=null)DropMotion(item.Id,_selected!=null&&CompatibleMotion(_selected,item.Motion)?_selected:null,new Vector3(0,SceneGroundHeight,0));else DropAsset(item.Id,new Vector3(0,SceneGroundHeight,0));}catch(Exception ex){Error(ex.Message);}};
         AddContentThumbnail(card,item);return card;
     }
 
@@ -83,7 +83,7 @@ public partial class PrevisApp
         {
             if(viewport!=null)return;
             viewport=new SubViewport{Size=new Vector2I(160,128),OwnWorld3D=true,RenderTargetUpdateMode=SubViewport.UpdateMode.Once};card.AddChild(viewport);var world=new Node3D();viewport.AddChild(world);world.AddChild(new WorldEnvironment{Environment=StudioLighting.CreateEnvironment()});
-            var wrapper=new Node3D();world.AddChild(wrapper);var model=item.Model??ContentCatalog.ForFamily(item.Motion?.ActorFamily??"human").First();
+            var wrapper=new Node3D();world.AddChild(wrapper);var model=item.Model??(item.Pose?.Pose.RigModelId is {} rigId?ContentCatalog.Find(rigId):null)??ContentCatalog.ForFamily(item.Motion?.ActorFamily??"human").First();
             if(model.IsBuiltin)
             {
                 if(model.BuiltinKind=="actor")
@@ -100,7 +100,9 @@ public partial class PrevisApp
                 var player=Descendants(generated).OfType<AnimationPlayer>().FirstOrDefault();
                 if(player!=null&&Descendants(generated).OfType<Skeleton3D>().Any())
                 {
-                    native=new NativeMotionTrack(generated,player);string animation=item.Motion?.SourceAnimation??model.DefaultAnimation??"";if(player.HasAnimation(animation)){native.SetClips(new[]{new MotionClipData{Name=animation,SourceAnimation=animation,Duration=player.GetAnimation(animation).Length,Loop=true}});native.Evaluate(.2,true);}
+                    native=new NativeMotionTrack(generated,player);string animation=item.Motion?.SourceAnimation??model.DefaultAnimation??"";
+                    if(item.Pose!=null)native.Evaluate(0,true,null,item.Pose.Pose);
+                    else if(player.HasAnimation(animation)){native.SetClips(new[]{new MotionClipData{Name=animation,SourceAnimation=animation,Duration=player.GetAnimation(animation).Length,Loop=true}});native.Evaluate(.2,true);}
                 }
                 var bounds=PropFactory.CalculateBounds(wrapper);generated.Position-=Vector3.Up*bounds.Position.Y;
             }

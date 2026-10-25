@@ -54,7 +54,7 @@ public partial class PrevisApp
                 }
                 foreach (Entry entry in App._entries)
                 {
-                    bool motion = entry.Data.MotionClips.Count > 0 || entry.Player != null;
+                    bool motion = entry.Data.MotionClips.Count > 0 || entry.NativeTrack == null && entry.Player != null;
                     if (motion) rows.Add(new TrackRow("Motion", entry.Data.Name + " · Motion", Object: entry));
                     if (entry.Data.Path.Points.Count > 0)
                         rows.Add(new TrackRow("Path", entry.Data.Name + " · Path", Object: entry));
@@ -63,14 +63,14 @@ public partial class PrevisApp
                     if (_expanded.Contains("object:" + entry.Data.Id))
                         foreach (string channel in new[] { "Position", "Rotation", "Scale" })
                             rows.Add(new TrackRow("Transform", channel, Object: entry, Channel: channel, Child: true));
-                    if(entry.Node is RiggedActor human)
+                    if(entry.Node is RiggedActor||entry.NativeTrack!=null)
                     {
                         rows.Add(new TrackRow("Pose","Pose corrections",Object:entry));
                         if(_expanded.Contains("pose:"+entry.Data.Id))
                         {
                             var data=entry.Data.PoseCorrections;
                             if(data.Root.Count>0)rows.Add(new TrackRow("Pose","Pelvis offset",Object:entry,Channel:"Root",Child:true));
-                            foreach(string bone in human.PoseBoneNames.Concat(data.Bones.Keys).Distinct())
+                            foreach(string bone in (entry.Node is RiggedActor human?human.PoseBoneNames:entry.NativeTrack!.PoseBoneNames).Concat(data.Bones.Keys).Distinct())
                                 if(data.Bones.TryGetValue(bone,out var keys)&&keys.Count>0)
                                     rows.Add(new TrackRow("Pose",PoseBoneLabel(bone),Object:entry,Channel:bone,Child:true));
                         }
@@ -144,6 +144,7 @@ public partial class PrevisApp
                 if(_dragPoseKey&&_dragKeyEntry!=null)App.RetimePoseCorrection(_dragKeyEntry,_dragKeyChannel,_lastKeyTime,time);
                 else App.RetimeTransform(_dragKeyEntry, _dragKeyCamera, _dragKeyChannel, _lastKeyTime, time);
                 _lastKeyTime = time; _selectedKeyTime = time;
+                App.SelectKeyInterpolation(_dragPoseKey?"Pose":"Transform",_dragKeyEntry,_dragKeyCamera,_dragKeyChannel,time);
                 App.SetTime(time); QueueRedraw();
             }
             else if (_dragPathEntry != null)
@@ -442,13 +443,13 @@ public partial class PrevisApp
             if(double.IsFinite(nearest))
             {
                 if(button.ButtonIndex==MouseButton.Right){App.RemovePoseCorrectionKey(row.Object!,row.Channel,nearest);QueueRedraw();AcceptEvent();return;}
-                App._playing=false;App._play.Text="▶";App.SelectPoseCorrectionTimeline(row.Object!,row.Channel,nearest);
+                App._playing=false;App._play.Text="▶";App.SelectPoseCorrectionTimeline(row.Object!,row.Channel,nearest);App.SelectKeyInterpolation("Pose",row.Object,null,row.Channel,nearest);
                 _selectedKeyTarget=row.Target;_selectedKeyChannel=row.Channel;_selectedKeyTime=nearest;
                 _dragKey=true;_dragPoseKey=true;_dragKeyEntry=row.Object;_dragKeyCamera=null;_dragKeyChannel=row.Channel;_dragX=button.Position.X;_keyOriginalTime=_lastKeyTime=nearest;_hasDragged=false;AcceptEvent();return;
             }
             if(button.ButtonIndex!=MouseButton.Left)return;
             App.SelectPoseCorrectionTimeline(row.Object!,row.Channel,Snap(Seconds(button.Position.X)));
-            if(button.DoubleClick){App.CapturePoseCorrectionKey(row.Channel);_selectedKeyTarget=row.Target;_selectedKeyChannel=row.Channel;_selectedKeyTime=App._time;UpdateMinimumHeight();}
+            if(button.DoubleClick){App.CapturePoseCorrectionKey(row.Channel);App.SelectKeyInterpolation("Pose",row.Object,null,row.Channel,App._time);_selectedKeyTarget=row.Target;_selectedKeyChannel=row.Channel;_selectedKeyTime=App._time;UpdateMinimumHeight();}
             else _scrubbing=true;
             AcceptEvent();QueueRedraw();
         }

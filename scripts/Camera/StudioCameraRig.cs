@@ -31,7 +31,12 @@ public partial class StudioCameraRig : Node3D
 {
     public const uint EditorLayer = 1u << 1;
     public const float SensorWidthMm = 36f;
-    private const float PreviewAspect = 16f / 9f;
+    private float _aspectRatio = 16f / 9f;
+    public float AspectRatio
+    {
+        get=>_aspectRatio;
+        set{if(!float.IsFinite(value)||value<=0)throw new ArgumentException("Camera aspect ratio must be positive.");if(Mathf.IsEqualApprox(value,_aspectRatio))return;_aspectRatio=value;if(_frustumMesh!=null)UpdateFrustum();}
+    }
     private const float FrustumLength = 2.1f;
     private static readonly Vector3 SceneTarget = new(0f, 1f, 0f);
 
@@ -280,7 +285,7 @@ public partial class StudioCameraRig : Node3D
     {
         _frustumMesh.ClearSurfaces();
         float halfWidth = FrustumLength * SensorWidthMm / (2f * _focalLengthMm);
-        float halfHeight = halfWidth / PreviewAspect;
+        float halfHeight = halfWidth / AspectRatio;
         Vector3[] corners =
         {
             new(-halfWidth, -halfHeight, -FrustumLength),

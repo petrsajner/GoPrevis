@@ -9,6 +9,8 @@ namespace Previs;
 /// </summary>
 public sealed class StaticPoseData
 {
+    /// <summary>Null for the prepared human rig; native poses are restricted to this catalog model.</summary>
+    public string? RigModelId { get; set; }
     public string? CatalogId { get; set; }
     public string Name { get; set; } = "Custom pose";
     public float[] RootPosition { get; set; } = new float[3];

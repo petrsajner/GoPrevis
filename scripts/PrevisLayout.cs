@@ -34,7 +34,8 @@ public partial class PrevisApp
         foreach(var item in new[]{"Undo","Redo","Duplicate selected","Delete selected"})editMenu.GetPopup().AddItem(item);
         editMenu.GetPopup().IdPressed+=id=>{switch(id){case 0:Undo();break;case 1:Redo();break;case 2:DuplicateSelected();break;case 3:DeleteSelected();break;}};
         var export=Button("Export shot",OpenShotExport);export.AddThemeStyleboxOverride("normal",Style(new Color("e5e2ec"),4));export.AddThemeColorOverride("font_color",new Color("202026"));
-        var header=Row(Text("PREVIS",14),fileMenu,editMenu,Space(),Button("Save",SaveProject),export);
+        _projectSetupButton=Button("Project · 16:9 · 24 fps",OpenProjectSetup);_projectSetupButton.TooltipText="Shot aspect ratio, resolution, frame rate and camera reference";
+        var header=Row(Text("PREVIS",14),fileMenu,editMenu,BuildHistoryControls(),Space(),_projectSetupButton,Button("Save",SaveProject),export);
         header.AddThemeConstantOverride("separation",6);_layoutHeader=CompactPanel(header,4,2);_layoutRoot.AddChild(_layoutHeader);
 
         _layoutWorkSplit=new VSplitContainer{SizeFlagsVertical=SizeFlags.ExpandFill,SizeFlagsHorizontal=SizeFlags.ExpandFill,DraggerVisibility=SplitContainer.DraggerVisibilityEnum.Hidden};
@@ -75,11 +76,12 @@ public partial class PrevisApp
         _framing=new CameraFrameOverlay{App=this,MouseFilter=MouseFilterEnum.Ignore};_framing.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);_sceneContainer.AddChild(_framing);BuildPoseViewportOverlay();BuildObjectGizmoOverlay();
 
         var right=new VBoxContainer{SizeFlagsHorizontal=SizeFlags.ExpandFill,SizeFlagsVertical=SizeFlags.ExpandFill};right.AddThemeConstantOverride("separation",6);
-        var previewToggle=Button("Preview",()=>{_layoutCameraPreview.Visible=!_layoutCameraPreview.Visible;_previewViewport.RenderTargetUpdateMode=_layoutCameraPreview.Visible?SubViewport.UpdateMode.Always:SubViewport.UpdateMode.Disabled;});previewToggle.TooltipText="Show or hide the active camera preview";
+        var previewToggle=Button("Preview",()=>{_previewAspect!.Visible=!_previewAspect.Visible;_previewViewport.RenderTargetUpdateMode=_previewAspect.Visible?SubViewport.UpdateMode.Always:SubViewport.UpdateMode.Disabled;});previewToggle.TooltipText="Show or hide the active camera preview";
         _cameraChoice=new OptionButton{SizeFlagsHorizontal=SizeFlags.ExpandFill,FitToLongestItem=false,ClipText=true};_cameraChoice.ItemSelected+=i=>{if(!_refreshing&&i>=0&&i<_cameras.Count)SelectCamera(_cameras[(int)i]);};right.AddChild(Row(_cameraChoice,previewToggle));
-        _layoutCameraPreview=new SubViewportContainer{Stretch=true,CustomMinimumSize=new Vector2(0,144),MouseFilter=MouseFilterEnum.Ignore};
-        _layoutCameraPreview.Resized+=FitCompactPreview;
-        _previewViewport=new SubViewport{Size=new Vector2I(480,270),RenderTargetUpdateMode=SubViewport.UpdateMode.Always,Msaa3D=Viewport.Msaa.Msaa4X};_layoutCameraPreview.AddChild(_previewViewport);right.AddChild(_layoutCameraPreview);
+        _previewAspect=new AspectRatioContainer{Ratio=ProjectAspect,StretchMode=AspectRatioContainer.StretchModeEnum.Fit,CustomMinimumSize=new Vector2(0,144),MouseFilter=MouseFilterEnum.Ignore};
+        _layoutCameraPreview=new SubViewportContainer{Stretch=true,MouseFilter=MouseFilterEnum.Ignore};
+        _previewAspect.Resized+=FitCompactPreview;
+        _previewViewport=new SubViewport{Size=new Vector2I(480,270),RenderTargetUpdateMode=SubViewport.UpdateMode.Always,Msaa3D=Viewport.Msaa.Msaa4X};_layoutCameraPreview.AddChild(_previewViewport);_previewAspect.AddChild(_layoutCameraPreview);right.AddChild(_previewAspect);
         _cameraInfo=Text("Active camera",11,true);_cameraInfo.ClipText=true;right.AddChild(_cameraInfo);
         _cameraQuickControls=new VBoxContainer();_cameraQuickControls.AddThemeConstantOverride("separation",4);right.AddChild(_cameraQuickControls);
         _pilotButton=Button("Camera view",TogglePilot,true);_cameraQuickControls.AddChild(_pilotButton);
@@ -95,7 +97,7 @@ public partial class PrevisApp
         _play=Button("▶",()=>{_playing=!_playing;_play.Text=_playing?"Ⅱ":"▶";});_play.TooltipText="Play / pause (Space)";_play.CustomMinimumSize=new Vector2(28,0);
         _timeLabel=Text("00:00:00",13);_scrub=new HSlider{MinValue=0,MaxValue=_duration,Step=1.0/_fps,SizeFlagsHorizontal=SizeFlags.ExpandFill};_scrub.ValueChanged+=v=>{if(!_refreshing)SetTime(v);};
         _durationField=Spin(1,MaxSceneDuration,.1,_duration);_durationField.CustomMinimumSize=new Vector2(64,0);_durationField.SizeFlagsHorizontal=SizeFlags.ShrinkEnd;_durationField.TooltipText="Scene duration in seconds";_durationField.ValueChanged+=v=>{if(_refreshing)return;_duration=v;_scrub.MaxValue=v;SetTime(Math.Min(_time,v));};
-        _fpsChoice=new OptionButton();foreach(int f in new[]{24,25,30,60})_fpsChoice.AddItem(f.ToString(),f);_fpsChoice.TooltipText="Scene frame rate";_fpsChoice.ItemSelected+=i=>{if(_refreshing)return;_fps=_fpsChoice.GetItemId((int)i);_scrub.Step=1.0/_fps;SetTime(_time);};
+        _fpsChoice=new OptionButton();foreach(int f in ProjectFrameRates)_fpsChoice.AddItem(f.ToString(),f);_fpsChoice.Select(Array.IndexOf(ProjectFrameRates,_fps));_fpsChoice.TooltipText="Scene frame rate · more options in Project setup";_fpsChoice.ItemSelected+=i=>{if(!_refreshing)ChangeProjectFps(_fpsChoice.GetItemId((int)i));};
         var transport=Row(_play,Button("|◀",()=>SetTime(0)),_timeLabel,_scrub,Text("Length",11,true),_durationField,Text("fps",11,true),_fpsChoice);transport.AddThemeConstantOverride("separation",5);timelinePane.AddChild(CompactPanel(transport,6,2));
         _timeline=new TimelineView{App=this,CustomMinimumSize=new Vector2(0,150),SizeFlagsHorizontal=SizeFlags.ExpandFill};
         var timelineScroll=new ScrollContainer{SizeFlagsVertical=SizeFlags.ExpandFill,SizeFlagsHorizontal=SizeFlags.ExpandFill,HorizontalScrollMode=ScrollContainer.ScrollMode.Disabled};timelineScroll.AddChild(_timeline);var tracksPanel=CompactPanel(timelineScroll,2,2);tracksPanel.SizeFlagsVertical=SizeFlags.ExpandFill;timelinePane.AddChild(tracksPanel);
@@ -123,7 +125,7 @@ public partial class PrevisApp
         }
         FitCompactPreview();_layoutTimelinePane.CustomMinimumSize=new Vector2(0,height<850?172:205);UpdateCompactChrome();
     }
-    void FitCompactPreview(){if(_layoutCameraPreview==null||_layoutCameraPreview.Size.X<1)return;float height=Mathf.Round(_layoutCameraPreview.Size.X*9f/16f);if(Math.Abs(_layoutCameraPreview.CustomMinimumSize.Y-height)>.5f)_layoutCameraPreview.CustomMinimumSize=new Vector2(0,height);}
+    void FitCompactPreview(){if(_previewAspect==null||_previewAspect.Size.X<1)return;float height=Math.Min(280,Mathf.Round(_previewAspect.Size.X/ProjectAspect));if(Math.Abs(_previewAspect.CustomMinimumSize.Y-height)>.5f)_previewAspect.CustomMinimumSize=new Vector2(0,height);_previewAspect.Ratio=ProjectAspect;}
     void UpdateCompactChrome(){if(_finishPathButton!=null)_finishPathButton.Visible=_drawingPath;}
 
     /// <summary>Geometry-level checks for automated desktop layout validation.</summary>

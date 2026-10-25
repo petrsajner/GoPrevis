@@ -24,7 +24,7 @@ public partial class PrevisApp
     void RefreshUnifiedWorkflow()
     {
         if(_arrangeButton!=null)_arrangeButton.ButtonPressed=!_poseEditing;
-        if(_drawPathButton!=null)_drawPathButton.Visible=_drawingPath||_selected?.Node is RiggedActor||_selected?.NativeTrack!=null;
+        if(_drawPathButton!=null)_drawPathButton.Visible=_drawingPath||_selected!=null;
         if(_inspectorContext!=null)
         {
             _inspectorContext.Text=_inspectorSection switch{"Pose"=>"POSE CORRECTIONS","Motion"=>"MOTION CLIP","Path"=>"TRAVEL PATH",_=>"PROPERTIES"};

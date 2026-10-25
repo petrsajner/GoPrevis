@@ -48,9 +48,10 @@ public static class CameraFramingCatalog
         return All.FirstOrDefault(p=>p.Id.Equals(normalized,StringComparison.OrdinalIgnoreCase)||p.Name.Equals(normalized,StringComparison.OrdinalIgnoreCase));
     }
 
-    public static void Apply(StudioCameraRig rig,string id,FramingSubject subject,Transform3D workingView,float horizontalWorkingFov=50)
+    public static void Apply(StudioCameraRig rig,string id,FramingSubject subject,Transform3D workingView,float horizontalWorkingFov=50,float aspectRatio=16f/9)
     {
         var preset=Find(id)??throw new InvalidDataException("Unknown camera framing preset: "+id);
+        if(!float.IsFinite(aspectRatio)||aspectRatio<=0)throw new ArgumentException("Camera aspect ratio must be positive.");
         if(!subject.WorldBounds.Position.IsFinite()||!subject.WorldBounds.Size.IsFinite()||subject.WorldBounds.Size.X<0||subject.WorldBounds.Size.Y<0||subject.WorldBounds.Size.Z<0)
             throw new ArgumentException("The framing subject has invalid bounds.");
         var scale=rig.Scale;
@@ -93,7 +94,7 @@ public static class CameraFramingCatalog
         }
         var orientation=Looking(Vector3.Zero,-direction,up).Basis;
         if(roll!=0)orientation*=new Basis(Vector3.Back,roll);
-        float distance=FitDistance(region,focus,orientation,lens,padding);
+        float distance=FitDistance(region,focus,orientation,lens,padding,aspectRatio);
         var origin=focus+orientation.Z*distance;
         // Low-angle cameras stay above the subject's support plane. Fitting is
         // recalculated after lifting so the silhouette still stays inside frame.
@@ -104,7 +105,7 @@ public static class CameraFramingCatalog
             {
                 float horizontal=new Vector2(origin.X-focus.X,origin.Z-focus.Z).Length();
                 direction=(forward*horizontal+Vector3.Up*(minimumY-focus.Y)).Normalized();orientation=Looking(Vector3.Zero,-direction,Vector3.Up).Basis;
-                distance=FitDistance(region,focus,orientation,lens,padding);origin=focus+orientation.Z*distance;
+                distance=FitDistance(region,focus,orientation,lens,padding,aspectRatio);origin=focus+orientation.Z*distance;
                 if(origin.Y<minimumY)origin.Y=minimumY;
                 orientation=Looking(origin,focus,Vector3.Up).Basis;
             }
@@ -141,9 +142,9 @@ public static class CameraFramingCatalog
         var points=new[]{subject.Head,subject.Pelvis,subject.LeftShoulder,subject.RightShoulder};var min=points.Aggregate((a,b)=>a.Min(b));var max=points.Aggregate((a,b)=>a.Max(b));
         return new Aabb(min-Vector3.One*radius,max-min+Vector3.One*radius*2);
     }
-    static float FitDistance(Aabb region,Vector3 focus,Basis camera,float lens,float padding)
+    static float FitDistance(Aabb region,Vector3 focus,Basis camera,float lens,float padding,float aspectRatio)
     {
-        float horizontal=StudioCameraRig.SensorWidthMm/(2*lens),vertical=horizontal*9/16;float distance=.12f;
+        float horizontal=StudioCameraRig.SensorWidthMm/(2*lens),vertical=horizontal/aspectRatio;float distance=.12f;
         var inverse=camera.Inverse();
         for(int i=0;i<8;i++)
         {

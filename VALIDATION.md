@@ -1,6 +1,32 @@
-# Previs 0.10.0 validation
+# Previs 0.11.0 validation
 
 Validation date: **2026-10-25**. Development/verified platform: **Windows x64**.
+
+This revision makes paths and keyed transforms available to all objects, adds shared key timing curves, native animal pose editing, configurable project aspect/fps, editor-only image/video camera references and visible Undo/Redo controls. All app UI remains English. Project format **7** stores these fields; formats **1–6** remain migration inputs.
+
+## Independent 0.11.0 Windows delivery
+
+The source builds with **zero warnings and zero errors**. The independent exported Windows executable passes the combined **163-check** suite (`output/packaged-0.11.0-project.log`):
+
+| Area | Checks | Evidence covered |
+| --- | ---: | --- |
+| History | 9 | Actual Undo/Redo buttons, enabled states, playback stop, Ctrl+Z, Ctrl+Shift+Z, Ctrl+Y and branch invalidation |
+| Object motion and timing | 41 | Car path drawing/arrival keys, grouped XYZ transforms, all five modes, actual Bezier handle gesture and one Undo, camera lens/pose timing, reverse seeking and portable curve persistence |
+| Native animal posing | 70 | All thirteen supplied rigs, Wolf viewport/keys/Undo/persistence/library, Horse and classic Fox IK/segment lengths, source-facing path evaluation preserving manual root turns |
+| Project setup and camera references | 39 | All six preview/frustum aspects, 12/15/24/25/30/custom37 fps, format Undo/Redo, reference source bundling, custom fps reopen, real background/foreground pixels, camera gate and real MP4 seeking/offset/cache |
+| Portrait shot export | 4 | Reference loaded during 288×512 / 9:16 export at 15 fps, three frames and all three MP4/PNG passes, FFprobe verification and exported RGB matching the clean still exactly |
+
+Reference backgrounds render on a separate editor-only layer. GPU pixels verify that opaque foreground objects keep their original appearance, orbit mode excludes the reference and clean RGB exports are byte-identical with it enabled. Actual MP4 reference decoding is checked forward and backward using a two-color encoded video, including source-frame timing and end hold. Reference audio is not played. Cold seeks decode asynchronously; the displayed guide catches up to the requested frame without blocking scene manipulation. The frame cache is bounded to 24 entries.
+
+The native pose test retains a real walk beneath corrections, verifies both reachable end-joint IK and moving middle joints with following children, and checks exact final bone poses after portable save/reopen. Saved native poses identify their matching catalog rig. Anatomical joint limits, generic cross-species retargeting and automatic four-foot contact constraints are outside this revision.
+
+The same executable passes **31 full-shot export checks** at **1920×1080, 24 fps, 192 frames/eight seconds**, plus 21 scene-settings/placement + 27 appearance + 72 framing + 13 rendered scene/depth checks, 38 interaction + 15 numeric + 14 clip-trim checks, 55 correction + 13 pose-key checks, 71 rendered human manual-pose checks, 278 static-pose checks, 225 model/motion-library checks and the rendered full-HD smoke test. Logs: `output/packaged-0.11.0-{export,scene-settings,interaction,correction,manual-pose,pose,content,smoke}.log`. All nine packaged stderr files, including the combined project suite, are empty.
+
+Independent source regressions retain **267 transform assertions**, **1,397 path assertions** and **24 responsive layout checks**. The final rendered UI probe operates the real Project setup dialog, nested image picker and 9:16 / 15 fps controls (`output/project-setup-ui-final-0.11.0.log`). Screenshots show the timing graph, native joint handles, compact project setup and portrait camera gate. The dialog is 520×570 logical pixels. At logical 2560×1440 the header stays 35 px and the play button 31 px.
+
+The exported PCK inventory retains **567 sources, 859 covers and 118 bundled human poses**, with no missing resources. The portable package includes four example scenes, including `examples/keyed-car.previs`, validation logs/reports and representative exported media. `BUILD-INFO.json` records the exact source revision and binary hashes. Packaging reads every ZIP entry for CRC validation and writes a SHA-256 sidecar. Only Windows x64 has been exercised.
+
+## Historical 0.10.0 evidence
 
 This revision adds persistent scene display and object appearance settings, support-surface placement, and fifteen subject-relative framing presets. Existing full-shot export, synchronized depth/pose guidance and twenty-four camera movement presets remain in place. Ordinary dragging preserves Y; Shift transform handles retain unrestricted 3D adjustment. Application UI and authored messages are English. See README.md for output semantics and limits.
 

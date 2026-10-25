@@ -19,7 +19,7 @@ public partial class PrevisApp
     void SelectPoseCorrectionTimeline(Entry entry,string channel,double time)
     {
         _playing=false;_play.Text="▶";Select(entry);SetTime(time);StartPoseEditing();
-        if(channel=="Root")SelectPoseBone("Hips");
+        if(channel=="Root")SelectPoseBone(entry.NativeTrack?.RootBoneName??"Hips");
         else if(channel!="All")SelectPoseBone(channel);
     }
 
