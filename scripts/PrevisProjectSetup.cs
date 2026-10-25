@@ -59,7 +59,7 @@ public partial class PrevisApp
         foreach(var camera in _cameras)camera.Rig.AspectRatio=ProjectAspect;
         _previewCamera.KeepAspect=Camera3D.KeepAspectEnum.Width;
         _previewCamera.Fov=_shot.ShotCamera.Fov;
-        if(_cameraInfo!=null)_cameraInfo.Text=$"{ActiveCameraName} · {_shot.FocalLengthMm:0} mm · {ProjectAspectLabel} · {_fps} fps · {ActiveCameraKeyCount()} keys";
+        if(_cameraInfo!=null){string tracking=ActiveCameraTrackingLabel;_cameraInfo.Text=$"{ActiveCameraName} · {_shot.FocalLengthMm:0} mm · {ProjectAspectLabel} · {_fps} fps · "+(tracking==""?ActiveCameraKeyCount()+" keys":tracking);_cameraInfo.TooltipText=_cameraInfo.Text;}
         if(_pilot)
         {
             _editorCamera.KeepAspect=Camera3D.KeepAspectEnum.Width;

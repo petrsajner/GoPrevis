@@ -19,6 +19,7 @@ public partial class PrevisApp
         if(!value.IsFinite()||group=="Scale"&&(value.X<=0||value.Y<=0||value.Z<=0))throw new ArgumentException("Transform values must be finite; scale must be positive.");
         if(_selectedCamera is {} camera)
         {
+            if(TryEditConstrainedCamera(camera,group,value)){SetTime(_time);RefreshCameraTrackingInspector();return;}
             EnsureCameraAnimation(camera);var list=TransformLayerRuntime.Channel(camera.Animation,group);
             if(_autoKey||list.Count>0)TransformLayerRuntime.Upsert(list,_time,value);
             else if(group=="Position")camera.BasePosition=value;else if(group=="Rotation")camera.BaseRotation=value;else camera.BaseScale=value;

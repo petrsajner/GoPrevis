@@ -76,12 +76,12 @@ public partial class PrevisApp
 
             string frames=Path.Combine(output,"video-source");Directory.CreateDirectory(frames);for(int i=0;i<2;i++){using var frame=Image.CreateEmpty(128,64,false,Image.Format.Rgb8);frame.Fill(i==0?new Color(1,0,0):new Color(0,0,1));frame.SavePng(Path.Combine(frames,i.ToString("D6")+".png"));}
             string video=Path.Combine(output,"reference-"+Guid.NewGuid().ToString("N")[..8]+".mp4");await ShotVideoEncoder.EncodeAsync(frames,video,1,128,64);var videoSetup=ActiveCameraReference.ValidatedCopy();videoSetup.Path=video;videoSetup.OffsetSeconds=0;SetTime(0);ApplyActiveCameraReference(videoSetup);await ReferenceReady();
-            Color VideoPixel(){long key=(long)Math.Round(_referenceDisplayedTime*1000000);using var image=new Image();image.LoadPngFromBuffer(_referenceFrames[key]);return image.GetPixel(20,20);}
+            Color VideoPixel(){using var image=CurrentReferenceVideoImage();return image.GetPixel(20,20);}
             var red=VideoPixel();Check(red.R>.8f&&red.B<.2f,"a real MP4 reference decodes its first frame asynchronously");
             SetTime(1.25);await ReferenceReady();var blue=VideoPixel();Check(blue.B>.8f&&blue.R<.2f,"video reference follows a forward timeline seek");
             SetTime(0);await ReferenceReady();Check(VideoPixel().R>.8f,"reverse seeking restores the original reference frame deterministically");
             videoSetup=ActiveCameraReference.ValidatedCopy();videoSetup.OffsetSeconds=1.25;ApplyActiveCameraReference(videoSetup);await ReferenceReady();Check(VideoPixel().B>.8f,"reference time offset selects the matching source-video frame");
-            Check(_referenceFrames.Count<=24,"video reference cache stays bounded");
+            Check(_referenceVideo!=null&&_referenceVideo.CachedFrames<=_referenceVideo.Capacity&&_referenceVideo.BufferedBytes<=ReferenceVideoStream.MaximumBufferBytes,"video reference cache stays bounded");
             passed=true;GD.Print("PROJECT_SETUP_OK checks="+checks);return checks;
         }
         catch(Exception ex){failure=ex.ToString();throw;}

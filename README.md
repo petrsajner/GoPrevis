@@ -1,10 +1,10 @@
-# Previs 0.12.0 — film shot planning
+# Previs 0.13.0 — film shot planning
 
 Previs is a desktop blockout tool for preparing movement and camera references for AI video. It uses Godot 4.7.2 .NET, C# and .NET 10. The application UI, dialogs and authored errors are English.
 
 ## Run
 
-The Windows portable output is `build/Previs-0.12.0-Windows/Previs.exe`. Keep Previs.exe, Previs.pck and data_Previs_windows_x86_64 together. The portable Windows build includes its runtime; using it does not require the Godot editor or .NET SDK.
+The Windows portable output is `build/Previs-0.13.0-Windows/Previs.exe`. Keep Previs.exe, Previs.pck and data_Previs_windows_x86_64 together. The portable Windows build includes its runtime; using it does not require the Godot editor or .NET SDK.
 
 For development, open project.godot with Godot 4.7.2 .NET. Local tools are in the ignored .tools directory. The existing run.ps1 starts the source project; build.ps1 -Test builds, runs source checks and exports Windows x64.
 
@@ -12,7 +12,7 @@ For development, open project.godot with Godot 4.7.2 .NET. Local tools are in th
 
 Double-click **Open car chase demo.cmd** beside Previs.exe, or choose **File → Open car chase demo**. The example opens at frame zero in its following camera. Press **Space** to play. Saving prompts for your own project, preserving the supplied example.
 
-The self-contained **examples/car-chase.previs** shot is 12 seconds at 25 fps: a parked blue car accelerates, follows a sweeping 90-degree road turn, decelerates and holds still with the camera for the final two seconds. **Car follow** has editable frame-matched Position/Rotation keys; **Wide overview** shows the complete route. Select the car's Path track to inspect arrival keys and Bezier acceleration/deceleration. Every scene object is a built-in prop, so the project needs no imported model or motion file.
+The self-contained **examples/car-chase.previs** shot is 12 seconds at 25 fps: a parked blue car accelerates, follows a sweeping 90-degree road turn, decelerates and holds still with the camera for the final two seconds. **Car follow** uses live Follow + Look at bindings to the car, with no baked position/rotation keys; **Wide overview** shows the complete route. Select the car's Path track to inspect arrival keys and Bezier acceleration/deceleration. Changing the car’s path, arrival timing or manual transforms updates the following camera automatically. Every scene object is a built-in prop, so the project needs no imported model or motion file.
 
 ## One placement workflow
 
@@ -42,7 +42,21 @@ Use the **Project** button in the header to open **Project setup**. Aspect prese
 
 The camera preview, main **Camera view** gate, camera-frustum drawings and framing presets use the selected aspect ratio. Clean still output uses the project dimensions; whole-shot export starts with that size and fps. Half/double export sizes retain the project ratio.
 
-**Camera background…** below the camera preview opens the active camera’s reference controls, even while a scene object is selected. Alternatively select a camera in **SCENE**, expand **Camera background** near the top of Properties and choose **Load image / video…**. Each camera stores its own image/video, opacity, Fit / Fill cropping, visibility and video time offset. Switching cameras shows that camera’s guide; duplication copies independent settings. The section starts collapsed so transforms stay accessible. It appears behind 3D objects in camera views only. The working perspective remains unchanged. Video is muted and seeks to scene time, including reverse scrubbing; its last frame holds beyond the end. Decoding uses the bundled FFmpeg asynchronously with a bounded in-memory frame cache. A cold seek can take a moment to display its matching guide frame. Reference pixels are never included in clean stills, MP4, PNG sequences, depth or pose passes.
+**Camera background…** below the camera preview opens the active camera’s reference controls, even while a scene object is selected. Alternatively select a camera in **SCENE**, expand **Camera background** near the top of Properties and choose **Load image / video…**. Each camera stores its own image/video, opacity, Fit / Fill cropping, visibility and video time offset. Switching cameras shows that camera’s guide; duplication copies independent settings. The section starts collapsed so transforms stay accessible. It appears behind 3D objects in camera views only. The working perspective remains unchanged. Video is muted and seeks to scene time, including reverse scrubbing; its last frame holds beyond the end. Playback uses one persistent CPU FFmpeg raw-RGB stream with asynchronous prefetch, rather than starting a process and decoding a PNG for every frame. The editor preview is limited to a 960-pixel long edge; original media remains unchanged. A sliding raw-frame cache has a 48 MiB budget per source, retaining at most two sources for camera switching. Cached scrubbing is immediate; an uncached seek may briefly wait for the matching frame. Ordinary playback has been verified with real 1080p H.264 at 25 and 30 fps through the application viewport. Reference pixels are never included in clean stills, MP4, PNG sequences, depth or pose passes.
+
+The **Load image / video…** picker remembers its last browsed folder across cameras and application restarts, including a folder visited before cancelling. This is a local application preference, independent of scene Undo and project files.
+
+## Live camera Follow and Look at
+
+Select a camera in **SCENE** and expand **Follow / Look at** near the top of Properties. The section opens automatically for an already constrained camera.
+
+- **Follow** controls position. Choose its target and adjust **Side**, **Height** and **Distance** in metres. Positive target-relative distance sits behind the target; negative distance puts the camera in front.
+- **Look at** controls orientation. Choose the same or a different object, set an XYZ **Aim offset**, and adjust its own smoothness.
+- **Target-relative offsets** rotate with the target’s heading. Disable this for fixed world-axis offsets.
+- **Smoothness** is a lag in seconds: zero follows exactly; higher values ease the response. It is evaluated from absolute shot time, so scrubbing backward and exporting produce the same camera pose.
+- **Match current view** derives offsets from the working camera. Ordinary camera XYZ, gizmo and pilot edits adjust live offsets or an angle correction. **Reset angle** removes the manual orientation correction.
+
+Target paths, source motion and final manual transforms are evaluated before camera constraints. Editing a car path immediately updates its camera without generating new keys. The preview identifies **Follow**, **Look at** or both. Existing absolute camera keys are retained and resume when their corresponding constraint is disabled. Controlled key buttons are disabled with an explanation. A deleted target safely falls back to the source camera animation; Undo restores the binding. Choosing a framing or movement preset releases live constraints so the preset takes effect, with Undo support.
 
 ## Object paths and key timing
 
@@ -207,7 +221,7 @@ A continuous numeric scrub creates one Undo action. After reaching a minimum or 
 
 ## Save, reopen and export
 
-Save creates a **version 8 .previs** project and neighbouring .assets folder containing used sources. Keep both together when moving a project. It preserves embedded static body poses and keyed additive pose corrections, motion tracks, paths and path keys, final transform channels, camera channels/lenses, active camera, scene display settings, per-object colors/labels, lighting, interpolation curves, native poses and project setup. Every camera’s original image/video source is bundled under a separate safe content-addressed filename in the neighbouring assets folder; decoded preview frames are disposable cache data. Version 1/2/3/4/5/6/7 scenes are accepted on opening. Version 7 projects migrate their former global reference to the saved active camera. Other cameras start without a reference. Older releases refuse version 8 instead of silently dropping per-camera backgrounds. Overwriting an existing project keeps the previous JSON as .previs.bak.
+Save creates a **version 9 .previs** project and neighbouring .assets folder containing used sources. Keep both together when moving a project. It preserves embedded static body poses and keyed additive pose corrections, motion tracks, paths and path keys, final transform channels, camera channels/lenses and live constraints, active camera, scene display settings, per-object colors/labels, lighting, interpolation curves, native poses and project setup. Every camera’s original image/video source is bundled under a separate safe content-addressed filename in the neighbouring assets folder; decoded preview frames are disposable cache data. Version 1/2/3/4/5/6/7/8 scenes are accepted on opening. Version 7 projects migrate their former global reference to the saved active camera. Other cameras start without a reference. Older releases refuse version 9 instead of silently dropping live Follow / Look at bindings. Overwriting an existing project keeps the previous JSON as .previs.bak.
 
 ### Export a complete shot
 
@@ -215,7 +229,7 @@ Choose **Export shot** and confirm the active camera shown in the dialog. Export
 
 Choose **MP4 + PNG sequences**, **MP4 videos**, or **PNG sequences**; use the project resolution or half/double size at the same aspect ratio and choose the frame rate. Project fps is selected initially, including 12/15/24/25/30 fps. Color, Depth and Pose can be selected independently. A uniquely named output folder preserves earlier exports. The export dialog reports progress and offers cancellation. After success, failure or cancellation, the application restores the working time, selection, playback state and original scene materials.
 
-All selected passes use the **same evaluated frame time, active-camera transform and lens**. This includes mocap blends, keyed body corrections, paths, final object transforms, native animation and camera/lens keys. Editor grid, joint/transform handles, paths, camera helpers and selection outlines are excluded.
+All selected passes use the **same evaluated frame time, active-camera transform and lens**. This includes mocap blends, keyed body corrections, paths, final object transforms, native animation, camera/lens keys and live Follow / Look at evaluation. Editor grid, joint/transform handles, paths, camera helpers and selection outlines are excluded.
 
 | Output | Files and interpretation |
 | --- | --- |
@@ -256,3 +270,5 @@ The scene and library previews use neutral hemisphere illumination, with **no di
 - Windows x64 is the verified development platform. macOS/Linux builds have not been verified.
 
 See VALIDATION.md for the exact checks and final delivery status.
+
+© Petr Sajner 2026. The visible header and native file metadata identify the current application version.

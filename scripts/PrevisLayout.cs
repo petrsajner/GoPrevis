@@ -35,7 +35,7 @@ public partial class PrevisApp
         editMenu.GetPopup().IdPressed+=id=>{switch(id){case 0:Undo();break;case 1:Redo();break;case 2:DuplicateSelected();break;case 3:DeleteSelected();break;}};
         var export=Button("Export shot",OpenShotExport);export.AddThemeStyleboxOverride("normal",Style(new Color("e5e2ec"),4));export.AddThemeColorOverride("font_color",new Color("202026"));
         _projectSetupButton=Button("Project · 16:9 · 24 fps",OpenProjectSetup);_projectSetupButton.TooltipText="Shot aspect ratio, resolution and frame rate";
-        var header=Row(Text("PREVIS",14),fileMenu,editMenu,BuildHistoryControls(),Space(),_projectSetupButton,Button("Save",SaveProject),export);
+        var header=Row(Text("PREVIS "+AppVersion,14),fileMenu,editMenu,BuildHistoryControls(),Space(),_projectSetupButton,Button("Save",SaveProject),export);
         header.AddThemeConstantOverride("separation",6);_layoutHeader=CompactPanel(header,4,2);_layoutRoot.AddChild(_layoutHeader);
 
         _layoutWorkSplit=new VSplitContainer{SizeFlagsVertical=SizeFlags.ExpandFill,SizeFlagsHorizontal=SizeFlags.ExpandFill,DraggerVisibility=SplitContainer.DraggerVisibilityEnum.Hidden};
@@ -102,7 +102,7 @@ public partial class PrevisApp
         var transport=Row(_play,Button("|◀",()=>SetTime(0)),_timeLabel,_scrub,Text("Length",11,true),_durationField,Text("fps",11,true),_fpsChoice);transport.AddThemeConstantOverride("separation",5);timelinePane.AddChild(CompactPanel(transport,6,2));
         _timeline=new TimelineView{App=this,CustomMinimumSize=new Vector2(0,150),SizeFlagsHorizontal=SizeFlags.ExpandFill};
         var timelineScroll=new ScrollContainer{SizeFlagsVertical=SizeFlags.ExpandFill,SizeFlagsHorizontal=SizeFlags.ExpandFill,HorizontalScrollMode=ScrollContainer.ScrollMode.Disabled};timelineScroll.AddChild(_timeline);var tracksPanel=CompactPanel(timelineScroll,2,2);tracksPanel.SizeFlagsVertical=SizeFlags.ExpandFill;timelinePane.AddChild(tracksPanel);
-        _status=Text("Ready",11,true);_status.ClipText=true;_status.TooltipText="RMB orbit · MMB pan · Alt+MMB zoom · Shift: 3D transforms · F frame selection";_layoutRoot.AddChild(CompactPanel(_status,6,1));
+        _status=Text("Ready",11,true);_status.ClipText=true;_status.SizeFlagsHorizontal=SizeFlags.ExpandFill;_status.TooltipText="RMB orbit · MMB pan · Alt+MMB zoom · Shift: 3D transforms · F frame selection";_layoutRoot.AddChild(CompactPanel(Row(_status,Text(AppCopyright,10,true)),6,1));
 
         _fileDialog=new FileDialog{Access=FileDialog.AccessEnum.Filesystem,UseNativeDialog=false};_fileDialog.FileSelected+=path=>{try{_fileAction?.Invoke(path);}catch(Exception ex){Error(ex.Message);}};AddChild(_fileDialog);
         _message=new AcceptDialog{Title="Previs"};AddChild(_message);

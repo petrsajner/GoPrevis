@@ -1,6 +1,40 @@
-# Previs 0.12.0 validation
+# Previs 0.13.0 validation
 
 Validation date: **2026-10-25**. Development/verified platform: **Windows x64**.
+
+This revision adds live camera Follow / Look at constraints, persistent background-picker folders, continuous raw-video decoding, and visible version/copyright branding. The app UI remains English. Project format **9** stores live camera bindings; formats **1–8** remain migration inputs.
+
+## Independent 0.13.0 Windows delivery
+
+The integrated source and exported Windows executable build with **zero warnings/errors**. Native executable checks pass:
+
+| Suite | Checks | Scope |
+| --- | ---: | --- |
+| Camera Follow / Look at | 32 | Independent targets, distance/height/side offsets, changed target paths, exact/smoothed reverse seeking, frame-rate-independent evaluation, manual XYZ/gizmo correction routing, retained source keys, Undo/Redo, duplication, missing targets, save/reopen, presets and pure human/native history sampling |
+| Video playback | 29 | Real 1080p25/30 playback, decoder reuse, bounded buffers, independent exact source-frame hashes, fractional 29.97 fps, rotated phone video, EOF, terminal errors, per-camera cache reuse and export pause/resume |
+| Editor settings and branding | 8 | Actual background pickers across cameras, cancellation, persisted directory reload, removed-folder fallback, damaged preferences, visible version and copyright |
+| Live car example | 22 | 301 exact car/camera samples, path-edit response without rebaking, zero camera TRS keys, reverse seek, portable roundtrip, stop at 10.012 seconds and a complete 300-frame rendered MP4 |
+
+Logs: `output/packaged-0.13.0-{camera-tracking,video-playback,editor-settings,car-demo}.log`. All stderr logs are empty. The example’s active camera uses Follow + Look at bindings to `demo-car`; both camera position/rotation key arrays are empty.
+
+### Real-time video measurements
+
+The exported executable plays real **1920×1080 H.264** sources into its actual camera-reference texture using a **960×540 editor preview**. The backend is **CPU FFmpeg**, with a persistent raw-RGB pipe and no GPU decoder dependency.
+
+| Source | Distinct displayed frames | Real elapsed time | Maximum sampled lag | Decoder launches | Initial probe/decode/display |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 25 fps | 63 | 2.516 s | 0 ms | 1 | 313 ms |
+| 30 fps | 76 | 2.518 s | 0 ms | 1 | 130 ms |
+
+These are machine-specific measured results, not a guarantee for every source codec/resolution or computer. Buffers measured **49,766,400 bytes per source**, within the 48 MiB budget; at most two sources are retained. Normal playback does not launch a decoder or encode/decode PNGs for each frame. Cached requests upload synchronously to a reused texture; uncached jumps seek asynchronously. Exact frame 5 is compared against independent FFmpeg `select(n=5)` output, including reverse/fractional-rate cases. Source files remain unchanged. Performance evidence is `build/Previs-0.13.0-Windows/output/video-playback-checks/report.json`; the portable validation folder contains a copy.
+
+The exported executable also passes **29 per-camera-background checks**, the existing **163-check project workflow**, **7 demo-opening checks**, **21 scene/placement + 27 appearance + 72 framing + 13 GPU scene/depth checks**, **38 interaction + 15 numeric + 14 trim checks**, and rendered full-HD smoke. Their logs are `output/packaged-0.13.0-{camera-reference,project-workflow,demo-launch,scene-settings,interaction,smoke}.log`, all with empty stderr. Source layout checks pass **24 assertions** at logical 1280×800, 1920×1080 and 2560×1440. PCK inventory confirms 567 source resources, 859 covers and 118 bundled poses, with no missing files.
+
+Actual source UI interaction verifies selecting a car, selecting a camera, enabling Follow and Look at, choosing targets and showing live status (`output/CameraTrackingUiProbe-0.13.0.log`). Its target lists are cached during playback so open dropdowns are not rebuilt every frame. The application header reads **PREVIS 0.13.0**, the footer displays **© Petr Sajner 2026**, and the exported executable’s native file metadata reports version **0.13.0.0** and the same copyright.
+
+The portable package includes the updated live-follow example, one-click launcher, MP4 preview and validation evidence. `BUILD-INFO.json` records exact source commit, live bindings, test counts, measured video performance and binary hashes. All ZIP entries are read back for CRC validation and a SHA-256 sidecar is written. Windows x64 is the tested platform.
+
+## Historical 0.12.0 evidence
 
 This revision supplies a ready-to-play car shot and moves image/video backgrounds from global project setup to independent camera properties. UI remains English. Project format **8** stores per-camera references; formats **1–7** remain migration inputs.
 

@@ -75,8 +75,14 @@ public partial class PrevisApp
         var dialog=new FileDialog{Access=FileDialog.AccessEnum.Filesystem,FileMode=FileDialog.FileModeEnum.OpenFile,UseNativeDialog=false,Title="Choose background for "+camera.Name};
         dialog.Filters=new[]{"*.png,*.jpg,*.jpeg,*.webp,*.bmp ; Background images","*.mp4,*.mov,*.mkv,*.webm,*.avi,*.m4v,*.ogv ; Background videos"};
         if(anchor.GetWindow()==_cameraBackgroundDialog)_cameraBackgroundDialog!.AddChild(dialog);else AddChild(dialog);
-        dialog.FileSelected+=path=>{var target=_cameras.FirstOrDefault(item=>item.Id==cameraId);EditCameraBackground(target,data=>{data.Path=Path.GetFullPath(path);data.Enabled=true;});dialog.QueueFree();};
-        dialog.Canceled+=()=>dialog.QueueFree();dialog.PopupCentered(new Vector2I(900,600));
+        RestoreBackgroundDirectory(dialog,camera);
+        dialog.FileSelected+=path=>
+        {
+            string full=Path.GetFullPath(path);RememberBackgroundDirectory(Path.GetDirectoryName(full));var target=_cameras.FirstOrDefault(item=>item.Id==cameraId);
+            bool reload=target!=null&&string.Equals(target.Reference.Path,full,OperatingSystem.IsWindows()?StringComparison.OrdinalIgnoreCase:StringComparison.Ordinal);
+            EditCameraBackground(target,data=>{data.Path=full;data.Enabled=true;});if(reload&&target?.Rig==_shot)_=LoadCameraReferenceAsync();dialog.QueueFree();
+        };
+        dialog.Canceled+=()=>{RememberBackgroundDirectory(dialog.CurrentDir);dialog.QueueFree();};dialog.PopupCentered(new Vector2I(900,600));
     }
     void RefreshCameraBackgroundControls()
     {

@@ -20,6 +20,7 @@ public partial class PrevisApp
     }
     void SelectCamera(CameraEntry camera)
     {
+        if(_selected!=null)_lastTrackingTargetId=_selected.Data.Id;
         if(_drawingPath)CancelDrawingPath();CancelPlacement();_selected=null;SyncPoseEditorSelection();_selectedCamera=camera;SetActiveCamera(camera.Id);_refreshing=true;_name.Text=camera.Name;
         _cameraQuickControls.Visible=true;ShowInspectorSection("Object");UpdateTransformFields();int i=_cameras.IndexOf(camera);if(i>=0)_objectList.Select(_entries.Count+i);_refreshing=false;UpdateSelection();RefreshAllObjectLabels();UpdateObjectAppearanceInspector();UpdatePlacementInspector();
     }
@@ -40,6 +41,7 @@ public partial class PrevisApp
         camera.Rig.GlobalRotationDegrees=TransformLayerRuntime.EvaluateVector(camera.Animation.Rotation,time,camera.BaseRotation,true);
         camera.Rig.Scale=TransformLayerRuntime.EvaluateVector(camera.Animation.Scale,time,camera.BaseScale);
         camera.Rig.FocalLengthMm=EvaluateLens(camera,time);
+        ApplyCameraTracking(camera,time);
     }
     float EvaluateLens(CameraEntry camera,double time)
     {
@@ -74,16 +76,17 @@ public partial class PrevisApp
         {
             var animation=_selectedCamera?.Animation??_selected?.Data.TransformAnimation;
             bool keyed=animation!=null&&TransformLayerRuntime.Channel(animation,pair.Key).Any(k=>Math.Abs(k.Time-_time)<.5/_fps);
-            pair.Value.Text=keyed?"◆":"◇";pair.Value.Disabled=animation==null;
+            bool controlled=_selectedCamera is {} constrained&&(pair.Key=="Position"&&CameraFollowActive(constrained)||pair.Key=="Rotation"&&CameraLookAtActive(constrained));
+            pair.Value.Text=keyed?"◆":"◇";pair.Value.Disabled=animation==null||controlled;pair.Value.TooltipText=controlled?"This channel is controlled by Follow / Look at. Adjust its offsets, or disable the constraint to edit the retained keys.":"Key all XYZ axes of "+pair.Key;
         }
-        foreach(var pair in _parameterLabels){bool offset=_selectedCamera==null&&_selected?.Data.Path.Enabled==true;pair.Value.Text=pair.Key+(offset&&pair.Key!="Scale"?" offset":"")+(pair.Key=="Position"?" (m)":pair.Key=="Rotation"?" (°)":"");}
+        foreach(var pair in _parameterLabels){bool offset=_selectedCamera==null&&_selected?.Data.Path.Enabled==true;pair.Value.Text=pair.Key+(_selectedCamera is {} tracking&&(pair.Key=="Position"&&CameraFollowActive(tracking)||pair.Key=="Rotation"&&CameraLookAtActive(tracking))?" · live":"")+(offset&&pair.Key!="Scale"?" offset":"")+(pair.Key=="Position"?" (m)":pair.Key=="Rotation"?" (°)":"");}
         _refreshing=old;RefreshKeyInterpolationInspector();
     }
     void StorePilotedCameraPose()
     {
         var camera=_cameras.First(c=>c.Rig==_shot);EnsureCameraAnimation(camera);
-        if(_autoKey||camera.Animation.Position.Count>0)TransformLayerRuntime.Upsert(camera.Animation.Position,_time,_shot.GlobalPosition);else camera.BasePosition=_shot.GlobalPosition;
-        if(_autoKey||camera.Animation.Rotation.Count>0)TransformLayerRuntime.Upsert(camera.Animation.Rotation,_time,_shot.GlobalRotationDegrees);else camera.BaseRotation=_shot.GlobalRotationDegrees;
+        if(!TryEditConstrainedCamera(camera,"Position",_shot.GlobalPosition)){if(_autoKey||camera.Animation.Position.Count>0)TransformLayerRuntime.Upsert(camera.Animation.Position,_time,_shot.GlobalPosition);else camera.BasePosition=_shot.GlobalPosition;}
+        if(!TryEditConstrainedCamera(camera,"Rotation",_shot.GlobalRotationDegrees)){if(_autoKey||camera.Animation.Rotation.Count>0)TransformLayerRuntime.Upsert(camera.Animation.Rotation,_time,_shot.GlobalRotationDegrees);else camera.BaseRotation=_shot.GlobalRotationDegrees;}
         UpdateTransformFields();_timeline.QueueRedraw();
     }
     void EditSelectedTransform(string group,int axis,float value)
@@ -95,10 +98,11 @@ public partial class PrevisApp
 
     void CaptureSelectedTransformKey(string group)
     {
-        if(_selected==null&&_selectedCamera==null){Status("Select an object or camera to add a key.");return;}PushUndo();
+        if(_selected==null&&_selectedCamera==null){Status("Select an object or camera to add a key.");return;}
+        if(_selectedCamera is {} constrained&&(group=="Position"&&CameraFollowActive(constrained)||group=="Rotation"&&CameraLookAtActive(constrained))){Status("This camera channel is controlled live. Adjust Follow / Look at offsets or disable the constraint to key its retained animation.");return;}PushUndo();
         foreach(string channel in group=="All"?new[]{"Position","Rotation","Scale"}:group=="Lens"?Array.Empty<string>():new[]{group})
         {
-            if(_selectedCamera is {} camera){EnsureCameraAnimation(camera);var value=channel=="Position"?camera.Rig.GlobalPosition:channel=="Rotation"?camera.Rig.GlobalRotationDegrees:camera.Rig.Scale;TransformLayerRuntime.Upsert(TransformLayerRuntime.Channel(camera.Animation,channel),_time,value);}
+            if(_selectedCamera is {} camera){if(channel=="Position"&&CameraFollowActive(camera)||channel=="Rotation"&&CameraLookAtActive(camera))continue;EnsureCameraAnimation(camera);var value=channel=="Position"?camera.Rig.GlobalPosition:channel=="Rotation"?camera.Rig.GlobalRotationDegrees:camera.Rig.Scale;TransformLayerRuntime.Upsert(TransformLayerRuntime.Channel(camera.Animation,channel),_time,value);}
             else if(_selected is {} entry){var list=TransformLayerRuntime.Channel(entry.Data.TransformAnimation,channel);var correction=TransformLayerRuntime.EvaluateVector(list,_time,channel=="Scale"?Vector3.One:Vector3.Zero,channel=="Rotation");TransformLayerRuntime.Upsert(list,_time,correction);}
         }
         if(_selectedCamera is {} cam&&(group=="All"||group=="Lens"))UpsertLens(cam,_time,cam.Rig.FocalLengthMm);

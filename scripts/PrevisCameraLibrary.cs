@@ -59,7 +59,7 @@ public partial class PrevisApp
         {
             float aspect=_sceneViewport.Size.X/(float)Math.Max(1,_sceneViewport.Size.Y);fov=Mathf.RadToDeg(2*Mathf.Atan(Mathf.Tan(Mathf.DegToRad(fov)*.5f)*aspect));
         }
-        PushUndo();_playing=false;_play.Text="▶";var camera=_cameras.First(c=>c.Rig==_shot);camera.Rig.ClearKeys();CameraFramingCatalog.Apply(camera.Rig,preset.Id,subject,working,fov,ProjectAspect);SyncCameraFromRig(camera);SetTime(_time);SelectCamera(camera);UpdatePreview();
+        PushUndo();_playing=false;_play.Text="▶";var camera=_cameras.First(c=>c.Rig==_shot);DisableCameraTrackingForPreset(camera);camera.Rig.ClearKeys();CameraFramingCatalog.Apply(camera.Rig,preset.Id,subject,working,fov,ProjectAspect);SyncCameraFromRig(camera);SetTime(_time);SelectCamera(camera);UpdatePreview();
         Status(preset.Name+" framing applied to "+camera.Name+".");
     }
     FramingSubject CameraFramingSubject()
@@ -99,7 +99,7 @@ public partial class PrevisApp
 
     void ApplyIllustratedCameraMove(string id)
     {
-        Vector3 target=CameraMovementTarget();var camera=_cameras.First(c=>c.Rig==_shot);PushUndo();_playing=false;_play.Text="▶";
+        Vector3 target=CameraMovementTarget();var camera=_cameras.First(c=>c.Rig==_shot);PushUndo();DisableCameraTrackingForPreset(camera);_playing=false;_play.Text="▶";
         camera.Rig.SetMovementPreset(id,_duration,target);SyncCameraFromRig(camera);SetTime(0);SelectCamera(camera);
         Status(CameraMoveCatalog.Find(id)!.Name+" applied to "+camera.Name+" from frame 0.");
     }

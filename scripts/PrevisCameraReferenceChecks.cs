@@ -75,7 +75,7 @@ public partial class PrevisApp
             EditCameraBackground(copy,data=>{data.Path=green;data.Opacity=.25f;});Check(A().Reference.Path==red&&A().Reference.Opacity==1,"editing a duplicated camera cannot alter the source camera");
             RemoveActiveCamera();SelectCamera(B());
             string projectFile=Path.Combine(output,"two-cameras.previs");SaveTo(projectFile);var saved=JsonSerializer.Deserialize<ProjectData>(File.ReadAllText(projectFile))!;
-            Check(saved.Version==8&&saved.Cameras.All(camera=>!Path.IsPathRooted(camera.Reference.Path)&&File.Exists(Path.Combine(output,camera.Reference.Path))),"format 8 bundles every camera source with portable relative paths");
+            Check(saved.Version==9&&saved.Cameras.All(camera=>!Path.IsPathRooted(camera.Reference.Path)&&File.Exists(Path.Combine(output,camera.Reference.Path))),"format 9 bundles every camera source with portable relative paths");
             Check(saved.Cameras.Select(camera=>camera.Reference.Path).Distinct().Count()==2&&saved.Setup.ReferencePath=="","each camera asset has its own destination and new projects store no global reference");
             LoadProjectFromPath(projectFile);await Ready();Check(ActiveCameraId==bId&&A().Reference.Opacity==1&&B().Reference.Opacity==1,"save/reopen retains independent references, settings and active camera");
             Check(SHA256.HashData(File.ReadAllBytes(A().Reference.Path)).SequenceEqual(SHA256.HashData(File.ReadAllBytes(red)))&&SHA256.HashData(File.ReadAllBytes(B().Reference.Path)).SequenceEqual(SHA256.HashData(File.ReadAllBytes(blue))),"both reopened camera sources preserve the original image bytes");

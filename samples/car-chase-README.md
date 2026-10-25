@@ -8,7 +8,7 @@ Choose **File → Open car chase demo**, or launch **Open car chase demo.cmd** b
 - **About 8–10 s:** it slows to a complete stop.
 - **The final two seconds:** both car and camera hold still.
 
-**Car follow** is the active camera. Its editable Position/Rotation keys keep a front three-quarter view of the vehicle. Choose **Wide overview** in the camera selector to see the road and complete route.
+**Car follow** is the active camera. Its live **Follow** and **Look at** settings keep a front three-quarter view of the vehicle, with no baked camera keys. Edit the car's route and the camera continues following automatically. Select the camera to change its target, distance, height, side offset and smoothness. The supplied composition uses zero smoothing for exact framing; increase it to try a gentler response. Choose **Wide overview** in the camera selector to see the road and complete route.
 
 Select **Blue car · eased drive** and click its **Path** diamonds on the timeline to inspect arrival times. The first and final moving intervals use custom **Curved** Bezier timing; intermediate keys remain Linear, so the car does not stop at each waypoint. The car's front faces its path direction automatically.
 

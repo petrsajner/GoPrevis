@@ -69,16 +69,12 @@ public partial class PrevisApp
 
         var follow=CreateCamera("Car follow",new CameraTrackData{Id=DemoFollowCameraId,Name="Car follow",FocalLength=35,ShowLabel=false},true);
         follow.AnimationInitialized=true;follow.Animation=new();follow.LensKeys.Clear();follow.Rig.ClearKeys();follow.BaseLens=35;
-        for(int frame=0;frame<=300;frame++)
-        {
-            double t=frame/25.0;var sample=ActorPathRuntime.Evaluate(path,t);var forward=sample.Tangent.Normalized();var right=forward.Cross(Vector3.Up).Normalized();
-            var position=sample.Position+forward*7.9f-right*5.8f+Vector3.Up*3.5f;
-            var target=sample.Position+Vector3.Up*.8f+forward*.65f;
-            var transform=new Transform3D(Basis.Identity,position).LookingAt(target,Vector3.Up);
-            TransformLayerRuntime.Upsert(follow.Animation.Position,t,position).Id="demo-follow-position-"+frame;
-            TransformLayerRuntime.Upsert(follow.Animation.Rotation,t,transform.Basis.GetEuler()*180/Mathf.Pi).Id="demo-follow-rotation-"+frame;
-        }
-        follow.BasePosition=Vector(follow.Animation.Position[0].Value);follow.BaseRotation=Vector(follow.Animation.Rotation[0].Value);
+        var opening=ActorPathRuntime.Evaluate(path,0);var openingForward=opening.Tangent.Normalized();var openingRight=openingForward.Cross(Vector3.Up).Normalized();
+        var openingPosition=opening.Position+openingForward*7.9f-openingRight*5.8f+Vector3.Up*3.5f;
+        follow.Rig.SetPose(openingPosition,opening.Position+Vector3.Up*.8f+openingForward*.65f);
+        follow.BasePosition=follow.Rig.GlobalPosition;follow.BaseRotation=follow.Rig.GlobalRotationDegrees;
+        follow.Tracking=new CameraTrackingData{FollowEnabled=true,FollowTargetId=DemoCarId,FollowOffset=new[]{-5.8f,3.5f,-7.9f},
+            LookAtEnabled=true,LookAtTargetId=DemoCarId,LookAtOffset=new[]{0f,.8f,-.65f},TargetRelativeOffsets=true,FollowSmoothness=0,LookAtSmoothness=0};
         var overview=CreateCamera("Wide overview",new CameraTrackData{Id=DemoOverviewCameraId,Name="Wide overview",FocalLength=27,ShowLabel=false},false);
         overview.Rig.SetPose(new Vector3(18,25,30),new Vector3(-2,0,3));SyncCameraFromRig(overview);overview.AnimationInitialized=true;
         SetActiveCamera(follow.Id);SetTime(0);Select(car);ShowInspectorSection("Path");_selectedPathPoint=0;RefreshSequenceInspector();RefreshTimelineSize();
@@ -127,11 +123,30 @@ public partial class PrevisApp
             Check(tracking,"the following camera aims at the intended lead point throughout the entire turn");
             SetTime(5.32);var carTransform=car.Node.Transform;var cameraTransform=follow.Rig.Transform;SetTime(9);SetTime(5.32);Check(car.Node.Transform.IsEqualApprox(carTransform)&&follow.Rig.Transform.IsEqualApprox(cameraTransform),"car and camera are deterministic when scrubbing backward");
             SetTime(stop+.2);var endCar=car.Node.Transform;var endCamera=follow.Rig.Transform;SetTime(11.99);Check(car.Node.Transform.IsEqualApprox(endCar)&&follow.Rig.Transform.IsEqualApprox(endCamera),"the camera settles with the stopped vehicle during the final beat");
-            Check(follow.Animation.Position.Count==301&&follow.Animation.Rotation.Count==301&&follow.Rig.Keys.Count==0,"the follow is stored as editable camera transform keys, without an invisible runtime tracking constraint");
+            Check(follow.Animation.Position.Count==0&&follow.Animation.Rotation.Count==0&&follow.Rig.Keys.Count==0&&follow.Tracking.FollowEnabled&&follow.Tracking.LookAtEnabled,
+                "the camera uses editable live Follow and Look at settings without baked transform keys");
+            var originalPoints=path.Points.Select(point=>(float[])point.Clone()).ToList();
+            SetTime(5.32);var originalCarPosition=car.Node.Position;var originalCameraPosition=follow.Rig.GlobalPosition;
+            string unchangedKeys=JsonSerializer.Serialize(follow.Animation);
+            var translation=new Vector3(3,0,-2);foreach(var point in path.Points){point[0]+=translation.X;point[2]+=translation.Z;}
+            SetTime(5.32);
+            Check((car.Node.Position-originalCarPosition).IsEqualApprox(translation)&&(follow.Rig.GlobalPosition-originalCameraPosition).IsEqualApprox(translation),
+                "moving the authored car path moves the following camera immediately without rebaking");
+            path.Points[3][0]+=1.2f;path.Points[3][2]-=1.8f;SetTime(5.32);
+            var changedSample=ActorPathRuntime.Evaluate(path,5.32);var changedAim=follow.Rig.GlobalTransform.AffineInverse()*(changedSample.Position+Vector3.Up*.8f+changedSample.Tangent*.65f);
+            Check(Math.Abs(changedAim.X)<.002f&&Math.Abs(changedAim.Y)<.002f,"editing the bend still keeps Look at aimed at the moving car");
+            var changedTransform=follow.Rig.GlobalTransform;SetTime(8.7);SetTime(5.32);
+            Check(follow.Rig.GlobalTransform.IsEqualApprox(changedTransform),"the live camera remains deterministic after a path edit and reverse seek");
+            Check(JsonSerializer.Serialize(follow.Animation)==unchangedKeys&&follow.Animation.Position.Count==0&&follow.Animation.Rotation.Count==0,
+                "path edits never rewrite or generate camera animation keys");
+            path.Points=originalPoints;SetTime(5.32);
+            Check(car.Node.Transform.IsEqualApprox(carTransform)&&follow.Rig.Transform.IsEqualApprox(cameraTransform),"restoring path points restores the exact original live composition");
 
             string samplePath=Path.Combine(output,"car-chase.previs");SetTime(0);SaveTo(samplePath);
             if(saveSample){string sourceSample=ProjectSettings.GlobalizePath("res://samples/car-chase.previs");Directory.CreateDirectory(Path.GetDirectoryName(sourceSample)!);File.Copy(samplePath,sourceSample,true);}
-            var saved=JsonSerializer.Deserialize<ProjectData>(File.ReadAllText(samplePath))!;Check(saved.ActiveCameraId==DemoFollowCameraId&&saved.Objects.Single(e=>e.Id==DemoCarId).Path.PointInterpolation[0].Mode=="Curved","the portable scene opens with the correct active camera and acceleration timing");
+            var saved=JsonSerializer.Deserialize<ProjectData>(File.ReadAllText(samplePath))!;var savedFollow=saved.Cameras.Single(camera=>camera.Id==DemoFollowCameraId);
+            Check(saved.ActiveCameraId==DemoFollowCameraId&&saved.Objects.Single(e=>e.Id==DemoCarId).Path.PointInterpolation[0].Mode=="Curved"&&savedFollow.Tracking.FollowTargetId==DemoCarId&&savedFollow.Tracking.LookAtTargetId==DemoCarId&&savedFollow.TransformAnimation.Position.Count==0,
+                "the portable scene opens with the correct active camera, live targets and acceleration timing");
             LoadProjectFromPath(samplePath);SetTime(5.32);car=_entries.Single(e=>e.Data.Id==DemoCarId);follow=_cameras.Single(c=>c.Id==DemoFollowCameraId);
             Check(car.Node.Transform.IsEqualApprox(carTransform)&&follow.Rig.Transform.IsEqualApprox(cameraTransform),"portable save/reopen preserves the exact car and camera poses");
             if(DisplayServer.GetName()!="headless")

@@ -4,6 +4,9 @@
     <EnableDynamicLoading>true</EnableDynamicLoading>
     <Nullable>enable</Nullable>
     <RootNamespace>Previs</RootNamespace>
+    <Version>0.13.0</Version>
+    <Authors>Petr Sajner</Authors>
+    <Copyright>Copyright © Petr Sajner 2026</Copyright>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove=".tools/**;build/**;tests/**" />
