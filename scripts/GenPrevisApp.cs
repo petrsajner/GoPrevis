@@ -63,7 +63,9 @@ public partial class GenPrevisApp : Control
         var window=GetWindow();float dpiScale=Math.Clamp(Math.Max(DisplayServer.ScreenGetScale(),DisplayServer.ScreenGetDpi()/96f),1,2.5f);window.ContentScaleMode=Window.ContentScaleModeEnum.CanvasItems;window.ContentScaleSize=Vector2I.Zero;window.ContentScaleFactor=dpiScale;
         window.Title="GenPrevis "+AppVersion+" — 3D control clips for AI video";
         BuildTheme(); BuildUi(); BuildWorld(); StarterScene();
-        if (OS.GetCmdlineUserArgs().Contains("--editor-refinements-test")) _ = RunEditorRefinementChecksAndQuit();
+        if (OS.GetCmdlineUserArgs().Contains("--ai-live-test")) _ = RunAiChecksAndQuit(true);
+        else if (OS.GetCmdlineUserArgs().Contains("--ai-test")) _ = RunAiChecksAndQuit(false);
+        else if (OS.GetCmdlineUserArgs().Contains("--editor-refinements-test")) _ = RunEditorRefinementChecksAndQuit();
         else if (OS.GetCmdlineUserArgs().Contains("--animal-repair-test")) _ = RunAnimalRepairChecksAndQuit();
         else if (OS.GetCmdlineUserArgs().Contains("--rename-test")) _ = RunRenameChecksAndQuit();
         else if (OS.GetCmdlineUserArgs().Contains("--camera-tracking-test")) _ = RunCameraTrackingChecksAndQuit();
@@ -84,10 +86,10 @@ public partial class GenPrevisApp : Control
         else if (OS.GetCmdlineUserArgs().Contains("--pose-test")) _ = RunPoseChecksAndQuit();
         else if (OS.GetCmdlineUserArgs().Contains("--content-test")) _ = RunContentChecksAndQuit();
         else if (OS.GetCmdlineUserArgs().Contains("--smoke-test")) _ = RunSmokeChecks();
-        else ApplyStartupProjectArguments();
+        else {if(OS.GetCmdlineUserArgs().Contains("--ai-connect-vividia"))ConfigureVividiaAiConnection();ApplyStartupProjectArguments();}
     }
 
-    public override void _ExitTree()=>DisposeCameraReference();
+    public override void _ExitTree(){_aiShuttingDown=true;_aiCancellation?.Cancel();_aiService?.Dispose();DisposeCameraReference();}
 
     async Task RunContentChecksAndQuit()
     {
@@ -359,7 +361,7 @@ public partial class GenPrevisApp : Control
     }
     void ViewportInput(InputEvent input)
     {
-        if(_exportBusy)return;
+        if(_exportBusy||_aiBusy)return;
         if(input is InputEventMouseButton {Pressed:true,ButtonIndex:MouseButton.Left or MouseButton.Right or MouseButton.Middle}){_timeline.ClearKeySelection();GetViewport().GuiReleaseFocus();}
         UpdateViewportModifiers(input);
         if(HandleViewportZoom(input))return;
@@ -401,7 +403,7 @@ public partial class GenPrevisApp : Control
     }
     public override void _UnhandledInput(InputEvent input)
     {
-        if(_exportBusy)return;
+        if(_exportBusy||_aiBusy)return;
         if (input is not InputEventKey key || !key.Pressed || key.Echo) return;
         if(_placeOnObject&&key.Keycode==Key.Escape){CancelPlacement();Status("Placement cancelled.");return;}
         if(_drawingPath&&key.Keycode==Key.Escape){CancelDrawingPath();return;}if(_drawingPath&&key.Keycode==Key.Enter){FinishDrawingPath();return;}

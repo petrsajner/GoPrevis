@@ -35,7 +35,7 @@ public partial class GenPrevisApp
         editMenu.GetPopup().IdPressed+=id=>{switch(id){case 0:Undo();break;case 1:Redo();break;case 2:DuplicateSelected();break;case 3:DeleteSelected();break;}};
         var export=Button("Export shot",OpenShotExport);export.AddThemeStyleboxOverride("normal",Style(new Color("e5e2ec"),4));export.AddThemeColorOverride("font_color",new Color("202026"));
         _projectSetupButton=Button("Project · 16:9 · 24 fps",OpenProjectSetup);_projectSetupButton.TooltipText="Shot aspect ratio, resolution and frame rate";
-        var header=Row(Text("GENPREVIS "+AppVersion,14),fileMenu,editMenu,BuildHistoryControls(),Space(),_projectSetupButton,Button("Save",SaveProject),export);
+        var header=Row(Text("GENPREVIS "+AppVersion,14),fileMenu,editMenu,BuildHistoryControls(),Space(),Button("AI Director",OpenAiDirector),_projectSetupButton,Button("Save",SaveProject),export);
         header.AddThemeConstantOverride("separation",6);_layoutHeader=CompactPanel(header,4,2);_layoutRoot.AddChild(_layoutHeader);
 
         _layoutWorkSplit=new VSplitContainer{SizeFlagsVertical=SizeFlags.ExpandFill,SizeFlagsHorizontal=SizeFlags.ExpandFill,DraggerVisibility=SplitContainer.DraggerVisibilityEnum.Hidden};

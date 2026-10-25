@@ -1,14 +1,30 @@
 <img src="assets/genprevis.png" width="120" alt="GenPrevis icon">
 
-# GenPrevis 0.15.0 — 3D control clips for AI video
+# GenPrevis 0.16.0 — 3D control clips for AI video
 
 GenPrevis prepares 3D control clips for AI video generation. Build the scene, direct character and object motion, frame the camera, and export synchronized color, depth and pose guidance. It uses Godot 4.7.2 .NET, C# and .NET 10. The application UI, dialogs and authored errors are English.
 
 ## Run
 
-The Windows portable output is `build/GenPrevis-0.15.0-Windows/GenPrevis.exe`. Keep GenPrevis.exe, GenPrevis.pck and data_GenPrevis_windows_x86_64 together. The portable Windows build includes its runtime; using it does not require the Godot editor or .NET SDK.
+The Windows portable output is `build/GenPrevis-0.16.0-Windows/GenPrevis.exe`. Keep GenPrevis.exe, GenPrevis.pck and data_GenPrevis_windows_x86_64 together. The portable Windows build includes its runtime; using it does not require the Godot editor or .NET SDK.
 
 For development, open project.godot with Godot 4.7.2 .NET. Local tools are in the ignored .tools directory. The existing run.ps1 starts the source project; build.ps1 -Test builds, runs source checks and exports Windows x64.
+
+## AI Director in 0.16.0
+
+Click **AI Director** in the top bar, choose **New scene** or **Edit current scene**, describe the shot in English or Czech, then click **Build shot** (Ctrl+Enter). **View shot** enters the active camera; Space plays its timeline. The complete request is one Undo step, including object creation, animation and cameras. Subsequent prompts can modify the same scene while preserving unrelated objects and animation.
+
+The default is **GPT-6 Luna through OpenRouter** (`openai/gpt-6-luna`). Also available: direct OpenAI Responses (`gpt-6-luna`), direct Google **Gemini 3.8 Flash** (`gemini-3.8-flash`), and a **Custom model / OpenRouter** field for later model changes. A custom model must support function calling. All providers use the same validated scene plan and existing Godot animation runtime.
+
+Use **Connection…** to connect your provider key. On Windows the app can also read the existing **VIVIDIA** Google/OpenRouter entries from the current user's Windows Credential Manager when **Use existing VIVIDIA key** is selected. It does not modify those entries or copy them into a project or distribution. Manually entered Windows keys use GenPrevis's own OS credential entry; on macOS/Linux manual keys are session-only and provider environment variables can reconnect them. No key is bundled. Only nonsecret model/source preferences are saved in the local user profile. The Windows build is the tested delivery.
+
+Supported scene instructions include library models and static poses, exact placement on a chair or ground, compatible human/animal mocap sequences and crossfades, timed paths, object XYZ transform keys, additive pose corrections, cameras with live Follow/Look at, keyed dolly/crane moves, lenses, lights, scene display settings, aspect/resolution and FPS. Bone corrections and source clips stay separate and editable. An animated dog resolves to the actual Husky/Shiba Inu rigs; the older built-in Dog prop is static.
+
+The model can read the current scene and search actual library IDs. Plans validate IDs, rig compatibility, values, timing, limits and target references. New-scene mode presents an empty target while retaining project format/FPS defaults. The model cannot execute scripts, choose arbitrary files, save projects, render exports or alter credentials. Validation/cancellation/runtime failures preserve the scene and history; successful changes stay fully editable.
+
+Planning is capped at eight provider requests, 45000 output tokens and 100 object changes per request. Existing scene context is limited to 180000 characters in this first prototype. Token use and estimated cost are shown after success. GPT-6 Luna Standard is $0.10 input / $0.50 output per million tokens; Gemini 3.8 Flash Standard is $0.75/$3.75 through December 31, 2026 and $1.50/$7.50 from January 1, 2027. OpenRouter account fees and caching can change actual billed cost. See [OpenAI](https://developers.openai.com/api/docs/models/gpt-6-luna), [Google](https://ai.google.dev/gemini-api/docs/pricing#gemini-3.8-flash) and your provider usage records.
+
+This first AI release plans from structured geometry/library data. It does not visually inspect rendered camera frames or guarantee collision-free blocking, composition or acting quality. Review the shot and refine it with another prompt or the regular tools. Built-in Examples provide prompts for a car shot, cafe blocking and a dog in a park. Portable examples and real API/render evidence are included in the delivery.
 
 ## Editor improvements in 0.15.0
 
@@ -21,7 +37,7 @@ The portable example **examples/lights.genprevis** contains a box, a point light
 
 Project format **11** stores independently editable lights; project formats **1–10** remain readable. Older app versions reject format 11 rather than reopening a light as a box.
 
-AI scene control is still a proposal. The recommended low-cost candidate, typed command interface and spatial evaluation plan are documented in [the design, section 12](NAVRH-GENPREVIS.md#12-ai-režie-scény--návrh-k-25-10-2026). No cloud AI connection or API charge is enabled by this release.
+AI Director is available in 0.16.0. Its typed scene commands and remaining design scope are documented in section 12 of NAVRH-GENPREVIS.md. Requests run only when Build shot is clicked.
 
 ## Rename and existing projects
 

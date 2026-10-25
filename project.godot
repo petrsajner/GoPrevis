@@ -3,7 +3,7 @@ config_version=5
 
 [application]
 config/name="GenPrevis"
-config/version="0.15.0"
+config/version="0.16.0"
 run/main_scene="res://Main.tscn"
 config/features=PackedStringArray("4.7", "C#", "GL Compatibility")
 config/icon="res://assets/genprevis.png"
