@@ -10,7 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Godot;
 
-namespace Previs;
+namespace GenPrevis;
 
 public sealed record VideoProbeInfo
 {
@@ -22,7 +22,7 @@ public sealed record VideoProbeInfo
     public double DurationSeconds { get; init; }
 }
 
-/// <summary>Runs the separately bundled command-line tools; no FFmpeg libraries are linked into Previs.</summary>
+/// <summary>Runs the separately bundled command-line tools; no FFmpeg libraries are linked into GenPrevis.</summary>
 public static class ShotVideoEncoder
 {
     public static string FindBinary(string name)
@@ -41,7 +41,7 @@ public static class ShotVideoEncoder
         // Only the editor-project fallback needs an engine API. Normal exported
         // and source runs stay entirely in .NET, including worker-thread probes.
         string projectPath=ProjectSettings.GlobalizePath("res://.tools/ffmpeg/"+file);
-        return File.Exists(projectPath)?projectPath:throw new FileNotFoundException("The bundled "+name+" tool is missing. Use the complete Previs package for MP4 export.");
+        return File.Exists(projectPath)?projectPath:throw new FileNotFoundException("The bundled "+name+" tool is missing. Use the complete GenPrevis package for MP4 export.");
     }
 
     /// <summary>Encodes zero-based 000000.png frames into an atomic, H.264/yuv420p MP4.</summary>

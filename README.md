@@ -1,18 +1,34 @@
-# Previs 0.13.0 — film shot planning
+<img src="assets/genprevis.png" width="120" alt="GenPrevis icon">
 
-Previs is a desktop blockout tool for preparing movement and camera references for AI video. It uses Godot 4.7.2 .NET, C# and .NET 10. The application UI, dialogs and authored errors are English.
+# GenPrevis 0.14.0 — 3D control clips for AI video
+
+GenPrevis prepares 3D control clips for AI video generation. Build the scene, direct character and object motion, frame the camera, and export synchronized color, depth and pose guidance. It uses Godot 4.7.2 .NET, C# and .NET 10. The application UI, dialogs and authored errors are English.
 
 ## Run
 
-The Windows portable output is `build/Previs-0.13.0-Windows/Previs.exe`. Keep Previs.exe, Previs.pck and data_Previs_windows_x86_64 together. The portable Windows build includes its runtime; using it does not require the Godot editor or .NET SDK.
+The Windows portable output is `build/GenPrevis-0.14.0-Windows/GenPrevis.exe`. Keep GenPrevis.exe, GenPrevis.pck and data_GenPrevis_windows_x86_64 together. The portable Windows build includes its runtime; using it does not require the Godot editor or .NET SDK.
 
 For development, open project.godot with Godot 4.7.2 .NET. Local tools are in the ignored .tools directory. The existing run.ps1 starts the source project; build.ps1 -Test builds, runs source checks and exports Windows x64.
 
+## Rename and existing projects
+
+The product and GitHub repository are now **GenPrevis**: [petrsajner/GenPrevis](https://github.com/petrsajner/GenPrevis). The Windows executable is **GenPrevis.exe**; the C# solution, assembly and source namespace use the same name. The app UI remains entirely English.
+
+New projects use **.genprevis**. Existing **.previs** files, including source asset folders, still open directly. On the first regular start, GenPrevis imports saved user poses and file-picker preferences from the previous **Previs** user profile. Existing GenPrevis files are kept, the source profile is untouched, and a one-time marker prevents re-importing deliberately deleted presets. Bundled source caches are recreated on demand.
+
+The approved Windows icon is a blue shaded 3D mannequin on a light perspective grid floor, viewed obliquely from above. The PNG source and multi-size ICO are in `assets/genprevis.png` and `assets/genprevis.ico`.
+
+## Repaired animal feet and motion placement
+
+The twelve Quaternius rigs expose four complete foot chains. Their skin-weighted `IKFrontLeg` / `IKBackLeg` and toe bones are treated as real deforming joints and connected to the corresponding lower legs at runtime. Original authored animation transforms are converted into that hierarchy before blending; source GLB files remain unchanged. The pose inspector labels these joints as Front/Back foot and toes. Moving a knee or ankle carries its descendants and the actual paw mesh.
+
+A newly placed animal's automatic Idle is a replaceable placeholder. The first library motion replaces it. A looping native walk/run fills the remaining shot (at least three seconds); the original short cycle is repeated rather than frozen after one jump. Explicitly authored clips still append and crossfade, and one-shot actions keep their original duration. Clip timing, source IN/OUT and Loop remain editable.
+
 ## Ready-made car shot
 
-Double-click **Open car chase demo.cmd** beside Previs.exe, or choose **File → Open car chase demo**. The example opens at frame zero in its following camera. Press **Space** to play. Saving prompts for your own project, preserving the supplied example.
+Double-click **Open car chase demo.cmd** beside GenPrevis.exe, or choose **File → Open car chase demo**. The example opens at frame zero in its following camera. Press **Space** to play. Saving prompts for your own project, preserving the supplied example.
 
-The self-contained **examples/car-chase.previs** shot is 12 seconds at 25 fps: a parked blue car accelerates, follows a sweeping 90-degree road turn, decelerates and holds still with the camera for the final two seconds. **Car follow** uses live Follow + Look at bindings to the car, with no baked position/rotation keys; **Wide overview** shows the complete route. Select the car's Path track to inspect arrival keys and Bezier acceleration/deceleration. Changing the car’s path, arrival timing or manual transforms updates the following camera automatically. Every scene object is a built-in prop, so the project needs no imported model or motion file.
+The self-contained **examples/car-chase.genprevis** shot is 12 seconds at 25 fps: a parked blue car accelerates, follows a sweeping 90-degree road turn, decelerates and holds still with the camera for the final two seconds. **Car follow** uses live Follow + Look at bindings to the car, with no baked position/rotation keys; **Wide overview** shows the complete route. Select the car's Path track to inspect arrival keys and Bezier acceleration/deceleration. Changing the car’s path, arrival timing or manual transforms updates the following camera automatically. Every scene object is a built-in prop, so the project needs no imported model or motion file.
 
 ## One placement workflow
 
@@ -139,7 +155,7 @@ A posed figure holds its shape for the entire scene without a motion clip. Apply
 
 The Poses library can also **save the current body pose** from a selected figure, including a frame sampled from mocap. Saving a preset leaves the figure's existing animation intact. The saved preset can then be applied to another figure as a static pose. Custom presets are stored locally, and a project's applied body pose is embedded in the `.previs` file, so opening a static figure does not require its original motion source or the creator's preset library. **Reset pose** in the library restores the default standing body; if source clips are present, they continue playing.
 
-The self-contained `samples/static-poses.previs` example includes a seated figure and chair, floor sitting, kneeling and lying figures. It contains no motion clips or external asset dependencies.
+The self-contained `samples/static-poses.genprevis` example includes a seated figure and chair, floor sitting, kneeling and lying figures. It contains no motion clips or external asset dependencies.
 
 Seating presets are prepared around practical blocking proportions. Match the figure's placement to the actual chair, stool or floor; smaller body variants scale the pose as well. Use Place on object to position a seated pose on the chosen support, then use the manual pose editor below to adjust individual limbs. Existing animal animations retain their own rig compatibility.
 
@@ -159,7 +175,7 @@ The blend order is **blended mocap or static base → local pose corrections →
 
 Enter a name and use **Save to My poses** to store the currently visible corrected body as a reusable static library item. Saving does not replace the scene's mocap. The preset retains intentional body offsets and local joint rotations, while separate scene-object placement and proportions remain with the target figure. **Reset edits** restores the correction layer from the start of the editing session; **Done** leaves its keys active.
 
-`samples/manual-adjusted-pose.previs` contains a fitted figure and imported chair. For a specific seat, use Place on object or Arrange, then adjust pelvis and limbs in Pose. Placement preserves the body pose; animation foot-contact solving is not provided.
+`samples/manual-adjusted-pose.genprevis` contains a fitted figure and imported chair. For a specific seat, use Place on object or Arrange, then adjust pelvis and limbs in Pose. Placement preserves the body pose; animation foot-contact solving is not provided.
 
 ## Arrange motion, paths and corrections
 
@@ -221,7 +237,7 @@ A continuous numeric scrub creates one Undo action. After reaching a minimum or 
 
 ## Save, reopen and export
 
-Save creates a **version 9 .previs** project and neighbouring .assets folder containing used sources. Keep both together when moving a project. It preserves embedded static body poses and keyed additive pose corrections, motion tracks, paths and path keys, final transform channels, camera channels/lenses and live constraints, active camera, scene display settings, per-object colors/labels, lighting, interpolation curves, native poses and project setup. Every camera’s original image/video source is bundled under a separate safe content-addressed filename in the neighbouring assets folder; decoded preview frames are disposable cache data. Version 1/2/3/4/5/6/7/8 scenes are accepted on opening. Version 7 projects migrate their former global reference to the saved active camera. Other cameras start without a reference. Older releases refuse version 9 instead of silently dropping live Follow / Look at bindings. Overwriting an existing project keeps the previous JSON as .previs.bak.
+Save creates a **version 10 .genprevis** project and neighbouring .assets folder containing used sources. Keep both together when moving a project. It preserves embedded static body poses and keyed additive pose corrections, motion tracks, paths and path keys, final transform channels, camera channels/lenses and live constraints, active camera, scene display settings, per-object colors/labels, lighting, interpolation curves, native poses and project setup. Every camera’s original image/video source is bundled under a separate safe content-addressed filename in the neighbouring assets folder; decoded preview frames are disposable cache data. Version 1/2/3/4/5/6/7/8/9 scenes are accepted on opening. Version 7 projects migrate their former global reference to the saved active camera. Other cameras start without a reference. Legacy .previs projects remain accepted without renaming; their project data and neighbouring assets retain their existing layout. Format 10 additionally preserves repaired native-foot hierarchy snapshots; earlier releases reject this version instead of discarding that data. Overwriting an existing project keeps the previous JSON as .genprevis.bak.
 
 ### Export a complete shot
 

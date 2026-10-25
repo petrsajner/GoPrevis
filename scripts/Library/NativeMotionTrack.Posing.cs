@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Previs;
+namespace GenPrevis;
 
 public sealed partial class NativeMotionTrack
 {
@@ -22,7 +22,7 @@ public sealed partial class NativeMotionTrack
         for(int i=0;i<_bones.Length;i++)if(BoneName(i)==name)return i;
         throw new FormatException("This animal rig has no joint named '"+name+"'.");
     }
-    public IReadOnlyList<string> PoseBoneNames=>_poseNames??=Enumerable.Range(0,_bones.Length).Select(BoneName).Where(name=>!name.StartsWith("PoleTarget",StringComparison.OrdinalIgnoreCase)&&!name.StartsWith("IK",StringComparison.OrdinalIgnoreCase)&&!name.StartsWith("FF",StringComparison.OrdinalIgnoreCase)).ToArray();
+    public IReadOnlyList<string> PoseBoneNames=>_poseNames??=Enumerable.Range(0,_bones.Length).Select(BoneName).Where(name=>!name.StartsWith("PoleTarget",StringComparison.OrdinalIgnoreCase)).ToArray();
     public string RootBoneName=>BoneName(_roots[0]);
     public string DefaultPoseBone=>PoseBoneNames.FirstOrDefault(name=>name.Contains("head",StringComparison.OrdinalIgnoreCase))??RootBoneName;
     public bool IsEndJoint(string name){var bone=_bones[FindPoseBone(name)];return !Enumerable.Range(0,bone.Skeleton.GetBoneCount()).Any(i=>bone.Skeleton.GetBoneParent(i)==bone.Index);}
@@ -50,15 +50,32 @@ public sealed partial class NativeMotionTrack
     public StaticPoseData CaptureSourcePose()=>CapturePose(_source,"Source pose");
     StaticPoseData CapturePose(Pose? pose,string name)
     {
-        var data=new StaticPoseData{Name=name};
-        for(int i=0;i<_bones.Length;i++)data.BoneRotations[BoneName(i)]=PoseCorrectionRuntime.Values(pose==null?GetPoseBoneRotation(BoneName(i)):pose.Rotation[i]);
+        var data=new StaticPoseData{Name=name,NativeHierarchyVersion=1};
+        for(int i=0;i<_bones.Length;i++)
+        {
+            string key=BoneName(i);data.BoneRotations[key]=PoseCorrectionRuntime.Values(pose==null?GetPoseBoneRotation(key):pose.Rotation[i]);
+            var b=_bones[i];Vector3 bonePosition=pose==null?b.Skeleton.GetBonePosePosition(b.Index):pose.Position[i],scale=pose==null?b.Skeleton.GetBonePoseScale(b.Index):pose.Scale[i];
+            if(!_roots.Contains(i))data.NativeBonePositions[key]=new[]{bonePosition.X,bonePosition.Y,bonePosition.Z};data.NativeBoneScales[key]=new[]{scale.X,scale.Y,scale.Z};
+        }
         var root=_bones[_roots[0]];Vector3 position=(pose==null?root.Skeleton.GetBonePosePosition(root.Index):pose.Position[_roots[0]])-_rest.Position[_roots[0]];
         data.RootPosition=new[]{position.X,position.Y,position.Z};return data;
     }
     void ApplyStaticPose(Pose pose,StaticPoseData? data)
     {
         if(data==null)return;
+        if(data.NativeHierarchyVersion==0&&_linkedFeet.Count>0)
+        {
+            Copy(_authoredRest,pose);for(int i=0;i<_bones.Length;i++)if(data.BoneRotations.ContainsKey(BoneName(i)))pose.Rotation[i]=PoseCorrectionRuntime.ReadBone(data,BoneName(i));
+            Vector3 legacyRoot=PoseCorrectionRuntime.RootValue(data);if(legacyRoot.IsFinite())foreach(int index in _roots)pose.Position[index]+=legacyRoot;
+            ConvertAuthoredPose(pose);return;
+        }
         for(int i=0;i<_bones.Length;i++)if(data.BoneRotations.ContainsKey(BoneName(i)))pose.Rotation[i]=PoseCorrectionRuntime.ReadBone(data,BoneName(i));
+        for(int i=0;i<_bones.Length;i++)
+        {
+            string key=BoneName(i);
+            if(!_roots.Contains(i)&&data.NativeBonePositions.TryGetValue(key,out var position)&&position.Length==3&&position.All(float.IsFinite))pose.Position[i]=new(position[0],position[1],position[2]);
+            if(data.NativeBoneScales.TryGetValue(key,out var scale)&&scale.Length==3&&scale.All(float.IsFinite))pose.Scale[i]=new(scale[0],scale[1],scale[2]);
+        }
         Vector3 root=PoseCorrectionRuntime.RootValue(data);if(root.IsFinite())foreach(int index in _roots)pose.Position[index]+=root;
     }
     void ApplyCorrections(Pose pose,PoseCorrectionAnimationData? corrections,double time)

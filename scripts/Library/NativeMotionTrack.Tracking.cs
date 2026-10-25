@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Previs;
+namespace GenPrevis;
 
 public sealed partial class NativeMotionTrack
 {
@@ -27,9 +27,17 @@ public sealed partial class NativeMotionTrack
     }
     void SampleTrackingClip(Clip clip,double seconds,Pose output)
     {
-        Copy(_rest,output);double t=clip.Offset+Math.Clamp(seconds-clip.Start,0,clip.Duration)*clip.Speed;var animation=_player.GetAnimation(clip.Name);double length=animation.Length;
+        double t=clip.Offset+Math.Clamp(seconds-clip.Start,0,clip.Duration)*clip.Speed;var animation=_player.GetAnimation(clip.Name);double length=animation.Length;
         double loops=clip.Loop&&length>0?Math.Floor(t/length):0;t=length<=0?0:clip.Loop?((t%length)+length)%length:Math.Clamp(t,0,length);
-        foreach(var binding in TrackingBindings(clip.Name))
+        ReadAuthoredAnimation(clip.Name,t,output);ConvertAuthoredPose(output);
+        if(loops!=0){var cycle=_cycles[clip.Name];for(int i=0;i<_roots.Length;i++)output.Position[_roots[i]]+=cycle.Bones[i]*(float)loops;if(_nodes.Length>0)output.NodePosition[0]+=cycle.Node*(float)loops;}
+        if(clip.InPlace){foreach(int root in _roots){output.Position[root].X=_rest.Position[root].X;output.Position[root].Z=_rest.Position[root].Z;}if(_nodes.Length>0){output.NodePosition[0].X=_rest.NodePosition[0].X;output.NodePosition[0].Z=_rest.NodePosition[0].Z;}}
+        ApplyAlignment(clip,output);
+    }
+    void ReadAuthoredAnimation(string name,double t,Pose output)
+    {
+        Copy(_authoredRest,output);var animation=_player.GetAnimation(name);
+        foreach(var binding in TrackingBindings(name))
         {
             if(binding.Type==Animation.TrackType.Position3D)
             {var value=animation.PositionTrackInterpolate(binding.Track,t);if(binding.Bone>=0)output.Position[binding.Bone]=value;else output.NodePosition[binding.Node]=value;}
@@ -38,9 +46,6 @@ public sealed partial class NativeMotionTrack
             else
             {var value=animation.ScaleTrackInterpolate(binding.Track,t);if(binding.Bone>=0)output.Scale[binding.Bone]=value;else output.NodeScale[binding.Node]=value;}
         }
-        if(loops!=0){var cycle=_cycles[clip.Name];for(int i=0;i<_roots.Length;i++)output.Position[_roots[i]]+=cycle.Bones[i]*(float)loops;if(_nodes.Length>0)output.NodePosition[0]+=cycle.Node*(float)loops;}
-        if(clip.InPlace){foreach(int root in _roots){output.Position[root].X=_rest.Position[root].X;output.Position[root].Z=_rest.Position[root].Z;}if(_nodes.Length>0){output.NodePosition[0].X=_rest.NodePosition[0].X;output.NodePosition[0].Z=_rest.NodePosition[0].Z;}}
-        ApplyAlignment(clip,output);
     }
     Transform3D TrackingNodeTransform(Node3D node,Pose pose)
     {

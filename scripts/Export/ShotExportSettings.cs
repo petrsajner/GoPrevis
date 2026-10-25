@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Previs;
+namespace GenPrevis;
 
 /// <summary>All selected outputs sample the same end-exclusive shot-time range.</summary>
 public sealed class ShotExportSettings

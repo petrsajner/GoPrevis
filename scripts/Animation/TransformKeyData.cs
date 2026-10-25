@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Previs;
+namespace GenPrevis;
 
 /// <summary>One time/value key for all three axes of a transform parameter.</summary>
 public sealed class TransformKeyData

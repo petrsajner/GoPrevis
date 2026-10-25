@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Linq;
 
-namespace Previs;
+namespace GenPrevis;
 
 public partial class RiggedActor
 {

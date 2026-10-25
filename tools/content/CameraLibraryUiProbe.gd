@@ -33,7 +33,7 @@ func run():
  var background=ColorRect.new();background.color=Color('#111116');background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);contact.add_child(background)
  var margin=MarginContainer.new();margin.theme=app.theme;margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);margin.add_theme_constant_override('margin_left',20);margin.add_theme_constant_override('margin_right',20);margin.add_theme_constant_override('margin_top',12);margin.add_theme_constant_override('margin_bottom',12);contact.add_child(margin)
  var column=VBoxContainer.new();margin.add_child(column)
- var title=Label.new();title.text='PREVIS · 24 CAMERA MOVEMENTS';title.add_theme_font_size_override('font_size',18);column.add_child(title)
+ var title=Label.new();title.text='GENPREVIS · 24 CAMERA MOVEMENTS';title.add_theme_font_size_override('font_size',18);column.add_child(title)
  var grid=GridContainer.new();grid.columns=6;grid.add_theme_constant_override('h_separation',6);grid.add_theme_constant_override('v_separation',6);column.add_child(grid)
  for card in cards:
   card.get_parent().remove_child(card);card.custom_minimum_size=Vector2(174,143);grid.add_child(card)

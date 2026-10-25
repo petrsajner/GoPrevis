@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 
-namespace Previs;
+namespace GenPrevis;
 
 public sealed class ProjectData
 {
-    public int Version { get; set; } = 9;
+    public int Version { get; set; } = 10;
     public int Fps { get; set; } = 24;
     public double Duration { get; set; } = 8;
     public List<ObjectData> Objects { get; set; } = new();
@@ -51,6 +51,7 @@ public sealed class ObjectData
 
 public sealed class MotionClipData
 {
+    public bool IsPlaceholder { get; set; }
     public string Id { get; set; } = Guid.NewGuid().ToString("N");
     public string MotionPath { get; set; } = "";
     public string Name { get; set; } = "Motion";

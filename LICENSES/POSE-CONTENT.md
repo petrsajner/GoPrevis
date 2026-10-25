@@ -1,7 +1,7 @@
 # Static human blocking poses
 
 The pose library in `assets/content/manifests/human-poses.json` is authored for
-Previs' original prepared 21-bone mannequin. It contains fixed local joint
+GenPrevis' original prepared 21-bone mannequin. It contains fixed local joint
 rotations and pelvis positions, not motion-capture files or animation clips.
 No third-party pose photographs, scans, animation files or reference-library
 data were copied to create it.

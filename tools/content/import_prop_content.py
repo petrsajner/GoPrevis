@@ -1,4 +1,4 @@
-"""Rebuild Previs's curated CC0 static model library from official Kenney ZIPs.
+"""Rebuild GenPrevis's curated CC0 static model library from official Kenney ZIPs.
 
 Python 3.11+, standard library only. Run from the repository root. Downloads stay
 in ignored .tools/prop-content; only selected, self-contained GLBs are shipped.

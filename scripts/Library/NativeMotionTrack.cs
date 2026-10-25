@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Godot;
 
-namespace Previs;
+namespace GenPrevis;
 
 /// <summary>
 /// Sequences animations belonging to one imported rig. It samples and blends native local
@@ -16,7 +16,7 @@ public sealed partial class NativeMotionTrack
     readonly Node3D[] _nodes;
     readonly Bone[] _bones;
     readonly int[] _roots;
-    readonly Pose _rest, _result, _incoming, _source;
+    readonly Pose _rest, _result, _incoming, _source, _authoredRest;
     readonly Quaternion _restRootRotation;
     Clip[] _clips = Array.Empty<Clip>();
     readonly Dictionary<string,Cycle> _cycles=new(StringComparer.Ordinal);
@@ -64,8 +64,9 @@ public sealed partial class NativeMotionTrack
         _player.PlaybackDefaultBlendTime=0;
         _player.Stop(true);
         foreach(var skeleton in skeletons)skeleton.ResetBonePoses();
-        _rest=new Pose(_bones.Length,_nodes.Length);_result=new Pose(_bones.Length,_nodes.Length);_incoming=new Pose(_bones.Length,_nodes.Length);_source=new Pose(_bones.Length,_nodes.Length);
-        Capture(_rest);_restRootRotation=_rest.Rotation[_roots[0]];
+        _rest=new Pose(_bones.Length,_nodes.Length);_result=new Pose(_bones.Length,_nodes.Length);_incoming=new Pose(_bones.Length,_nodes.Length);_source=new Pose(_bones.Length,_nodes.Length);_authoredRest=new Pose(_bones.Length,_nodes.Length);
+        Capture(_authoredRest);Copy(_authoredRest,_rest);PrepareEditableHierarchy();
+        _roots=Enumerable.Range(0,_bones.Length).Where(i=>_bones[i].Skeleton.GetBoneParent(_bones[i].Index)<0).ToArray();_restRootRotation=_rest.Rotation[_roots[0]];
         foreach(string name in _player.GetAnimationList())if(name!="RESET")
         {
             var animation=_player.GetAnimation(name);animation.LoopMode=Animation.LoopModeEnum.None;
@@ -149,7 +150,7 @@ public sealed partial class NativeMotionTrack
     }
     void SampleAt(string animation,double seconds,Pose output)
     {
-        _player.Stop(true);Apply(_rest);_player.Play(animation,0);_player.Seek(seconds,true);_player.Advance(0);Capture(output);
+        ReadAuthoredAnimation(animation,seconds,output);ConvertAuthoredPose(output);
     }
     void ApplyAlignment(Clip clip,Pose pose)
     {

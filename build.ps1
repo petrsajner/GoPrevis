@@ -4,7 +4,7 @@ Set-Location -LiteralPath $PSScriptRoot
 $env:DOTNET_ROOT = Join-Path $PSScriptRoot '.tools\dotnet'
 $env:PATH = $env:DOTNET_ROOT + ';' + $env:PATH
 $previsGodot = Join-Path $PSScriptRoot '.tools\godot\Godot_v4.7.2-stable_mono_win64\Godot_v4.7.2-stable_mono_win64_console.exe'
-& (Join-Path $env:DOTNET_ROOT 'dotnet.exe') build Previs.csproj
+& (Join-Path $env:DOTNET_ROOT 'dotnet.exe') build GenPrevis.csproj
 if ($LASTEXITCODE -ne 0) { throw 'C# build failed.' }
 & $previsGodot --headless --editor --path $PSScriptRoot --import --quit
 if ($LASTEXITCODE -ne 0) { throw 'Godot asset import failed.' }
@@ -12,7 +12,7 @@ if ($Test) {
     & $previsGodot --headless --path $PSScriptRoot -- --smoke-test
     if ($LASTEXITCODE -ne 0) { throw 'Headless smoke checks failed.' }
 }
-$previsOutput = Join-Path $PSScriptRoot 'build\Previs-0.13.0-Windows'
+$previsOutput = Join-Path $PSScriptRoot 'build\GenPrevis-0.14.0-Windows'
 New-Item -ItemType Directory -Path $previsOutput -Force | Out-Null
 New-Item -ItemType Directory -Path (Join-Path $PSScriptRoot 'output') -Force | Out-Null
 $previsLog = Join-Path $PSScriptRoot 'output\export.log'
@@ -34,4 +34,4 @@ $previsVideoTools = Join-Path $previsOutput 'tools\ffmpeg'
 New-Item -ItemType Directory -Path $previsVideoTools -Force | Out-Null
 Get-ChildItem -LiteralPath '.tools\ffmpeg' -File | Copy-Item -Destination $previsVideoTools -Force
 Copy-Item -LiteralPath 'tools\launchers\Open car chase demo.cmd' -Destination $previsOutput -Force
-Write-Output ('Built: ' + (Join-Path $previsOutput 'Previs.exe'))
+Write-Output ('Built: ' + (Join-Path $previsOutput 'GenPrevis.exe'))

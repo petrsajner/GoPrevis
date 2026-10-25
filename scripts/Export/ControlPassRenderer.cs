@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 
-namespace Previs;
+namespace GenPrevis;
 
 public sealed record PoseActorSample(string Id,string Name,RiggedActor Actor);
 public sealed record NativePoseActorSample(string Id,string Name,Node3D ModelRoot);

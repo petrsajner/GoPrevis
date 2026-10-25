@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Previs;
+namespace GenPrevis;
 
 public partial class RiggedActor
 {

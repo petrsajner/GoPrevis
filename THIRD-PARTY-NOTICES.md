@@ -1,6 +1,6 @@
 # Third-party notices
 
-Previs uses Godot Engine 4.7.2 under the MIT licence. Engine and bundled third-party notices are included in `LICENSES/GODOT-LICENSE.txt` and `LICENSES/GODOT-COPYRIGHT.txt`.
+GenPrevis uses Godot Engine 4.7.2 under the MIT licence. Engine and bundled third-party notices are included in `LICENSES/GODOT-LICENSE.txt` and `LICENSES/GODOT-COPYRIGHT.txt`.
 
 Official source: https://github.com/godotengine/godot/tree/4.7.2-stable
 
@@ -25,7 +25,7 @@ The 118 prepared static humanoid poses are authored project assets, independent 
 
 ## FFmpeg shot encoding
 
-The portable Windows package invokes unmodified **FFmpeg and ffprobe 9.0.2** executables from Gyan Doshi's release-essentials build as separate command-line processes. It does not link their libraries into the Previs managed assembly or Godot process. This build includes libx264 and is supplied under GPL version 3 or later. The FFmpeg project's [download directory](https://ffmpeg.org/download.html) links to the [build provider](https://www.gyan.dev/ffmpeg/builds/).
+The portable Windows package invokes unmodified **FFmpeg and ffprobe 9.0.2** executables from Gyan Doshi's release-essentials build as separate command-line processes. It does not link their libraries into the GenPrevis managed assembly or Godot process. This build includes libx264 and is supplied under GPL version 3 or later. The FFmpeg project's [download directory](https://ffmpeg.org/download.html) links to the [build provider](https://www.gyan.dev/ffmpeg/builds/).
 
 [LICENSES/FFMPEG-NOTICE.md](LICENSES/FFMPEG-NOTICE.md) records the pinned package, publisher checksum, matching FFmpeg core source location and integration boundary. The complete license text, original vendor README/build configuration/dependency versions, and provenance/binary hashes are retained in `LICENSES/FFMPEG-GPL-v3.txt`, `LICENSES/FFMPEG-VENDOR-README.txt` and `LICENSES/FFMPEG-PROVENANCE.json`. The notice distinguishes the FFmpeg core source archive from corresponding source for every statically linked dependency; it does not invent a complete-source claim or an author source offer. Redistribution of those tools remains subject to their license terms.
 

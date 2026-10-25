@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Godot;
 
-namespace Previs;
+namespace GenPrevis;
 
 /// <summary>Headless runtime GLB import/animation check; requires -- --model=absolute-path.</summary>
 public partial class ModelImportProbe : SceneTree

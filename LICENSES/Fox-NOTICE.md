@@ -16,11 +16,11 @@ Survey (Look around) animations.
 The original metadata is retained beside the model as `fox.metadata.json`.
 An identical `fox.glb.bytes` packaging copy preserves the original GLB data for
 runtime import after Godot resource remapping.
-The asset data have not been changed. Previs applies its own runtime playback,
+The asset data have not been changed. GenPrevis applies its own runtime playback,
 timing and blending to the original animations. The imported model uses centimetre
-coordinates; Previs displays it with a 0.01 scene-object scale.
+coordinates; GenPrevis displays it with a 0.01 scene-object scale.
 
 GLB SHA-256: `D97044E701822BAC5A62696459B27D7B375AADA5DE8574ED4362EDBBA94771F7`.
 
-These asset licences are separate from the Previs application licence. Retain
+These asset licences are separate from the GenPrevis application licence. Retain
 this credit and the licence links when redistributing the bundled asset.

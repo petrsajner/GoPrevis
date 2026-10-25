@@ -1,2 +1,2 @@
 @echo off
-start "" "%~dp0Previs.exe" -- --demo=car-chase
+start "" "%~dp0GenPrevis.exe" -- --demo=car-chase

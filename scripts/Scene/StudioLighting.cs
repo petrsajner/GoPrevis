@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Previs;
+namespace GenPrevis;
 
 /// <summary>
 /// Neutral, shadow-free studio illumination for arranging a shot. The hemisphere

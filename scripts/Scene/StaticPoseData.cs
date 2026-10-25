@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Previs;
+namespace GenPrevis;
 
 /// <summary>
 /// A self-contained prepared-humanoid pose. The hip offset is relative to the
@@ -9,6 +9,9 @@ namespace Previs;
 /// </summary>
 public sealed class StaticPoseData
 {
+    public int NativeHierarchyVersion { get; set; }
+    public Dictionary<string,float[]> NativeBonePositions { get; set; } = new();
+    public Dictionary<string,float[]> NativeBoneScales { get; set; } = new();
     /// <summary>Null for the prepared human rig; native poses are restricted to this catalog model.</summary>
     public string? RigModelId { get; set; }
     public string? CatalogId { get; set; }

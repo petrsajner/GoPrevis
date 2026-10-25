@@ -4,7 +4,7 @@ using System.Linq;
 using System.IO;
 using Godot;
 
-namespace Previs;
+namespace GenPrevis;
 
 /// <summary>A motion card describes a prepared source, never a command to open a file dialog.</summary>
 public sealed record LibraryMotion
@@ -38,7 +38,7 @@ public static class MotionCatalog
     {
         var motions = new List<LibraryMotion>
         {
-            new() { Id="human-walk-gesture", Name="Walk & gesture", ActorFamily="human", SourcePath="res://samples/synthetic-walk-gesture.bvh", SourceScale=.01f, Duration=4, Attribution="Previs original synthetic test motion", Description="Prepared human · walk and arm gesture", Category="Locomotion", Tags=new[]{"human","synthetic","walk","gesture"}, License="Previs project asset" },
+            new() { Id="human-walk-gesture", Name="Walk & gesture", ActorFamily="human", SourcePath="res://samples/synthetic-walk-gesture.bvh", SourceScale=.01f, Duration=4, Attribution="GenPrevis original synthetic test motion", Description="Prepared human · walk and arm gesture", Category="Locomotion", Tags=new[]{"human","synthetic","walk","gesture"}, License="GenPrevis project asset" },
             new() { Id="human-cmu-walk", Name="Captured walk", ActorFamily="human", SourcePath="res://samples/real/CMU_02_01_Walk.bvh", SourceScale=.055f, SourceOffset=.0083333, Duration=342*.0083333, Loop=false, Attribution="CMU Graphics Lab · Bruce Hahne conversion", Description="Prepared human · recorded walking", Category="Locomotion", Tags=new[]{"human","mocap","walk","recorded","cmu"}, License="CMU", SourceUrl="https://mocap.cs.cmu.edu/" },
             new() { Id="fox-walk", Name="Fox (classic) · Walk", ActorFamily="fox", SourcePath=FoxModelPath, SourceAnimation="Walk", Duration=.7083333134651184, Attribution="PixelMannen · tomkranis · AsoboStudio / scurest", Description="Fox rig · walking cycle", Category="Locomotion", Tags=new[]{"animal","fox","walk","authored"}, License="CC0-1.0 / CC-BY-4.0", SourceUrl="https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/Fox" },
             new() { Id="fox-run", Name="Fox (classic) · Run", ActorFamily="fox", SourcePath=FoxModelPath, SourceAnimation="Run", Duration=1.1583333015441895, Attribution="PixelMannen · tomkranis · AsoboStudio / scurest", Description="Fox rig · running cycle", Category="Locomotion", Tags=new[]{"animal","fox","run","authored"}, License="CC0-1.0 / CC-BY-4.0", SourceUrl="https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/Fox" },

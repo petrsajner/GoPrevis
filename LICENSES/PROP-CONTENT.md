@@ -4,10 +4,10 @@ The 255 static models listed in `assets/content/manifests/prop-models.json` are
 curated from official [Kenney](https://kenney.nl/) asset packages. All four
 packages are distributed under **Creative Commons Zero 1.0 Universal (CC0-1.0)**.
 
-These models may be bundled with Previs and used in personal, educational and
+These models may be bundled with GenPrevis and used in personal, educational and
 commercial projects, including commercial rendered images and videos. Credit
 is appreciated by Kenney but is not required by CC0. Kenney does not endorse
-Previs. The public-domain dedication does not grant third-party trademark or
+GenPrevis. The public-domain dedication does not grant third-party trademark or
 personality rights.
 
 License: <https://creativecommons.org/publicdomain/zero/1.0/>
@@ -40,7 +40,7 @@ because, for example, the Nature Kit also supplies a canoe, bridges and tents.
 The original mesh geometry, palette colors, material parameters and hierarchy
 are retained. In Car Kit and Modular Buildings models, the external PNG color
 palette has been embedded into the GLB binary so models remain self-contained
-when Previs is exported. Furniture Kit and Nature Kit models already contain
+when GenPrevis is exported. Furniture Kit and Nature Kit models already contain
 their material colors. No remote download is needed while using the library.
 
 Models are stored as `.glb.bytes` to preserve original glTF binary data in Godot

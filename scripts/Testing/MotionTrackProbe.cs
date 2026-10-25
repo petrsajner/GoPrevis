@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Previs;
+namespace GenPrevis;
 
 /// <summary>Headless end-to-end BVH track regression probe, run with --script res://scripts/Testing/MotionTrackProbe.cs.</summary>
 public partial class MotionTrackProbe : SceneTree

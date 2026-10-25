@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Previs;
+namespace GenPrevis;
 
 public sealed record CameraFramingPreset(string Id,string Name,string Description);
 

@@ -7,7 +7,7 @@ using System.Text;
 using System.Text.Json;
 using Godot;
 
-namespace Previs;
+namespace GenPrevis;
 
 /// <summary>A ready-to-place model, including provenance and its authored unit conversion.</summary>
 public sealed record LibraryModel
@@ -66,7 +66,7 @@ public static class ContentCatalog
                 "wall" or "floor" => "Architecture", _ => "Props"
             };
             models.Add(new LibraryModel { Id=kind, Name=PropFactory.DisplayName(kind), Category=category,
-                BuiltinKind=kind, Attribution="Previs original procedural blockout model", License="Previs project asset" });
+                BuiltinKind=kind, Attribution="GenPrevis original procedural blockout model", License="GenPrevis project asset" });
         }
         models.AddRange(ReadManifest<LibraryModel>("res://assets/content/manifests/animal-models.json"));
         models.AddRange(ReadManifest<LibraryModel>("res://assets/content/manifests/prop-models.json"));
@@ -77,7 +77,7 @@ public static class ContentCatalog
     private static LibraryModel Human(string id, string name, float[] scale, float[] color) => new()
     {
         Id=id, Name=name, Category="People", ActorFamily="human", BuiltinKind="actor", BodyScale=scale, Color=color,
-        Animated=true, Attribution="Previs original procedural mannequin", License="Previs project asset"
+        Animated=true, Attribution="GenPrevis original procedural mannequin", License="GenPrevis project asset"
     };
 
     internal static IReadOnlyList<T> ReadManifest<T>(string path)

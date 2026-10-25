@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-namespace Previs;
+namespace GenPrevis;
 
 public readonly record struct TrackingTargetPose(Vector3 Position,Basis Basis);
 

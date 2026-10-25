@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Previs;
+namespace GenPrevis;
 
 /// <summary>Static rig editing in actor-local metres; scene transforms remain a separate layer.</summary>
 public partial class RiggedActor

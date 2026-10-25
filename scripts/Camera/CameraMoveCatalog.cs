@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Previs;
+namespace GenPrevis;
 
 public sealed record CameraMovePreset(string Id,string Name,string Category,string Description);
 

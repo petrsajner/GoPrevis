@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 
-namespace Previs;
+namespace GenPrevis;
 
 /// <summary>GPU-render all authored static poses using the actual prepared-rig runtime.</summary>
 public partial class PoseContentProbe : SceneTree

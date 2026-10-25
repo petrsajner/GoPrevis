@@ -8,7 +8,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Previs;
+namespace GenPrevis;
 
 /// <summary>
 /// A CPU decoder with a persistent FFmpeg raw-RGB pipe. The worker decodes ahead

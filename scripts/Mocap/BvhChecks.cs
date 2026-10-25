@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-namespace Previs;
+namespace GenPrevis;
 
 /// <summary>Headless parser checks that exercise format handling, rotation order, and absolute sampling.</summary>
 public static class BvhChecks

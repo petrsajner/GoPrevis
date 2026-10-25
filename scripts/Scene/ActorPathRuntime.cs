@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Godot;
 
-namespace Previs;
+namespace GenPrevis;
 
 /// <summary>
 /// Stateless, distance-based evaluation of a world-space actor path. The geometry cache is

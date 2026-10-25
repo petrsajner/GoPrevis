@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text.Json;
 using Godot;
 
-namespace Previs;
+namespace GenPrevis;
 
 /// <summary>A project-authored static blocking pose; it never creates a motion clip.</summary>
 public sealed record LibraryPose

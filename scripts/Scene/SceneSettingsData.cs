@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-namespace Previs;
+namespace GenPrevis;
 
 /// <summary>Persistent scene display settings shared by the working view and camera exports.</summary>
 public sealed class SceneSettingsData

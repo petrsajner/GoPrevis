@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Previs;
+namespace GenPrevis;
 
 /// <summary>The prototype's prepared humanoid. BVH motion is retargeted to its fixed proportions.</summary>
 public partial class RiggedActor : Node3D

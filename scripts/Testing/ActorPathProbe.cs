@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Godot;
 
-namespace Previs;
+namespace GenPrevis;
 
 /// <summary>Run with Godot --headless --path . --script res://scripts/Testing/ActorPathProbe.cs.</summary>
 public partial class ActorPathProbe : SceneTree

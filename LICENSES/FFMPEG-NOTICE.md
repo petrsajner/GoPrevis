@@ -1,7 +1,7 @@
 # FFmpeg video export tools
 
-Previs invokes **FFmpeg** and **ffprobe** as separate command-line programs for
-MP4 encoding and verification. It does not link their libraries into the Previs
+GenPrevis invokes **FFmpeg** and **ffprobe** as separate command-line programs for
+MP4 encoding and verification. It does not link their libraries into the GenPrevis
 managed assembly or Godot process. The supplied programs are unmodified upstream
 Windows x64 executables from Gyan Doshi's release-essentials build **9.0.2**.
 

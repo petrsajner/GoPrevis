@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Previs;
+namespace GenPrevis;
 
 public partial class RiggedActor
 {

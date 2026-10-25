@@ -1,7 +1,7 @@
 using System;
 using Godot;
 
-namespace Previs;
+namespace GenPrevis;
 
 /// <summary>
 /// Built-in, metre-scale blockout objects. All objects rest on Y = 0 and face -Z.

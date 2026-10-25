@@ -1,6 +1,26 @@
-# Previs 0.13.0 validation
+# GenPrevis 0.14.0 validation
 
 Validation date: **2026-10-25**. Development/verified platform: **Windows x64**.
+
+This release renames the product, C# solution/assembly, Windows executable and private GitHub repository to **GenPrevis**. UI remains English. It also repairs the complete deforming foot chains of the twelve Quaternius animals and fixes first-motion placement and looping. Project format **10** preserves repaired native pose snapshots; formats **1–9** and legacy `.previs` filenames remain supported.
+
+## Independent 0.14.0 Windows delivery
+
+The renamed source builds with zero warnings/errors. The exported executable reports **GenPrevis / 0.14.0.0** in native file metadata. Its embedded 256-pixel PNG icon was extracted from the PE resource tree and compared byte-for-byte as RGBA pixels with the approved ICO image (`WINDOWS_ICON_OK resources=6 approved256px=true`). The source PNG is the user-approved opaque blue 3D mannequin on a light perspective-grid floor; ICO source includes 16/24/32/48/64/128/256 sizes. Generation and final prompt are documented in `assets/genprevis-icon-notes.md`.
+
+- **Rename checks: 13** — identity/assembly/header/native window title, `.genprevis` default saves, new and legacy filename loading, non-destructive one-time user-profile migration, opaque icon and new exported application metadata.
+- **Animal repair checks: 315** — all 48 Quaternius feet lift with complete ancestor chains and move actual skin-weighted mesh vertices; all **155 native clips** (152 Quaternius + three classic Fox clips) preserve authored relative joint transforms above root-locomotion alignment at five sampled times each. The donkey gallop replaces automatic idle immediately, loops throughout the shot and remains animated after four seconds. Lifted-foot corrections survive a real save/reopen.
+- **Existing animal posing: 70** — IK lengths, manual head/limb changes, viewport gestures, motion layering, Undo/Redo, saved native poses and project roundtrip.
+
+Evidence: `output/packaged-genprevis-0.14.0-{rename,animal-repair,animal-pose}.log` and the corresponding report files. Original vendor GLB bytes are unchanged. Deforming foot/toe bones retain their stable names for project compatibility; the inspector displays friendly Front/Back foot and toes labels. Nondeforming pole helpers remain hidden. Native animation TRS tracks are sampled directly before hierarchy conversion and final source blending, so editor rest-pose changes cannot alter animation sampling.
+
+Automatic initial native clips carry a placeholder flag. A first library drop replaces that placeholder; editing its timing or animation promotes it to an authored clip. The first looping native motion spans the remaining shot (minimum three seconds), repeating the original short source cycle. Subsequent authored clips retain append/crossfade semantics, and one-shot actions retain their source duration. Older full-shot automatic idle clips are recognized conservatively on load.
+
+The same package runs the content/library, project workflow, camera tracking, scene/display and rendered smoke regressions; the complete-shot exporter additionally verifies a real eight-second 192-frame Full-HD Color/Depth/Pose MP4+PNG export. PCK inventory retains 567 source assets, 859 covers and 118 bundled poses without missing files. Versioned logs and reports are supplied in the portable validation folder.
+
+The GitHub repository is **https://github.com/petrsajner/GenPrevis**, with private visibility preserved. Old build names and dated test paths in the sections below remain historical evidence under the previous product name. `BUILD-INFO.json` records the exact renamed source commit, current schema, icon/runtime hashes and test counts. The final ZIP is read back completely for CRC verification and has a SHA-256 sidecar.
+
+## Historical Previs 0.13.0 evidence
 
 This revision adds live camera Follow / Look at constraints, persistent background-picker folders, continuous raw-video decoding, and visible version/copyright branding. The app UI remains English. Project format **9** stores live camera bindings; formats **1–8** remain migration inputs.
 
