@@ -11,10 +11,8 @@ public partial class PrevisApp
 {
     ProjectSetupData _projectSetup=new();
     ConfirmationDialog? _projectSetupDialog;
-    OptionButton _setupAspect=null!,_setupFps=null!,_setupReferenceFit=null!;
-    SpinBox _setupWidth=null!,_setupHeight=null!,_setupCustomFps=null!,_setupReferenceOpacity=null!,_setupReferenceOffset=null!;
-    Label _setupReferenceName=null!;
-    CheckButton _setupReferenceEnabled=null!;
+    OptionButton _setupAspect=null!,_setupFps=null!;
+    SpinBox _setupWidth=null!,_setupHeight=null!,_setupCustomFps=null!;
     Button? _projectSetupButton;
     bool _refreshingProjectSetup;
     ProjectSetupData? _setupDraft;
@@ -34,16 +32,16 @@ public partial class PrevisApp
             return _projectSetup.Width+":"+_projectSetup.Height;
         }
     }
-    ProjectSetupData SnapshotProjectSetup()=>_projectSetup.ValidatedCopy();
+    ProjectSetupData SnapshotProjectSetup()=>new ProjectSetupData{Width=_projectSetup.Width,Height=_projectSetup.Height};
     void ApplyProjectSetup(ProjectSetupData? setup)
     {
-        var next=(setup??new()).ValidatedCopy();bool sourceChanged=next.ReferencePath!=_projectSetup.ReferencePath;
+        var next=new ProjectSetupData{Width=setup?.Width??1920,Height=setup?.Height??1080}.ValidatedCopy();
         _projectSetup=next;
         if(_fpsChoice!=null){bool before=_refreshing;_refreshing=true;EnsureOptionId(_fpsChoice,_fps,_fps.ToString(CultureInfo.InvariantCulture));_fpsChoice.Select(Enumerable.Range(0,_fpsChoice.ItemCount).First(i=>_fpsChoice.GetItemId(i)==_fps));_refreshing=before;}
         if(_projectSetupButton!=null)_projectSetupButton.Text="Project · "+ProjectAspectLabel+" · "+_fps+" fps";
         if(_previewAspect!=null)_previewAspect.Ratio=ProjectAspect;
         FitCompactPreview();UpdateProjectCameraView();RefreshProjectSetupControls();
-        if(sourceChanged)_=LoadCameraReferenceAsync();else UpdateCameraReference();
+        UpdateCameraReference();
     }
     void ChangeProjectFps(int fps)
     {
@@ -79,7 +77,7 @@ public partial class PrevisApp
     void OpenProjectSetup()
     {
         if(_projectSetupDialog==null)BuildProjectSetupDialog();_setupDraft=SnapshotProjectSetup();
-        RefreshProjectSetupControls();_projectSetupDialog!.PopupCentered(new Vector2I(520,570));
+        RefreshProjectSetupControls();_projectSetupDialog!.PopupCentered(new Vector2I(480,260));
     }
     void BuildProjectSetupDialog()
     {
@@ -94,20 +92,12 @@ public partial class PrevisApp
         void FormatEdited(double _){if(_refreshingProjectSetup)return;int match=Array.FindIndex(ProjectFormats,f=>f.Width==(int)_setupWidth.Value&&f.Height==(int)_setupHeight.Value);_setupAspect.Select(match<0?ProjectFormats.Length:match);}
         _setupWidth.ValueChanged+=FormatEdited;_setupHeight.ValueChanged+=FormatEdited;
         _setupFps.ItemSelected+=_=>{_setupCustomFps.Editable=_setupFps.GetSelectedId()==0;_setupCustomFps.Visible=_setupFps.GetSelectedId()==0;};
-        box.AddChild(new HSeparator());box.AddChild(Text("CAMERA REFERENCE",11,true));
-        var note=Text("Image or video guide in camera views only. It is excluded from every render and export. Videos follow scene time; audio is muted.",11,true);note.AutowrapMode=TextServer.AutowrapMode.WordSmart;box.AddChild(note);
-        _setupReferenceName=Text("No reference",11,true);_setupReferenceName.ClipText=true;box.AddChild(_setupReferenceName);
-        box.AddChild(Row(Button("Load image / video…",ChooseCameraReference),Button("Remove",()=>{if(_setupDraft!=null)_setupDraft.ReferencePath="";_setupReferenceName.Text="No reference";})));
-        _setupReferenceEnabled=new CheckButton{Text="Show in camera views"};box.AddChild(_setupReferenceEnabled);
-        _setupReferenceOpacity=Spin(0,100,1,50);_setupReferenceFit=new OptionButton();_setupReferenceFit.AddItem("Fit");_setupReferenceFit.AddItem("Fill / crop");box.AddChild(Row(Text("Opacity",12,true),_setupReferenceOpacity,Text("%",11,true),_setupReferenceFit));
-        _setupReferenceOffset=Spin(-86400,86400,.01,0);box.AddChild(Row(Text("Video time offset",12,true),_setupReferenceOffset,Text("s",11,true)));
-        var help=Text("Use opacity to compare the guide with your 3D scene. A positive offset starts later in the video; its last frame holds after the end.",11,true);help.AutowrapMode=TextServer.AutowrapMode.WordSmart;box.AddChild(help);
+        var note=Text("Camera images and videos belong to each camera. Use Camera background below the preview, or select a camera in the Scene list.",11,true);note.AutowrapMode=TextServer.AutowrapMode.WordSmart;box.AddChild(note);
         _projectSetupDialog.Confirmed+=()=>
         {
             try
             {
                 var next=(_setupDraft??SnapshotProjectSetup()).ValidatedCopy();next.Width=(int)_setupWidth.Value;next.Height=(int)_setupHeight.Value;
-                next.ReferenceEnabled=_setupReferenceEnabled.ButtonPressed;next.ReferenceOpacity=(float)_setupReferenceOpacity.Value/100;next.ReferenceFill=_setupReferenceFit.Selected==1;next.ReferenceOffsetSeconds=_setupReferenceOffset.Value;next=next.ValidatedCopy();
                 int fps=_setupFps.GetSelectedId()==0?(int)_setupCustomFps.Value:_setupFps.GetSelectedId();PushUndo();_fps=fps;_scrub.Step=1.0/fps;
                 EnsureOptionId(_fpsChoice,fps,fps.ToString(CultureInfo.InvariantCulture));bool before=_refreshing;_refreshing=true;_fpsChoice.Select(Enumerable.Range(0,_fpsChoice.ItemCount).First(i=>_fpsChoice.GetItemId(i)==fps));_refreshing=before;
                 _setupDraft=null;ApplyProjectSetup(next);SetTime(_time);Status("Project setup applied · "+ProjectAspectLabel+" · "+fps+" fps.");
@@ -119,14 +109,7 @@ public partial class PrevisApp
         if(_projectSetupDialog==null)return;var value=_setupDraft??_projectSetup;_refreshingProjectSetup=true;
         int match=Array.FindIndex(ProjectFormats,f=>f.Width==value.Width&&f.Height==value.Height);_setupAspect.Select(match<0?ProjectFormats.Length:match);_setupWidth.Value=value.Width;_setupHeight.Value=value.Height;
         int fpsIndex=Array.IndexOf(ProjectFrameRates,_fps);_setupFps.Select(fpsIndex<0?ProjectFrameRates.Length:fpsIndex);_setupCustomFps.Value=_fps;_setupCustomFps.Editable=fpsIndex<0;_setupCustomFps.Visible=fpsIndex<0;
-        _setupReferenceName.Text=string.IsNullOrEmpty(value.ReferencePath)?"No reference":Path.GetFileName(value.ReferencePath);_setupReferenceName.TooltipText=value.ReferencePath;
-        _setupReferenceEnabled.ButtonPressed=value.ReferenceEnabled;_setupReferenceOpacity.Value=value.ReferenceOpacity*100;_setupReferenceFit.Select(value.ReferenceFill?1:0);_setupReferenceOffset.Value=value.ReferenceOffsetSeconds;_refreshingProjectSetup=false;
-    }
-    void ChooseCameraReference()
-    {
-        var dialog=new FileDialog{Access=FileDialog.AccessEnum.Filesystem,FileMode=FileDialog.FileModeEnum.OpenFile,UseNativeDialog=false,Title="Choose camera reference"};
-        dialog.Filters=new[]{"*.png,*.jpg,*.jpeg,*.webp,*.bmp ; Reference images","*.mp4,*.mov,*.mkv,*.webm,*.avi,*.m4v,*.ogv ; Reference videos"};_projectSetupDialog!.AddChild(dialog);
-        dialog.FileSelected+=path=>{_setupDraft??=SnapshotProjectSetup();_setupDraft.ReferencePath=Path.GetFullPath(path);_setupReferenceName.Text=Path.GetFileName(path);_setupReferenceName.TooltipText=path;dialog.QueueFree();};dialog.Canceled+=()=>dialog.QueueFree();dialog.PopupCentered(new Vector2I(900,600));
+        _refreshingProjectSetup=false;
     }
     partial class CameraFrameOverlay
     {

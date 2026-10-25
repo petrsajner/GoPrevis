@@ -74,7 +74,7 @@ public partial class PrevisApp
             Check(PoseCorrectionRuntime.EvaluateRotation(bones,3).IsEqualApprox(Quaternion.Identity)&&Math.Abs(PoseCorrectionRuntime.EvaluateRotation(bones,4).Dot(turn))>.99999,"bone pose correction keys share Hold without changing the underlying motion layer");
 
             string directory=ProjectSettings.GlobalizePath("res://output/object-motion-checks");Directory.CreateDirectory(directory);string file=Path.Combine(directory,"keyed-car.previs");SaveTo(file);var saved=JsonSerializer.Deserialize<ProjectData>(File.ReadAllText(file))!;
-            Check(saved.Version==7&&saved.Objects.Single().Path.PointInterpolation[0].Mode=="Ease in/out","format7 stores path and transform interpolation without external assets");
+            Check(saved.Version==8&&saved.Objects.Single().Path.PointInterpolation[0].Mode=="Ease in/out","format8 stores path and transform interpolation without external assets");
             var expected=car.Data.TransformAnimation.Position[0].Interpolation.Control1[1];LoadProjectFromPath(file);car=_entries.Single(e=>e.Data.Id==carId);
             Check(Math.Abs(car.Data.TransformAnimation.Position[0].Interpolation.Control1[1]-expected)<.00001&&_cameras[0].LensKeys[0].Interpolation.Mode=="Hold","custom curve handles and camera timing survive portable project reopen");
             Select(car);SelectTransformTimeline(car,null,"Position",0);Check(_keyInterpolationPanel.Visible&&_keyInterpolationMode.GetItemText(_keyInterpolationMode.Selected)=="Curved","reopened keys remain editable in the real interpolation inspector");

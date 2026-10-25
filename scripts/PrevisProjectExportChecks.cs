@@ -21,7 +21,7 @@ public partial class PrevisApp
         {
             _playing=false;SetTime(0);ChangeProjectFps(15);
             string reference=Path.Combine(output,"reference.png");using(var image=Image.CreateEmpty(32,32,false,Image.Format.Rgb8)){image.Fill(new Color(1,0,1));image.SavePng(reference);}
-            ApplyProjectSetup(new ProjectSetupData{Width=288,Height=512,ReferencePath=reference,ReferenceOpacity=1});await _referenceLoadTask;
+            ApplyProjectSetup(new ProjectSetupData{Width=288,Height=512});ApplyActiveCameraReference(new CameraReferenceData{Path=reference,Opacity=1});await _referenceLoadTask;
             Check(_cameraReferenceTexture!=null,"a camera reference is loaded during the portrait video export");
             string baseline=Path.Combine(output,"clean.png");await RenderFrame(baseline);
             var settings=new ShotExportSettings{OutputDirectory=Path.Combine(output,"portrait-"+Guid.NewGuid().ToString("N")[..8]),Width=ProjectResolution.X,Height=ProjectResolution.Y,Fps=_fps,EndSeconds=.2,IncludeColor=true,IncludeDepth=true,IncludePose=true,IncludeNativeRigs=true,ExportMp4=true,ExportPngSequence=true};

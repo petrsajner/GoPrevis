@@ -1,6 +1,29 @@
-# Previs 0.11.0 validation
+# Previs 0.12.0 validation
 
 Validation date: **2026-10-25**. Development/verified platform: **Windows x64**.
+
+This revision supplies a ready-to-play car shot and moves image/video backgrounds from global project setup to independent camera properties. UI remains English. Project format **8** stores per-camera references; formats **1–7** remain migration inputs.
+
+## Independent 0.12.0 Windows delivery
+
+The final integrated build has **zero warnings/errors**. The exported Windows executable passes:
+
+| Suite | Checks | Evidence |
+| --- | ---: | --- |
+| Per-camera backgrounds | 29 | Distinct images and rendered pixels, source-time offsets and opacity for a shared video, cancellation on camera switch, Undo/Redo, duplication/deletion, portable assets, content-addressed reuse safety, v7 migration without mutating inputs, unchanged clean exports |
+| Ready-made car shot | 17 | 12 seconds / 25 fps, opening and final stationary beats, continuous acceleration/deceleration, near-constant cruise through the turn, correct heading and safe camera composition at all 301 sampled times, reverse seeking, portable roundtrip and a real 300-frame MP4 |
+| Demo opening | 7 | Actual File menu action, automatic following-camera view, frame zero, untitled Save As behavior, visible background shortcut and Space playback after releasing text input |
+| Existing project workflow | 163 | History9, object timing41, native poses70, project setup/reference39 and portrait export4 |
+
+Logs: `output/packaged-0.12.0-{camera-reference,car-demo,demo-launch,project-workflow}.log`; all stderr files are empty. The active **Car follow** camera keeps a minimum normalized framing margin of **0.234** over every sampled frame. The vehicle stops at **10.012 seconds**, leaving approximately two seconds of stationary ending. Its dense transform keys are editable; no hidden live-tracking constraint is required. All scene geometry is procedural and no external model/motion assets are needed.
+
+The same executable passes **38 interaction + 15 numeric + 14 clip-trim checks**, **21 scene-setting/placement + 27 appearance + 72 framing + 13 GPU pixel/depth checks**, and the rendered full-HD smoke test. Their logs are `output/packaged-0.12.0-{interaction,scene-settings,smoke}.log`, with empty stderr. PCK inventory confirms **567 source resources, 859 covers and 118 bundled poses**, with no missing files. Source responsive-layout checks pass 24 assertions, including 2560×1440 logical geometry.
+
+Actual source UI probes verify the prominent **Camera background…** action, a compact nested file picker, expandable camera inspector controls with two independent file names, and the format-only 480×260 Project setup dialog. `CarDemoStartupUiProbe.gd` exercises the real `--demo=car-chase` argument and Space playback. The exported executable separately verifies the same demo-opening behavior through its actual File menu action. Evidence: `output/CameraBackgroundUiProbe-0.12.0.log`, `output/ProjectSetupUiProbe-0.12.0.log`, `output/demo-startup-ui-source-0.12.0.log`, their empty stderr files and the corresponding screenshots.
+
+The portable package includes **Open car chase demo.cmd**, five example projects, the car-shot guide, eight full-HD proof frames, an overview and a complete 1280×720 / 25 fps MP4 preview. `BUILD-INFO.json` records the exact source commit and binary hashes. Packaging reads every ZIP entry for CRC validation and writes a SHA-256 sidecar. Windows x64 is the exercised platform.
+
+## Historical 0.11.0 evidence
 
 This revision makes paths and keyed transforms available to all objects, adds shared key timing curves, native animal pose editing, configurable project aspect/fps, editor-only image/video camera references and visible Undo/Redo controls. All app UI remains English. Project format **7** stores these fields; formats **1–6** remain migration inputs.
 

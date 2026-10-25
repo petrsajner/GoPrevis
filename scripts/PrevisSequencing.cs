@@ -15,6 +15,7 @@ public partial class PrevisApp
         public string Id=Guid.NewGuid().ToString("N");
         public string Name="Camera";
         public bool ShowLabel=true;
+        public CameraReferenceData Reference=new();
         public StudioCameraRig Rig=null!;
         public TransformAnimationData Animation=new();
         public List<LensKeyData> LensKeys=new();
@@ -46,7 +47,7 @@ public partial class PrevisApp
 
     CameraEntry CreateCamera(string name,CameraTrackData? data,bool activate)
     {
-        var item=new CameraEntry {Name=name,Id=data?.Id??Guid.NewGuid().ToString("N"),ShowLabel=data?.ShowLabel??true,Rig=new StudioCameraRig()};
+        var item=new CameraEntry {Name=name,Id=data?.Id??Guid.NewGuid().ToString("N"),ShowLabel=data?.ShowLabel??true,Reference=(data?.Reference??new()).ValidatedCopy(),Rig=new StudioCameraRig()};
         _world.AddChild(item.Rig);item.Rig.ShotCamera.Current=false;
         item.BasePosition=item.Rig.GlobalPosition;item.BaseRotation=item.Rig.GlobalRotationDegrees;
         if(data!=null)
@@ -85,7 +86,7 @@ public partial class PrevisApp
         if(_cameras.Count<=1){Status("A scene must keep at least one camera.");return;}PushUndo();var item=_cameras.First(c=>c.Rig==_shot);_cameras.Remove(item);_world.RemoveChild(item.Rig);item.Rig.QueueFree();RefreshObjects();SelectCamera(_cameras[0]);if(_category=="Cameras")ShowCategory("Cameras");Status(item.Name+" removed.");
     }
     void ClearCameras(){foreach(var c in _cameras){_world.RemoveChild(c.Rig);c.Rig.QueueFree();}_cameras.Clear();}
-    CameraTrackData SnapshotCamera(CameraEntry item){EnsureCameraAnimation(item);return JsonSerializer.Deserialize<CameraTrackData>(JsonSerializer.Serialize(new CameraTrackData{Id=item.Id,Name=item.Name,ShowLabel=item.ShowLabel,Position=Array3(item.BasePosition),Rotation=Array3(item.BaseRotation),Scale=Array3(item.BaseScale),FocalLength=item.BaseLens,TransformAnimation=item.Animation,LensKeys=item.LensKeys,Keys=new()}))!;}
+    CameraTrackData SnapshotCamera(CameraEntry item){EnsureCameraAnimation(item);return JsonSerializer.Deserialize<CameraTrackData>(JsonSerializer.Serialize(new CameraTrackData{Id=item.Id,Name=item.Name,ShowLabel=item.ShowLabel,Reference=item.Reference.ValidatedCopy(),Position=Array3(item.BasePosition),Rotation=Array3(item.BaseRotation),Scale=Array3(item.BaseScale),FocalLength=item.BaseLens,TransformAnimation=item.Animation,LensKeys=item.LensKeys,Keys=new()}))!;}
     void BuildCameraLibrary()=>BuildIllustratedCameraLibrary();
 
     void BuildSequenceInspector()
@@ -127,7 +128,7 @@ public partial class PrevisApp
         _inspectorSection=section;string current="Object";
         foreach(var node in _inspector.GetChildren().OfType<Control>()){if(node==_inspectorTabs){node.Visible=true;continue;}if(node==_motionHeader)current="Motion";if(node==_pathHeader)current="Path";if(node==_posePanel)current="Pose";node.Visible=current==section;}
         if(_animationChoice!=null)_animationChoice.Visible=section=="Motion"&&_selected?.Player!=null;
-        if(_clipChoice!=null)_clipChoice.Visible=section=="Motion"&&(_selected?.Node is RiggedActor||_selected?.NativeTrack!=null);UpdatePoseInspector();RefreshUnifiedWorkflow();UpdateObjectAppearanceInspector();UpdatePlacementInspector();RefreshKeyInterpolationInspector();
+        if(_clipChoice!=null)_clipChoice.Visible=section=="Motion"&&(_selected?.Node is RiggedActor||_selected?.NativeTrack!=null);UpdatePoseInspector();RefreshUnifiedWorkflow();UpdateObjectAppearanceInspector();UpdatePlacementInspector();RefreshKeyInterpolationInspector();RefreshCameraBackgroundControls();
     }
     void RefreshSequenceInspector()
     {

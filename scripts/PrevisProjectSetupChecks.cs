@@ -41,21 +41,21 @@ public partial class PrevisApp
             PushUndo();ApplyProjectSetup(new ProjectSetupData{Width=800,Height=800});Undo();Check(ProjectResolution==new Vector2I(before.Width,before.Height),"Undo restores the project format");Redo();Check(ProjectResolution==new Vector2I(800,800),"Redo restores the project format");
 
             string imagePath=Path.Combine(output,"reference.png");using(var image=Image.CreateEmpty(128,64,false,Image.Format.Rgb8)){image.Fill(new Color(1,0,1));image.SavePng(imagePath);}
-            var setup=new ProjectSetupData{Width=512,Height=512,ReferencePath=imagePath,ReferenceFill=true,ReferenceOpacity=1};ApplyProjectSetup(setup);await ReferenceReady();
+            var setup=new ProjectSetupData{Width=512,Height=512};ApplyProjectSetup(setup);ApplyActiveCameraReference(new CameraReferenceData{Path=imagePath,Fill=true,Opacity=1});await ReferenceReady();
             Check(_cameraReferenceTexture!=null&&_cameraReferencePlane?.Visible==true&&_cameraReferencePlane.Layers==CameraReferenceLayer,"an image is an actual far-background plane restricted to the editor reference layer");
             Check((_editorCamera.CullMask&CameraReferenceLayer)==0,"the working orbit camera cannot see the reference layer");
             string projectFile=Path.Combine(output,"reference-scene.previs");SaveTo(projectFile);var serialized=JsonSerializer.Deserialize<ProjectData>(File.ReadAllText(projectFile))!;
-            Check(serialized.Setup.Width==512&&serialized.Fps==37&&!Path.IsPathRooted(serialized.Setup.ReferencePath)&&File.Exists(Path.Combine(output,serialized.Setup.ReferencePath)),"portable projects bundle the original reference and custom frame rate");
+            Check(serialized.Setup.Width==512&&serialized.Fps==37&&!Path.IsPathRooted(serialized.Cameras.Single(camera=>camera.Id==serialized.ActiveCameraId).Reference.Path)&&File.Exists(Path.Combine(output,serialized.Cameras.Single(camera=>camera.Id==serialized.ActiveCameraId).Reference.Path)),"portable projects bundle the original reference and custom frame rate");
             LoadProjectFromPath(projectFile);await ReferenceReady();Check(ProjectResolution==new Vector2I(512,512)&&_fps==37&&_fpsChoice.GetSelectedId()==37,"custom frame rate, aspect and reference reopen correctly");
             BuildShotExportDialog();EnsureOptionId(_shotExportFps,_fps,_fps+" fps");Check(ShotExportDimensions(0)==ProjectResolution&&Math.Abs(ShotExportDimensions(1).X/(float)ShotExportDimensions(1).Y-ProjectAspect)<.00001,"export dimensions start from the project and keep its aspect when scaled");
 
             if(DisplayServer.GetName()!="headless")
             {
-                ClearObjects();ClearCameras();var camera=CreateCamera("Reference test",null,true);camera.Rig.ClearKeys();camera.Rig.SetPose(new Vector3(0,.5f,4),new Vector3(0,.5f,0));SyncCameraFromRig(camera);
+                ClearObjects();ClearCameras();var camera=CreateCamera("Reference test",null,true);camera.Rig.ClearKeys();camera.Rig.SetPose(new Vector3(0,.5f,4),new Vector3(0,.5f,0));SyncCameraFromRig(camera);ApplyActiveCameraReference(new CameraReferenceData{Path=imagePath,Fill=true,Opacity=1});await ReferenceReady();
                 var cube=AddObject("box",Vector3.Zero,"Opaque foreground");Select(cube);SetSelectedObjectColor(new Color(.5f,.5f,.5f));
                 var display=SnapshotSceneSettings();display.GroundVisible=false;display.ObjectLabelsVisible=false;display.BackgroundColor=new[]{.025f,.055f,.16f,1f};ApplySceneSettings(display);SetTime(0);
-                string baselinePath=Path.Combine(output,"export-no-reference.png");var off=SnapshotProjectSetup();off.ReferenceEnabled=false;ApplyProjectSetup(off);await Settle();await RenderFrame(baselinePath);using var clean=Image.LoadFromFile(baselinePath);
-                var on=SnapshotProjectSetup();on.ReferenceEnabled=true;ApplyProjectSetup(on);TogglePilot();await Settle(8);
+                string baselinePath=Path.Combine(output,"export-no-reference.png");var off=ActiveCameraReference.ValidatedCopy();off.Enabled=false;ApplyActiveCameraReference(off);await Settle();await RenderFrame(baselinePath);using var clean=Image.LoadFromFile(baselinePath);
+                var on=ActiveCameraReference.ValidatedCopy();on.Enabled=true;ApplyActiveCameraReference(on);TogglePilot();await Settle(8);
                 using(var preview=_previewViewport.GetTexture().GetImage())
                 {
                     preview.SavePng(Path.Combine(output,"reference-camera-preview.png"));var background=preview.GetPixel(8,8);var foreground=preview.GetPixel(preview.GetWidth()/2,preview.GetHeight()/2);
@@ -75,12 +75,12 @@ public partial class PrevisApp
             }
 
             string frames=Path.Combine(output,"video-source");Directory.CreateDirectory(frames);for(int i=0;i<2;i++){using var frame=Image.CreateEmpty(128,64,false,Image.Format.Rgb8);frame.Fill(i==0?new Color(1,0,0):new Color(0,0,1));frame.SavePng(Path.Combine(frames,i.ToString("D6")+".png"));}
-            string video=Path.Combine(output,"reference-"+Guid.NewGuid().ToString("N")[..8]+".mp4");await ShotVideoEncoder.EncodeAsync(frames,video,1,128,64);var videoSetup=SnapshotProjectSetup();videoSetup.ReferencePath=video;videoSetup.ReferenceOffsetSeconds=0;SetTime(0);ApplyProjectSetup(videoSetup);await ReferenceReady();
+            string video=Path.Combine(output,"reference-"+Guid.NewGuid().ToString("N")[..8]+".mp4");await ShotVideoEncoder.EncodeAsync(frames,video,1,128,64);var videoSetup=ActiveCameraReference.ValidatedCopy();videoSetup.Path=video;videoSetup.OffsetSeconds=0;SetTime(0);ApplyActiveCameraReference(videoSetup);await ReferenceReady();
             Color VideoPixel(){long key=(long)Math.Round(_referenceDisplayedTime*1000000);using var image=new Image();image.LoadPngFromBuffer(_referenceFrames[key]);return image.GetPixel(20,20);}
             var red=VideoPixel();Check(red.R>.8f&&red.B<.2f,"a real MP4 reference decodes its first frame asynchronously");
             SetTime(1.25);await ReferenceReady();var blue=VideoPixel();Check(blue.B>.8f&&blue.R<.2f,"video reference follows a forward timeline seek");
             SetTime(0);await ReferenceReady();Check(VideoPixel().R>.8f,"reverse seeking restores the original reference frame deterministically");
-            videoSetup=SnapshotProjectSetup();videoSetup.ReferenceOffsetSeconds=1.25;ApplyProjectSetup(videoSetup);await ReferenceReady();Check(VideoPixel().B>.8f,"reference time offset selects the matching source-video frame");
+            videoSetup=ActiveCameraReference.ValidatedCopy();videoSetup.OffsetSeconds=1.25;ApplyActiveCameraReference(videoSetup);await ReferenceReady();Check(VideoPixel().B>.8f,"reference time offset selects the matching source-video frame");
             Check(_referenceFrames.Count<=24,"video reference cache stays bounded");
             passed=true;GD.Print("PROJECT_SETUP_OK checks="+checks);return checks;
         }

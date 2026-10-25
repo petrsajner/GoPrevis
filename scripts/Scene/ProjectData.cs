@@ -5,7 +5,7 @@ namespace Previs;
 
 public sealed class ProjectData
 {
-    public int Version { get; set; } = 7;
+    public int Version { get; set; } = 8;
     public int Fps { get; set; } = 24;
     public double Duration { get; set; } = 8;
     public List<ObjectData> Objects { get; set; } = new();
@@ -78,6 +78,7 @@ public sealed class ActorPathData
 
 public sealed class CameraTrackData
 {
+    public CameraReferenceData Reference { get; set; } = new();
     public string Id { get; set; } = Guid.NewGuid().ToString("N");
     public string Name { get; set; } = "Camera A";
     public bool ShowLabel { get; set; } = true;

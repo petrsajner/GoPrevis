@@ -1,12 +1,18 @@
-# Previs 0.11.0 — film shot planning
+# Previs 0.12.0 — film shot planning
 
 Previs is a desktop blockout tool for preparing movement and camera references for AI video. It uses Godot 4.7.2 .NET, C# and .NET 10. The application UI, dialogs and authored errors are English.
 
 ## Run
 
-The Windows portable output is `build/Previs-0.11.0-Windows/Previs.exe`. Keep Previs.exe, Previs.pck and data_Previs_windows_x86_64 together. The portable Windows build includes its runtime; using it does not require the Godot editor or .NET SDK.
+The Windows portable output is `build/Previs-0.12.0-Windows/Previs.exe`. Keep Previs.exe, Previs.pck and data_Previs_windows_x86_64 together. The portable Windows build includes its runtime; using it does not require the Godot editor or .NET SDK.
 
 For development, open project.godot with Godot 4.7.2 .NET. Local tools are in the ignored .tools directory. The existing run.ps1 starts the source project; build.ps1 -Test builds, runs source checks and exports Windows x64.
+
+## Ready-made car shot
+
+Double-click **Open car chase demo.cmd** beside Previs.exe, or choose **File → Open car chase demo**. The example opens at frame zero in its following camera. Press **Space** to play. Saving prompts for your own project, preserving the supplied example.
+
+The self-contained **examples/car-chase.previs** shot is 12 seconds at 25 fps: a parked blue car accelerates, follows a sweeping 90-degree road turn, decelerates and holds still with the camera for the final two seconds. **Car follow** has editable frame-matched Position/Rotation keys; **Wide overview** shows the complete route. Select the car's Path track to inspect arrival keys and Bezier acceleration/deceleration. Every scene object is a built-in prop, so the project needs no imported model or motion file.
 
 ## One placement workflow
 
@@ -36,7 +42,7 @@ Use the **Project** button in the header to open **Project setup**. Aspect prese
 
 The camera preview, main **Camera view** gate, camera-frustum drawings and framing presets use the selected aspect ratio. Clean still output uses the project dimensions; whole-shot export starts with that size and fps. Half/double export sizes retain the project ratio.
 
-**Load image / video…** adds a camera reference with opacity, Fit / Fill cropping and video time offset. It appears behind 3D objects in camera views only. The working perspective remains unchanged. Video is muted and seeks to scene time, including reverse scrubbing; its last frame holds beyond the end. Decoding uses the bundled FFmpeg asynchronously with a bounded in-memory frame cache. A cold seek can take a moment to display its matching guide frame. Reference pixels are never included in clean stills, MP4, PNG sequences, depth or pose passes.
+**Camera background…** below the camera preview opens the active camera’s reference controls, even while a scene object is selected. Alternatively select a camera in **SCENE**, expand **Camera background** near the top of Properties and choose **Load image / video…**. Each camera stores its own image/video, opacity, Fit / Fill cropping, visibility and video time offset. Switching cameras shows that camera’s guide; duplication copies independent settings. The section starts collapsed so transforms stay accessible. It appears behind 3D objects in camera views only. The working perspective remains unchanged. Video is muted and seeks to scene time, including reverse scrubbing; its last frame holds beyond the end. Decoding uses the bundled FFmpeg asynchronously with a bounded in-memory frame cache. A cold seek can take a moment to display its matching guide frame. Reference pixels are never included in clean stills, MP4, PNG sequences, depth or pose passes.
 
 ## Object paths and key timing
 
@@ -201,7 +207,7 @@ A continuous numeric scrub creates one Undo action. After reaching a minimum or 
 
 ## Save, reopen and export
 
-Save creates a **version 7 .previs** project and neighbouring .assets folder containing used sources. Keep both together when moving a project. It preserves embedded static body poses and keyed additive pose corrections, motion tracks, paths and path keys, final transform channels, camera channels/lenses, active camera, scene display settings, per-object colors/labels, lighting, interpolation curves, native poses and project setup. Reference image/video sources are bundled in the neighbouring assets folder; decoded preview frames are disposable cache data. Version 1/2/3/4/5/6 scenes are accepted on opening. Older releases refuse version 7 instead of silently dropping its timing curves, project format, references or native poses. Overwriting an existing project keeps the previous JSON as .previs.bak.
+Save creates a **version 8 .previs** project and neighbouring .assets folder containing used sources. Keep both together when moving a project. It preserves embedded static body poses and keyed additive pose corrections, motion tracks, paths and path keys, final transform channels, camera channels/lenses, active camera, scene display settings, per-object colors/labels, lighting, interpolation curves, native poses and project setup. Every camera’s original image/video source is bundled under a separate safe content-addressed filename in the neighbouring assets folder; decoded preview frames are disposable cache data. Version 1/2/3/4/5/6/7 scenes are accepted on opening. Version 7 projects migrate their former global reference to the saved active camera. Other cameras start without a reference. Older releases refuse version 8 instead of silently dropping per-camera backgrounds. Overwriting an existing project keeps the previous JSON as .previs.bak.
 
 ### Export a complete shot
 

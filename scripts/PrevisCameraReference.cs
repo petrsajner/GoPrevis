@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,14 +13,17 @@ namespace Previs;
 public partial class PrevisApp
 {
     const uint CameraReferenceLayer=4;
+    static readonly CameraReferenceData EmptyCameraReference=new();
+    CameraEntry? ActiveReferenceCamera=>_cameras.FirstOrDefault(camera=>camera.Rig==_shot);
+    CameraReferenceData ActiveCameraReference=>ActiveReferenceCamera?.Reference??EmptyCameraReference;
     MeshInstance3D? _cameraReferencePlane;
     ShaderMaterial? _cameraReferenceMaterial;
     ImageTexture? _cameraReferenceTexture;
     CancellationTokenSource? _referenceCancellation;
     bool _referenceIsVideo,_referenceDecoding,_referenceDisposed;
-    string _referenceLoadedPath="",_referenceBinary="";
+    string _referenceLoadedPath="",_referenceLoadedCameraId="",_referenceBinary="";
     double _referenceDuration,_referenceSourceFps=24,_referenceRequestedTime=-1,_referenceDisplayedTime=-1;
-    int _referenceGeneration;
+    int _referenceGeneration,_referenceDecoderGeneration=-1;
     readonly Dictionary<long,byte[]> _referenceFrames=new();
     readonly Queue<long> _referenceFrameOrder=new();
     Task _referenceLoadTask=Task.CompletedTask;
@@ -31,7 +35,7 @@ public partial class PrevisApp
     async Task LoadCameraReferenceCoreAsync()
     {
         _referenceCancellation?.Cancel();_referenceCancellation?.Dispose();_referenceCancellation=new();var cancellation=_referenceCancellation.Token;int generation=++_referenceGeneration;
-        _referenceFrames.Clear();_referenceFrameOrder.Clear();_cameraReferenceTexture?.Dispose();_cameraReferenceTexture=null;_referenceLoadedPath=_projectSetup.ReferencePath;
+        _referenceFrames.Clear();_referenceFrameOrder.Clear();_cameraReferenceTexture?.Dispose();_cameraReferenceTexture=null;_referenceLoadedPath=ActiveCameraReference.Path;_referenceLoadedCameraId=ActiveReferenceCamera?.Id??"";
         _referenceRequestedTime=_referenceDisplayedTime=-1;_referenceDuration=0;_referenceIsVideo=false;
         RedrawCameraReference();
         try
@@ -60,25 +64,28 @@ public partial class PrevisApp
     }
     double ReferenceSampleTime()
     {
-        double time=Math.Clamp(_time+_projectSetup.ReferenceOffsetSeconds,0,Math.Max(0,_referenceDuration-1.0/_referenceSourceFps));
+        double time=Math.Clamp(_time+ActiveCameraReference.OffsetSeconds,0,Math.Max(0,_referenceDuration-1.0/_referenceSourceFps));
         return Math.Floor(time*_referenceSourceFps+.000001)/_referenceSourceFps;
     }
     void UpdateCameraReference()
     {
-        if(_referenceDisposed)return;UpdateReferenceEnvironment();RedrawCameraReference();
+        if(_referenceDisposed)return;
+        if(_referenceLoadedCameraId!=(ActiveReferenceCamera?.Id??"")||_referenceLoadedPath!=ActiveCameraReference.Path){_=LoadCameraReferenceAsync();RefreshCameraBackgroundControls();return;}
+        UpdateReferenceEnvironment();RedrawCameraReference();
         if(_exportBusy)return;
-        if(!_referenceIsVideo||_referenceDuration<=0||!_projectSetup.ReferenceEnabled||_referenceLoadedPath!=_projectSetup.ReferencePath)return;
+        if(!_referenceIsVideo||_referenceDuration<=0||!ActiveCameraReference.Enabled||_referenceLoadedPath!=ActiveCameraReference.Path)return;
         _referenceRequestedTime=ReferenceSampleTime();
         if(!_referenceDecoding&&Math.Abs(_referenceRequestedTime-_referenceDisplayedTime)>.000001)
             _referenceLoadTask=DecodeReferenceFramesAsync(_referenceGeneration,_referenceCancellation?.Token??CancellationToken.None);
     }
     async Task DecodeReferenceFramesAsync(int generation,CancellationToken cancellation)
     {
-        if(_referenceDecoding)return;_referenceDecoding=true;
+        if(_referenceDecoding&&_referenceDecoderGeneration==generation)return;_referenceDecoding=true;_referenceDecoderGeneration=generation;
         try
         {
             while(generation==_referenceGeneration&&!_referenceDisposed)
             {
+                if(_exportBusy)break;
                 cancellation.ThrowIfCancellationRequested();double time=_referenceRequestedTime;long key=(long)Math.Round(time*1000000);
                 if(!_referenceFrames.TryGetValue(key,out var bytes))
                 {
@@ -97,7 +104,7 @@ public partial class PrevisApp
         }
         catch(OperationCanceledException){}
         catch(Exception ex){if(generation==_referenceGeneration&&!_referenceDisposed)Status("Reference video: "+ex.Message);}
-        finally{_referenceDecoding=false;if(generation!=_referenceGeneration&&!_referenceDisposed&&_referenceIsVideo&&_referenceDuration>0)UpdateCameraReference();}
+        finally{if(_referenceDecoderGeneration==generation){_referenceDecoding=false;_referenceDecoderGeneration=-1;}if(generation!=_referenceGeneration&&!_referenceDisposed&&_referenceIsVideo&&_referenceDuration>0)UpdateCameraReference();}
     }
     static async Task<byte[]> DecodeReferenceFrameAsync(string binary,string source,double time,CancellationToken cancellation)
     {
@@ -112,7 +119,7 @@ public partial class PrevisApp
     void UpdateReferenceEnvironment()
     {
         if(_previewCamera==null||_editorCamera==null||_lighting==null)return;
-        bool enabled=_projectSetup.ReferenceEnabled&&_cameraReferenceTexture!=null&&_projectSetup.ReferenceOpacity>0;
+        bool enabled=_referenceLoadedCameraId==(ActiveReferenceCamera?.Id??"")&&_referenceLoadedPath==ActiveCameraReference.Path&&ActiveCameraReference.Enabled&&_cameraReferenceTexture!=null&&ActiveCameraReference.Opacity>0;
         if(enabled&&_cameraReferencePlane==null)
         {
             _cameraReferenceMaterial=new ShaderMaterial{Shader=new Shader{Code="""
@@ -151,7 +158,7 @@ public partial class PrevisApp
         _cameraReferencePlane.GlobalTransform=new Transform3D(_shot.ShotCamera.GlobalBasis.Orthonormalized(),_shot.ShotCamera.GlobalPosition-_shot.ShotCamera.GlobalBasis.Orthonormalized().Z*distance);
         var background=_sceneSettings.BackgroundColor;
         _cameraReferenceMaterial!.SetShaderParameter("reference_image",_cameraReferenceTexture!);_cameraReferenceMaterial.SetShaderParameter("background_color",new Color(background[0],background[1],background[2],1));
-        _cameraReferenceMaterial.SetShaderParameter("image_aspect",_cameraReferenceTexture!.GetWidth()/(float)_cameraReferenceTexture.GetHeight());_cameraReferenceMaterial.SetShaderParameter("frame_aspect",ProjectAspect);_cameraReferenceMaterial.SetShaderParameter("opacity",_projectSetup.ReferenceOpacity);_cameraReferenceMaterial.SetShaderParameter("fill",_projectSetup.ReferenceFill);
+        _cameraReferenceMaterial.SetShaderParameter("image_aspect",_cameraReferenceTexture!.GetWidth()/(float)_cameraReferenceTexture.GetHeight());_cameraReferenceMaterial.SetShaderParameter("frame_aspect",ProjectAspect);_cameraReferenceMaterial.SetShaderParameter("opacity",ActiveCameraReference.Opacity);_cameraReferenceMaterial.SetShaderParameter("fill",ActiveCameraReference.Fill);
     }
     void RedrawCameraReference()=>UpdateReferenceEnvironment();
     void DisposeCameraReference()
