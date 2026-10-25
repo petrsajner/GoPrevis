@@ -71,7 +71,7 @@ public partial class GenPrevisApp
             Redo();camera=_cameras.Single(item=>item.Id==cameraId);car=_entries.Single(item=>item.Data.Id==carId);
             Check(Math.Abs(camera.Tracking.FollowOffset[1]-offset[1]-.4f)<.0001,"Redo restores the live follow parameter");
             SetTime(3);var restoredPose=camera.Rig.GlobalTransform;string file=Path.Combine(output,"tracking.previs");SaveTo(file);LoadProjectFromPath(file);SetTime(3);camera=_cameras.Single(item=>item.Id==cameraId);car=_entries.Single(item=>item.Data.Id==carId);
-            Check(camera.Rig.GlobalTransform.IsEqualApprox(restoredPose)&&camera.Tracking.FollowTargetId==carId&&Snapshot().Version==10,"project format ten reopens bindings, offsets and the exact live camera pose");
+            Check(camera.Rig.GlobalTransform.IsEqualApprox(restoredPose)&&camera.Tracking.FollowTargetId==carId&&Snapshot().Version==ProjectData.CurrentVersion,"project current format reopens bindings, offsets and the exact live camera pose");
             var duplicate=SnapshotCamera(camera);duplicate.Id=Guid.NewGuid().ToString("N");var copy=CreateCamera("Tracking copy",duplicate,false);copy.Tracking.FollowOffset[0]+=3;
             Check(Math.Abs(copy.Tracking.FollowOffset[0]-camera.Tracking.FollowOffset[0]-3)<.0001,"duplicated camera tracking settings have independent offset arrays");
             camera.Tracking.FollowTargetId="missing-target";camera.Tracking.LookAtTargetId="missing-target";SetTime(3);

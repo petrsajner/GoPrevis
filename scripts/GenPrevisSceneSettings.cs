@@ -74,7 +74,8 @@ public partial class GenPrevisApp
         _sceneBrightnessSlider.DragStarted+=BeginNumericGesture;_sceneBrightnessSlider.DragEnded+=_=>EndNumericGesture();
         _sceneBrightnessSlider.ValueChanged+=value=>ChangeSceneSetting(data=>data.Brightness=(float)value/100);
         _sceneBrightnessNumber.ValueChanged+=value=>ChangeSceneSetting(data=>data.Brightness=(float)value/100);
-        _sceneDirectional=new CheckButton{Text="Directional light",ButtonPressed=_lighting.DirectionalEnabled};_sceneDirectional.Toggled+=value=>{if(_refreshing||_refreshingSceneSettings)return;PushUndo();_lighting.DirectionalEnabled=value;};lighting.AddChild(_sceneDirectional);
+        _sceneDirectional=new CheckButton{Text="Studio key light",TooltipText="Optional fixed studio light. Add a directional light below to control its rotation and properties.",ButtonPressed=_lighting.DirectionalEnabled};_sceneDirectional.Toggled+=value=>{if(_refreshing||_refreshingSceneSettings)return;PushUndo();_lighting.DirectionalEnabled=value;};lighting.AddChild(_sceneDirectional);
+        lighting.AddChild(Row(Button("+ Point light",()=>AddSceneLight("point_light")),Button("+ Directional light",()=>AddSceneLight("directional_light"))));
 
         var display=SceneSettingsFoldout(content,"Display",true);
         _sceneGlobalLabels=new CheckButton{Text="Object labels"};_sceneGlobalLabels.Toggled+=value=>ChangeSceneSetting(data=>data.ObjectLabelsVisible=value);display.AddChild(_sceneGlobalLabels);

@@ -5,7 +5,8 @@ namespace GenPrevis;
 
 public sealed class ProjectData
 {
-    public int Version { get; set; } = 10;
+    public const int CurrentVersion=11;
+    public int Version { get; set; } = CurrentVersion;
     public int Fps { get; set; } = 24;
     public double Duration { get; set; } = 8;
     public List<ObjectData> Objects { get; set; } = new();
@@ -22,6 +23,7 @@ public sealed class ProjectData
 
 public sealed class ObjectData
 {
+    public SceneLightData? Light { get; set; }
     public string Id { get; set; } = Guid.NewGuid().ToString("N");
     public string Kind { get; set; } = "box";
     public string Name { get; set; } = "Box";

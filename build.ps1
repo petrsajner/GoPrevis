@@ -12,13 +12,16 @@ if ($Test) {
     & $previsGodot --headless --path $PSScriptRoot -- --smoke-test
     if ($LASTEXITCODE -ne 0) { throw 'Headless smoke checks failed.' }
 }
-$previsOutput = Join-Path $PSScriptRoot 'build\GenPrevis-0.14.0-Windows'
+$previsOutput = Join-Path $PSScriptRoot 'build\GenPrevis-0.15.0-Windows'
 New-Item -ItemType Directory -Path $previsOutput -Force | Out-Null
 New-Item -ItemType Directory -Path (Join-Path $PSScriptRoot 'output') -Force | Out-Null
 $previsLog = Join-Path $PSScriptRoot 'output\export.log'
 & $previsGodot --headless --path $PSScriptRoot --export-release 'Windows Desktop' *> $previsLog
 if ($LASTEXITCODE -ne 0 -or (Select-String -LiteralPath $previsLog -Pattern '^ERROR:' -Quiet)) { Get-Content -LiteralPath $previsLog -Tail 25; throw 'Windows export failed.' }
-Copy-Item -LiteralPath 'README.md', 'THIRD-PARTY-NOTICES.md' -Destination $previsOutput -Force
+Copy-Item -LiteralPath 'README.md', 'THIRD-PARTY-NOTICES.md', 'NAVRH-GENPREVIS.md' -Destination $previsOutput -Force
+$previsBrandAssets=Join-Path $previsOutput 'assets'
+New-Item -ItemType Directory -Path $previsBrandAssets -Force | Out-Null
+Copy-Item -LiteralPath 'assets\genprevis.png', 'assets\genprevis.ico', 'assets\genprevis-icon-notes.md' -Destination $previsBrandAssets -Force
 if (Test-Path -LiteralPath 'VALIDATION.md') { Copy-Item -LiteralPath 'VALIDATION.md' -Destination $previsOutput -Force }
 Copy-Item -LiteralPath 'LICENSES' -Destination $previsOutput -Recurse -Force
 Copy-Item -LiteralPath 'samples' -Destination $previsOutput -Recurse -Force

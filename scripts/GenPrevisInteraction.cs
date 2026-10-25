@@ -7,7 +7,7 @@ namespace GenPrevis;
 
 public partial class GenPrevisApp
 {
-    bool _viewportShift,_middleZoom,_zoomUndo,_sceneTransformGesture,_numericGesture,_numericUndoPushed;
+    bool _viewportShift,_viewportCtrl,_middleZoom,_zoomUndo,_sceneTransformGesture,_numericGesture,_numericUndoPushed;
 
     void BeginNumericGesture(){_numericGesture=true;_numericUndoPushed=false;_playing=false;_play.Text="▶";}
     void EndNumericGesture(){_numericGesture=false;_numericUndoPushed=false;}
@@ -65,6 +65,8 @@ public partial class GenPrevisApp
     }
     void UpdateViewportModifiers(InputEvent input)
     {
+        if(input is InputEventKey control&&(control.Keycode==Key.Ctrl||control.PhysicalKeycode==Key.Ctrl))_viewportCtrl=control.Pressed;
+        else if(input is InputEventWithModifiers controlModifiers)_viewportCtrl=controlModifiers.CtrlPressed;
         if(input is InputEventKey key&&(key.Keycode==Key.Shift||key.PhysicalKeycode==Key.Shift))_viewportShift=key.Pressed;
         else if(input is InputEventWithModifiers modifiers)_viewportShift=modifiers.ShiftPressed;
         UpdatePoseModifierState(input);

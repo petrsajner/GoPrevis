@@ -129,7 +129,7 @@ public partial class GenPrevisApp
         _inspectorSection=section;string current="Object";
         foreach(var node in _inspector.GetChildren().OfType<Control>()){if(node==_inspectorTabs){node.Visible=true;continue;}if(node==_motionHeader)current="Motion";if(node==_pathHeader)current="Path";if(node==_posePanel)current="Pose";node.Visible=current==section;}
         if(_animationChoice!=null)_animationChoice.Visible=section=="Motion"&&_selected?.Player!=null;
-        if(_clipChoice!=null)_clipChoice.Visible=section=="Motion"&&(_selected?.Node is RiggedActor||_selected?.NativeTrack!=null);UpdatePoseInspector();RefreshUnifiedWorkflow();UpdateObjectAppearanceInspector();UpdatePlacementInspector();RefreshKeyInterpolationInspector();RefreshCameraBackgroundControls();RefreshCameraTrackingInspector();
+        if(_clipChoice!=null)_clipChoice.Visible=section=="Motion"&&(_selected?.Node is RiggedActor||_selected?.NativeTrack!=null);UpdatePoseInspector();RefreshUnifiedWorkflow();UpdateObjectAppearanceInspector();UpdatePlacementInspector();RefreshKeyInterpolationInspector();RefreshCameraBackgroundControls();RefreshCameraTrackingInspector();RefreshLightInspector();
     }
     void RefreshSequenceInspector()
     {

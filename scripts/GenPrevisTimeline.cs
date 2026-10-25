@@ -102,13 +102,15 @@ public partial class GenPrevisApp
 
         public override void _Ready()
         {
-            TooltipText = "Drag a clip's left edge to trim IN and its right edge to trim OUT. Drag its body to move it. Expand Transform for Position, Rotation and Scale keys.";
+            FocusMode=FocusModeEnum.All;
+            TooltipText = "Drag empty track space to box-select keys. Ctrl/Shift adds to the selection; Delete removes selected keys. Drag the ruler to scrub. Clip edges trim IN/OUT.";
             UpdateMinimumHeight();
         }
 
         public override void _Input(InputEvent input)
         {
-            if (_dragClip == null && _dragPathEntry == null && !_dragKey && !_scrubbing) return;
+            if(_marquee&&input is InputEventMouseMotion){UpdateMarquee(GetLocalMousePosition());GetViewport().SetInputAsHandled();return;}
+            if (_dragClip == null && _dragPathEntry == null && !_dragKey && !_scrubbing&&!_marquee) return;
             if (input is InputEventMouseMotion)
             {
                 UpdatePointer(GetLocalMousePosition().X);
@@ -122,6 +124,7 @@ public partial class GenPrevisApp
 
         private void EndDrag()
         {
+            _marquee=false;QueueRedraw();
             _dragClip = null; _dragEntry = null; _dragPathEntry = null;
             _dragKeyEntry = null; _dragKeyCamera = null; _dragKey = false; _dragPoseKey=false;
             _scrubbing = false; _hasDragged = false;
@@ -144,6 +147,7 @@ public partial class GenPrevisApp
                 if(_dragPoseKey&&_dragKeyEntry!=null)App.RetimePoseCorrection(_dragKeyEntry,_dragKeyChannel,_lastKeyTime,time);
                 else App.RetimeTransform(_dragKeyEntry, _dragKeyCamera, _dragKeyChannel, _lastKeyTime, time);
                 _lastKeyTime = time; _selectedKeyTime = time;
+                SelectTimelineKey(new TrackRow(_dragPoseKey?"Pose":"Transform","",_dragKeyEntry,_dragKeyCamera,_dragKeyChannel),time,false);
                 App.SelectKeyInterpolation(_dragPoseKey?"Pose":"Transform",_dragKeyEntry,_dragKeyCamera,_dragKeyChannel,time);
                 App.SetTime(time); QueueRedraw();
             }
@@ -289,6 +293,7 @@ public partial class GenPrevisApp
             float head = X(App._time);
             DrawLine(new Vector2(head, Top - 5), new Vector2(head, end), new Color("e8dcff"), 1.5f);
             DrawColoredPolygon(new[] { new Vector2(head - 4, Top - 6), new Vector2(head + 4, Top - 6), new Vector2(head, Top) }, new Color("e8dcff"));
+            DrawMarquee();
         }
 
         private void DrawTransformRow(TrackRow row, float y, bool selected)
@@ -297,8 +302,7 @@ public partial class GenPrevisApp
             double[] times = KeyTimes(row);
             foreach (double time in times)
             {
-                bool chosen = _selectedKeyTarget == row.Target && Math.Abs(_selectedKeyTime - time) < KeyTolerance &&
-                    (_selectedKeyChannel == row.Channel || row.Channel == "All");
+                bool chosen = IsTimelineKeySelected(row,time);
                 Diamond(X(time), y + 11, chosen ? new Color("f0e6ff") : selected ? App._accent : new Color("897c9b"));
             }
             if (times.Length == 0 && row.Child)
@@ -311,7 +315,7 @@ public partial class GenPrevisApp
             var times=KeyTimes(row);
             foreach(double time in times)
             {
-                bool chosen=_selectedKeyTarget==row.Target&&Math.Abs(_selectedKeyTime-time)<KeyTolerance&&(_selectedKeyChannel==row.Channel||row.Channel=="All");
+                bool chosen=IsTimelineKeySelected(row,time);
                 Diamond(X(time),y+11,chosen?new Color("fff0cd"):selected?new Color("e7c787"):new Color("b49b70"));
             }
             if(times.Length==0&&!row.Child)DrawString(ThemeDB.FallbackFont,new Vector2(Left+7,y+16),"Double-click to key the selected joint",fontSize:11,modulate:new Color("9d8f76"));
@@ -373,18 +377,22 @@ public partial class GenPrevisApp
                 float x = X(absoluteTime);
                 Color color = actor.Data.Path.Enabled ? selected && i == App._selectedPathPoint
                     ? new Color("c2f5fc") : new Color("78c4d1") : new Color("62757a");
-                Diamond(x, y + 11, color);
+                Diamond(x, y + 11, IsTimelineKeySelected(new TrackRow("Path","",Object:actor),absoluteTime)?new Color("ffdc62"):color);
                 if (times.Length < 12) DrawString(ThemeDB.FallbackFont, new Vector2(Math.Min(x + 7, Size.X - 24), y + 16), "P" + (i + 1), fontSize: 11, modulate: App._text);
             }
         }
 
         public override void _GuiInput(InputEvent input)
         {
+            if(_marquee&&input is InputEventMouseMotion marqueeMotion){UpdateMarquee(marqueeMotion.Position);AcceptEvent();return;}
             if (input is InputEventMouseButton button && button.ButtonIndex is MouseButton.Left or MouseButton.Right)
             {
                 if (!button.Pressed) { if (button.ButtonIndex == MouseButton.Left) EndDrag(); return; }
+                GrabFocus();
                 int index = (int)Math.Floor((button.Position.Y - Top) / RowHeight);
                 var rows = Rows;
+                if(button.ButtonIndex==MouseButton.Left&&!button.DoubleClick&&button.Position.X>=Left&&button.Position.Y>=Top&&!HitTimelineItem(rows,index,button.Position.X))
+                {BeginMarquee(button);AcceptEvent();return;}
                 if (index < 0 || index >= rows.Count)
                 {
                     if (button.ButtonIndex == MouseButton.Left && button.Position.X >= Left) { _scrubbing = true; App.SetTime(Snap(Seconds(button.Position.X))); AcceptEvent(); }
@@ -401,6 +409,7 @@ public partial class GenPrevisApp
                     for (int i = 0; i < times.Length; i++) { float d = Math.Abs(button.Position.X - X(actor.Data.Path.Start + times[i])); if (d < nearest) { nearest = d; point = i; } }
                     if (point >= 0 && button.Position.X >= Left - 8)
                     {
+                        SelectTimelineKey(row,actor.Data.Path.Start+times[point],button.CtrlPressed||button.ShiftPressed);
                         App.SelectPathKey(actor, point); _dragPathEntry = actor; _dragPathIndex = point; _dragX = button.Position.X;
                         _pathKeyStart = actor.Data.Path.Start + times[point]; _hasDragged = false; AcceptEvent(); return;
                     }
@@ -444,12 +453,13 @@ public partial class GenPrevisApp
             {
                 if(button.ButtonIndex==MouseButton.Right){App.RemovePoseCorrectionKey(row.Object!,row.Channel,nearest);QueueRedraw();AcceptEvent();return;}
                 App._playing=false;App._play.Text="▶";App.SelectPoseCorrectionTimeline(row.Object!,row.Channel,nearest);App.SelectKeyInterpolation("Pose",row.Object,null,row.Channel,nearest);
+                SelectTimelineKey(row,nearest,button.CtrlPressed||button.ShiftPressed);
                 _selectedKeyTarget=row.Target;_selectedKeyChannel=row.Channel;_selectedKeyTime=nearest;
                 _dragKey=true;_dragPoseKey=true;_dragKeyEntry=row.Object;_dragKeyCamera=null;_dragKeyChannel=row.Channel;_dragX=button.Position.X;_keyOriginalTime=_lastKeyTime=nearest;_hasDragged=false;AcceptEvent();return;
             }
             if(button.ButtonIndex!=MouseButton.Left)return;
             App.SelectPoseCorrectionTimeline(row.Object!,row.Channel,Snap(Seconds(button.Position.X)));
-            if(button.DoubleClick){App.CapturePoseCorrectionKey(row.Channel);App.SelectKeyInterpolation("Pose",row.Object,null,row.Channel,App._time);_selectedKeyTarget=row.Target;_selectedKeyChannel=row.Channel;_selectedKeyTime=App._time;UpdateMinimumHeight();}
+            if(button.DoubleClick){App.CapturePoseCorrectionKey(row.Channel);App.SelectKeyInterpolation("Pose",row.Object,null,row.Channel,App._time);_selectedKeyTarget=row.Target;_selectedKeyChannel=row.Channel;_selectedKeyTime=App._time;SelectTimelineKey(row,App._time,false);UpdateMinimumHeight();}
             else _scrubbing=true;
             AcceptEvent();QueueRedraw();
         }
@@ -476,6 +486,7 @@ public partial class GenPrevisApp
                 { App.RemoveTransformKey(row.Object, row.Camera, row.Channel, nearest); QueueRedraw(); AcceptEvent(); return; }
                 App._playing = false; App._play.Text = "▶ Play";
                 App.SelectTransformTimeline(row.Object, row.Camera, row.Channel, nearest);
+                SelectTimelineKey(row,nearest,button.CtrlPressed||button.ShiftPressed);
                 _selectedKeyTarget = row.Target; _selectedKeyChannel = row.Channel; _selectedKeyTime = nearest;
                 _dragKey = true; _dragPoseKey=false; _dragKeyEntry = row.Object; _dragKeyCamera = row.Camera; _dragKeyChannel = row.Channel;
                 _dragX = button.Position.X; _keyOriginalTime = _lastKeyTime = nearest; _hasDragged = false; AcceptEvent(); return;
@@ -487,6 +498,7 @@ public partial class GenPrevisApp
             {
                 App.CaptureSelectedTransformKey(row.Channel);
                 _selectedKeyTarget = row.Target; _selectedKeyChannel = row.Channel; _selectedKeyTime = App._time;
+                SelectTimelineKey(row,App._time,false);
             }
             else _scrubbing = true;
             AcceptEvent(); QueueRedraw();

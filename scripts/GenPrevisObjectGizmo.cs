@@ -77,14 +77,25 @@ public partial class GenPrevisApp
             }
             if(ObjectGizmoProject(origin+ObjectGizmoScaleAxis(target,axis)*length*.58f,out var cube))
             {
-                canvas.DrawRect(new Rect2(cube-Vector2.One*6,Vector2.One*12),new Color("15151b"));canvas.DrawRect(new Rect2(cube-Vector2.One*4,Vector2.One*8),color);
+                canvas.DrawRect(new Rect2(cube-Vector2.One*6,Vector2.One*12),new Color("15151b"));canvas.DrawRect(new Rect2(cube-Vector2.One*4,Vector2.One*8),ObjectGizmoScaleColor(axis));
             }
         }
         canvas.DrawCircle(center,6,new Color("19191f"));canvas.DrawArc(center,6,0,Mathf.Tau,24,new Color("eee6fb"),1.5f,true);
         string name=_selectedCamera?.Name??_selected?.Data.Name??"Object";
         canvas.DrawString(ThemeDB.FallbackFont,new Vector2(12,22),name+" · Transform",fontSize:12,modulate:new Color("e5dcf5"));
-        canvas.DrawString(ThemeDB.FallbackFont,new Vector2(12,41),"Arrows: move · Squares: scale · Rings: rotate · Ctrl: snap",fontSize:11,modulate:new Color("b8b2c7"));
+        canvas.DrawString(ThemeDB.FallbackFont,new Vector2(12,41),"Arrows: move · Squares: scale · Rings: rotate · Ctrl: uniform scale / snap",fontSize:11,modulate:new Color("b8b2c7"));
         if(_objectGizmoHover!=ObjectGizmoOperation.None)canvas.DrawString(ThemeDB.FallbackFont,center+new Vector2(13,-14),_objectGizmoHover==ObjectGizmoOperation.ScreenMove?"Move":_objectGizmoHover+" "+"XYZ"[_objectGizmoHoverAxis],fontSize:11,modulate:new Color("f2dba1"));
+    }
+
+    Color ObjectGizmoScaleColor(int axis)=>_viewportCtrl?new Color("ffdc62"):ObjectGizmoColors[axis];
+    static Vector3 ObjectGizmoScaled(Vector3 start,int axis,float factor,bool uniform)
+    {
+        if(uniform)
+        {
+            float minimum=Math.Min(start.X,Math.Min(start.Y,start.Z)),maximum=Math.Max(start.X,Math.Max(start.Y,start.Z));
+            return start*Math.Clamp(factor,.05f/Math.Max(.000001f,minimum),1000/Math.Max(.000001f,maximum));
+        }
+        start[axis]=Math.Clamp(start[axis]*factor,.05f,1000);return start;
     }
 
     (ObjectGizmoOperation Kind,int Axis) HitObjectGizmo(Vector2 point)
@@ -142,8 +153,8 @@ public partial class GenPrevisApp
                 }
                 else
                 {
-                    var scale=_objectGizmoStartLocal.Basis.Scale;float factor=Math.Max(.01f,1+amount/Math.Max(.0001f,_objectGizmoLength*.58f));scale[_objectGizmoAxis]=Math.Clamp(scale[_objectGizmoAxis]*factor,.05f,1000);
-                    if(motion.CtrlPressed)scale[_objectGizmoAxis]=Math.Max(.05f,Mathf.Snapped(scale[_objectGizmoAxis],.05f));SetSelectedTransformFromGizmo("Scale",scale);
+                    float factor=Math.Max(.000001f,1+amount/Math.Max(.0001f,_objectGizmoLength*.58f));
+                    SetSelectedTransformFromGizmo("Scale",ObjectGizmoScaled(_objectGizmoStartLocal.Basis.Scale,_objectGizmoAxis,factor,motion.CtrlPressed));
                 }
             }
             else if(_objectGizmoDrag==ObjectGizmoOperation.ScreenMove)

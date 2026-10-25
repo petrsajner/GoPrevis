@@ -239,3 +239,32 @@ Import mocapu a export vodicích podkladů jsou již součástí B, ne dodatečn
 ## 11. Co tento návrh zatím neprohlašuje za hotové
 
 Funkční prototyp 0.3.1 má vlastní scénu Godotu, kompaktní pracovní plochu, připraveného člověka, animovanou lišku, malou knihovnu pohybů, sekvence s prolnutím, časované dráhy a finální ruční transformace s klíči. Kamery jsou součástí seznamu objektů a mají editovatelné kanály včetně ohniska. Proklikávací návrh z předchozí fáze zůstává pouze vizuální referencí. Kompletní knihovny, univerzální zvířecí retargeting, filmový export všech průchodů a ověření ostatních OS zůstávají další prací. Přesný stav zdrojových a distribučních zkoušek uvádějí README.md a VALIDATION.md.
+
+## 12. AI režie scény — návrh k 25. 10. 2026
+
+Tato část je návrh, nikoli již připojená AI funkce. Prvním kandidátem pro levné řízení GenPrevisu je **GPT-6 Luna**, přes Responses API s voláním funkcí a se středním uvažováním pro stavbu nového záběru. Jednoduché následné změny lze měřit s nízkým uvažováním. Model přijímá i obrázky pro kontrolu několika náhledů; celé video není nutné posílat.
+
+Oficiální cena Standard je 0,10 USD za milion vstupních a 0,50 USD za milion výstupních tokenů; cached input 0,01 USD. Například 10 000 vstupních a 3 000 účtovaných výstupních tokenů stojí 0,0025 USD. Jde o výpočet pro uvedenou spotřebu, nikoli cenu garantovanou za celou scénu; další opravné kroky, obrázky a uvažování se promítají do účtované spotřeby. [Model a ceny](https://developers.openai.com/api/docs/models/gpt-6-luna), [volání funkcí](https://developers.openai.com/api/docs/guides/function-calling).
+
+Pro cenové a kvalitativní srovnání má smysl měřit také Gemini 2.5 Flash-Lite (0,10/0,40 USD za milion vstupních/výstupních tokenů). Jeho nižší cena sama nedokládá dostatečnou úspěšnost složité režie. Doporučení Luny je technický výběr kandidáta podle ceny, uvažování, obrázků a nástrojových příkazů, nikoli výsledek vlastního prostorového benchmarku. [Ceník Google](https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-flash-lite).
+
+### Rozhraní a prostorová pravidla
+
+AI dostane souhrn scény: stabilní ID objektů a kamer, rozměry a bounds modelů, transformace, FPS, délku záběru, dráhy, klipy, korekce póz a sledovací vazby. Souřadnice jsou v metrech, Y nahoru, výchozí směr postavy/kamery -Z, rotace ve stupních. Relativní pojmy jako „vlevo v obraze“ se vyhodnocují vůči konkrétní kameře, nikoli odhadovaným světovým osám.
+
+| Příkaz | Úloha |
+| --- | --- |
+| `get_scene` | Přečíst současný stav a nastavení projektu. |
+| `search_library` | Najít existující modely, pózy, kompatibilní pohyby a kamerové presety; vrátit vybrané položky s rozměry a délkami klipů. |
+| `apply_scene_plan` | Provést validovanou dávku: přidání modelu/světla/kamery, TRS, umístění na zem/povrch, cesta a její časování, sekvence klipů, ruční korekce a Follow/Look at. |
+| `preview_shot` | Vrátit malé RGB náhledy a naměřené bounds/viditelnost vybraných objektů v několika časech. |
+
+Celá dávka tvoří jeden Undo krok. Nejprve se ověří ID, kompatibilita rigů/pohybů, konečnost čísel a limity scény; neplatná dávka nic částečně nepřidá. Ovládání používá funkce programu a typovaný plán. Není třeba, aby model generoval GDScript/C# nebo klikal na UI.
+
+Přesné IK, interpolaci, retargeting, skládání vrstev, sledovací kameru i jednotlivé snímky počítá Godot. Model určuje záměr a časování: „přijď ke stolu, posaď se, otoč hlavu ke dveřím; kamera pomalu najede“. Dostane jen výsledky relevantního vyhledávání knihovny a změny scény, aby se v každém kole neposílal celý katalog a historie.
+
+### Ověření kandidáta před nasazením
+
+Na shodných zadáních změřit oba kandidáty: auto rozjezd/zatáčka/stop a živé Follow; usazení na různě vysoké židle; rozestavení dvojice proti sobě; zvíře s kompatibilní chůzí a přechodem na Idle; udržení postavy v obraze při změně dráhy; změna formátu 16:9 na 9:16. Zařadit české i anglické popisy a následné opravy již existujícího záběru.
+
+Vyhodnocovat správnost příkazů, geometrické vztahy, časování, framing v průběhu pohybu, počet opravných kol, latenci a skutečnou cenu **za přijatý záběr**. Nepřisuzovat modelu ověřené porozumění 3D prostoru pouze podle podpory JSON či volání funkcí. Produkční výchozí model zvolit podle tohoto testu; API připojení a uživatelský klíč jsou další samostatná implementační etapa.

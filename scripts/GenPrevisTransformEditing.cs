@@ -16,6 +16,7 @@ public partial class GenPrevisApp
 
     void HandleObjectListSelection(long index)
     {
+        _timeline.ClearKeySelection();
         if(index<0)return;if(index<_entries.Count)Select(_entries[(int)index]);else if(index-_entries.Count<_cameras.Count)SelectCamera(_cameras[(int)index-_entries.Count]);
     }
     void SelectCamera(CameraEntry camera)

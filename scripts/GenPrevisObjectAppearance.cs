@@ -151,7 +151,7 @@ public partial class GenPrevisApp
         if(_objectAppearancePanel==null)return;bool old=_refreshing;_refreshing=true;bool item=_selected!=null,camera=_selectedCamera!=null;
         _objectAppearancePanel.Visible=_inspectorSection=="Object"&&(item||camera);_objectShowLabel.Disabled=!item&&!camera;_objectShowLabel.ButtonPressed=_selectedCamera?.ShowLabel??_selected?.Data.Appearance?.ShowLabel??true;
         _objectShowLabel.TooltipText=_sceneSettings.ObjectLabelsVisible?"Show this name in the working viewport. Labels are excluded from rendered exports.":"Global object labels are hidden in 3D scene settings.";
-        _objectMaterialHeader.Visible=item;_objectMaterialControls.Visible=item&&_objectMaterialExpanded;
+        bool materialObject=item&&!IsSceneLightKind(_selected!.Data.Kind);_objectMaterialHeader.Visible=materialObject;_objectMaterialControls.Visible=materialObject&&_objectMaterialExpanded;
         if(item)
         {
             var color=AppearanceColor(_selected!.Data.Appearance??new());if(color==null){var mesh=Descendants(_selected.Node).OfType<MeshInstance3D>().FirstOrDefault(m=>m.Mesh!=null);color=mesh?.GetActiveMaterial(0) is BaseMaterial3D material?material.AlbedoColor:new Color("b8bcc8");}

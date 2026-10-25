@@ -72,7 +72,7 @@ public partial class GenPrevisApp
         _drawPathButton=Button("Draw path",StartDrawingPath,true);_finishPathButton=Button("Finish",FinishDrawingPath);_finishPathButton.Visible=false;
         center.AddChild(CompactPanel(BuildUnifiedViewportToolbar(),4,2));
         _sceneContainer=CreateSceneViewportContainer();_sceneContainer.Stretch=true;_sceneContainer.SizeFlagsVertical=SizeFlags.ExpandFill;_sceneContainer.SizeFlagsHorizontal=SizeFlags.ExpandFill;_sceneContainer.MouseFilter=MouseFilterEnum.Stop;
-        _sceneViewport=new SubViewport{Size=new Vector2I(800,500),RenderTargetUpdateMode=SubViewport.UpdateMode.Always,HandleInputLocally=true,Msaa3D=Viewport.Msaa.Msaa4X};_sceneContainer.AddChild(_sceneViewport);_sceneContainer.GuiInput+=ViewportInput;center.AddChild(_sceneContainer);
+        _sceneViewport=new SubViewport{Size=new Vector2I(800,500),RenderTargetUpdateMode=SubViewport.UpdateMode.Always,HandleInputLocally=true,PositionalShadowAtlasSize=2048,Msaa3D=Viewport.Msaa.Msaa4X};_sceneContainer.AddChild(_sceneViewport);_sceneContainer.GuiInput+=ViewportInput;center.AddChild(_sceneContainer);
         _framing=new CameraFrameOverlay{App=this,MouseFilter=MouseFilterEnum.Ignore};_framing.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);_sceneContainer.AddChild(_framing);BuildPoseViewportOverlay();BuildObjectGizmoOverlay();
 
         var right=new VBoxContainer{SizeFlagsHorizontal=SizeFlags.ExpandFill,SizeFlagsVertical=SizeFlags.ExpandFill};right.AddThemeConstantOverride("separation",6);
@@ -81,7 +81,7 @@ public partial class GenPrevisApp
         _previewAspect=new AspectRatioContainer{Ratio=ProjectAspect,StretchMode=AspectRatioContainer.StretchModeEnum.Fit,CustomMinimumSize=new Vector2(0,144),MouseFilter=MouseFilterEnum.Ignore};
         _layoutCameraPreview=new SubViewportContainer{Stretch=true,MouseFilter=MouseFilterEnum.Ignore};
         _previewAspect.Resized+=FitCompactPreview;
-        _previewViewport=new SubViewport{Size=new Vector2I(480,270),RenderTargetUpdateMode=SubViewport.UpdateMode.Always,Msaa3D=Viewport.Msaa.Msaa4X};_layoutCameraPreview.AddChild(_previewViewport);_previewAspect.AddChild(_layoutCameraPreview);right.AddChild(_previewAspect);
+        _previewViewport=new SubViewport{Size=new Vector2I(480,270),RenderTargetUpdateMode=SubViewport.UpdateMode.Always,PositionalShadowAtlasSize=2048,Msaa3D=Viewport.Msaa.Msaa4X};_layoutCameraPreview.AddChild(_previewViewport);_previewAspect.AddChild(_layoutCameraPreview);right.AddChild(_previewAspect);
         _cameraInfo=Text("Active camera",11,true);_cameraInfo.ClipText=true;right.AddChild(_cameraInfo);
         var cameraBackground=Button("Camera background…",OpenActiveCameraBackground);cameraBackground.TooltipText="Image or video reference for the active camera. Editor only; excluded from exports.";right.AddChild(cameraBackground);
         _cameraQuickControls=new VBoxContainer();_cameraQuickControls.AddThemeConstantOverride("separation",4);right.AddChild(_cameraQuickControls);

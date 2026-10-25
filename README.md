@@ -1,14 +1,27 @@
 <img src="assets/genprevis.png" width="120" alt="GenPrevis icon">
 
-# GenPrevis 0.14.0 — 3D control clips for AI video
+# GenPrevis 0.15.0 — 3D control clips for AI video
 
 GenPrevis prepares 3D control clips for AI video generation. Build the scene, direct character and object motion, frame the camera, and export synchronized color, depth and pose guidance. It uses Godot 4.7.2 .NET, C# and .NET 10. The application UI, dialogs and authored errors are English.
 
 ## Run
 
-The Windows portable output is `build/GenPrevis-0.14.0-Windows/GenPrevis.exe`. Keep GenPrevis.exe, GenPrevis.pck and data_GenPrevis_windows_x86_64 together. The portable Windows build includes its runtime; using it does not require the Godot editor or .NET SDK.
+The Windows portable output is `build/GenPrevis-0.15.0-Windows/GenPrevis.exe`. Keep GenPrevis.exe, GenPrevis.pck and data_GenPrevis_windows_x86_64 together. The portable Windows build includes its runtime; using it does not require the Godot editor or .NET SDK.
 
 For development, open project.godot with Godot 4.7.2 .NET. Local tools are in the ignored .tools directory. The existing run.ps1 starts the source project; build.ps1 -Test builds, runs source checks and exports Windows x64.
+
+## Editor improvements in 0.15.0
+
+- **Save:** enter only a project name. `.genprevis` is appended automatically, including names such as `Shot 01.v2`. Explicit `.genprevis` names are not doubled; existing `.previs` projects remain supported.
+- **Timeline selection:** drag a rectangle from empty track space to select keys across objects, cameras, paths, lens and additive pose tracks. Ctrl/Shift adds another region; Ctrl-click toggles a key. Expanded parameter rows select only their own XYZ key. **Delete** removes the selected keys in one Undo step. Drag the time ruler or the scrub slider to scrub; clip bodies and trim handles keep their existing behavior. Deleting a path diamond removes its waypoint and matching arrival time.
+- **Proportional scale:** hold Shift to reveal the transform axes, then hold Ctrl while dragging a scale cube to scale XYZ together. All scale cubes turn yellow while Ctrl is held. Existing nonuniform proportions are retained. Ctrl still snaps move/rotate operations; Alt gives fine adjustment.
+- **Lights:** open **Objects → 3D scene → Global lighting**, then choose **+ Point light** or **+ Directional light**. Select the light in the scene list to change **Enabled, Color, Intensity, Range** (point only) and **Cast shadows**. Shift exposes move/rotate controls. Lights are ordinary project objects with transform keys, duplication, Undo/Redo and portable save/reopen. Their handles are editor-only. Real-time shadows appear in the working view, camera preview, RGB frames and RGB video exports. The default scene remains neutral, with no explicit light. Shadows use raster shadow maps; this is not a path-traced renderer.
+
+The portable example **examples/lights.genprevis** contains a box, a point light with shadows and a disabled directional light. Select either light and edit its properties to compare the setup.
+
+Project format **11** stores independently editable lights; project formats **1–10** remain readable. Older app versions reject format 11 rather than reopening a light as a box.
+
+AI scene control is still a proposal. The recommended low-cost candidate, typed command interface and spatial evaluation plan are documented in [the design, section 12](NAVRH-GENPREVIS.md#12-ai-režie-scény--návrh-k-25-10-2026). No cloud AI connection or API charge is enabled by this release.
 
 ## Rename and existing projects
 
@@ -237,7 +250,7 @@ A continuous numeric scrub creates one Undo action. After reaching a minimum or 
 
 ## Save, reopen and export
 
-Save creates a **version 10 .genprevis** project and neighbouring .assets folder containing used sources. Keep both together when moving a project. It preserves embedded static body poses and keyed additive pose corrections, motion tracks, paths and path keys, final transform channels, camera channels/lenses and live constraints, active camera, scene display settings, per-object colors/labels, lighting, interpolation curves, native poses and project setup. Every camera’s original image/video source is bundled under a separate safe content-addressed filename in the neighbouring assets folder; decoded preview frames are disposable cache data. Version 1/2/3/4/5/6/7/8/9 scenes are accepted on opening. Version 7 projects migrate their former global reference to the saved active camera. Other cameras start without a reference. Legacy .previs projects remain accepted without renaming; their project data and neighbouring assets retain their existing layout. Format 10 additionally preserves repaired native-foot hierarchy snapshots; earlier releases reject this version instead of discarding that data. Overwriting an existing project keeps the previous JSON as .genprevis.bak.
+Save creates a **version 11 .genprevis** project and neighbouring .assets folder containing used sources. Keep both together when moving a project. It preserves embedded static body poses and keyed additive pose corrections, motion tracks, paths and path keys, final transform channels, camera channels/lenses and live constraints, active camera, scene display settings, per-object colors/labels, lighting, interpolation curves, native poses and project setup. Every camera’s original image/video source is bundled under a separate safe content-addressed filename in the neighbouring assets folder; decoded preview frames are disposable cache data. Version 1/2/3/4/5/6/7/8/9/10 scenes are accepted on opening. Version 7 projects migrate their former global reference to the saved active camera. Other cameras start without a reference. Legacy .previs projects remain accepted without renaming; their project data and neighbouring assets retain their existing layout. Format 10 introduced repaired native-foot hierarchy snapshots. Format 11 adds independent light objects and their properties. Earlier releases reject newer schemas instead of silently discarding those fields. Overwriting an existing project keeps the previous JSON as .genprevis.bak.
 
 ### Export a complete shot
 
@@ -272,7 +285,7 @@ The existing **Export frame** action remains available for a clean **PNG at the 
 - Ctrl+S/O saves/opens. Ctrl+D duplicates. Ctrl+Z undoes. Ctrl+Shift+Z or Ctrl+Y redoes. The header also has visible Undo and Redo buttons, disabled when their history is empty. Delete removes selection.
 - Draw path uses LMB points, Enter to finish and Esc to cancel.
 
-The scene and library previews use neutral hemisphere illumination, with **no directional light enabled by default**. The Objects library includes an optional **Directional light** control. The project saves that choice.
+The scene and library previews use neutral hemisphere illumination, with **no directional light enabled by default**. The Objects library includes a fixed **Studio key light** switch and **+ Point light / + Directional light** controls. The project saves that choice.
 
 ## Current limits
 

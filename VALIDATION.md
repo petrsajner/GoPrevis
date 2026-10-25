@@ -1,4 +1,24 @@
-# GenPrevis 0.14.0 validation
+# GenPrevis 0.15.0 validation
+
+Validation date: **2026-10-25**. Tested platform: **Windows x64**. UI remains English. Project format **11** adds independently editable point/directional light objects; formats **1–10** are accepted.
+
+## 0.15.0 editor and lighting checks
+
+The editor refinement suite exercises actual Save dialog confirmation, actual timeline widget input, the scene transform gizmo, visible light inspector controls, portable file roundtrips and GPU rendering. **39 checks** cover:
+
+- Automatic `.genprevis` extension for bare and dotted names, no double extension, retained legacy filenames, and confirming the real Save dialog with only a typed name.
+- Nine unique selected keys across camera position/lens, path waypoints, object XYZ transform channels and additive pose/root corrections. Summary/expanded rows deduplicate. Delete preserves scene objects, unrelated times and coincident unselected channels. One Undo/Redo reverses/repeats the whole batch. Text input is protected; Ctrl rectangle-add and Ctrl-click toggling work.
+- Actual Ctrl scale-cube dragging preserves a nonuniform XYZ ratio and one history step. Cubes turn yellow before dragging and return to axis colors on Ctrl release. Shared minimum/maximum factors preserve proportions at scale limits.
+- Point/directional light creation through discoverable Objects scene controls, real property changes, range only for point lights, editor-only nonshadowing handles, neutral startup, independent save/reopen and Undo of Cast shadows.
+- Geometric shadows verified by changed camera pixels for both light types. Each light also passes a paired **actual shot export** with/without shadows, including first-frame shadow rendering. Geometric depth PNGs are byte-identical across the shadow toggle. GPU proof images accompany the report. Compatibility rendering uses cubemap point shadows, 2048-pixel positional atlases, and separate point/directional bias settings to avoid floor self-shadow artifacts.
+
+Source regressions also pass **38 interaction + 15 precision-number + 14 trim checks**, and **55 additive-pose + 13 correction-timeline checks**. Original animal source/rig assets remain unchanged. AI scene control remains a documented proposal; the model-selection and command-interface design is in section 12 of `NAVRH-GENPREVIS.md`. No AI API integration or paid evaluation is claimed by this release.
+
+Evidence uses `output/{editor-refinements,interaction,correction}-source-0.15.0.log` and the corresponding reports; the portable validation folder records the exported executable's independent checks. `BUILD-INFO.json` identifies the exact commit and runtime hashes. Final portable ZIP entries are read back for CRC verification.
+
+The exported **GenPrevis.exe 0.15.0.0** independently passes **39 editor refinements**, **38 interaction + 15 numeric + 14 trim**, **55 pose corrections + 13 pose-key timeline**, **163 project workflow** (history 9, object motion 41, animal posing 70, setup 39, export 4), **21 scene + 27 appearance + 72 framing + 13 GPU scene/depth**, and **31 complete-shot export checks** (192 Full-HD frames, RGB/depth/pose MP4 and PNG). All six versioned native stderr logs are empty. The two paired lighting exports are additional first-frame shadow/depth checks inside the 39-check suite. The Windows build completes with zero compiler warnings/errors and the source smoke suite passes. The portable example `examples/lights.genprevis` contains a point light and a separately editable disabled directional light.
+
+## Historical GenPrevis 0.14.0 validation
 
 Validation date: **2026-10-25**. Development/verified platform: **Windows x64**.
 

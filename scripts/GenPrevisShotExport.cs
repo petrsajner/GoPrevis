@@ -124,7 +124,7 @@ public partial class GenPrevisApp
         _exportBusy=true;_playing=false;_play.Text="▶";
         try
         {
-            WriteManifest();view=new SubViewport{Size=new Vector2I(settings.Width,settings.Height),World3D=_sceneViewport.World3D,RenderTargetUpdateMode=SubViewport.UpdateMode.Once,Msaa3D=Viewport.Msaa.Msaa4X};AddChild(view);
+            WriteManifest();view=new SubViewport{Size=new Vector2I(settings.Width,settings.Height),World3D=_sceneViewport.World3D,RenderTargetUpdateMode=SubViewport.UpdateMode.Once,PositionalShadowAtlasSize=2048,Msaa3D=Viewport.Msaa.Msaa4X};AddChild(view);
             var camera=new Camera3D{Current=true,CullMask=1,KeepAspect=Camera3D.KeepAspectEnum.Width};view.AddChild(camera);controls=new ControlPassRenderer(_world,camera,settings.DepthNear,settings.DepthFar);
             var humans=_entries.Where(e=>e.Node is RiggedActor).Select(e=>new PoseActorSample(e.Data.Id,e.Data.Name,(RiggedActor)e.Node)).ToArray();
             var native=settings.IncludeNativeRigs?_entries.Where(e=>e.NativeTrack!=null).Select(e=>new NativePoseActorSample(e.Data.Id,e.Data.Name,e.NativeTrack!.ModelRoot as Node3D??e.Node)).ToArray():Array.Empty<NativePoseActorSample>();
