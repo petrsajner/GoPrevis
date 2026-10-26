@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="utf-8"?>
+<guide version="0.19.1" date="26 October 2026">
+<chapter id="welcome" title="Start here">
+<p>GoPrevis is a straightforward 3D tool for planning a moving shot. Build a rough world, place people and animals, direct their movement, and compose the camera. Export a guide clip that communicates the shot to an external AI video tool or to another person.</p>
+<p>You do not need to be a 3D animator. Begin with simple objects, a ready-made motion and one camera. Detailed rig controls, timing curves and AI assistance are available when you need them.</p>
+<note title="A complete manual workflow">All scene building, posing, animation, camera work, saving and exports work without AI and without an API key. AI Director is an optional assistant. Only requests made through AI Director require your own provider key and may incur provider charges.</note>
+<h2>What you create</h2>
+<p>A project is an editable shot containing objects, cameras, animation, appearance settings and a duration. An export is the rendered result: an MP4, a numbered PNG sequence, or synchronized color, depth and pose guidance. GoPrevis creates the guide; final AI video generation happens in your chosen external application.</p>
+<h2>The shortest useful workflow</h2>
+<steps><li>Choose a format and frame rate with <b>Project</b>.</li><li>Drag a model or prop from the library into the scene.</li><li>Arrange it. Add a pose for a static figure or a motion and path for a moving one.</li><li>Choose a camera, frame the subject and play the shot.</li><li>Save your project, then choose <b>Export shot</b>.</li></steps>
+<h2>How to use this guide</h2>
+<p>Chapters 2-7 introduce everyday scene work. Chapters 8-12 explain animation. Chapters 13-17 cover cameras and export. Chapter 18 is optional AI assistance. Chapter 19 walks through the supplied examples. Keyboard controls, troubleshooting and a glossary close the guide.</p>
+<p>Bold words identify interface labels. <b>File &gt; Save project as...</b> means open File and choose that action. LMB, RMB and MMB mean the left, right and middle mouse buttons. Distances are in metres; Y is height.</p>
+<note title="Scope of this edition">This guide describes GoPrevis 0.19.1 on Windows x64. The interface is English. macOS and Linux deliveries have not been verified. Features and library counts refer to this version.</note>
+</chapter>
+
+<chapter id="install" title="Install, launch and keep your work safe">
+<h2>Use the portable Windows application</h2>
+<steps><li>Extract the complete Windows ZIP into a writable folder. Do not run it from inside the ZIP.</li><li>Keep <b>GoPrevis.exe</b>, <b>GoPrevis.pck</b>, the <b>data_GoPrevis_windows_x86_64</b> directory and the supplied tools together.</li><li>Start <b>GoPrevis.exe</b>. The portable build includes its runtime; you do not need the Godot editor or a .NET SDK.</li><li>Keep the supplied examples, documentation and licenses with the package. FFmpeg in the tools folder provides video decoding and MP4 encoding.</li></steps>
+<p>A graphics-capable Windows computer is required. Large scenes, high resolutions and many skinned models need more resources. Begin with a modest scene and a lower resolution when assessing your computer. This edition does not specify a tested minimum GPU or RAM configuration.</p>
+<h2>Save a project</h2>
+<p>Choose <b>File &gt; Save project</b> or press <b>Ctrl+S</b>. For a new project, choose a folder and enter a name such as <b>Street test</b>. GoPrevis adds <b>.goprevis</b> automatically. A dot in a name, such as Shot 01.v2, is allowed.</p>
+<p>The top bar and Windows title show the active project name. An asterisk beside it means there are unsaved changes. Hover over the header name to see its full path. Saving clears the asterisk; undoing back to the saved content clears it as well.</p>
+<h2>Make a separate version</h2>
+<p>Use <b>File &gt; Save project as...</b> or <b>Ctrl+Shift+S</b>. Choose a new name or folder. The copy becomes the active project and later saves go to that copy. The original remains available. Use names such as Street 01, Street 02 and Street final to keep deliberate versions.</p>
+<h2>Open and close safely</h2>
+<p><b>File &gt; Open project</b> or <b>Ctrl+O</b> opens a saved project. Current .goprevis files and older .genprevis/.previs files are accepted. If you close the app, open another project, start a new scene or open a demo with unsaved work, choose <b>Save</b>, <b>Discard</b> or <b>Cancel</b>. Cancel keeps the current project open. Cancelling Save As also cancels the pending action.</p>
+<note title="A launcher is not a project">An <b>.cmd</b> file is a Windows command script. The supplied demo launchers open GoPrevis and its example for convenience. In the project's Open dialog, choose the actual <b>.goprevis</b> file inside examples.</note>
+<page/>
+<h2>Copy a project to another computer</h2>
+<p>Keep a project and its neighbouring asset folder together: <b>Street test.goprevis</b> and <b>Street test.assets</b>. Saving bundles supported imported model, motion and reference sources used by the project. Copy both items, not just the project file. Built-in content is supplied by the application.</p>
+<p>Use a self-contained GLB for portable custom models. External dependencies in a .gltf file are not bundled; saving such a model is refused. FBX may need embedded textures. Reopen the copied project to check it before deleting any original sources. Overwriting an existing project retains its previous JSON as a .goprevis.bak file; deliberate versioned saves remain useful.</p>
+<p>Library favorites, collections, saved pose presets and AI connection preferences are local user settings. They are not the same thing as the scene project. Applied static poses are stored in the project itself. API keys are never bundled with projects.</p>
+</chapter>
+
+<chapter id="interface" title="Understand the workspace">
+<figure src="01-street-scene-ui.png" caption="The actual street example in GoPrevis: library and scene list on the left, working view in the centre, camera preview and properties on the right, timeline below."/>
+<h2>Five areas to know</h2>
+<table widths="0.23,0.77"><row><cell>Area</cell><cell>Purpose</cell></row><row><cell>Top bar</cell><cell>File and Edit actions, Undo/Redo, project name, optional AI Director, project format, Save and Export shot.</cell></row><row><cell>Left dock</cell><cell>Browse Models, Objects, Poses, Motions and Cameras. SCENE below the library lists placed objects, including cameras and lights.</cell></row><row><cell>Main viewport</cell><cell>Arrange the world, edit body poses, draw paths and inspect camera movement.</cell></row><row><cell>Right dock</cell><cell>The active camera preview and context-sensitive properties for the selected object, motion, path, joint or camera.</cell></row><row><cell>Timeline</cell><cell>Play and scrub the shot; edit clips, arrival times, transforms, lens animation and pose corrections.</cell></row></table>
+<h2>Selection decides what you edit</h2>
+<p>Click an object in the viewport or its name in SCENE. The properties change to that selection. Selecting a timeline clip opens its motion controls. Selecting a path point opens its timing controls. <b>Properties</b> returns from a specialised task to the object. Selecting an asset in the library previews it; it does not select or add a scene object.</p>
+<h2>Working view and shot view</h2>
+<p>The working perspective lets you look around freely without changing the shot camera. The small preview always shows the active camera. <b>Camera view</b> enters the shot camera in the main viewport; the button changes to <b>Perspective</b> to leave it. Pilot operations in camera view can change the camera. Return to Perspective for inspection that should leave the shot alone.</p>
+<h2>Make room for the task</h2>
+<p>Resize the side docks or timeline by dragging their dividers. <b>Expand</b> widens the library; <b>Collapse</b> restores its compact two-column layout. The <b>Preview</b> switch hides the small camera view when you need more property space. Larger windows give more working room while controls retain desktop-sized proportions. Operating-system display scaling still applies.</p>
+<note title="Start simple">Use Arrange for normal scene layout. Enter Pose only when changing a body. You do not need to open every advanced property group to create a usable shot.</note>
+</chapter>
+
+<chapter id="navigation" title="Navigate and transform objects">
+<h2>Look around the working view</h2>
+<table widths="0.34,0.66"><row><cell>Input</cell><cell>Result</cell></row><row><cell>RMB drag</cell><cell>Orbit/look around the view.</cell></row><row><cell>MMB drag</cell><cell>Pan the view.</cell></row><row><cell>Mouse wheel</cell><cell>Move closer or farther away.</cell></row><row><cell>Alt + MMB drag</cell><cell>Zoom without a wheel. Drag up to approach; down to move away.</cell></row><row><cell>F</cell><cell>Frame the selected object.</cell></row><row><cell>RMB + W/A/S/D</cell><cell>Fly forward, left, backward and right.</cell></row><row><cell>RMB + Q/E</cell><cell>Fly down/up. Add Shift for faster flight.</cell></row></table>
+<p>Keyboard navigation acts when focus is not in a text field or dialog. Click the viewport if a shortcut appears to do nothing. A mouse with a middle button is useful; Alt+MMB provides zoom when no wheel is available.</p>
+<h2>Ordinary placement with Arrange</h2>
+<steps><li>Select <b>Arrange</b> above the viewport.</li><li>Click the object or its visible selection box.</li><li>Drag it to the new horizontal position. Its current Y height is preserved, so a raised object does not unexpectedly drop to the ground.</li><li>Release to finish the move. A continuous drag is one Undo action.</li></steps>
+<page/>
+<h2>Use the full transform gizmo</h2>
+<p>Hold <b>Shift</b> on a selected object to reveal axis handles. Drag an <b>arrow</b> to move along an axis, including height. Drag a <b>ring</b> to rotate. Drag a <b>cube</b> to scale. Red, green and blue identify X, Y and Z. These controls also work on cameras and lights.</p>
+<p>While using a scale cube, hold <b>Ctrl</b> to scale all three axes together. The scale cubes turn yellow and existing proportions are retained. For move and rotation, Ctrl applies snapping instead. <b>Alt</b> gives fine adjustment.</p>
+<h2>Precise numeric adjustment</h2>
+<p>Selected-object properties show grouped <b>Position</b>, <b>Rotation</b> and <b>Scale</b> values. Type a value directly for an exact placement. Position uses metres, rotation uses degrees, and scale 1 is the original size.</p>
+<p>The arrow strip on a numeric field also works as a scrub control. Click for a small step, or hold and drag up/down for a steady change. Horizontal distance does not accelerate the value. Hold Alt for finer movement; Escape cancels the active numeric scrub. Typical steps are 0.001 m, 0.1 degrees and 0.001 scale.</p>
+<note title="Before changing an animated object">Move to the intended time first. Transform keys and Auto key can make a change apply at that time rather than to the entire shot. On a path-driven object, Position and Rotation act as corrections above the path. Chapter 10 explains those layers.</note>
+<h2>Duplicate and undo</h2>
+<p><b>Ctrl+D</b> duplicates the selected scene object. Rename objects in Properties and press Enter to confirm; meaningful names make camera targets and timeline rows easier to recognise. <b>Ctrl+Z</b> undoes; <b>Ctrl+Shift+Z</b> or <b>Ctrl+Y</b> redoes. The top bar also has Undo and Redo buttons.</p>
+</chapter>
+
+<chapter id="library" title="Find, preview and reuse library items">
+<p>The library is your starting point for people, animals, props, poses, motions and cameras. It is independent of the scene list: removing an object from the scene does not remove the library asset.</p>
+<table widths="0.22,0.78"><row><cell>Section</cell><cell>What to find</cell></row><row><cell>Models</cell><cell>Prepared human variants and rigged animals, grouped by type.</cell></row><row><cell>Objects</cell><cell>Furniture, vehicles, architecture, nature, props and simple blockout objects. Also contains the 3D scene settings.</cell></row><row><cell>Poses</cell><cell>Ready-made human poses and your saved My poses items.</cell></row><row><cell>Motions</cell><cell>Recorded human takes, authored human actions and native animal clips.</cell></row><row><cell>Cameras</cell><cell>Scene cameras, framing cards and illustrated movement presets.</cell></row></table>
+<h2>Find an item in a large library</h2>
+<steps><li>Choose a section, then click <b>Expand</b> for more thumbnail columns.</li><li>Type one or more words into search. Use a type/action name such as walk, chair or cat.</li><li>Narrow the results with available category, actor/species and source filters.</li><li>Choose Name, Category or Recently used sorting.</li><li>Click a result to inspect its preview, source and duration. Selecting alone does not add it.</li><li>Drag it into the viewport, double-click it, or use the available Apply/add action.</li></steps>
+<figure src="03-motion-library-ui.png" crop="0,30,520,610" width="320" caption="The expanded Motions browser. Search and filters work together; clear a filter if an expected motion is missing."/>
+<h2>Remember items you will need again</h2>
+<p>Use <b>Favorite</b> on an item, then choose <b>Favorites</b> in the scope selector. <b>Recently used</b> helps recover something applied earlier. <b>Collection...</b> adds the current item to a named collection or creates a collection. This edition provides add/create actions; it does not have a full collection-management screen.</p>
+<p>Section searches, filters, selections and scroll position are remembered locally, along with favorites, collections and usage history. These preferences are not scene animation and do not participate in scene Undo. Sharing a project does not transfer your browsing preferences.</p>
+<h2>Library content in this edition</h2>
+<p>There are 290 model entries, including six prepared human variants, 19 rigged animals and imported props; 118 ready-made human poses; and 558 motion entries. Motions include a curated CMU subset, 84 authored actions from the free Standard Universal Animation Libraries 1 and 2, and native animal animations. Authored actions are not recorded mocap.</p>
+<p>Animal actions are restricted to compatible rigs. Cat and Dog have Idle and Walking; Pig and Sheep have Idle and Jump; Eagle has Flying and Idle; Rabbit has several actions including Running, Jump and Sitting. Do not assume every species has every action. Content-specific license notices and creator credits are supplied in the LICENSES folder.</p>
+</chapter>
+
+<chapter id="build" title="Build and dress a scene">
+<h2>Add models and props</h2>
+<steps><li>Choose <b>Models</b> for a human/animal or <b>Objects</b> for a prop.</li><li>Drag the asset onto the ground in the viewport.</li><li>Use Arrange to place it. Hold Shift for height, rotation and scale handles.</li><li>Rename it to a useful scene name, such as Blue car or Shop customer.</li><li>Duplicate repeated elements and vary their placement.</li></steps>
+<p>Start with broad shapes: a ground surface, road, building blocks and a few subjects. The purpose is to communicate scale, spacing and action. You can refine props and materials after the shot reads clearly.</p>
+<h2>Import your own model</h2>
+<p>Use the model import action in <b>File</b>. Supported model sources include GLB, glTF and FBX. Imported files can retain their own rigs and embedded clips. That does not automatically make an arbitrary skeleton compatible with every prepared human or animal motion. For reliable library use, start with the supplied prepared actors.</p>
+<p>Check an imported object's size and orientation. A source may use different units or a different forward direction. Adjust its scale and rotation in Properties. Use a self-contained GLB for portable projects; external glTF dependencies are not bundled when saving.</p>
+<h2>Color and labels</h2>
+<p>Select an object and open <b>Material</b>. Pick a color, enter an RGB hex value or use a swatch. The sketch-color override affects this instance, including RGB exports. <b>Original materials</b> restores the source palette. It does not alter the source file or rig.</p>
+<p><b>Show label</b> controls a selected object's name in the viewport. The global <b>Object labels</b> switch in 3D scene settings can hide all labels. Labels are editing aids and are excluded from clean exports.</p>
+<h2>Place on ground</h2>
+<p>Select the object and click <b>Place on ground</b>. Its currently evaluated lower bounds are moved to the configured Ground height. The operation works for posed figures and at the current animation frame. It also works when ground display is hidden.</p>
+<h2>Place on object</h2>
+<steps><li>Select the object or posed person to place.</li><li>Click <b>Place on object</b>.</li><li>Click an upward-facing support surface, such as a chair seat or tabletop. Escape cancels.</li><li>For a seated person, inspect the pelvis/seat contact and adjust the limbs in Pose.</li></steps>
+<p>Placement uses real mesh support rather than only a broad box. Seated human poses use pelvis/thigh contact; other objects generally use their lower bounds. The body pose, orientation and source motion are retained. It is a placement operation, not automatic body fitting or collision solving.</p>
+<note title="Do not confuse the two Dogs">The library includes rigged dogs with native motion. An older Dog blockout is a static prop. Choose a rigged animal from Models when you need pose handles or compatible animation.</note>
+</chapter>
+
+<chapter id="display" title="Set background, ground, light and shadows">
+<p>Open <b>Objects &gt; 3D scene</b>. Its Background, Global lighting and Display groups control the scene without adding another workspace tab.</p>
+<h2>Use the neutral default first</h2>
+<p>The scene starts with neutral hemisphere illumination and no explicit directional light. This keeps ordinary layout work simple. Start at 100% Brightness and only change the lighting when it helps the shot read.</p>
+<table widths="0.3,0.7"><row><cell>Control</cell><cell>Effect</cell></row><row><cell>Background / Color</cell><cell>Changes the scene background in the working view and color render.</cell></row><row><cell>Brightness</cell><cell>Adjusts neutral fill from 0% to 400%.</cell></row><row><cell>Ground</cell><cell>Shows/hides the ground and editor grid.</cell></row><row><cell>Height</cell><cell>Sets the ground height in metres. Placement uses this height even if the ground is hidden.</cell></row><row><cell>Opacity</cell><cell>Adjusts ground display opacity.</cell></row><row><cell>Object labels</cell><cell>Global visibility switch for editor labels.</cell></row></table>
+<h2>Add an editable light</h2>
+<steps><li>Expand <b>Global lighting</b>.</li><li>Choose <b>+ Point light</b> for a local source or <b>+ Directional light</b> for a source with a consistent direction.</li><li>Select the light in SCENE.</li><li>Adjust <b>Enabled</b>, <b>Color</b> and <b>Intensity</b>. A point light also has <b>Range</b>.</li><li>Use Shift handles to move it or rotate a directional light.</li><li>Enable <b>Cast shadows</b> if needed and inspect the camera preview.</li></steps>
+<p>The separate <b>Studio key light</b> switch enables a fixed studio source. Add an editable directional light when you want control of direction and properties. Lights can be duplicated and their object transforms can be keyed like other scene objects.</p>
+<h2>Keep lighting readable</h2>
+<p>Too much fill or several strong lights can wash out colors. Lower Brightness or light Intensity before changing every material. Point-light shadows also depend on Range and placement. The renderer uses real-time raster shadow maps; it is intended for previs rather than a final path-traced image.</p>
+<p>Color output includes scene appearance and enabled light shadows. Depth and pose outputs describe geometry and rigs; changing a light is not a way to alter their distance or joint values. Editor grids and light handles are excluded from clean renders.</p>
+<p>The supplied <b>examples/lights.goprevis</b> contains a box, a point light with shadows and a disabled directional light for comparison.</p>
+</chapter>
+
+<chapter id="poses" title="Pose people and animals">
+<h2>Start with a ready-made pose</h2>
+<p>Choose <b>Poses</b>, search for a posture, and drag it onto a prepared human. Dropping a human pose on empty ground creates a figure in that pose. Categories include standing, gestures, chair/floor sitting, kneeling, crouching, lying and action/interaction.</p>
+<note title="Applying a pose changes the base animation">Applying a stored pose deliberately replaces the figure's source clips and clears its body-correction tracks. Undo restores them. Entering the Pose editor or saving a preset preserves existing source motion. Choose the editor when you want to modify a moving figure.</note>
+<h2>Fit a person to a chair</h2>
+<steps><li>Add a chair and a prepared human.</li><li>Apply a seated pose from Poses.</li><li>Select the person and use <b>Place on object</b>; click the chair seat.</li><li>Use Arrange for overall orientation. Enter <b>Pose</b> or <b>Edit body pose</b>.</li><li>Move the pelvis if necessary, then drag hands and feet to their supports.</li><li>Rotate the head or wrists for the intended action. Inspect from the side as well as the camera.</li><li>Click <b>Done</b>, then save.</li></steps>
+<h2>Drag a body with IK</h2>
+<p>IK means inverse kinematics: you move a target joint and the connected chain bends to reach it. Drag a hand or foot to adjust its limb. Other joints normally rotate. Hold <b>Shift before grabbing</b> to exchange Move and Rotate temporarily: rotate a wrist/ankle, or move an intermediate joint. The chosen operation stays active until release.</p>
+<p><b>W</b> selects Move and <b>E</b> selects Rotate while posing, when you are not flying the view. The same tools are visible in Properties. Alt gives finer adjustment and Ctrl snaps. Use the joint selector if a viewport handle is hard to pick; open <b>Precise values</b> for numeric correction.</p>
+<p>Moving an elbow solves the chain above it through the shoulder. The forearm and hand follow the elbow with their local pose; they are not fixed to their old world positions. A knee similarly carries its lower leg and foot. Segment lengths are preserved. For human pelvis moves, <b>Keep feet in place</b> can pin the feet within reachable limits.</p>
+<figure src="04-pose-editing-ui.png" crop="215,35,1280,655" caption="Pose handles on a prepared human. The Move/Rotate controls and the save-pose action are on the right."/>
+<h2>Animals use their native rigs</h2>
+<p>Select a rigged animal and enter Pose. Edit its head, spine, tail or limbs using the same Move/Rotate tools. Only useful deforming joints are exposed; joint names and available chains vary by species. Root movement translates the skeleton, and descendants follow intermediate-joint edits.</p>
+<p>Animal IK does not impose anatomical joint limits or automatically pin all feet. Work in small changes and inspect the silhouette from more than one angle. A pose preset saved for a prepared animal is compatible with that exact model, not a universal animal pose.</p>
+<h2>Save a reusable pose</h2>
+<p>Enter a name and click <b>Save to My poses</b>. The visible body shape, including a sampled motion frame and your corrections, becomes a static preset. Saving leaves the current animation intact. Applying the saved preset elsewhere makes a static posed figure. Presets are local; the applied pose is embedded in the scene project.</p>
+<p><b>Reset edits</b> restores the correction layer from the start of this editing session. <b>Done</b> keeps the changes and returns to object properties. Escape exits pose editing. The example <b>samples/static-poses.goprevis</b> is useful for exploring static figures without motion clips.</p>
+</chapter>
+
+<chapter id="motions" title="Add, import and blend motion clips">
+<h2>Apply a library motion</h2>
+<steps><li>Select a prepared human or rigged animal.</li><li>Open <b>Motions</b>. Filter by actor/species and search an action.</li><li>Select a card to preview it, then drag it onto the figure or use <b>Apply motion / add actor</b>.</li><li>Press Space to inspect playback. Add a path for travel through the scene.</li></steps>
+<p>A motion dropped onto empty ground can create a matching actor. For animals, use actions from the correct prepared model family. A newly added animal's automatic Idle is a placeholder: the first deliberate library motion replaces it. Compatible looping walks/runs can fill the remaining shot; one-shot actions keep their intended duration.</p>
+<h2>Understand a clip</h2>
+<table widths="0.29,0.71"><row><cell>Setting</cell><cell>Meaning</cell></row><row><cell>Start</cell><cell>When the clip begins in the scene.</cell></row><row><cell>Duration</cell><cell>How much timeline time the clip occupies.</cell></row><row><cell>Source offset</cell><cell>The point inside the source where playback starts.</cell></row><row><cell>Speed</cell><cell>Source playback rate. 1 is normal; 2 plays twice as fast.</cell></row><row><cell>Blend in</cell><cell>Transition from an overlapping earlier source.</cell></row><row><cell>Loop source</cell><cell>Repeat the available source cycle.</cell></row><row><cell>In-place clip</cell><cell>Use source motion without its horizontal root travel for supported tracks, so a path can supply scene movement.</cell></row></table>
+<page/>
+<h2>Sequence and trim</h2>
+<p>Click the clip on the timeline to open its detailed settings. Drag its body to change Start. Drag its <b>left edge</b> to trim IN and skip an unwanted beginning. Drag its <b>right edge</b> to trim OUT. Moving a body keeps the source offset; trimming the left edge changes it while keeping the current OUT. A clip cannot be shorter than one scene frame.</p>
+<p>To transition between actions, overlap compatible neighbouring clips and adjust Blend in. The body sources blend first; path travel and manual object corrections are evaluated afterwards. This prevents source crossfades from replacing the final scene orientation. Inspect the overlap and both ends of a cycle, not only its middle.</p>
+<h2>Import BVH mocap</h2>
+<steps><li>Use <b>Import BVH...</b> or <b>File &gt; Import motion</b>.</li><li>Choose a humanoid BVH source and apply it to a prepared human.</li><li>Check the scale, pose and useful action interval.</li><li>Trim source IN/OUT, choose Loop if appropriate, and adjust Speed.</li><li>Add path travel and key additional body corrections if needed.</li></steps>
+<p>Human BVH retargeting uses the fixed prepared 21-bone mannequin. The original CMU conversion is 0.055 metres per source unit. Arbitrary naming, rest poses or nonhuman rigs may not retarget correctly. There is no universal animal BVH retargeter or finger animation in this edition.</p>
+<h2>Match footsteps and travel</h2>
+<p>A walk cycle and a scene path solve different problems. The clip supplies the body action; the path supplies the route and speed. If feet slide, compare clip Speed with the distance travelled between path arrivals. Trim idle lead-in frames before expecting locomotion. Loop only a suitable action interval; a recorded take is not automatically a seamless cycle.</p>
+<p>To remove a motion, select its timeline clip and press Delete, or use its right-click Delete action. Paths and additive body corrections remain. Removing the last source leaves the figure without that motion; Undo restores it.</p>
+</chapter>
+
+<chapter id="paths" title="Move an object along a path">
+<p>Use a path when a person, animal, vehicle or other object must travel through the scene. Use a motion clip for how a body moves. A car can travel on a path without a skeletal clip; a walking person normally needs both a walk cycle and a route.</p>
+<h2>Draw the route</h2>
+<steps><li>Select the object and click <b>Draw path</b>.</li><li>Click ground points in order along the intended route. Put points around bends, not only at the start and finish.</li><li>Hold Ctrl while placing points to snap to 0.25 metres.</li><li>Choose <b>Finish</b> or press Enter. Escape cancels and restores the previous path.</li><li>Play the shot and inspect the curve from above.</li></steps>
+<p>The object's separate <b>Path</b> row shows arrival keys P1, P2, P3 and so on. These diamonds represent progress along the route, not separate skeletal frames. Select a path point to expose its timing in Properties.</p>
+<h2>Set arrival times and direction</h2>
+<p>Drag a path diamond to change when the object reaches that point, or edit <b>Arrival time</b>. <b>Path start</b> shifts arrivals together; <b>Travel time</b> rescales them. More distance in less time means faster travel. Keep arrivals in chronological order and leave enough time for a readable turn.</p>
+<p>Enable <b>Face travel direction</b> for forward movement. The object's heading follows the path tangent. A manual Rotation value or rotation key then adds a correction to that heading. You can keep automatic route orientation and still turn the actor slightly toward another subject.</p>
+<page/>
+<h2>Understand the layers</h2>
+<diagram kind="layers"/>
+<p>The application first blends source motion, then applies body-pose corrections, then applies path movement and final object-transform corrections. On a path-driven object, Position fields are offsets above the evaluated path position; changing them does not redraw the curve. Use <b>Draw / replace</b> when the route itself must change.</p>
+<note title="If a character appears to walk backwards">First check the route direction, Face travel direction and any manual Y rotation offset. Also check that the chosen source is a forward action. Turning the body correction and changing the route are different operations; changing a clip's speed does not repair a reversed scene heading.</note>
+<h2>Accelerate, turn and stop</h2>
+<p>Place a few meaningful route points, set their arrivals, and edit the timing of the intervals between them. Use a smooth acceleration at the beginning and a deceleration into the final point. Avoid Ease in/out or Stop at every intermediate point unless the object should repeatedly slow down. Chapter 12 describes the timing modes.</p>
+<p>The supplied <b>examples/car-chase.goprevis</b> demonstrates a 12-second, 25 fps route with a sweeping turn, acceleration, deceleration and a final stationary hold. Changing the route updates its live following camera without rewriting camera keys.</p>
+</chapter>
+
+<chapter id="keyframes" title="Animate transforms and body corrections">
+<h2>Make a simple object animation</h2>
+<steps><li>Select an object and place the playhead at time zero.</li><li>Set its starting transform.</li><li>Click <b>Key transform</b> or press <b>K</b> in Arrange.</li><li>Move the playhead to a later time.</li><li>Change position, rotation or scale, then capture the new key.</li><li>Scrub between the keys and play. Use Undo if a change was made at the wrong time.</li></steps>
+<p>A diamond beside Position, Rotation or Scale keys that complete XYZ group. You do not need three separate axis keys. <b>Auto key</b> records applicable transform changes at the current time. For a first experiment, explicit keys make it easier to see what you have created.</p>
+<p>Expand an object's Transform row to see <b>Position</b>, <b>Rotation</b> and <b>Scale</b>. A camera additionally has <b>Focal length</b>. Drag individual diamonds to retime them. The compact parent row lets you keep the timeline manageable.</p>
+<h2>Animate a head turn above a walk</h2>
+<steps><li>Apply a walk clip and a path to a prepared human.</li><li>Move to the time before the head should begin turning. Enter <b>Pose</b> and select the head.</li><li>Use <b>Key joint</b> to record the current correction.</li><li>Move to the later time, then rotate the head. Body edits automatically write correction keys at the playhead.</li><li>Move later again, return the head toward its original direction and key it.</li><li>Exit with Done and play. The walk continues beneath the head correction.</li></steps>
+<p>The first edit later in a shot adds an identity correction at time zero so the source begins unchanged. Add an explicit unchanged key immediately before your action if you want the correction to wait until that moment instead of transitioning from zero.</p>
+<h2>Pose corrections on the timeline</h2>
+<p>Expand <b>Pose corrections</b> below the figure. Only animated joints and the root/pelvis offset appear as child rows. A joint key stores its local rotation together; a root key stores XYZ offset together. <b>Key joint</b> captures the selected correction. <b>Key pose</b> or K while posing captures the current set of body corrections.</p>
+<p>Corrections are added over the evaluated mocap/native sources. They do not replace those clips. Source motion, body keys and final scene transforms remain separately editable and removable. The same correction workflow is available on prepared native animal rigs.</p>
+<note title="K depends on the current task">In Arrange, K captures the selected object's transform. In Pose, K captures body corrections. Leave Pose before using K for whole-object placement.</note>
+<h2>Static pose versus correction</h2>
+<p>Use a library static pose when the figure should hold a base shape. Use Pose corrections when it must gesture or look around during a shot, especially above ongoing motion. Save to My poses creates a reusable snapshot; it does not save the whole animation as a pose preset.</p>
+</chapter>
+
+<chapter id="timeline" title="Edit the timeline and timing curves">
+<h2>Play and inspect time</h2>
+<p>Press <b>Space</b> to play/pause. Drag the ruler or scrub slider to inspect a moment. The shot Length and fps controls define the scene range and frame grid. Duration can be extended up to 600 seconds. Playhead sampling is based on the project fps; changing fps preserves existing key times in seconds.</p>
+<h2>Select exactly what you intend to remove</h2>
+<p>Click a clip, key, path span or track label to select it. Drag a rectangle from empty track space to select multiple keys across rows. Ctrl or Shift adds another region; Ctrl-click toggles a key. A child row targets its parameter group instead of every channel.</p>
+<table widths="0.34,0.66"><row><cell>Selection + Delete</cell><cell>Result</cell></row><row><cell>Motion clip</cell><cell>Removes that source clip; retains path and body corrections.</cell></row><row><cell>Transform or lens keys</cell><cell>Removes selected parameter keys.</cell></row><row><cell>Path point diamond</cell><cell>Removes that waypoint and its arrival time.</cell></row><row><cell>Path span</cell><cell>Removes the complete selected object path.</cell></row><row><cell>Pose correction keys</cell><cell>Removes the selected corrections; source clips remain.</cell></row><row><cell>Whole track label</cell><cell>Clears that track's animation. A camera's whole track includes movement and transform/lens keys.</cell></row></table>
+<p>Right-click a clip or track for its Delete action; right-click a key removes that targeted key. Selection clears after deletion, so pressing Delete again without a timeline selection does not remove another clip or a scene object. The models and cameras remain in the scene when their animation is removed. Each removal is undoable.</p>
+<note title="Focus matters">Delete in a text field edits text. Delete in the library does not delete a bundled asset or an unrelated scene actor. For scene-object deletion, deliberately select the object in the scene. For animation deletion, select the timeline element and check its highlight.</note>
+<page/>
+<h2>Change acceleration and deceleration</h2>
+<p>Select a key and find its <b>KEYFRAME</b> controls in Properties. <b>Interpolation</b> describes the interval <b>from the selected key to the next key</b>. It does not change the source skeleton's recorded motion.</p>
+<table widths="0.25,0.75"><row><cell>Mode</cell><cell>Use and behaviour</cell></row><row><cell>Linear</cell><cell>Constant interpolation rate toward the next key. Useful for sustained travel.</cell></row><row><cell>Ease in/out</cell><cell>Smooth acceleration at the start and slowing into the next key. Useful for a single start/arrival.</cell></row><row><cell>Curved</cell><cell>Drag two timing-curve handles to shape progress. Horizontal is time; vertical is progress toward the next value.</cell></row><row><cell>Stop</cell><cell>Comes to rest at both ends with zero speed and acceleration. Use where the subject should settle.</cell></row><row><cell>Hold</cell><cell>Keeps this key's value until the next key, then changes instantly. Useful for a deliberate step or pause.</cell></row></table>
+<p>For a car that stays still after arriving, let it reach its final point before the end of the shot. Hold is not a braking mode: it holds a value and jumps at the next key. Use a decelerating curve for braking. Repeated easing at every route point can cause pulsing; inspect the whole route and reserve stops for intended stops.</p>
+<p>Moving selected keys, changing a clip's Start, trimming its source and changing a path arrival are different edits. Check the active Properties context after selecting an element so you adjust the intended layer.</p>
+</chapter>
+
+<chapter id="cameras" title="Add cameras and choose framing">
+<h2>Select, activate and move a camera</h2>
+<p>Cameras appear in SCENE and in the Cameras library. You can select a camera by its scene-list name or visible body/helper lines in the working view. Arrange moves it horizontally at its current height; Shift reveals full transform handles.</p>
+<p>The active-camera choice above the preview decides which camera is shown and exported. Confirm its name before rendering. <b>Camera view</b> enters that shot in the main viewport. RMB flight, Q/E height, wheel/Alt+MMB zoom and Shift faster movement are available; while piloting, these operations can change the shot camera. Use Perspective to return to a free working view.</p>
+<p>Use <b>Cameras &gt; Add camera</b> to create a camera from the view, or <b>Duplicate</b> for another version. Name cameras by purpose, such as Tracking car or Wide overview. Separate cameras are alternative views of the scene; this version does not assemble an automatic cut sequence into one export.</p>
+<h2>Start from a framing card</h2>
+<steps><li>Select the intended subject in the scene.</li><li>Open <b>Cameras</b> and find the Framing cards.</li><li>Choose a composition, then inspect the active-camera preview.</li><li>Refine position, height and focal length. Recheck after changing aspect ratio.</li></steps>
+<table widths="0.28,0.72"><row><cell>Family</cell><cell>Available cards</cell></row><row><cell>Working/front</cell><cell>Current view, Front medium, Front close-up, Front wide.</cell></row><row><cell>Side/back</cell><cell>Side follow, Side close, Back medium.</cell></row><row><cell>High/low</cell><cell>Top wide, 45° high angle, Low angle, Low wide, Bird's-eye.</cell></row><row><cell>Shoulder/roll</cell><cell>Over shoulder left, Over shoulder right, Dutch angle.</cell></row></table>
+<p>Cards use the subject's dimensions, pose and facing direction. Human joints refine head, shoulder and medium compositions. <b>Current view</b> copies the working view. Wide aims to fit the subject; medium and close views deliberately crop it.</p>
+<note title="Applying a framing replaces movement">A framing card establishes a static base and replaces that camera's existing movement keys. Undo restores them. The subject's animation remains. The Side follow framing is a side composition; it does not itself enable live Follow.</note>
+<h2>Focal length</h2>
+<p>Focal length changes the field of view. A larger millimetre value gives a narrower view. A smaller value is wider. A lens zoom changes framing without moving the camera; a dolly changes camera position and perspective. Camera Focal length has its own timeline keys.</p>
+</chapter>
+
+<chapter id="camera-motion" title="Move, orbit and aim the camera">
+<h2>Use an illustrated movement preset</h2>
+<p>The Cameras library includes 24 movement cards under Basic and Aerial. Their diagrams show camera, subject, frustum and travel direction. Actions include static shot, tilt, pan, crane, truck, dolly, zoom, handheld, slider reveal, push-through, whip pan, crash zoom, orbit, ascending/descending orbit, aerial establishing, dive and pull away.</p>
+<steps><li>First establish a useful static camera composition.</li><li>Select a subject if the move needs a composition target.</li><li>Apply a movement card and play the complete shot.</li><li>Inspect its camera timeline and properties, then refine.</li></steps>
+<p>Presets cover frame zero through scene duration and replace that camera's existing movement. Other cameras are retained. Non-orbit presets use editable camera keys; orbit-family presets use the native orbit controller. Applying a preset disables conflicting live constraints. Undo restores the earlier state.</p>
+<h2>Native Orbit</h2>
+<p>Select a camera and expand <b>Camera movement</b>. Choose <b>Orbit</b>. Set the target, radius, start angle, angular sweep, start/end height, Start and Duration. Use <b>Aim at target</b> to look toward it. A 360-degree sweep makes a full orbit; changing the sign reverses direction.</p>
+<p>The orbit is an exact curve rather than a few sampled transform keys. It avoids the polygonal motion of a hand-built sparse orbit. Choose timing appropriate to the shot: Linear for sustained angular progress or easing for an intentional start and stop.</p>
+<h2>Independent camera position and aim</h2>
+<p>For a flight, choose <b>Path</b> in Camera movement. The camera owns its own route; it does not borrow an actor's path. The path point controls expose arrival time and XYZ position. Edit points in sequence and inspect the shot between them.</p>
+<p><b>Animated aim path</b> gives the camera a separate sequence of look-at points. In the curve selector, choose <b>Camera position path</b> to change where it flies or <b>Camera aim path</b> to change where it looks. This lets it pan across a road while rising, then look at a couple while descending. Focal-length keys remain independent.</p>
+<figure src="02-camera-framing-ui.png" caption="The street-shot camera uses independent position and aim paths. The project gate defines the exact image area; black bars outside it are not part of the export."/>
+<h2>Choose one position controller</h2>
+<p>Native movement and live Follow both control camera position. Enabling Follow disables native movement; enabling a native move disables Follow. Native Aim at target also disables conflicting live Look at. Retained manual keys can be edited again by setting Camera movement to <b>None</b> and disabling the relevant constraint.</p>
+<p>Shift transforms can adjust a complete native move. For detailed route changes, edit its points and arrival times. For a subject that changes its route often, live Follow and Look at may be simpler than a separately authored flight.</p>
+</chapter>
+
+<chapter id="tracking" title="Follow a moving subject and look at it">
+<p>Follow and Look at are live relationships. After you change the target's path or animation, the camera evaluates the updated target automatically. You do not need to rewrite a tracking camera's position keys.</p>
+<h2>Create a following camera</h2>
+<steps><li>Place a subject and give it a route. Select the camera in SCENE.</li><li>Expand <b>Follow / Look at</b>.</li><li>Enable <b>Follow</b> and choose its target.</li><li>Set <b>Side (m)</b>, <b>Height (m)</b> and <b>Distance (m)</b>. Positive distance is behind the target; negative is in front.</li><li>Enable <b>Look at</b> and choose the target. It can be the same object or another one.</li><li>Set the XYZ <b>Aim offset</b>; raise Y to look toward a person's upper body instead of the ground.</li><li>Play and tune Follow smoothness and Look smoothness.</li></steps>
+<h2>Offsets and smoothness</h2>
+<p><b>Target-relative offsets</b> rotate with target heading and remain measured in metres. Disable it for offsets along fixed world axes. Target-relative placement is useful behind a turning car; world-axis placement can suit a fixed side relationship.</p>
+<p>Smoothness is lag in seconds, not a quality slider. Zero follows exactly. Larger values ease the response behind the target's changes and may let it move away from the centre temporarily. Begin at zero, confirm offsets and aiming, then add only the lag you want.</p>
+<p><b>Match current view</b> derives the live offsets from the working view. <b>Reset angle</b> clears the additional angle correction. Use these after finding a pleasing starting composition.</p>
+<h2>Combine or disable constraints deliberately</h2>
+<p>Follow controls position. Look at controls rotation. You can enable only one: a manually moving camera can look at a subject, or a following camera can retain another aim strategy. Existing manual camera keys are kept and resume when the constraint controlling their channel is off.</p>
+<p>If numeric camera position or rotation appears to be overridden, inspect Follow, Look at and Camera movement before adding more keys. Change the controller's offsets or disable it to regain direct control.</p>
+<h2>Try the supplied car shot</h2>
+<p>Open <b>examples/car-chase.goprevis</b>. Its Car follow camera uses live Follow and Look at; Wide overview shows the route. Change the car's arrival times or redraw its path, then play again. This demonstrates the intended relationship without an AI request.</p>
+</chapter>
+
+<chapter id="format-reference" title="Project format and per-camera reference media">
+<h2>Choose the final image shape</h2>
+<steps><li>Click <b>Project</b> in the header to open Project setup.</li><li>Choose an aspect preset: 16:9 landscape, 9:16 portrait, 1:1 square, 4:3, 3:2 or 2.39:1 cinema.</li><li>Check pixel Width and Height, or enter custom even dimensions between 64 and 8192.</li><li>Choose a frame rate and confirm the setup.</li><li>Inspect framing in the camera view after changing the format.</li></steps>
+<p>The camera preview, main camera gate, camera-frustum helpers and framing presets use the project aspect ratio. The exact image area inside the gate is what matters for composition. A tall frame can require a different camera distance or lens from a wide frame.</p>
+<h2>Frame rate</h2>
+<p>Presets include <b>12, 15, 24, 25, 30, 48, 50 and 60 fps</b>. Custom whole rates range from 1 to 120. The timeline fps control edits the same setting. A 15-second shot at 24 fps contains 360 exported frames; at 12 fps it contains 180. Lower fps changes sampling, not scene duration. Existing key times stay in seconds.</p>
+<page/>
+<h2>Load a background for one camera</h2>
+<steps><li>Activate the intended camera.</li><li>Click <b>Camera background...</b> below its preview. Alternatively select the camera in SCENE and expand <b>Camera background</b> in Properties.</li><li>Choose <b>Load image / video...</b> and select a source.</li><li>Enable it and adjust Opacity and <b>Fit / Fill</b>.</li><li>For video, set the time offset and play or scrub the shot.</li></steps>
+<p>Each camera has its own reference settings. Switching cameras shows that camera's reference; duplication copies independently editable settings. The file picker remembers the last visited reference folder. Supported image formats include PNG, JPEG, WebP and BMP; video choices include MP4, MOV, MKV, WebM, AVI, M4V and OGV, subject to decoding support.</p>
+<note title="Viewport reference only">The image or video appears behind objects only in camera views. It does not appear in the working perspective and is excluded from still, MP4, depth and pose exports. It is a framing guide, not a rendered video plate.</note>
+<h2>Fit, Fill and video playback</h2>
+<p>Fit preserves the whole source and may leave unused space. Fill covers the frame and crops excess edges. Lower opacity to compare 3D subjects with the reference. Video is muted, follows scene time and holds its last frame beyond the source end.</p>
+<p>The application uses a persistent FFmpeg decoding stream and an asynchronous frame cache rather than decoding a new PNG for every frame. Preview is limited to a 960-pixel long edge; the original media is unchanged. First loads and uncached jumps can still take time. Shorter or lower-resolution reference copies can improve responsiveness on a busy computer.</p>
+<p>These per-camera references are separate from images/sketches attached to AI Director. A camera reference helps you frame manually; an AI attachment is sent to a provider when you run a request.</p>
+</chapter>
+
+<chapter id="export" title="Export a shot for AI video workflows">
+<h2>Check the shot before export</h2>
+<ul><li>Confirm the active camera, project aspect, resolution, fps and shot Length.</li><li>Play the complete range, including motion transitions and the last approach.</li><li>Check feet, turns, contact with props and objects blocking faces.</li><li>Save the editable project before making deliverable files.</li></ul>
+<h2>Export the complete shot</h2>
+<steps><li>Click <b>Export shot</b>.</li><li>Confirm the active-camera name in the dialog.</li><li>Choose the destination folder and export name.</li><li>Select <b>MP4 + PNG sequences</b>, <b>MP4 videos</b> or <b>PNG sequences</b>.</li><li>Choose project, half or double resolution, and the required fps. Half/double retains the aspect ratio.</li><li>Enable Color, Depth and/or Pose. For pose, choose Human body or All scene rigs.</li><li>Set a useful Depth range if exporting depth, then start.</li><li>Wait for completion and inspect the output. A new uniquely named folder protects older exports.</li></steps>
+<p>Export covers the whole scene range from zero. The end time is exclusive: a 15-second shot at 24 fps has 360 samples, ending at 14.95833 seconds. All selected passes share the same camera, lens and evaluated animation time.</p>
+<table widths="0.24,0.76"><row><cell>Output</cell><cell>Files and intended use</cell></row><row><cell>Color</cell><cell>color.mp4 and/or color/000000.png... The rendered 3D guide.</cell></row><row><cell>Depth</cell><cell>depth.mp4 and/or depth/000000.png... Surface distance guidance.</cell></row><row><cell>Pose</cell><cell>pose.mp4 and/or pose/000000.png... Colored rig guidance. Per-frame pose JSON is also retained.</cell></row><row><cell>Manifest</cell><cell>manifest.json records camera, dimensions, timing, depth encoding, frame count and completion state.</cell></row></table>
+<h2>Depth range</h2>
+<p>Depth is linear camera-axis distance: white is the configured near distance; black is the far distance or background. Choose a far distance that includes the useful scene. A very broad range compresses differences between nearby subjects; a short range clips distant objects to black. This normalization is separate from the camera's clipping planes.</p>
+<p>Depth PNG uses equal-channel RGB8, not 16-bit depth, inverse depth or radial distance. PNG is the lossless master. H.264 MP4 is lossy and can change byte values and edge colors, so use PNG when exact control-map values matter.</p>
+<passes/>
+<h2>Pose layout and compatibility</h2>
+<p><b>Human body - COCO-18</b> provides prepared humanoid body guidance. Facial anchors are geometric proxies from the head rig, not captured landmarks; fingers are not supplied. <b>All scene rigs - humans + animals</b> adds native skeleton names and parent topology. Animals are not relabelled as human COCO joints: this mixed map needs a workflow that understands its topology.</p>
+<p>Per-frame JSON contains pixel, normalized and world coordinates, camera depth, visibility/confidence and inferred-landmark flags. Depth is used to assess occlusion. Check the requirements of your external AI tool before choosing a pass: there is no universal control format accepted by every video model.</p>
+<h2>What is excluded and restored</h2>
+<p>Editor labels, grids, selections, paths, joint/gizmo handles and camera helpers are excluded. Per-camera reference images/videos are excluded. Enabled scene lights and shadows appear in color output. After export or cancellation, the application restores the working time, selection and materials.</p>
+<p><b>Cancel export</b> stops the operation. Any completed frames are recorded as cancelled/incomplete in the manifest. MP4-only removes temporary PNG frames after encoding but retains pose JSON. PNG-only makes no MP4. FFmpeg is bundled; export requires no network connection.</p>
+<h2>Export one still</h2>
+<p>Use <b>Export frame</b> for a clean active-camera PNG at project resolution with shot JSON data. The working perspective is not the output camera. For multiple views, activate and export each camera separately.</p>
+</chapter>
+
+<chapter id="ai" title="Optional: work with AI Director">
+<p>AI Director gives you an additional way to build and edit a shot using a description. It can arrange objects, choose real library motions, create paths and camera movement, and add timing or pose adjustments. Its results remain normal editable scene content.</p>
+<note title="Optional, with your own provider account">You can use the entire manual application without connecting AI. AI Director alone requires your own provider API key and is billed by that provider. No key or paid service is included. Opening and playing a supplied example does not make an AI request.</note>
+<h2>Connect when you want AI assistance</h2>
+<steps><li>Open <b>AI Director</b> and choose <b>Connection...</b>.</li><li>Select the provider/model. The default is GPT-6.1 Sol with High reasoning through OpenRouter.</li><li>Enter your own key in the connection dialog. Do not put a key in the scene description.</li><li>Confirm the connection, then choose New scene or Edit current scene.</li></steps>
+<p>Alternatives include GPT-6 Luna through OpenRouter or direct OpenAI, Google Gemini 3.8 Flash, and a custom OpenRouter model that supports tools and images. Availability, limits and prices depend on the provider. A stronger model and longer reasoning can cost more. High reasoning does not guarantee perfect blocking.</p>
+<p>On Windows, a manually entered key uses GoPrevis's own operating-system credential entry. It is not written into scene projects or exports. The app does not read keys from another application. Provider environment variables are also supported. Nonsecret model preferences are stored locally.</p>
+<h2>Describe a useful shot</h2>
+<p>Include the duration, main subjects, spatial relationships, action order and camera intention. State who faces whom, where travel begins/ends and when important beats occur. Ask for compatible walk clips plus paths for walking subjects, an independent route for camera flights, and a live Follow/Look at camera when that better matches the task.</p>
+<example title="Example request">Create a 10-second shot. A person walks forward along a gently curved path around a bench, facing the direction of travel. Use a compatible looping walk. A camera makes one smooth orbit around the person while keeping the upper body framed. Keep the bench clear of the walking route. Rehearse the result and inspect the rendered motion before applying it.</example>
+<page/>
+<h2>Add reference images or a sketch</h2>
+<steps><li>Open <b>References</b>.</li><li>Import PNG/JPEG/WebP images, or draw on the grid.</li><li>Choose <b>Top view</b>, <b>Side view</b> or <b>Reference</b>.</li><li>Add notes explaining symbols, object names, approximate dimensions and facing directions.</li><li>Choose <b>Add sketch</b>. Use Remove selected for an unwanted attachment.</li></steps>
+<p>Top view uses X right and -Z up; side view uses X right and Y up. Multiple attachments can accompany a description. These images are sent to the provider when the request runs. They do not become rendered camera backgrounds.</p>
+<figure src="05-ai-director-ui.png" crop="310,65,920,765" width="310" caption="AI Director with an unsubmitted street-shot description. This screenshot shows the interface, not a new paid generation or a claim that the displayed prompt has completed."/>
+<h2>Build, inspect and revise</h2>
+<p>Choose <b>New scene</b> to propose a replacement or <b>Edit current scene</b> for changes. Click <b>Build shot</b> or press Ctrl+Enter inside the director. The agent reads the program guide, real library identifiers and prepared geometry. It stages proposals, rehearses them in the application and assesses rendered camera/gait previews before applying an accepted plan.</p>
+<p>After completion, use <b>View shot</b>, play the whole range and inspect your subjects. A request is one Undo action. A follow-up can correct one part while retaining unrelated work. Be specific: for example, keep the scene, move the tree out of the final camera view, and preserve the couple's blocking.</p>
+<p>Automatic review helps catch problems but does not guarantee acting, perfect contact, collision-free paths or ideal composition. The user should review the final shot, especially faces, gait direction and occlusion. Manual tools can refine any committed result.</p>
+<h2>Cancel and resume</h2>
+<p>Cancel pauses a request. Responses already received, completed tools, staged sections, references, usage and the starting scene are checkpointed locally. <b>Resume</b> continues that saved request, including after restart. Received work can be reused; further model requests still cost money.</p>
+<p>There is no application-wide planning-token or request-count ceiling. Provider context/output limits still exist. A paused or failed request may already have incurred charges. Read the status and usage, then resume rather than submitting the same whole job again unnecessarily. Resume can restore the original starting scene; your current scene is retained in Undo.</p>
+<p>AI Director cannot run arbitrary scripts, select arbitrary local files, save/export projects or change credentials. You choose references, save projects and make deliverables yourself. For a connection failure, check the selected provider, model access, available credit and its error message.</p>
+</chapter>
+
+<chapter id="tutorial" title="Practice: first scene and the street flyover">
+<h2>A first scene without AI</h2>
+<steps><li>Start a new scene using File. Save it as <b>First shot</b>.</li><li>In Project, choose 16:9 at a modest test resolution and 24 fps.</li><li>Add a chair from Objects and a human from Models.</li><li>Apply a seated pose. Place the figure on the chair, then fit hands, feet and head in Pose.</li><li>Save the fitted body to My poses under a useful name.</li><li>Add another person. Apply a walk motion and draw a curved route that passes the chair without intersecting it.</li><li>Keep Face travel direction enabled. Set arrival times to fit the shot.</li><li>Select the seated person, open Cameras and choose a medium framing.</li><li>Create a gentle camera move, play and check the composition throughout.</li><li>Save, then export a short Color MP4. Add Depth/Pose once the action reads clearly.</li></steps>
+<p>This covers the core workflow: library, arrange, pose or motion, path, camera, preview and export. No AI connection is needed.</p>
+<h2>Open the supplied street example</h2>
+<steps><li>Choose File &gt; Open project.</li><li>Open <b>examples/city-street-15s.goprevis</b> inside the portable package. Keep its accompanying assets folder.</li><li>Press Space and watch the complete 15-second camera move.</li><li>Use Save project as to make your own working copy before experimenting.</li></steps>
+<p>The scene contains a four-lane road with opposing traffic, some parked cars, pavement pedestrians and walking dogs, trees, shop fronts and a stationary couple looking toward a shop. The camera begins on the right pavement, pans across the road, rises and crosses it, descends near the shop wall and finishes with a slow approach toward the couple's faces.</p>
+<filmstrip/>
+<page/>
+<h2>Explore the important layers</h2>
+<steps><li>Return to Perspective and select the active camera in SCENE.</li><li>Expand Camera movement. Inspect the position-path points and their arrival times.</li><li>Switch to Camera aim path. Notice that the looking direction can change independently of the flight route.</li><li>Select a travelling car or pedestrian and inspect its Path row. A pedestrian also has a source-motion row.</li><li>Select a stationary member of the couple and enter Pose to inspect body controls. Exit without editing if only exploring.</li><li>Export Color, Depth and Pose from the active camera. At 15 seconds and 24 fps, verify 360 frames.</li></steps>
+<h2>Try one small revision at a time</h2>
+<p>First move a tree out of an obstructed composition and inspect the final frames. Then adjust one camera aim point, keeping its position route. Finally retime a pedestrian arrival and watch the corresponding walk. Undo between experiments if you want to compare against the original.</p>
+<p>The example was originally created with AI Director and refined through rendered rehearsals. The saved project is ordinary editable scene data: opening, playing and changing it makes no AI call. The bundled preview video is a useful reference for the original shot.</p>
+<note title="If the example is not in your copy">Use the accompanying example package supplied with this guide/release. Open its .goprevis file rather than a launcher script. The manual workflow above can still be completed using the standard built-in library.</note>
+</chapter>
+
+<chapter id="shortcuts" title="Keyboard and mouse reference">
+<p>Shortcuts are context-sensitive. Text fields and dialogs keep typing/editing keys. Click the viewport or timeline before using a scene shortcut. The Pose Move/Rotate keys are different from RMB flight controls.</p>
+<table widths="0.34,0.66"><row><cell>Project and history</cell><cell>Action</cell></row><row><cell>Ctrl+S</cell><cell>Save project.</cell></row><row><cell>Ctrl+Shift+S</cell><cell>Save project as.</cell></row><row><cell>Ctrl+O</cell><cell>Open project.</cell></row><row><cell>Ctrl+Z</cell><cell>Undo.</cell></row><row><cell>Ctrl+Shift+Z / Ctrl+Y</cell><cell>Redo.</cell></row><row><cell>Ctrl+D</cell><cell>Duplicate selected scene object.</cell></row><row><cell>Delete</cell><cell>Delete selected timeline content or a deliberately selected scene object, depending on selection/focus.</cell></row></table>
+<table widths="0.34,0.66"><row><cell>View and Arrange</cell><cell>Action</cell></row><row><cell>F</cell><cell>Frame selected object.</cell></row><row><cell>RMB drag</cell><cell>Orbit/look around.</cell></row><row><cell>MMB drag</cell><cell>Pan.</cell></row><row><cell>Wheel / Alt+MMB drag</cell><cell>Zoom. Alt+MMB up approaches; down moves away.</cell></row><row><cell>RMB + W/A/S/D</cell><cell>Fly forward/left/backward/right.</cell></row><row><cell>RMB + Q/E</cell><cell>Fly down/up. Add Shift for faster flight.</cell></row><row><cell>LMB object/box drag</cell><cell>Arrange horizontally, preserving current height.</cell></row><row><cell>Shift</cell><cell>Reveal full XYZ move, rotation and scale gizmo.</cell></row><row><cell>Ctrl during scale</cell><cell>Uniform scaling; cubes turn yellow.</cell></row><row><cell>Ctrl during move/rotate</cell><cell>Snap.</cell></row><row><cell>Alt during adjustment</cell><cell>Fine control.</cell></row></table>
+<table widths="0.34,0.66"><row><cell>Animation and Pose</cell><cell>Action</cell></row><row><cell>Space</cell><cell>Play/pause.</cell></row><row><cell>K in Arrange</cell><cell>Key selected object transform.</cell></row><row><cell>K in Pose</cell><cell>Key current body corrections.</cell></row><row><cell>W / E in Pose</cell><cell>Choose Move / Rotate when not flying the view.</cell></row><row><cell>Shift before joint grab</cell><cell>Temporarily exchange Move and Rotate for that drag.</cell></row><row><cell>Escape in Pose</cell><cell>Leave body-pose editing.</cell></row><row><cell>Ctrl/Shift + marquee</cell><cell>Add to timeline key selection.</cell></row><row><cell>Ctrl-click key</cell><cell>Toggle a key in selection.</cell></row><row><cell>Delete on timeline</cell><cell>Remove selected animation. Right-click also offers/removes targeted content.</cell></row></table>
+<table widths="0.34,0.66"><row><cell>Other task controls</cell><cell>Action</cell></row><row><cell>LMB in Draw path</cell><cell>Add a route point.</cell></row><row><cell>Enter in Draw path</cell><cell>Finish path.</cell></row><row><cell>Escape in Draw path</cell><cell>Cancel and restore previous path.</cell></row><row><cell>Ctrl in Draw path</cell><cell>Snap point placement to 0.25 m.</cell></row><row><cell>Escape in placement</cell><cell>Cancel Place on object.</cell></row><row><cell>Numeric arrow-strip drag</cell><cell>Scrub a value vertically. Alt is finer; Escape cancels the scrub.</cell></row><row><cell>Ctrl+Enter in AI Director</cell><cell>Build shot using the current description.</cell></row></table>
+<p>The interface also exposes controls for these common tasks. You do not need to memorise every shortcut before making your first shot.</p>
+</chapter>
+
+<chapter id="troubleshooting" title="Troubleshooting and current limits">
+<h2>I cannot find a library item</h2>
+<p>Clear the search, category, species, source and scope filters. Favorites or a collection can hide other entries. Switch to All items and expand the library. An animal only shows compatible actions; a species lacking a supplied walk will not acquire one by removing filters.</p>
+<h2>A figure is static, slides or stops too early</h2>
+<p>Confirm it has a motion clip covering the current time. Inspect source IN, OUT, Speed and Loop. A recorded take can contain a long idle beginning. Trim to the useful cycle. For travel, add a path and match its speed to the gait. Foot-contact solving and automatic stride matching are not provided.</p>
+<h2>The figure faces away from its travel</h2>
+<p>Check Face travel direction, manual Y rotation offsets and rotation keys. Verify the source is the intended forward/sideways/backward action. Inspect from the side and front, not only a distant camera. A body motion and whole-object heading are separate layers.</p>
+<h2>My change is overridden</h2>
+<p>Inspect the active layer. An object path supplies travel; transform values correct it. A camera may be controlled by Follow, Look at or native Camera movement. Disable the relevant controller to edit retained manual channels, or change its offsets/points. Check Auto key and the playhead before changing animation.</p>
+<h2>Pose editing behaves unexpectedly</h2>
+<p>Use a prepared rigged figure, not a static prop. Select the intended joint in the inspector. Choose Move/Rotate explicitly or hold Shift before grabbing. An intermediate joint moves its ancestor chain while descendants follow. Keep feet in place applies to human pelvis movement within reach; it is not universal foot locking.</p>
+<h2>I cannot delete what I selected</h2>
+<p>Click the actual timeline clip/key/span/label and confirm its highlight, then Delete. A parent track clears more than a child parameter row. A selected library card is not scene content. Text fields keep Delete for text. Use Undo if you remove a whole track instead of one key.</p>
+<h2>The camera reference is missing from the output</h2>
+<p>That is expected: references are editor-only. Confirm you activated the correct camera for viewing. If you need a final composited background, do that in your external video/compositing workflow. This version does not render reference video plates.</p>
+<h2>Reference video or playback is slow</h2>
+<p>Allow the initial decode/cache to populate. Try a shorter, lower-resolution reference copy and fewer heavy models. A large scene may not play in real time on every computer. Offline frame export still samples exact frame times; viewport playback speed is not a guarantee of export speed.</p>
+<h2>Depth or pose does not suit my AI model</h2>
+<p>Check that model's required normalization, resolution and topology. Adjust the depth range and prefer lossless PNG for exact maps. Mixed animal/human pose uses native animal rigs, not a universal OpenPose animal standard. Human facial anchors are inferred; fingers and captured facial expressions are absent.</p>
+<h2>A saved project cannot find a model</h2>
+<p>Keep its .assets folder next to the project. Check that the original import was self-contained. Save As and reopen a copy before moving work between computers. API keys and local library preferences are not part of the project, but normal manual playback does not require an AI key.</p>
+<h2>AI failed after using credit</h2>
+<p>Providers can charge for successful model responses even if a longer task later fails or is cancelled. Read the stored status, usage and provider error; use Resume to continue saved work where possible. Further requests can incur additional charges. No model or reasoning level guarantees a successful shot.</p>
+<h2>What this edition does not do</h2>
+<p>There is no automatic camera-cut editing, audio track, direct final AI video generation, universal rig retargeting, finger capture, motion-cleanup system, collision avoidance, automatic prop contact or full foot locking. Imported rig compatibility varies. Windows x64 is verified; macOS/Linux builds have not been verified. These limits do not prevent the core manual previs workflow.</p>
+</chapter>
+
+<chapter id="glossary" title="Glossary and handoff checklist">
+<table widths="0.25,0.75"><row><cell>Term</cell><cell>Plain-language meaning</cell></row><row><cell>Previs</cell><cell>A rough visual plan for a shot before final production/generation.</cell></row><row><cell>Viewport</cell><cell>The interactive 3D viewing/editing area.</cell></row><row><cell>Active camera</cell><cell>The camera currently used for preview and export.</cell></row><row><cell>Framing</cell><cell>What the camera includes, at what size and angle.</cell></row><row><cell>Rig / skeleton</cell><cell>A hierarchy of joints that deforms a character model.</cell></row><row><cell>IK</cell><cell>A solver that bends a joint chain toward a moved target.</cell></row><row><cell>Mocap / BVH</cell><cell>Recorded motion / a common hierarchical motion-file format.</cell></row><row><cell>Clip</cell><cell>A timed use of a motion source in the shot.</cell></row><row><cell>IN / OUT</cell><cell>The beginning and ending boundaries of a clip.</cell></row><row><cell>Blend</cell><cell>A transition combining two motion sources.</cell></row><row><cell>Path / arrival</cell><cell>A route through space / the time a point on it is reached.</cell></row><row><cell>Keyframe</cell><cell>A stored parameter value at a particular time.</cell></row><row><cell>Interpolation</cell><cell>How a value progresses from one key to the next.</cell></row><row><cell>Additive correction</cell><cell>An adjustment layered over the underlying motion.</cell></row><row><cell>Follow / Look at</cell><cell>Live camera position / aiming relationships with targets.</cell></row><row><cell>Pass</cell><cell>A synchronized output showing color, distance or rig guidance.</cell></row><row><cell>PNG sequence</cell><cell>One numbered image per frame.</cell></row><row><cell>FPS</cell><cell>Frames sampled per second.</cell></row></table>
+<h2>Before sending a shot to an AI video workflow</h2>
+<ul><li>Save the editable project and keep its asset folder.</li><li>Verify the active camera, image dimensions, fps and duration.</li><li>Play the start, every transition and the final framing.</li><li>Check forward-facing gait, contact, timing and occlusion.</li><li>Choose only passes supported by the destination tool.</li><li>Inspect a few PNG frames and the complete encoded video.</li><li>Keep the manifest with the exported guidance.</li></ul>
+<p>GoPrevis 0.19.1 - English user guide. Copyright Petr Sajner 2026. This guide describes the supplied application; third-party asset and FFmpeg notices remain in the package's LICENSES directory.</p>
+</chapter>
+</guide>

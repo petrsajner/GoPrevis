@@ -4,6 +4,8 @@ Produkt se původně jmenoval Previs. Starší datované milníky a názvy tehde
 
 Stav: funkční prototyp 0.3.1, 24. 10. 2026. Skutečný implementovaný rozsah a omezení popisuje anglický README.md; ověřené kontroly a stav finálního balení jsou v VALIDATION.md.
 
+**Produktové upřesnění 26. 10. 2026:** GoPrevis je jednoduchý přímočarý nástroj pro rychlou previzualizaci a vodicí 3D video pro externí AI nástroje. Celý ruční postup funguje bez AI a bez API klíče. AI Director je volitelný bonus; pouze jeho použití vyžaduje vlastní klíč a účtování poskytovatele.
+
 **Veškeré uživatelské rozhraní aplikace musí být anglicky**, včetně dialogů, chyb, nápovědy a názvů ovládacích prvků. Český text této studie je pouze popis specifikace.
 
 ### Rozšíření knihovny 0.19.0

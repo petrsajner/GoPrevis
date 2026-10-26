@@ -10,19 +10,17 @@ namespace GoPrevis;
 public static class AiCredentials
 {
     const string Service="com.petrsajner.goprevis.ai.v1";
-    const string Vividia="com.vividia.personal-providers.v1";
     static readonly Dictionary<string,string> Session=new(StringComparer.Ordinal);
-    public static string? Read(string provider,bool useVividia)
+    internal static string[] CredentialTargets(string provider)=>new[]{provider+"."+Service,provider+".com.petrsajner.genprevis.ai.v1"};
+    public static string? Read(string provider)
     {
         string[] variables=provider switch{"openrouter"=>new[]{"OPENROUTER_API_KEY"},"gemini"=>new[]{"GEMINI_API_KEY","GOOGLE_API_KEY"},_=>new[]{"OPENAI_API_KEY"}};
         foreach(string variable in variables){string? value=Environment.GetEnvironmentVariable(variable);if(!string.IsNullOrWhiteSpace(value))return value.Trim();}
         if(Session.TryGetValue(provider,out string? session))return session;
-        string? own=ReadWindows(provider+"."+Service);if(!string.IsNullOrWhiteSpace(own))return own;
-        string? legacy=ReadWindows(provider+".com.petrsajner.genprevis.ai.v1");if(!string.IsNullOrWhiteSpace(legacy))return legacy;
-        if(useVividia&&provider is "openrouter" or "gemini")return ReadWindows((provider=="gemini"?"gis_apikey":"gis_openrouter_apikey")+"."+Vividia);
+        foreach(string target in CredentialTargets(provider)){string? own=ReadWindows(target);if(!string.IsNullOrWhiteSpace(own))return own;}
         return null;
     }
-    public static bool Has(string provider,bool useVividia)=>!string.IsNullOrWhiteSpace(Read(provider,useVividia));
+    public static bool Has(string provider)=>!string.IsNullOrWhiteSpace(Read(provider));
     public static void Save(string provider,string value)
     {
         value=value.Trim();if(value.Length<12||value.Length>4096||value.Contains('\r')||value.Contains('\n'))throw new ArgumentException("Enter a valid provider API key.");

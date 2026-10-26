@@ -126,8 +126,8 @@ public partial class GoPrevisApp
         void Check(bool value,string message){Require(value,"AI live: "+message);checks++;observations.Add(new{message,passed=value});GD.Print("PASS AI live: "+message);}
         try
         {
-            OpenAiDirector();AiSettings.UseVividia=true;AiSettings.Selection=provider=="gemini"?2:0;_aiModelChoice.Select(AiSettings.Selection);RefreshAiConnection();_aiModeChoice.Select(1);
-            Check(AiCredentials.Has(provider,true),"the selected provider key is read without displaying or copying it");
+            OpenAiDirector();AiSettings.Selection=provider=="gemini"?2:0;_aiModelChoice.Select(AiSettings.Selection);RefreshAiConnection();_aiModeChoice.Select(1);
+            Check(AiCredentials.Has(provider),"the selected provider key is read without displaying or copying it");
             _aiPrompt.Text=provider=="gemini"?"Create a simple 8 second park shot with a dog, a standing human and two trees. The dog runs along a curved path and stops near the person. Use a compatible native dog running motion, followed by idle. A camera follows the dog and looks at it for the entire shot. Use only four objects and one camera. Search library IDs first.":"Vytvoř jednoduchý 8sekundový záběr: modré auto se rozjede, zatočí doleva po dráze a v 7. sekundě zastaví. Vedle silnice jde jedna postava po samostatné dráze s cyklickým mocapem chůze a ve 4. sekundě otočí hlavu pomocí korekčních klíčů. Přidej dva stromy. Kamera 35 mm celou dobu následuje auto a dívá se na něj. Přidej i druhou statickou přehledovou kameru. Použij základní car, human-average a tree a nanejvýš čtyři objekty. Vyhledej skutečné motion IDs.";
             int history=_undo.Count;_aiLastResult=null;await BuildAiShot();var result=_aiLastResult??throw new InvalidOperationException(_aiResult.Text);
             var allResults=new List<AiDirectorResult>{result};

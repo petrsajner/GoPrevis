@@ -23,7 +23,7 @@ public partial class GoPrevisApp
         void Check(bool value,string message){observations.Add(new{message,passed=value});Require(value,"City AI: "+message);checks++;GD.Print("PASS City AI: "+message);}
         try
         {
-            OpenAiDirector();AiSettings.Selection=4;AiSettings.UseVividia=true;_aiModelChoice.Select(4);RefreshAiConnection();_aiModeChoice.Select(1);_aiPrompt.Text=CityShotBrief;
+            OpenAiDirector();AiSettings.Selection=4;_aiModelChoice.Select(4);RefreshAiConnection();_aiModeChoice.Select(1);_aiPrompt.Text=CityShotBrief;
             _aiLastResult=null;await BuildAiShot();var result=_aiLastResult??throw new InvalidOperationException(_aiResult.Text);
             Check(AiSettings.Model=="openai/gpt-6.1-sol"&&Math.Abs(_duration-15)<.001,"GPT-6.1 Sol / High builds the requested 15-second shot");
             Check(result.Actions.Contains("assess_preview"),"the agent visually evaluates actual renders before declaring the street complete");

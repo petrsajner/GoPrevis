@@ -1,0 +1,8591 @@
+{
+  "Version": 13,
+  "Fps": 24,
+  "Duration": 15,
+  "Objects": [
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "road",
+      "Kind": "box",
+      "Name": "Four lane asphalt boulevard",
+      "Position": [
+        0,
+        -0.25,
+        0
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        14,
+        0.1,
+        90
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.19,
+          0.22,
+          0.25
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "walkW",
+      "Kind": "box",
+      "Name": "West shopping pavement and curb",
+      "Position": [
+        -10,
+        -0.15,
+        0
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        6,
+        0.15,
+        90
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.73,
+          0.71,
+          0.65
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "walkE",
+      "Kind": "box",
+      "Name": "East shopping pavement and curb",
+      "Position": [
+        10,
+        -0.15,
+        0
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        6,
+        0.15,
+        90
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.73,
+          0.71,
+          0.65
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "center1",
+      "Kind": "box",
+      "Name": "Double centre line west",
+      "Position": [
+        -0.09,
+        -0.195,
+        0
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.07,
+        0.05,
+        90
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.91,
+          0.81,
+          0.47
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "center2",
+      "Kind": "box",
+      "Name": "Double centre line east",
+      "Position": [
+        0.09,
+        -0.195,
+        0
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.07,
+        0.05,
+        90
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.91,
+          0.81,
+          0.47
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "edgeW",
+      "Kind": "box",
+      "Name": "West road edge",
+      "Position": [
+        -6.8,
+        -0.195,
+        0
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.1,
+        0.05,
+        90
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.88,
+          0.88,
+          0.83
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "edgeE",
+      "Kind": "box",
+      "Name": "East road edge",
+      "Position": [
+        6.8,
+        -0.195,
+        0
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.1,
+        0.05,
+        90
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.88,
+          0.88,
+          0.83
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "dashW1",
+      "Kind": "box",
+      "Name": "West lane divider 1",
+      "Position": [
+        -3.5,
+        -0.195,
+        -24
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.12,
+        0.05,
+        4
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.9,
+          0.9,
+          0.84
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "dashW2",
+      "Kind": "box",
+      "Name": "West lane divider 2",
+      "Position": [
+        -3.5,
+        -0.195,
+        -16
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.12,
+        0.05,
+        4
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.9,
+          0.9,
+          0.84
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "dashW3",
+      "Kind": "box",
+      "Name": "West lane divider 3",
+      "Position": [
+        -3.5,
+        -0.195,
+        -8
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.12,
+        0.05,
+        4
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.9,
+          0.9,
+          0.84
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "dashW4",
+      "Kind": "box",
+      "Name": "West lane divider 4",
+      "Position": [
+        -3.5,
+        -0.195,
+        0
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.12,
+        0.05,
+        4
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.9,
+          0.9,
+          0.84
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "dashW5",
+      "Kind": "box",
+      "Name": "West lane divider 5",
+      "Position": [
+        -3.5,
+        -0.195,
+        8
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.12,
+        0.05,
+        4
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.9,
+          0.9,
+          0.84
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "dashW6",
+      "Kind": "box",
+      "Name": "West lane divider 6",
+      "Position": [
+        -3.5,
+        -0.195,
+        16
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.12,
+        0.05,
+        4
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.9,
+          0.9,
+          0.84
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "dashE1",
+      "Kind": "box",
+      "Name": "East lane divider 1",
+      "Position": [
+        3.5,
+        -0.195,
+        -24
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.12,
+        0.05,
+        4
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.9,
+          0.9,
+          0.84
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "dashE2",
+      "Kind": "box",
+      "Name": "East lane divider 2",
+      "Position": [
+        3.5,
+        -0.195,
+        -16
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.12,
+        0.05,
+        4
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.9,
+          0.9,
+          0.84
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "dashE3",
+      "Kind": "box",
+      "Name": "East lane divider 3",
+      "Position": [
+        3.5,
+        -0.195,
+        -8
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.12,
+        0.05,
+        4
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.9,
+          0.9,
+          0.84
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "dashE4",
+      "Kind": "box",
+      "Name": "East lane divider 4",
+      "Position": [
+        3.5,
+        -0.195,
+        0
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.12,
+        0.05,
+        4
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.9,
+          0.9,
+          0.84
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "dashE5",
+      "Kind": "box",
+      "Name": "East lane divider 5",
+      "Position": [
+        3.5,
+        -0.195,
+        8
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.12,
+        0.05,
+        4
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.9,
+          0.9,
+          0.84
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "dashE6",
+      "Kind": "box",
+      "Name": "East lane divider 6",
+      "Position": [
+        3.5,
+        -0.195,
+        16
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.12,
+        0.05,
+        4
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.9,
+          0.9,
+          0.84
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "shopW1",
+      "Kind": "box",
+      "Name": "West bakery ground floor",
+      "Position": [
+        -16.7,
+        0,
+        -16
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        7,
+        3,
+        7.9
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.84,
+          0.71,
+          0.53
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "shopW2",
+      "Kind": "box",
+      "Name": "West bookshop ground floor",
+      "Position": [
+        -16.7,
+        0,
+        -8
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        7,
+        3,
+        7.9
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.76,
+          0.8,
+          0.69
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "shopW3",
+      "Kind": "box",
+      "Name": "Central boutique sandstone ground floor",
+      "Position": [
+        -16.7,
+        0,
+        0
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        7,
+        3,
+        7.9
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.85,
+          0.74,
+          0.61
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "shopW4",
+      "Kind": "box",
+      "Name": "West cafe ground floor",
+      "Position": [
+        -16.7,
+        0,
+        8
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        7,
+        3,
+        7.9
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.79,
+          0.64,
+          0.55
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "shopW5",
+      "Kind": "box",
+      "Name": "West florist ground floor",
+      "Position": [
+        -16.7,
+        0,
+        16
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        7,
+        3,
+        7.9
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.74,
+          0.77,
+          0.67
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "shopE1",
+      "Kind": "box",
+      "Name": "East grocery ground floor",
+      "Position": [
+        16.7,
+        0,
+        -16
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        7,
+        3,
+        7.9
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.76,
+          0.71,
+          0.63
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "shopE2",
+      "Kind": "box",
+      "Name": "East cafe ground floor",
+      "Position": [
+        16.7,
+        0,
+        -8
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        7,
+        3,
+        7.9
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.8,
+          0.67,
+          0.58
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "shopE3",
+      "Kind": "box",
+      "Name": "East pharmacy ground floor",
+      "Position": [
+        16.7,
+        0,
+        0
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        7,
+        3,
+        7.9
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.72,
+          0.78,
+          0.77
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "shopE4",
+      "Kind": "box",
+      "Name": "East fashion shop ground floor",
+      "Position": [
+        16.7,
+        0,
+        8
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        7,
+        3,
+        7.9
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.84,
+          0.76,
+          0.62
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "shopE5",
+      "Kind": "box",
+      "Name": "East delicatessen ground floor",
+      "Position": [
+        16.7,
+        0,
+        16
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        7,
+        3,
+        7.9
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.78,
+          0.69,
+          0.63
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "upperW1",
+      "Kind": "box",
+      "Name": "West bakery upper floor",
+      "Position": [
+        -16.7,
+        3,
+        -16
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        7,
+        3.5,
+        7.9
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.9,
+          0.8,
+          0.64
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "upperW2",
+      "Kind": "box",
+      "Name": "West bookshop upper floor",
+      "Position": [
+        -16.7,
+        3,
+        -8
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        7,
+        4,
+        7.9
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.82,
+          0.85,
+          0.74
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "upperW3",
+      "Kind": "box",
+      "Name": "Central boutique upper floor",
+      "Position": [
+        -16.7,
+        3,
+        0
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        7,
+        3.5,
+        7.9
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.93,
+          0.84,
+          0.72
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "upperW4",
+      "Kind": "box",
+      "Name": "West cafe upper floor",
+      "Position": [
+        -16.7,
+        3,
+        8
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        7,
+        4,
+        7.9
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.87,
+          0.73,
+          0.64
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "upperW5",
+      "Kind": "box",
+      "Name": "West florist upper floor",
+      "Position": [
+        -16.7,
+        3,
+        16
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        7,
+        3.5,
+        7.9
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.8,
+          0.83,
+          0.73
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "upperE1",
+      "Kind": "box",
+      "Name": "East grocery upper floor",
+      "Position": [
+        16.7,
+        3,
+        -16
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        7,
+        3.5,
+        7.9
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.86,
+          0.8,
+          0.7
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "upperE2",
+      "Kind": "box",
+      "Name": "East cafe upper floor",
+      "Position": [
+        16.7,
+        3,
+        -8
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        7,
+        4,
+        7.9
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.88,
+          0.77,
+          0.67
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "upperE3",
+      "Kind": "box",
+      "Name": "East pharmacy upper floor",
+      "Position": [
+        16.7,
+        3,
+        0
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        7,
+        3.5,
+        7.9
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.8,
+          0.87,
+          0.85
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "upperE4",
+      "Kind": "box",
+      "Name": "East fashion upper floor",
+      "Position": [
+        16.7,
+        3,
+        8
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        7,
+        4,
+        7.9
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.91,
+          0.83,
+          0.71
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "upperE5",
+      "Kind": "box",
+      "Name": "East deli upper floor",
+      "Position": [
+        16.7,
+        3,
+        16
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        7,
+        3.5,
+        7.9
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.87,
+          0.79,
+          0.72
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "display",
+      "Kind": "box",
+      "Name": "Boutique dark teal display glazing",
+      "Position": [
+        -12.9,
+        0.35,
+        0
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.08,
+        2.05,
+        5.3
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.12,
+          0.28,
+          0.31
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "fascia",
+      "Kind": "box",
+      "Name": "Boutique teal fascia above window",
+      "Position": [
+        -12.85,
+        2.45,
+        0
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.18,
+        0.38,
+        5.65
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.08,
+          0.24,
+          0.26
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "mullion",
+      "Kind": "box",
+      "Name": "Boutique brass window and entrance division",
+      "Position": [
+        -12.8,
+        0.35,
+        0
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.12,
+        2.05,
+        0.07
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.69,
+          0.56,
+          0.35
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "glassW1",
+      "Kind": "box",
+      "Name": "Bakery display glazing",
+      "Position": [
+        -13.05,
+        0.3,
+        -16
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.1,
+        2.1,
+        5.6
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.18,
+          0.32,
+          0.36
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "glassW2",
+      "Kind": "box",
+      "Name": "Bookshop display glazing",
+      "Position": [
+        -13.05,
+        0.3,
+        -8
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.1,
+        2.1,
+        5.6
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.2,
+          0.35,
+          0.37
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "glassW4",
+      "Kind": "box",
+      "Name": "Cafe display glazing",
+      "Position": [
+        -13.05,
+        0.3,
+        8
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.1,
+        2.1,
+        5.6
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.18,
+          0.32,
+          0.36
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "glassW5",
+      "Kind": "box",
+      "Name": "Florist display glazing",
+      "Position": [
+        -13.05,
+        0.3,
+        16
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.1,
+        2.1,
+        5.6
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.18,
+          0.34,
+          0.32
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "glassE1",
+      "Kind": "box",
+      "Name": "Grocery display glazing",
+      "Position": [
+        13.05,
+        0.3,
+        -16
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.1,
+        2.1,
+        5.6
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.18,
+          0.34,
+          0.36
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "glassE2",
+      "Kind": "box",
+      "Name": "East cafe display glazing",
+      "Position": [
+        13.05,
+        0.3,
+        -8
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.1,
+        2.1,
+        5.6
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.2,
+          0.32,
+          0.37
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "glassE3",
+      "Kind": "box",
+      "Name": "Pharmacy display glazing",
+      "Position": [
+        13.05,
+        0.3,
+        0
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.1,
+        2.1,
+        5.6
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.16,
+          0.35,
+          0.35
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "glassE4",
+      "Kind": "box",
+      "Name": "Fashion shop display glazing",
+      "Position": [
+        13.05,
+        0.3,
+        8
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.1,
+        2.1,
+        5.6
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.19,
+          0.32,
+          0.36
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "glassE5",
+      "Kind": "box",
+      "Name": "Deli display glazing",
+      "Position": [
+        13.05,
+        0.3,
+        16
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.1,
+        2.1,
+        5.6
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.19,
+          0.33,
+          0.36
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "awningW1",
+      "Kind": "box",
+      "Name": "Bakery ochre awning",
+      "Position": [
+        -12.8,
+        2.65,
+        -16
+      ],
+      "Rotation": [
+        0,
+        0,
+        -7
+      ],
+      "Scale": [
+        0.9,
+        0.12,
+        5.9
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.63,
+          0.4,
+          0.19
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "awningW2",
+      "Kind": "box",
+      "Name": "Bookshop green awning",
+      "Position": [
+        -12.8,
+        2.65,
+        -8
+      ],
+      "Rotation": [
+        0,
+        0,
+        -7
+      ],
+      "Scale": [
+        0.9,
+        0.12,
+        5.9
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.22,
+          0.38,
+          0.32
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "awningW3",
+      "Kind": "box",
+      "Name": "Boutique teal awning",
+      "Position": [
+        -12.8,
+        2.85,
+        0
+      ],
+      "Rotation": [
+        0,
+        0,
+        -7
+      ],
+      "Scale": [
+        0.9,
+        0.12,
+        5.9
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.12,
+          0.32,
+          0.32
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "awningW4",
+      "Kind": "box",
+      "Name": "Cafe terracotta awning",
+      "Position": [
+        -12.8,
+        2.65,
+        8
+      ],
+      "Rotation": [
+        0,
+        0,
+        -7
+      ],
+      "Scale": [
+        0.9,
+        0.12,
+        5.9
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.56,
+          0.25,
+          0.19
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "awningW5",
+      "Kind": "box",
+      "Name": "Florist green awning",
+      "Position": [
+        -12.8,
+        2.65,
+        16
+      ],
+      "Rotation": [
+        0,
+        0,
+        -7
+      ],
+      "Scale": [
+        0.9,
+        0.12,
+        5.9
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.26,
+          0.4,
+          0.26
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "awningE1",
+      "Kind": "box",
+      "Name": "Grocery green awning",
+      "Position": [
+        12.8,
+        2.65,
+        -16
+      ],
+      "Rotation": [
+        0,
+        0,
+        7
+      ],
+      "Scale": [
+        0.9,
+        0.12,
+        5.9
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.27,
+          0.39,
+          0.25
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "awningE2",
+      "Kind": "box",
+      "Name": "East cafe red awning",
+      "Position": [
+        12.8,
+        2.65,
+        -8
+      ],
+      "Rotation": [
+        0,
+        0,
+        7
+      ],
+      "Scale": [
+        0.9,
+        0.12,
+        5.9
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.56,
+          0.25,
+          0.19
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "awningE3",
+      "Kind": "box",
+      "Name": "Pharmacy teal awning",
+      "Position": [
+        12.8,
+        2.65,
+        0
+      ],
+      "Rotation": [
+        0,
+        0,
+        7
+      ],
+      "Scale": [
+        0.9,
+        0.12,
+        5.9
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.14,
+          0.36,
+          0.35
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "awningE4",
+      "Kind": "box",
+      "Name": "Fashion ochre awning",
+      "Position": [
+        12.8,
+        2.65,
+        8
+      ],
+      "Rotation": [
+        0,
+        0,
+        7
+      ],
+      "Scale": [
+        0.9,
+        0.12,
+        5.9
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.64,
+          0.45,
+          0.23
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "awningE5",
+      "Kind": "box",
+      "Name": "Deli blue awning",
+      "Position": [
+        12.8,
+        2.65,
+        16
+      ],
+      "Rotation": [
+        0,
+        0,
+        7
+      ],
+      "Scale": [
+        0.9,
+        0.12,
+        5.9
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.22,
+          0.33,
+          0.42
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "windowW1",
+      "Kind": "box",
+      "Name": "Bakery upper-floor glazing",
+      "Position": [
+        -13.05,
+        4.1,
+        -16
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.1,
+        1.65,
+        4.3
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.32,
+          0.45,
+          0.5
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "windowW2",
+      "Kind": "box",
+      "Name": "Bookshop upper-floor glazing",
+      "Position": [
+        -13.05,
+        4.3,
+        -8
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.1,
+        1.8,
+        4.3
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.32,
+          0.45,
+          0.5
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "windowW3",
+      "Kind": "box",
+      "Name": "Boutique upper-floor glazing",
+      "Position": [
+        -13.05,
+        4.1,
+        0
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.1,
+        1.65,
+        4.3
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.32,
+          0.45,
+          0.5
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "windowW4",
+      "Kind": "box",
+      "Name": "Cafe upper-floor glazing",
+      "Position": [
+        -13.05,
+        4.3,
+        8
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.1,
+        1.8,
+        4.3
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.32,
+          0.45,
+          0.5
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "windowW5",
+      "Kind": "box",
+      "Name": "Florist upper-floor glazing",
+      "Position": [
+        -13.05,
+        4.1,
+        16
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.1,
+        1.65,
+        4.3
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.32,
+          0.45,
+          0.5
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "windowE1",
+      "Kind": "box",
+      "Name": "Grocery upper-floor glazing",
+      "Position": [
+        13.05,
+        4.1,
+        -16
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.1,
+        1.65,
+        4.3
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.32,
+          0.45,
+          0.5
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "windowE2",
+      "Kind": "box",
+      "Name": "East cafe upper-floor glazing",
+      "Position": [
+        13.05,
+        4.3,
+        -8
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.1,
+        1.8,
+        4.3
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.32,
+          0.45,
+          0.5
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "windowE3",
+      "Kind": "box",
+      "Name": "Pharmacy upper-floor glazing",
+      "Position": [
+        13.05,
+        4.1,
+        0
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.1,
+        1.65,
+        4.3
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.32,
+          0.45,
+          0.5
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "windowE4",
+      "Kind": "box",
+      "Name": "Fashion upper-floor glazing",
+      "Position": [
+        13.05,
+        4.3,
+        8
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.1,
+        1.8,
+        4.3
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.32,
+          0.45,
+          0.5
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "windowE5",
+      "Kind": "box",
+      "Name": "Deli upper-floor glazing",
+      "Position": [
+        13.05,
+        4.1,
+        16
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.1,
+        1.65,
+        4.3
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.32,
+          0.45,
+          0.5
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "treeW1",
+      "Kind": "tree",
+      "Name": "West street tree south",
+      "Position": [
+        -8.1,
+        0,
+        -18
+      ],
+      "Rotation": [
+        0,
+        20,
+        0
+      ],
+      "Scale": [
+        1,
+        1.3,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "tree",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": null,
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "treeW2",
+      "Kind": "tree",
+      "Name": "West street tree below boutique",
+      "Position": [
+        -8.1,
+        0,
+        -6
+      ],
+      "Rotation": [
+        0,
+        70,
+        0
+      ],
+      "Scale": [
+        1,
+        1.35,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "tree",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": null,
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "treeW3",
+      "Kind": "tree",
+      "Name": "West street tree north",
+      "Position": [
+        -8.1,
+        0,
+        10
+      ],
+      "Rotation": [
+        0,
+        -20,
+        0
+      ],
+      "Scale": [
+        1,
+        1.3,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "tree",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": null,
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "treeW4",
+      "Kind": "tree",
+      "Name": "West street tree far north",
+      "Position": [
+        -8.1,
+        0,
+        22
+      ],
+      "Rotation": [
+        0,
+        40,
+        0
+      ],
+      "Scale": [
+        1,
+        1.35,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "tree",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": null,
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "treeE1",
+      "Kind": "tree",
+      "Name": "East street tree south",
+      "Position": [
+        8.1,
+        0,
+        -18
+      ],
+      "Rotation": [
+        0,
+        55,
+        0
+      ],
+      "Scale": [
+        1,
+        1.3,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "tree",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": null,
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "treeE2",
+      "Kind": "tree",
+      "Name": "East street tree centre",
+      "Position": [
+        8.1,
+        0,
+        -6
+      ],
+      "Rotation": [
+        0,
+        -35,
+        0
+      ],
+      "Scale": [
+        1,
+        1.3,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "tree",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": null,
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "treeE3",
+      "Kind": "tree",
+      "Name": "East street tree behind opening camera",
+      "Position": [
+        8.1,
+        0,
+        18
+      ],
+      "Rotation": [
+        0,
+        15,
+        0
+      ],
+      "Scale": [
+        1,
+        1.35,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "tree",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": null,
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "treeE4",
+      "Kind": "tree",
+      "Name": "East street tree far north",
+      "Position": [
+        8.1,
+        0,
+        30
+      ],
+      "Rotation": [
+        0,
+        90,
+        0
+      ],
+      "Scale": [
+        1,
+        1.3,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "tree",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": null,
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "parkW1",
+      "Kind": "car",
+      "Name": "Parked west outer lane cream car",
+      "Position": [
+        -5.35,
+        -0.15,
+        -17
+      ],
+      "Rotation": [
+        0,
+        180,
+        0
+      ],
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "car",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.76,
+          0.72,
+          0.6
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "parkW2",
+      "Kind": "car",
+      "Name": "Parked west outer lane blue car",
+      "Position": [
+        -5.35,
+        -0.15,
+        17
+      ],
+      "Rotation": [
+        0,
+        180,
+        0
+      ],
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "car",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.19,
+          0.31,
+          0.43
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "parkE1",
+      "Kind": "car",
+      "Name": "Parked east outer lane red car",
+      "Position": [
+        5.35,
+        -0.15,
+        -15
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "car",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.55,
+          0.2,
+          0.16
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "parkE2",
+      "Kind": "car",
+      "Name": "Parked east outer lane silver car",
+      "Position": [
+        5.35,
+        -0.15,
+        15
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "car",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.59,
+          0.64,
+          0.66
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "driveW1",
+      "Kind": "car",
+      "Name": "Southbound ochre car",
+      "Position": [
+        -1.75,
+        -0.15,
+        -26
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "car",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": true,
+        "Points": [
+          [
+            -1.75,
+            -0.15,
+            -26
+          ],
+          [
+            -1.75,
+            -0.15,
+            34
+          ]
+        ],
+        "PointTimes": [
+          0,
+          15
+        ],
+        "PointInterpolation": [
+          {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          },
+          {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          }
+        ],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": true
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.77,
+          0.48,
+          0.16
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "driveW2",
+      "Kind": "car",
+      "Name": "Southbound graphite car",
+      "Position": [
+        -1.75,
+        -0.15,
+        -43
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "car",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": true,
+        "Points": [
+          [
+            -1.75,
+            -0.15,
+            -43
+          ],
+          [
+            -1.75,
+            -0.15,
+            17
+          ]
+        ],
+        "PointTimes": [
+          0,
+          15
+        ],
+        "PointInterpolation": [
+          {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          },
+          {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          }
+        ],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": true
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.22,
+          0.26,
+          0.29
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "driveE1",
+      "Kind": "car",
+      "Name": "Northbound teal car",
+      "Position": [
+        1.75,
+        -0.15,
+        34
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "car",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": true,
+        "Points": [
+          [
+            1.75,
+            -0.15,
+            34
+          ],
+          [
+            1.75,
+            -0.15,
+            -26
+          ]
+        ],
+        "PointTimes": [
+          0,
+          15
+        ],
+        "PointInterpolation": [
+          {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          },
+          {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          }
+        ],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": true
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.12,
+          0.43,
+          0.44
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "driveE2",
+      "Kind": "car",
+      "Name": "Northbound ivory car",
+      "Position": [
+        1.75,
+        -0.15,
+        16
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "car",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": true,
+        "Points": [
+          [
+            1.75,
+            -0.15,
+            16
+          ],
+          [
+            1.75,
+            -0.15,
+            -44
+          ]
+        ],
+        "PointTimes": [
+          0,
+          15
+        ],
+        "PointInterpolation": [
+          {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          },
+          {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          }
+        ],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": true
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.84,
+          0.82,
+          0.72
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "coupleA",
+      "Kind": "actor",
+      "Name": "Boutique couple - blue jacket",
+      "Position": [
+        -10.5,
+        0,
+        -0.43
+      ],
+      "Rotation": [
+        0,
+        90,
+        0
+      ],
+      "Scale": [
+        1,
+        1.03,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "human-average",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "human",
+      "StaticPose": {
+        "NativeHierarchyVersion": 0,
+        "NativeBonePositions": {},
+        "NativeBoneScales": {},
+        "RigModelId": null,
+        "CatalogId": "pose-stand-relaxed",
+        "Name": "Stand relaxed",
+        "RootPosition": [
+          0,
+          -0.0144831,
+          0
+        ],
+        "Forward": [
+          0,
+          0,
+          -1
+        ],
+        "BoneRotations": {
+          "Hips": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "Spine": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "Chest": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "Neck": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "Head": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "LeftShoulder": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "LeftUpperArm": [
+            0,
+            0.03968685,
+            -0.57534385,
+            0.81694824
+          ],
+          "LeftLowerArm": [
+            0.03475116,
+            -0.03126782,
+            -0.26205546,
+            0.96391994
+          ],
+          "LeftHand": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "LeftUpperLeg": [
+            0.00778561,
+            0,
+            0.01533062,
+            0.9998522
+          ],
+          "LeftLowerLeg": [
+            -0.01566502,
+            0.00024019,
+            -2E-08,
+            0.9998773
+          ],
+          "LeftFoot": [
+            0.00788173,
+            0,
+            -0.01533059,
+            0.9998514
+          ],
+          "LeftToe": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "RightShoulder": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "RightUpperArm": [
+            0,
+            -0.03968685,
+            0.57534385,
+            0.81694824
+          ],
+          "RightLowerArm": [
+            0.03475116,
+            0.03126782,
+            0.26205546,
+            0.96391994
+          ],
+          "RightHand": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "RightUpperLeg": [
+            0.00778561,
+            0,
+            -0.01533062,
+            0.9998522
+          ],
+          "RightLowerLeg": [
+            -0.01566502,
+            -0.00024019,
+            2E-08,
+            0.9998773
+          ],
+          "RightFoot": [
+            0.00788173,
+            0,
+            0.01533059,
+            0.9998514
+          ],
+          "RightToe": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      },
+      "PoseCorrections": {
+        "Bones": {
+          "Head": [
+            {
+              "Id": "69be97d3a3074ff683cc197a752eb36b",
+              "Time": 0,
+              "Interpolation": {
+                "Mode": "Ease in/out",
+                "Control1": [
+                  0.25,
+                  0.1
+                ],
+                "Control2": [
+                  0.25,
+                  1
+                ]
+              },
+              "Rotation": [
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "Id": "b57c68b6ff1f4a67bfde3bb821c3656c",
+              "Time": 5,
+              "Interpolation": {
+                "Mode": "Ease in/out",
+                "Control1": [
+                  0.25,
+                  0.1
+                ],
+                "Control2": [
+                  0.25,
+                  1
+                ]
+              },
+              "Rotation": [
+                -0.026128123,
+                -0.06102762,
+                -0.0015980644,
+                0.9977928
+              ]
+            },
+            {
+              "Id": "2315ae8322be4be6bb66711960a41588",
+              "Time": 10,
+              "Interpolation": {
+                "Mode": "Ease in/out",
+                "Control1": [
+                  0.25,
+                  0.1
+                ],
+                "Control2": [
+                  0.25,
+                  1
+                ]
+              },
+              "Rotation": [
+                0.008714578,
+                0.05233397,
+                -0.00045671163,
+                0.9985916
+              ]
+            },
+            {
+              "Id": "4dee3703ea0145669336b27447d86555",
+              "Time": 15,
+              "Interpolation": {
+                "Mode": "Ease in/out",
+                "Control1": [
+                  0.25,
+                  0.1
+                ],
+                "Control2": [
+                  0.25,
+                  1
+                ]
+              },
+              "Rotation": [
+                0,
+                0.017452406,
+                0,
+                0.9998477
+              ]
+            }
+          ],
+          "Chest": [
+            {
+              "Id": "fe6cdaef543d42c8af40f824ac578793",
+              "Time": 0,
+              "Interpolation": {
+                "Mode": "Ease in/out",
+                "Control1": [
+                  0.25,
+                  0.1
+                ],
+                "Control2": [
+                  0.25,
+                  1
+                ]
+              },
+              "Rotation": [
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "Id": "689ace98c3d04d6187b5b679658ba0f5",
+              "Time": 7.5,
+              "Interpolation": {
+                "Mode": "Ease in/out",
+                "Control1": [
+                  0.25,
+                  0.1
+                ],
+                "Control2": [
+                  0.25,
+                  1
+                ]
+              },
+              "Rotation": [
+                0.013089098,
+                0.000114226816,
+                -0.0087257875,
+                0.99987626
+              ]
+            },
+            {
+              "Id": "067318c86d55450e8eb761f8215f2ddc",
+              "Time": 15,
+              "Interpolation": {
+                "Mode": "Ease in/out",
+                "Control1": [
+                  0.25,
+                  0.1
+                ],
+                "Control2": [
+                  0.25,
+                  1
+                ]
+              },
+              "Rotation": [
+                0,
+                0,
+                0,
+                1
+              ]
+            }
+          ]
+        },
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.2,
+          0.36,
+          0.48
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "coupleB",
+      "Kind": "actor",
+      "Name": "Boutique couple - terracotta jacket",
+      "Position": [
+        -10.45,
+        0,
+        0.43
+      ],
+      "Rotation": [
+        0,
+        90,
+        0
+      ],
+      "Scale": [
+        0.85,
+        1,
+        0.9
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "human-slim",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "human",
+      "StaticPose": {
+        "NativeHierarchyVersion": 0,
+        "NativeBonePositions": {},
+        "NativeBoneScales": {},
+        "RigModelId": null,
+        "CatalogId": "pose-stand-weight-on-one-leg",
+        "Name": "Stand weight on one leg",
+        "RootPosition": [
+          0,
+          -0.0141153,
+          0
+        ],
+        "Forward": [
+          0,
+          0,
+          -1
+        ],
+        "BoneRotations": {
+          "Hips": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "Spine": [
+            0,
+            0,
+            -0.0348995,
+            0.99939084
+          ],
+          "Chest": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "Neck": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "Head": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "LeftShoulder": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "LeftUpperArm": [
+            -0.00161502,
+            0.04624824,
+            -0.52281666,
+            0.8511881
+          ],
+          "LeftLowerArm": [
+            0.04863613,
+            -0.04338785,
+            -0.35713458,
+            0.9317762
+          ],
+          "LeftHand": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "LeftUpperLeg": [
+            0.00778473,
+            0,
+            0.00306716,
+            0.999965
+          ],
+          "LeftLowerLeg": [
+            -0.01566502,
+            4.805E-05,
+            0,
+            0.9998773
+          ],
+          "LeftFoot": [
+            0.00788085,
+            0,
+            -0.00306716,
+            0.99996424
+          ],
+          "LeftToe": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "RightShoulder": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "RightUpperArm": [
+            0.00097015,
+            -0.0277815,
+            0.64921063,
+            0.76010054
+          ],
+          "RightLowerArm": [
+            0.0129777,
+            0.01183027,
+            0.1003851,
+            0.99479365
+          ],
+          "RightHand": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "RightUpperLeg": [
+            0.13446163,
+            0,
+            -0.09467529,
+            0.98638564
+          ],
+          "RightLowerLeg": [
+            -0.12005325,
+            -0.01176129,
+            -0.00174836,
+            0.9926962
+          ],
+          "RightFoot": [
+            -0.01394724,
+            0,
+            0.0972898,
+            0.9951584
+          ],
+          "RightToe": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      },
+      "PoseCorrections": {
+        "Bones": {
+          "Head": [
+            {
+              "Id": "9af4d51043cd439d9ff6f6f05a993c69",
+              "Time": 0,
+              "Interpolation": {
+                "Mode": "Ease in/out",
+                "Control1": [
+                  0.25,
+                  0.1
+                ],
+                "Control2": [
+                  0.25,
+                  1
+                ]
+              },
+              "Rotation": [
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "Id": "47c49dd9a27644d4a486b633644e75e6",
+              "Time": 6,
+              "Interpolation": {
+                "Mode": "Ease in/out",
+                "Control1": [
+                  0.25,
+                  0.1
+                ],
+                "Control2": [
+                  0.25,
+                  1
+                ]
+              },
+              "Rotation": [
+                0.017409895,
+                0.06974586,
+                -0.0012174185,
+                0.99741215
+              ]
+            },
+            {
+              "Id": "d57a9981155f49529529c8d4362c4741",
+              "Time": 11,
+              "Interpolation": {
+                "Mode": "Ease in/out",
+                "Control1": [
+                  0.25,
+                  0.1
+                ],
+                "Control2": [
+                  0.25,
+                  1
+                ]
+              },
+              "Rotation": [
+                0,
+                -0.052335955,
+                0,
+                0.9986295
+              ]
+            },
+            {
+              "Id": "8cf6feaf99774e5ba3247c23da512d0b",
+              "Time": 15,
+              "Interpolation": {
+                "Mode": "Ease in/out",
+                "Control1": [
+                  0.25,
+                  0.1
+                ],
+                "Control2": [
+                  0.25,
+                  1
+                ]
+              },
+              "Rotation": [
+                0.017446427,
+                -0.026172968,
+                0.0004568508,
+                0.99950516
+              ]
+            }
+          ],
+          "Spine": [
+            {
+              "Id": "1b38403832a54322b00ac267f45ba9ef",
+              "Time": 0,
+              "Interpolation": {
+                "Mode": "Ease in/out",
+                "Control1": [
+                  0.25,
+                  0.1
+                ],
+                "Control2": [
+                  0.25,
+                  1
+                ]
+              },
+              "Rotation": [
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "Id": "870140a1713c4d29b4041bb10af508e9",
+              "Time": 8,
+              "Interpolation": {
+                "Mode": "Ease in/out",
+                "Control1": [
+                  0.25,
+                  0.1
+                ],
+                "Control2": [
+                  0.25,
+                  1
+                ]
+              },
+              "Rotation": [
+                0.008726205,
+                -7.615242E-05,
+                0.008726205,
+                0.99992394
+              ]
+            },
+            {
+              "Id": "3f38291ca92640f6a0de6ff39f09a2ab",
+              "Time": 15,
+              "Interpolation": {
+                "Mode": "Ease in/out",
+                "Control1": [
+                  0.25,
+                  0.1
+                ],
+                "Control2": [
+                  0.25,
+                  1
+                ]
+              },
+              "Rotation": [
+                0,
+                0,
+                0,
+                1
+              ]
+            }
+          ]
+        },
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.64,
+          0.29,
+          0.2
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "walkerE1",
+      "Kind": "actor",
+      "Name": "East pavement dog walker",
+      "Position": [
+        10.4,
+        0,
+        5
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": "Captured walk",
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "human-average",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [
+        {
+          "IsPlaceholder": false,
+          "Id": "27f06d4e6bc64c85ace52c516d175f6b",
+          "MotionPath": "city-street-15s.assets/walkerE1_27f06d4e6bc64c85ace52c516d175f6b.bvh",
+          "Name": "Captured walk",
+          "Start": 0,
+          "Duration": 15,
+          "SourceOffset": 0.0083333,
+          "Speed": 1,
+          "BlendIn": 0,
+          "Loop": true,
+          "InPlace": true,
+          "SourceScale": 0.055,
+          "SourceAnimation": null
+        }
+      ],
+      "Path": {
+        "Enabled": true,
+        "Points": [
+          [
+            10.4,
+            0,
+            5
+          ],
+          [
+            10.4,
+            0,
+            -10
+          ]
+        ],
+        "PointTimes": [
+          0,
+          15
+        ],
+        "PointInterpolation": [
+          {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          },
+          {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          }
+        ],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": true
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "human",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.44,
+          0.5,
+          0.28
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "shiba",
+      "Kind": "imported",
+      "Name": "Shiba on east pavement leash",
+      "Position": [
+        11.3,
+        0,
+        4.4
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": "Shiba Inu \u00B7 Walk",
+      "ModelPath": "city-street-15s.assets/shiba_model.glb",
+      "ModelAnimation": "Idle",
+      "LibraryModelId": "animal-shiba-inu",
+      "ModelUnitScale": 0.2099756,
+      "ModelGrounded": true,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [
+        {
+          "IsPlaceholder": false,
+          "Id": "5dbbbaa3147747309e3dea8b80f2dd4b",
+          "MotionPath": "city-street-15s.assets/shiba_5dbbbaa3147747309e3dea8b80f2dd4b.glb",
+          "Name": "Shiba Inu \u00B7 Walk",
+          "Start": 0,
+          "Duration": 15,
+          "SourceOffset": 0,
+          "Speed": 1.15,
+          "BlendIn": 0,
+          "Loop": true,
+          "InPlace": true,
+          "SourceScale": 1,
+          "SourceAnimation": "Walk"
+        }
+      ],
+      "Path": {
+        "Enabled": true,
+        "Points": [
+          [
+            11.3,
+            0,
+            4.4
+          ],
+          [
+            11.3,
+            0,
+            -10.6
+          ]
+        ],
+        "PointTimes": [
+          0,
+          15
+        ],
+        "PointInterpolation": [
+          {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          },
+          {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          }
+        ],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": true
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "animal-quaternius-shiba-inu",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": null,
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": {
+        "StartTargetId": "walkerE1",
+        "EndTargetId": "shiba",
+        "StartBone": "RightHand",
+        "EndBone": "Head",
+        "StartOffset": [
+          0,
+          0,
+          0
+        ],
+        "EndOffset": [
+          0,
+          0.02,
+          0.06
+        ],
+        "Width": 0.018
+      },
+      "Light": null,
+      "Id": "leashE",
+      "Kind": "cylinder",
+      "Name": "East walker live leash",
+      "Position": [
+        0,
+        0,
+        0
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "cylinder",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.24,
+          0.16,
+          0.1
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "walkerW1",
+      "Kind": "actor",
+      "Name": "West pavement husky walker",
+      "Position": [
+        -9.55,
+        0,
+        9
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": "Captured walk",
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "human-average",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [
+        {
+          "IsPlaceholder": false,
+          "Id": "b3f994f356854c0dab195aa0a1d0616a",
+          "MotionPath": "city-street-15s.assets/walkerW1_b3f994f356854c0dab195aa0a1d0616a.bvh",
+          "Name": "Captured walk",
+          "Start": 0,
+          "Duration": 15,
+          "SourceOffset": 0.7083332999999999,
+          "Speed": 1,
+          "BlendIn": 0,
+          "Loop": true,
+          "InPlace": true,
+          "SourceScale": 0.055,
+          "SourceAnimation": null
+        }
+      ],
+      "Path": {
+        "Enabled": true,
+        "Points": [
+          [
+            -9.55,
+            0,
+            9
+          ],
+          [
+            -9.55,
+            0,
+            24
+          ]
+        ],
+        "PointTimes": [
+          0,
+          15
+        ],
+        "PointInterpolation": [
+          {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          },
+          {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          }
+        ],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": true
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "human",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.58,
+          0.39,
+          0.22
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "husky",
+      "Kind": "imported",
+      "Name": "Husky on west pavement leash",
+      "Position": [
+        -10.45,
+        0,
+        9.6
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": "Husky \u00B7 Walk",
+      "ModelPath": "city-street-15s.assets/husky_model.glb",
+      "ModelAnimation": "Idle",
+      "LibraryModelId": "animal-husky",
+      "ModelUnitScale": 0.26636842,
+      "ModelGrounded": true,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [
+        {
+          "IsPlaceholder": false,
+          "Id": "08df45edc21044c991dfda1b414bcc97",
+          "MotionPath": "city-street-15s.assets/husky_08df45edc21044c991dfda1b414bcc97.glb",
+          "Name": "Husky \u00B7 Walk",
+          "Start": 0,
+          "Duration": 15,
+          "SourceOffset": 0.2,
+          "Speed": 1.05,
+          "BlendIn": 0,
+          "Loop": true,
+          "InPlace": true,
+          "SourceScale": 1,
+          "SourceAnimation": "Walk"
+        }
+      ],
+      "Path": {
+        "Enabled": true,
+        "Points": [
+          [
+            -10.45,
+            0,
+            9.6
+          ],
+          [
+            -10.45,
+            0,
+            24.6
+          ]
+        ],
+        "PointTimes": [
+          0,
+          15
+        ],
+        "PointInterpolation": [
+          {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          },
+          {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          }
+        ],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": true
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "animal-quaternius-husky",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": null,
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": {
+        "StartTargetId": "walkerW1",
+        "EndTargetId": "husky",
+        "StartBone": "RightHand",
+        "EndBone": "Head",
+        "StartOffset": [
+          0,
+          0,
+          0
+        ],
+        "EndOffset": [
+          0,
+          0.03,
+          0.06
+        ],
+        "Width": 0.018
+      },
+      "Light": null,
+      "Id": "leashW",
+      "Kind": "cylinder",
+      "Name": "West walker live leash",
+      "Position": [
+        0,
+        0,
+        0
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "cylinder",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.18,
+          0.18,
+          0.17
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "walkerE2",
+      "Kind": "actor",
+      "Name": "East pavement approaching pedestrian",
+      "Position": [
+        9.75,
+        0,
+        -17
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.85,
+        1,
+        0.9
+      ],
+      "MotionPath": null,
+      "MotionName": "Captured walk",
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "human-slim",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [
+        {
+          "IsPlaceholder": false,
+          "Id": "701f603d8f9c494fb5e65e71e22da118",
+          "MotionPath": "city-street-15s.assets/walkerE2_701f603d8f9c494fb5e65e71e22da118.bvh",
+          "Name": "Captured walk",
+          "Start": 0,
+          "Duration": 15,
+          "SourceOffset": 1.2083333,
+          "Speed": 1,
+          "BlendIn": 0,
+          "Loop": true,
+          "InPlace": true,
+          "SourceScale": 0.055,
+          "SourceAnimation": null
+        }
+      ],
+      "Path": {
+        "Enabled": true,
+        "Points": [
+          [
+            9.75,
+            0,
+            -17
+          ],
+          [
+            9.75,
+            0,
+            -2
+          ]
+        ],
+        "PointTimes": [
+          0,
+          15
+        ],
+        "PointInterpolation": [
+          {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          },
+          {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          }
+        ],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": true
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "human",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.55,
+          0.25,
+          0.27
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "walkerE3",
+      "Kind": "actor",
+      "Name": "East pavement blue pedestrian",
+      "Position": [
+        11.8,
+        0,
+        -4
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": "Captured walk",
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "human-average",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [
+        {
+          "IsPlaceholder": false,
+          "Id": "4d3f8513d25444a588c310602b39617d",
+          "MotionPath": "city-street-15s.assets/walkerE3_4d3f8513d25444a588c310602b39617d.bvh",
+          "Name": "Captured walk",
+          "Start": 0,
+          "Duration": 15,
+          "SourceOffset": 1.8083333000000001,
+          "Speed": 1,
+          "BlendIn": 0,
+          "Loop": true,
+          "InPlace": true,
+          "SourceScale": 0.055,
+          "SourceAnimation": null
+        }
+      ],
+      "Path": {
+        "Enabled": true,
+        "Points": [
+          [
+            11.8,
+            0,
+            -4
+          ],
+          [
+            11.8,
+            0,
+            -19
+          ]
+        ],
+        "PointTimes": [
+          0,
+          15
+        ],
+        "PointInterpolation": [
+          {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          },
+          {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          }
+        ],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": true
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "human",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.25,
+          0.4,
+          0.56
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "walkerW2",
+      "Kind": "actor",
+      "Name": "West pavement pedestrian leaving boutique area",
+      "Position": [
+        -11.7,
+        0,
+        -2.5
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.85,
+        1,
+        0.9
+      ],
+      "MotionPath": null,
+      "MotionName": "Captured walk",
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "human-slim",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [
+        {
+          "IsPlaceholder": false,
+          "Id": "61ab17c133d046af91122976bffdeba1",
+          "MotionPath": "city-street-15s.assets/walkerW2_61ab17c133d046af91122976bffdeba1.bvh",
+          "Name": "Captured walk",
+          "Start": 0,
+          "Duration": 15,
+          "SourceOffset": 0.4083333,
+          "Speed": 1,
+          "BlendIn": 0,
+          "Loop": true,
+          "InPlace": true,
+          "SourceScale": 0.055,
+          "SourceAnimation": null
+        }
+      ],
+      "Path": {
+        "Enabled": true,
+        "Points": [
+          [
+            -11.7,
+            0,
+            -2.5
+          ],
+          [
+            -11.7,
+            0,
+            -17.5
+          ]
+        ],
+        "PointTimes": [
+          0,
+          15
+        ],
+        "PointInterpolation": [
+          {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          },
+          {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          }
+        ],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": true
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "human",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.37,
+          0.36,
+          0.47
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "walkerW3",
+      "Kind": "actor",
+      "Name": "West pavement approaching pedestrian",
+      "Position": [
+        -9.6,
+        0,
+        -22
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": "Captured walk",
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "human-average",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [
+        {
+          "IsPlaceholder": false,
+          "Id": "6c64253adbf8420faa2ac7d301bd0a8f",
+          "MotionPath": "city-street-15s.assets/walkerW3_6c64253adbf8420faa2ac7d301bd0a8f.bvh",
+          "Name": "Captured walk",
+          "Start": 0,
+          "Duration": 15,
+          "SourceOffset": 2.0083333,
+          "Speed": 1,
+          "BlendIn": 0,
+          "Loop": true,
+          "InPlace": true,
+          "SourceScale": 0.055,
+          "SourceAnimation": null
+        }
+      ],
+      "Path": {
+        "Enabled": true,
+        "Points": [
+          [
+            -9.6,
+            0,
+            -22
+          ],
+          [
+            -9.6,
+            0,
+            -7
+          ]
+        ],
+        "PointTimes": [
+          0,
+          15
+        ],
+        "PointInterpolation": [
+          {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          },
+          {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          }
+        ],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": true
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "human",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.27,
+          0.47,
+          0.44
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "eyeA1",
+      "Kind": "box",
+      "Name": "Bakery glass entrance division",
+      "Position": [
+        -12.95,
+        0.3,
+        -14
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.12,
+        2.1,
+        0.07
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.72,
+          0.65,
+          0.5
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "eyeA2",
+      "Kind": "box",
+      "Name": "Bookshop glass entrance division",
+      "Position": [
+        -12.95,
+        0.3,
+        -6
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.12,
+        2.1,
+        0.07
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.72,
+          0.65,
+          0.5
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "eyeB1",
+      "Kind": "box",
+      "Name": "Pharmacy glass entrance division",
+      "Position": [
+        12.95,
+        0.3,
+        2
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.12,
+        2.1,
+        0.07
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.72,
+          0.7,
+          0.64
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "eyeB2",
+      "Kind": "box",
+      "Name": "Fashion shop glass entrance division",
+      "Position": [
+        12.95,
+        0.3,
+        10
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.12,
+        2.1,
+        0.07
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 15,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.72,
+          0.7,
+          0.64
+        ],
+        "ShowLabel": true
+      }
+    }
+  ],
+  "CameraKeys": [],
+  "ShotPosition": [
+    10.15,
+    1.65,
+    14
+  ],
+  "ShotRotation": [
+    -0.8184462,
+    -0.272836,
+    2.084621E-10
+  ],
+  "FocalLength": 28,
+  "Cameras": [
+    {
+      "Movement": {
+        "Mode": "Path",
+        "TargetId": "",
+        "TargetPosition": [
+          -10.48,
+          1.47,
+          0
+        ],
+        "TargetOffset": [
+          0,
+          0,
+          0
+        ],
+        "AimAtTarget": true,
+        "Start": 0,
+        "Duration": 15,
+        "Radius": 7,
+        "StartAngleDegrees": 0,
+        "OrbitDegrees": 0,
+        "StartHeight": 1.5,
+        "EndHeight": 1.5,
+        "Easing": "Linear",
+        "Path": {
+          "Enabled": true,
+          "Points": [
+            [
+              10.15,
+              1.65,
+              14
+            ],
+            [
+              10.15,
+              1.65,
+              14
+            ],
+            [
+              10.15,
+              4,
+              13
+            ],
+            [
+              5.5,
+              6.8,
+              9.5
+            ],
+            [
+              -3.8,
+              7.2,
+              5.5
+            ],
+            [
+              -8.7,
+              4.4,
+              4
+            ],
+            [
+              -11.9,
+              2.1,
+              3
+            ],
+            [
+              -12.55,
+              1.6,
+              1.8
+            ],
+            [
+              -12.6,
+              1.53,
+              0.5
+            ],
+            [
+              -12.4,
+              1.53,
+              0
+            ]
+          ],
+          "PointTimes": [
+            0,
+            1.8,
+            3,
+            4.8,
+            7,
+            9,
+            10.8,
+            12,
+            13,
+            15
+          ],
+          "PointInterpolation": [
+            {
+              "Mode": "Hold",
+              "Control1": [
+                0.25,
+                0.1
+              ],
+              "Control2": [
+                0.25,
+                1
+              ]
+            },
+            {
+              "Mode": "Curved",
+              "Control1": [
+                0.33333334,
+                0
+              ],
+              "Control2": [
+                0.6666667,
+                0.58169264
+              ]
+            },
+            {
+              "Mode": "Curved",
+              "Control1": [
+                0.33333334,
+                0.24835928
+              ],
+              "Control2": [
+                0.6666667,
+                0.6263171
+              ]
+            },
+            {
+              "Mode": "Curved",
+              "Control1": [
+                0.33333334,
+                0.29298377
+              ],
+              "Control2": [
+                0.6666667,
+                0.74161565
+              ]
+            },
+            {
+              "Mode": "Curved",
+              "Control1": [
+                0.33333334,
+                0.4082823
+              ],
+              "Control2": [
+                0.6666667,
+                0.70940596
+              ]
+            },
+            {
+              "Mode": "Curved",
+              "Control1": [
+                0.33333334,
+                0.37607265
+              ],
+              "Control2": [
+                0.6666667,
+                0.7652951
+              ]
+            },
+            {
+              "Mode": "Curved",
+              "Control1": [
+                0.33333334,
+                0.43196175
+              ],
+              "Control2": [
+                0.6666667,
+                0.65625614
+              ]
+            },
+            {
+              "Mode": "Curved",
+              "Control1": [
+                0.33333334,
+                0.3229228
+              ],
+              "Control2": [
+                0.6666667,
+                0.88619024
+              ]
+            },
+            {
+              "Mode": "Curved",
+              "Control1": [
+                0.33333334,
+                0.5528569
+              ],
+              "Control2": [
+                0.6666667,
+                1
+              ]
+            },
+            {
+              "Mode": "Hold",
+              "Control1": [
+                0.25,
+                0.1
+              ],
+              "Control2": [
+                0.25,
+                1
+              ]
+            }
+          ],
+          "Start": 0,
+          "Duration": 15,
+          "OrientToPath": true
+        },
+        "AimPathEnabled": true,
+        "AimPath": {
+          "Enabled": true,
+          "Points": [
+            [
+              10.25,
+              1.35,
+              -7
+            ],
+            [
+              9.8,
+              1.35,
+              -6
+            ],
+            [
+              -10.48,
+              1.4,
+              0
+            ],
+            [
+              -10.48,
+              1.25,
+              0
+            ],
+            [
+              -10.48,
+              1.4,
+              0
+            ],
+            [
+              -10.48,
+              1.47,
+              0
+            ],
+            [
+              -10.48,
+              1.47,
+              0
+            ]
+          ],
+          "PointTimes": [
+            0,
+            0.4,
+            2.2,
+            6,
+            10,
+            13,
+            15
+          ],
+          "PointInterpolation": [
+            {
+              "Mode": "Curved",
+              "Control1": [
+                0.33333334,
+                0
+              ],
+              "Control2": [
+                0.6666667,
+                0.4613883
+              ]
+            },
+            {
+              "Mode": "Curved",
+              "Control1": [
+                0.33333334,
+                0.12805496
+              ],
+              "Control2": [
+                0.6666667,
+                0.997657
+              ]
+            },
+            {
+              "Mode": "Curved",
+              "Control1": [
+                0.33333334,
+                0.6643236
+              ],
+              "Control2": [
+                0.6666667,
+                0.68382454
+              ]
+            },
+            {
+              "Mode": "Curved",
+              "Control1": [
+                0.33333334,
+                0.35049123
+              ],
+              "Control2": [
+                0.6666667,
+                0.74429184
+              ]
+            },
+            {
+              "Mode": "Curved",
+              "Control1": [
+                0.33333334,
+                0.4109585
+              ],
+              "Control2": [
+                0.6666667,
+                1
+              ]
+            },
+            {
+              "Mode": "Hold",
+              "Control1": [
+                0.25,
+                0.1
+              ],
+              "Control2": [
+                0.25,
+                1
+              ]
+            },
+            {
+              "Mode": "Hold",
+              "Control1": [
+                0.25,
+                0.1
+              ],
+              "Control2": [
+                0.25,
+                1
+              ]
+            }
+          ],
+          "Start": 0,
+          "Duration": 15,
+          "OrientToPath": true
+        },
+        "PositionOffset": [
+          0,
+          0,
+          0
+        ],
+        "RotationOffset": [
+          0,
+          0,
+          0
+        ]
+      },
+      "Tracking": {
+        "FollowEnabled": false,
+        "FollowTargetId": "",
+        "FollowOffset": [
+          0,
+          2,
+          6
+        ],
+        "FollowSmoothness": 0,
+        "LookAtEnabled": false,
+        "LookAtTargetId": "",
+        "LookAtOffset": [
+          0,
+          0.8,
+          0
+        ],
+        "LookAtSmoothness": 0,
+        "TargetRelativeOffsets": false,
+        "RotationOffset": [
+          0,
+          0,
+          0
+        ]
+      },
+      "Reference": {
+        "Path": "",
+        "Enabled": true,
+        "Opacity": 0.5,
+        "Fill": false,
+        "OffsetSeconds": 0
+      },
+      "Id": "shot",
+      "Name": "15s left pan - rise - street crossing - boutique face reveal",
+      "ShowLabel": true,
+      "Keys": [],
+      "Position": [
+        10.15,
+        1.65,
+        14
+      ],
+      "Rotation": [
+        -0.81844604,
+        -0.27283603,
+        0
+      ],
+      "FocalLength": 28,
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "LensKeys": [
+        {
+          "Id": "89b46063495343e285d100b28a71d03b",
+          "Time": 0,
+          "Value": 28,
+          "Interpolation": {
+            "Mode": "Curved",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          }
+        },
+        {
+          "Id": "3f8d8dae7ec143b1b0079ec9918f3efb",
+          "Time": 9,
+          "Value": 28,
+          "Interpolation": {
+            "Mode": "Curved",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          }
+        },
+        {
+          "Id": "a473ddd472e044f88669d31dbddbaefd",
+          "Time": 12,
+          "Value": 30,
+          "Interpolation": {
+            "Mode": "Curved",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          }
+        },
+        {
+          "Id": "68aab312b27b445bb9d4fd9d2291b602",
+          "Time": 13,
+          "Value": 32,
+          "Interpolation": {
+            "Mode": "Ease in/out",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          }
+        },
+        {
+          "Id": "42a6c2ab032644fdb228b464215dc5e5",
+          "Time": 15,
+          "Value": 40,
+          "Interpolation": {
+            "Mode": "Stop",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "ActiveCameraId": "shot",
+  "DirectionalLightEnabled": false,
+  "SceneSettings": {
+    "BackgroundColor": [
+      0.67,
+      0.78,
+      0.87,
+      1
+    ],
+    "Brightness": 1,
+    "GroundVisible": true,
+    "GroundHeight": -0.26,
+    "GroundOpacity": 1,
+    "ObjectLabelsVisible": false
+  },
+  "Setup": {
+    "Width": 1920,
+    "Height": 1080,
+    "ReferencePath": "",
+    "ReferenceEnabled": true,
+    "ReferenceOpacity": 0.5,
+    "ReferenceFill": false,
+    "ReferenceOffsetSeconds": 0
+  }
+}

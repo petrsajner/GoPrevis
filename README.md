@@ -1,12 +1,20 @@
 <img src="assets/goprevis.png" width="120" alt="GoPrevis icon">
 
-# GoPrevis 0.19.0 — 3D control clips for AI video
+# GoPrevis 0.19.1 — 3D control clips for AI video
 
 GoPrevis prepares 3D control clips for AI video generation. Build the scene, direct character and object motion, frame the camera, and export synchronized color, depth and pose guidance. It uses Godot 4.7.2 .NET, C# and .NET 10. The application UI, dialogs and authored errors are English.
 
+All scene building, animation, camera controls and exports work without AI or an API key. **AI Director is an optional assistant**; only its use requires a provider key and incurs provider AI charges. Final AI video generation happens in the external tool of your choice.
+
+## User guide
+
+The detailed [English PDF manual](docs/GoPrevis-User-Guide-EN.pdf) explains the complete beginner workflow, controls and shortcuts in 22 chapters. It includes real UI captures, independent camera paths, mocap and additive posing, all export passes, troubleshooting and the supplied street-flyover example. The optional AI Director has its own chapter. The portable package includes the same PDF beside the executable.
+
+The editable manual source and reproducible ReportLab builder are in `docs/manual/`; run `python docs/manual/build_guide.py` with ReportLab and Pillow installed to generate `output/pdf/GoPrevis-User-Guide-EN.pdf`.
+
 ## Run
 
-The Windows portable output is `build/GoPrevis-0.19.0-Windows/GoPrevis.exe`. Keep GoPrevis.exe, GoPrevis.pck and data_GoPrevis_windows_x86_64 together. The portable Windows build includes its runtime; using it does not require the Godot editor or .NET SDK.
+The Windows portable output is `build/GoPrevis-0.19.1-Windows/GoPrevis.exe`. Keep GoPrevis.exe, GoPrevis.pck and data_GoPrevis_windows_x86_64 together. The portable Windows build includes its runtime; using it does not require the Godot editor or .NET SDK.
 
 For development, open project.godot with Godot 4.7.2 .NET. Local tools are in the ignored .tools directory. The existing run.ps1 starts the source project; build.ps1 -Test builds, runs source checks and exports Windows x64.
 
@@ -44,7 +52,7 @@ Normal human, animal and car travel uses a timed **Path**, tangent orientation a
 
 Camera **Orbit** is analytic, with radius, angular sweep, height and timing; a full orbit has no baked position/rotation keys. Camera **Path** controls its own flight. **Animated aim path** independently controls pan/tilt; lens keys remain separate. Select a camera, expand **Camera movement**, and choose **Camera position path** or **Camera aim path** to edit points and arrivals. Smooth authored timing preserves pauses and arrivals while joining velocities continuously. Follow/Look at remains available. The trajectory appears in the viewport and a labeled movement span on the timeline. Shift transforms adjust the complete move. Format **13** adds independent aim paths and linked lines; formats 1–12 remain readable.
 
-Use **Connection…** to connect a provider. On Windows **Use existing VIVIDIA key** reads the authorized Google/OpenRouter Windows Credential Manager entries without modifying or copying them. Manual Windows keys use GoPrevis's own OS entry; macOS/Linux manual keys are session-only, with provider environment variables available for reconnection. No key is bundled or sent in project files, images or exports. Only nonsecret model/connection-source preferences are saved. The tested delivery is Windows x64.
+Use **Connection…** to enter your own provider API key. Windows stores it in GoPrevis's own operating-system credential entry; macOS/Linux manual keys are session-only, with provider environment variables available for reconnection. No other application is required or consulted for keys. No key is bundled or sent in projects, screenshots or exports. Nonsecret model preferences remain local. AI usage is billed by the selected provider. The tested delivery is Windows x64.
 
 The model receives scene geometry rather than local source-file paths. It cannot execute scripts, choose arbitrary files, save projects, export files or alter credentials. Runtime failures preserve the scene/history and checkpointed draft. All committed content remains editable.
 

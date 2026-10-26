@@ -66,7 +66,9 @@ public partial class GoPrevisApp : Control
         var window=GetWindow();float dpiScale=Math.Clamp(Math.Max(DisplayServer.ScreenGetScale(),DisplayServer.ScreenGetDpi()/96f),1,2.5f);window.ContentScaleMode=Window.ContentScaleModeEnum.CanvasItems;window.ContentScaleSize=Vector2I.Zero;window.ContentScaleFactor=dpiScale;
         window.Title="GoPrevis "+AppVersion+" — 3D control clips for AI video";
         BuildTheme(); BuildUi(); BuildWorld(); StarterScene();InitializeProjectProtection();
-        if(OS.GetCmdlineUserArgs().Contains("--library-ui-test"))OpenLibraryQa();
+        if(OS.GetCmdlineUserArgs().Contains("--credential-isolation-test"))_=RunCredentialIsolationChecksAndQuit();
+        else if(OS.GetCmdlineUserArgs().Contains("--release-media-test"))_=RunReleaseMediaAndQuit();
+        else if(OS.GetCmdlineUserArgs().Contains("--library-ui-test"))OpenLibraryQa();
         else if(OS.GetCmdlineUserArgs().Contains("--prepare-library-content-test"))_=RunContentExpansionChecksAndQuit(true);
         else if(OS.GetCmdlineUserArgs().Contains("--content-expansion-test"))_=RunContentExpansionChecksAndQuit(false);
         else if(OS.GetCmdlineUserArgs().Contains("--library-browser-test"))_=RunLibraryBrowserChecksAndQuit();
@@ -101,7 +103,7 @@ public partial class GoPrevisApp : Control
         else if (OS.GetCmdlineUserArgs().Contains("--pose-test")) _ = RunPoseChecksAndQuit();
         else if (OS.GetCmdlineUserArgs().Contains("--content-test")) _ = RunContentChecksAndQuit();
         else if (OS.GetCmdlineUserArgs().Contains("--smoke-test")) _ = RunSmokeChecks();
-        else {if(OS.GetCmdlineUserArgs().Contains("--ai-connect-vividia"))ConfigureVividiaAiConnection();ApplyStartupProjectArguments();}
+        else ApplyStartupProjectArguments();
     }
 
     public override void _ExitTree(){_aiShuttingDown=true;_aiCancellation?.Cancel();_aiService?.Dispose();DisposeCameraReference();}

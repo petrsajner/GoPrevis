@@ -1,0 +1,474 @@
+{
+  "Version": 5,
+  "Fps": 24,
+  "Duration": 8,
+  "Objects": [
+    {
+      "Id": "f2dcbf03bee943a2a3d0667b4e85da28",
+      "Kind": "actor",
+      "Name": "Corrected performer",
+      "Position": [
+        0,
+        0,
+        0
+      ],
+      "Rotation": [
+        0,
+        25,
+        0
+      ],
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": "synthetic-walk-gesture",
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": null,
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.055,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [
+        {
+          "Id": "b4782fc0a12047b3a26632bcfbe8041f",
+          "MotionPath": "keyed-pose.assets/f2dcbf03bee943a2a3d0667b4e85da28_b4782fc0a12047b3a26632bcfbe8041f.bvh",
+          "Name": "synthetic-walk-gesture",
+          "Start": 0,
+          "Duration": 4,
+          "SourceOffset": 0,
+          "Speed": 1,
+          "BlendIn": 0,
+          "Loop": true,
+          "InPlace": false,
+          "SourceScale": 0.01,
+          "SourceAnimation": null
+        },
+        {
+          "Id": "cd9eab0ca7284739abb90228bcdba08f",
+          "MotionPath": "keyed-pose.assets/f2dcbf03bee943a2a3d0667b4e85da28_cd9eab0ca7284739abb90228bcdba08f.bvh",
+          "Name": "Captured walk",
+          "Start": 3.7,
+          "Duration": 2.8499886,
+          "SourceOffset": 0.0083333,
+          "Speed": 1,
+          "BlendIn": 0.3,
+          "Loop": false,
+          "InPlace": false,
+          "SourceScale": 0.055,
+          "SourceAnimation": null
+        }
+      ],
+      "Path": {
+        "Enabled": true,
+        "Points": [
+          [
+            -2,
+            0,
+            1
+          ],
+          [
+            0,
+            0.3,
+            2
+          ],
+          [
+            2,
+            0.1,
+            0
+          ]
+        ],
+        "PointTimes": [],
+        "Start": 0,
+        "Duration": 8,
+        "OrientToPath": true
+      },
+      "PathOffset": [
+        0.1,
+        0.2,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [
+          {
+            "Id": "c80e7b8cf73c4615a50279427dceae9d",
+            "Time": 0,
+            "Value": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "Id": "cf7217d509704c5eba3707a68193d8b7",
+            "Time": 8,
+            "Value": [
+              0.4,
+              0,
+              0
+            ]
+          }
+        ],
+        "Rotation": [
+          {
+            "Id": "1b94dd5732a24ceba6800797aa3398b0",
+            "Time": 0,
+            "Value": [
+              0,
+              10,
+              0
+            ]
+          },
+          {
+            "Id": "593bbc4924844860b147a2fb432f4155",
+            "Time": 8,
+            "Value": [
+              0,
+              50,
+              0
+            ]
+          }
+        ],
+        "Scale": []
+      },
+      "ActorFamily": "human",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {
+          "Head": [
+            {
+              "Id": "653479d78a124cf4b6861a5643ee7fba",
+              "Time": 0,
+              "Rotation": [
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "Id": "ff4149f414404b769c9e1db69001a427",
+              "Time": 2,
+              "Rotation": [
+                0.058327883,
+                0.26038283,
+                -0.051671516,
+                0.96235585
+              ]
+            }
+          ],
+          "RightUpperArm": [
+            {
+              "Id": "e0b01446b3504d39832021d7d8b1ef36",
+              "Time": 0,
+              "Rotation": [
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "Id": "b3b1c328877c4963bc4a4af73d580291",
+              "Time": 3,
+              "Rotation": [
+                3.2159733e-09,
+                0.021588048,
+                0.11521207,
+                0.99310637
+              ]
+            }
+          ],
+          "RightLowerArm": [
+            {
+              "Id": "3397206db2854284bc467566ed8de54f",
+              "Time": 0,
+              "Rotation": [
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "Id": "44f3b933ed1040b29e5a992c3d717de1",
+              "Time": 3,
+              "Rotation": [
+                8.940698e-08,
+                -0.10558713,
+                -0.74244994,
+                0.66152817
+              ]
+            }
+          ],
+          "RightHand": [
+            {
+              "Id": "3ed6db25dd2a4d96992dc53134ad6872",
+              "Time": 0,
+              "Rotation": [
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "Id": "d0ab0e39046744df8fcebd4049d3cbeb",
+              "Time": 3,
+              "Rotation": [
+                -0.009981969,
+                0.08529443,
+                0.6622981,
+                0.7443027
+              ]
+            }
+          ],
+          "Hips": [
+            {
+              "Id": "cbd02d902d8e412ab648d076fa4f1b8b",
+              "Time": 0,
+              "Rotation": [
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "Id": "3eaa98ffc46349adbae4b026c1555ec3",
+              "Time": 4,
+              "Rotation": [
+                0,
+                0.1736482,
+                0,
+                0.98480785
+              ]
+            }
+          ]
+        },
+        "Root": [
+          {
+            "Id": "f7f323897c8d4f9794df80e0afd15ac2",
+            "Time": 0,
+            "Value": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "Id": "82ec877e091040b89f74fab921f22877",
+            "Time": 4,
+            "Value": [
+              0.02,
+              0.05,
+              0
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "CameraKeys": [],
+  "ShotPosition": [
+    5.25,
+    2.925,
+    6.125
+  ],
+  "ShotRotation": [
+    -13.421134,
+    40.601295,
+    -4.3887235e-07
+  ],
+  "FocalLength": 35,
+  "Cameras": [
+    {
+      "Id": "c9b03bd445ab4d30999f21c502efcb23",
+      "Name": "Camera A",
+      "Keys": [],
+      "Position": [
+        6,
+        3.2,
+        7
+      ],
+      "Rotation": [
+        -13.421134,
+        40.601295,
+        -4.388723e-07
+      ],
+      "FocalLength": 35,
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "TransformAnimation": {
+        "Position": [
+          {
+            "Id": "f4a7b0d4bc864920affaf2ac35fea006",
+            "Time": 0,
+            "Value": [
+              6,
+              3.2,
+              7
+            ]
+          },
+          {
+            "Id": "2cff68280e3846d38a899ad82d6656e7",
+            "Time": 8,
+            "Value": [
+              3,
+              2.1,
+              3.5
+            ]
+          }
+        ],
+        "Rotation": [
+          {
+            "Id": "68160c0d4b12496b935c564dd309ba33",
+            "Time": 0,
+            "Value": [
+              -13.421134,
+              40.6013,
+              -4.3887226e-07
+            ]
+          },
+          {
+            "Id": "cd19f7315ebf4092ad004c598a0c9106",
+            "Time": 8,
+            "Value": [
+              -13.421134,
+              40.6013,
+              -4.3887226e-07
+            ]
+          }
+        ],
+        "Scale": []
+      },
+      "LensKeys": [
+        {
+          "Id": "9ac14121b955404782b7aee8b29acb82",
+          "Time": 0,
+          "Value": 35
+        },
+        {
+          "Id": "0cf072ef78f64308878129c77ea66fc4",
+          "Time": 8,
+          "Value": 35
+        }
+      ]
+    },
+    {
+      "Id": "b118c05a2d3043caa6ac9fd3944f84ec",
+      "Name": "Camera B",
+      "Keys": [],
+      "Position": [
+        6,
+        3.2,
+        7
+      ],
+      "Rotation": [
+        -13.421134,
+        40.601295,
+        -4.388723e-07
+      ],
+      "FocalLength": 35,
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "TransformAnimation": {
+        "Position": [
+          {
+            "Id": "11c26fee7946459480eda77e9cad3975",
+            "Time": 0,
+            "Value": [
+              -1.5,
+              1.65,
+              4
+            ]
+          }
+        ],
+        "Rotation": [
+          {
+            "Id": "99221b6d310c40349993bddd62509754",
+            "Time": 0,
+            "Value": [
+              -9.229889,
+              0,
+              0
+            ]
+          }
+        ],
+        "Scale": []
+      },
+      "LensKeys": [
+        {
+          "Id": "d1858854beca451a814129099585b488",
+          "Time": 0,
+          "Value": 35
+        }
+      ]
+    },
+    {
+      "Id": "773fd7f7691847149fc2bbd1b9fb4aae",
+      "Name": "Camera C",
+      "Keys": [],
+      "Position": [
+        6,
+        3.2,
+        7
+      ],
+      "Rotation": [
+        -13.421134,
+        40.601295,
+        -4.388723e-07
+      ],
+      "FocalLength": 35,
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "TransformAnimation": {
+        "Position": [
+          {
+            "Id": "de143121b2d344638acbff44e3f0b0da",
+            "Time": 0,
+            "Value": [
+              -6,
+              3.5,
+              -5
+            ]
+          }
+        ],
+        "Rotation": [
+          {
+            "Id": "fecd5cb4f9564800bafc7a183cb3184b",
+            "Time": 0,
+            "Value": [
+              -17.749466,
+              -129.80557,
+              -4.4822283e-07
+            ]
+          }
+        ],
+        "Scale": []
+      },
+      "LensKeys": [
+        {
+          "Id": "501877a2295449d99cb23e20aba16349",
+          "Time": 0,
+          "Value": 35
+        }
+      ]
+    }
+  ],
+  "ActiveCameraId": "c9b03bd445ab4d30999f21c502efcb23",
+  "DirectionalLightEnabled": false
+}

@@ -1,8 +1,4 @@
-* text=auto eol=lf
-# Preserve upstream capture and licence bytes, including their original spacing.
-samples/real/*.bvh -text -whitespace
-samples/**/*.bvh -text -whitespace
-LICENSES/* -text -whitespace
-assets/content/**/*.bvh -text -whitespace
-assets/content/**/*.txt -text -whitespace
-assets/content/**/*.bytes binary
+# PDFs contain byte offsets; text line-ending conversion would corrupt them.
+*.pdf binary
+# Preserve bundled source-motion bytes rather than applying text conversion.
+examples/**/*.bvh binary

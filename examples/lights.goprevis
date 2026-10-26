@@ -1,0 +1,423 @@
+{
+  "Version": 13,
+  "Fps": 24,
+  "Duration": 8,
+  "Objects": [
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "d203c616d25d41dfad9549170cfc88e7",
+      "Kind": "box",
+      "Name": "Box",
+      "Position": [
+        0,
+        0,
+        0
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": null,
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 8,
+        "OrientToPath": true
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": null,
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": {
+        "Enabled": true,
+        "Color": [
+          1,
+          1,
+          1
+        ],
+        "Energy": 1.6,
+        "Range": 12,
+        "Shadows": true
+      },
+      "Id": "aacc91858f9244baaaea7d98e72998f7",
+      "Kind": "point_light",
+      "Name": "Point light",
+      "Position": [
+        -3,
+        4,
+        2
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": null,
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 8,
+        "OrientToPath": true
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": null,
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": {
+        "Enabled": false,
+        "Color": [
+          0.9,
+          0.95,
+          1
+        ],
+        "Energy": 0.8,
+        "Range": 10,
+        "Shadows": true
+      },
+      "Id": "c49d1b5ab43446d19fc9b68a1f085ef3",
+      "Kind": "directional_light",
+      "Name": "Directional light",
+      "Position": [
+        0,
+        3,
+        0
+      ],
+      "Rotation": [
+        -48,
+        -28,
+        0
+      ],
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": null,
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 8,
+        "OrientToPath": true
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": null,
+        "ShowLabel": true
+      }
+    }
+  ],
+  "CameraKeys": [],
+  "ShotPosition": [
+    0,
+    0,
+    0
+  ],
+  "ShotRotation": [
+    -13.421134,
+    40.601295,
+    0
+  ],
+  "FocalLength": 50,
+  "Cameras": [
+    {
+      "Movement": {
+        "Mode": "None",
+        "TargetId": "",
+        "TargetPosition": [
+          0,
+          0,
+          0
+        ],
+        "TargetOffset": [
+          0,
+          0.8,
+          0
+        ],
+        "AimAtTarget": true,
+        "Start": 0,
+        "Duration": 8,
+        "Radius": 8,
+        "StartAngleDegrees": 0,
+        "OrbitDegrees": 360,
+        "StartHeight": 2,
+        "EndHeight": 2,
+        "Easing": "Linear",
+        "Path": {
+          "Enabled": false,
+          "Points": [],
+          "PointTimes": [],
+          "PointInterpolation": [],
+          "Start": 0,
+          "Duration": 8,
+          "OrientToPath": true
+        },
+        "AimPathEnabled": false,
+        "AimPath": {
+          "Enabled": false,
+          "Points": [],
+          "PointTimes": [],
+          "PointInterpolation": [],
+          "Start": 0,
+          "Duration": 8,
+          "OrientToPath": true
+        },
+        "PositionOffset": [
+          0,
+          0,
+          0
+        ],
+        "RotationOffset": [
+          0,
+          0,
+          0
+        ]
+      },
+      "Tracking": {
+        "FollowEnabled": false,
+        "FollowTargetId": "",
+        "FollowOffset": [
+          0,
+          3,
+          6
+        ],
+        "FollowSmoothness": 0,
+        "LookAtEnabled": false,
+        "LookAtTargetId": "",
+        "LookAtOffset": [
+          0,
+          0.8,
+          0
+        ],
+        "LookAtSmoothness": 0,
+        "TargetRelativeOffsets": true,
+        "RotationOffset": [
+          0,
+          0,
+          0
+        ]
+      },
+      "Reference": {
+        "Path": "",
+        "Enabled": true,
+        "Opacity": 0.5,
+        "Fill": false,
+        "OffsetSeconds": 0
+      },
+      "Id": "50cb2e7d34dc4f849d4c057ff44a9a39",
+      "Name": "Camera A",
+      "ShowLabel": true,
+      "Keys": [],
+      "Position": [
+        6,
+        3.2,
+        7
+      ],
+      "Rotation": [
+        -13.421134,
+        40.601295,
+        -4.388723e-07
+      ],
+      "FocalLength": 35,
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "TransformAnimation": {
+        "Position": [
+          {
+            "Id": "ddede5f53c42461f935c4ed3b374b242",
+            "Time": 1.5,
+            "Interpolation": {
+              "Mode": "Linear",
+              "Control1": [
+                0.25,
+                0.1
+              ],
+              "Control2": [
+                0.25,
+                1
+              ]
+            },
+            "Value": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "Id": "02194b5589b949e48793a7934114fe94",
+            "Time": 6,
+            "Interpolation": {
+              "Mode": "Linear",
+              "Control1": [
+                0.25,
+                0.1
+              ],
+              "Control2": [
+                0.25,
+                1
+              ]
+            },
+            "Value": [
+              1,
+              1,
+              1
+            ]
+          }
+        ],
+        "Rotation": [],
+        "Scale": []
+      },
+      "LensKeys": [
+        {
+          "Id": "dd3ed0007b3f49699dabc24452163c69",
+          "Time": 2.2,
+          "Value": 50,
+          "Interpolation": {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "ActiveCameraId": "50cb2e7d34dc4f849d4c057ff44a9a39",
+  "DirectionalLightEnabled": false,
+  "SceneSettings": {
+    "BackgroundColor": [
+      0.14509805,
+      0.14509805,
+      0.16078432,
+      1
+    ],
+    "Brightness": 0.1,
+    "GroundVisible": true,
+    "GroundHeight": 0,
+    "GroundOpacity": 1,
+    "ObjectLabelsVisible": true
+  },
+  "Setup": {
+    "Width": 1920,
+    "Height": 1080,
+    "ReferencePath": "",
+    "ReferenceEnabled": true,
+    "ReferenceOpacity": 0.5,
+    "ReferenceFill": false,
+    "ReferenceOffsetSeconds": 0
+  }
+}

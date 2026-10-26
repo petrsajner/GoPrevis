@@ -1,0 +1,394 @@
+{
+  "Version": 13,
+  "Fps": 24,
+  "Duration": 8,
+  "Objects": [
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "walker",
+      "Kind": "actor",
+      "Name": "Forward mocap walker",
+      "Position": [
+        -3,
+        0,
+        1
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": "Captured walk",
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "human-average",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [
+        {
+          "IsPlaceholder": false,
+          "Id": "cba8bbfcf2074335aece8eb0f627532f",
+          "MotionPath": "ai-smooth-orbit.assets/walker_cba8bbfcf2074335aece8eb0f627532f.bvh",
+          "Name": "Captured walk",
+          "Start": 0,
+          "Duration": 8,
+          "SourceOffset": 0.0083333,
+          "Speed": 0.7,
+          "BlendIn": 0,
+          "Loop": true,
+          "InPlace": true,
+          "SourceScale": 0.055,
+          "SourceAnimation": null
+        }
+      ],
+      "Path": {
+        "Enabled": true,
+        "Points": [
+          [
+            -3,
+            0,
+            1
+          ],
+          [
+            -1.5,
+            0,
+            0.68
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1.5,
+            0,
+            -0.68
+          ],
+          [
+            3,
+            0,
+            -1
+          ]
+        ],
+        "PointTimes": [
+          0,
+          1.9288737832094103,
+          3.999999957868218,
+          6.071126205087317,
+          8
+        ],
+        "PointInterpolation": [
+          {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          },
+          {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          },
+          {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          },
+          {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          },
+          {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          }
+        ],
+        "Start": 0,
+        "Duration": 8,
+        "OrientToPath": true
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "human",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.24,
+          0.52,
+          0.65
+        ],
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "box",
+      "Kind": "box",
+      "Name": "Static ochre box \u2014 orbit centre",
+      "Position": [
+        0,
+        0,
+        1.65
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        0.8,
+        0.8,
+        0.8
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 8,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": [
+          0.73,
+          0.43,
+          0.18
+        ],
+        "ShowLabel": true
+      }
+    }
+  ],
+  "CameraKeys": [],
+  "ShotPosition": [
+    4.75,
+    4,
+    9.877241
+  ],
+  "ShotRotation": [
+    -20.754068,
+    30,
+    0
+  ],
+  "FocalLength": 32,
+  "Cameras": [
+    {
+      "Movement": {
+        "Mode": "Orbit",
+        "TargetId": "box",
+        "TargetPosition": [
+          0,
+          0,
+          1.65
+        ],
+        "TargetOffset": [
+          0,
+          0.4,
+          0
+        ],
+        "AimAtTarget": true,
+        "Start": 0,
+        "Duration": 8,
+        "Radius": 9.5,
+        "StartAngleDegrees": 30,
+        "OrbitDegrees": 360,
+        "StartHeight": 3.6,
+        "EndHeight": 3.6,
+        "Easing": "Linear",
+        "Path": {
+          "Enabled": false,
+          "Points": [],
+          "PointTimes": [],
+          "PointInterpolation": [],
+          "Start": 0,
+          "Duration": 8,
+          "OrientToPath": true
+        },
+        "AimPathEnabled": false,
+        "AimPath": {
+          "Enabled": false,
+          "Points": [],
+          "PointTimes": [],
+          "PointInterpolation": [],
+          "Start": 0,
+          "Duration": 8,
+          "OrientToPath": true
+        },
+        "PositionOffset": [
+          0,
+          0,
+          0
+        ],
+        "RotationOffset": [
+          0,
+          0,
+          0
+        ]
+      },
+      "Tracking": {
+        "FollowEnabled": false,
+        "FollowTargetId": "",
+        "FollowOffset": [
+          0,
+          2,
+          6
+        ],
+        "FollowSmoothness": 0,
+        "LookAtEnabled": false,
+        "LookAtTargetId": "",
+        "LookAtOffset": [
+          0,
+          0.4,
+          0
+        ],
+        "LookAtSmoothness": 0,
+        "TargetRelativeOffsets": false,
+        "RotationOffset": [
+          0,
+          0,
+          0
+        ]
+      },
+      "Reference": {
+        "Path": "",
+        "Enabled": true,
+        "Opacity": 0.5,
+        "Fill": false,
+        "OffsetSeconds": 0
+      },
+      "Id": "orbit",
+      "Name": "360\u00b0 constant-speed orbit around box",
+      "ShowLabel": true,
+      "Keys": [],
+      "Position": [
+        4.75,
+        4,
+        9.87724
+      ],
+      "Rotation": [
+        -20.754072,
+        30.000004,
+        0
+      ],
+      "FocalLength": 32,
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "LensKeys": []
+    }
+  ],
+  "ActiveCameraId": "orbit",
+  "DirectionalLightEnabled": false,
+  "SceneSettings": {
+    "BackgroundColor": [
+      0.13,
+      0.17,
+      0.22,
+      1
+    ],
+    "Brightness": 1,
+    "GroundVisible": true,
+    "GroundHeight": 0,
+    "GroundOpacity": 1,
+    "ObjectLabelsVisible": false
+  },
+  "Setup": {
+    "Width": 1920,
+    "Height": 1080,
+    "ReferencePath": "",
+    "ReferenceEnabled": true,
+    "ReferenceOpacity": 0.5,
+    "ReferenceFill": false,
+    "ReferenceOffsetSeconds": 0
+  }
+}

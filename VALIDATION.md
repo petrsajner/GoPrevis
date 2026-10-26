@@ -1,4 +1,16 @@
-# GoPrevis 0.19.0 validation
+# GoPrevis 0.19.1 validation
+
+Validation date: **2026-10-26**. Windows x64, schema **13**, English UI. Removes the external VIVIDIA credential bridge from production code, UI, startup flags and live-test configuration. AI uses only provider environment variables, this product's own OS credential names or session keys. Existing external-source flags are ignored and are omitted when preferences are saved; no secret was copied or modified in another application.
+
+Seven deterministic isolation checks cover all three provider credential target lists, retired-settings migration, the actual connection dialog, a blank secret input and independent connection status. The real provider-format and planner tests run with fixtures and make no paid API request. A real saved 103-object street scene provides current 1280×800 UI images and a complete 360-frame 1280×720 / 24fps color/depth/pose export for draft release material. The AI UI image shows an unsubmitted example prompt and explicitly requires the user's own key; it does not portray a new live generation.
+
+The release copy and media are drafts for Petr's review. No GitHub Release, public upload, source-visibility change, email or social publication was made. Current reports and exact binary identity accompany the local build. Historical development evidence below records earlier internal credential testing and is not a current connection capability.
+
+The English beginner manual is a **41-page PDF with 22 chapters**, clickable contents and bookmarks, actual application images, a full keyboard/mouse reference, step-by-step scene/pose/motion/path/camera/export workflows, troubleshooting and the saved street example. The optional AI chapter preserves the complete no-key manual workflow. Every page was rendered with Poppler and visually inspected. PDF extraction checks found no text outside the safe page bounds; all 22 bookmarks and 44 chapter links are present. Editable XML, original captures and the ReportLab builder are in docs/manual; the same PDF is bundled beside the executable and under docs/.
+
+Nine native regression suites pass: credential isolation (7), AI integration (55), resumable reliability (20), semantics (22), library browser (16), project files (22 plus 24 layout cases), unsaved changes (31), project workflow (181) and branding (14). Compilation has zero warnings/errors and the source smoke suite passes. The 360-frame street export completed all three MP4/PNG passes. Its stderr contains one Godot C# wrapper/GC-handle diagnostic during a depth-material swap; this did not abort export. Selected actual color/depth/pose frames, frame counts and encoded video timing were checked. The remaining nine native suite stderr logs are empty. No paid AI calls were made.
+
+# Historical GoPrevis 0.19.0 validation
 
 Validation date: **2026-10-26**. Windows x64, English UI, schema **13**. Adds six ordinary-proportion rigged animals (Cat, Dog, Pig, Sheep, Rabbit, Eagle), 17 compatible native actions and all **84 usable actions** from the publisher's free Standard Universal Animation Libraries 1 and 2. No GobKit content or paid archive is included. Catalog totals: **290 models, 19 animals, 558 motion cards**. Original licenses and content/source hashes are retained.
 

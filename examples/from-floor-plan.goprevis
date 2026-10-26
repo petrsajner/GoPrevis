@@ -1,0 +1,282 @@
+{
+  "Version": 13,
+  "Fps": 24,
+  "Duration": 4,
+  "Objects": [
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "plan_car",
+      "Kind": "car",
+      "Name": "Car",
+      "Position": [
+        -6.8,
+        0,
+        2.94
+      ],
+      "Rotation": [
+        0,
+        90,
+        0
+      ],
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "car",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 4,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": null,
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "plan_tree",
+      "Kind": "tree",
+      "Name": "Tree",
+      "Position": [
+        6.8,
+        0,
+        -2.94
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        1.15,
+        1.15,
+        1.15
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "tree",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 4,
+        "OrientToPath": false
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": null,
+        "ShowLabel": true
+      }
+    }
+  ],
+  "CameraKeys": [],
+  "ShotPosition": [
+    0,
+    27,
+    6
+  ],
+  "ShotRotation": [
+    -77.47119,
+    0,
+    0
+  ],
+  "FocalLength": 35,
+  "Cameras": [
+    {
+      "Movement": {
+        "Mode": "None",
+        "TargetId": "",
+        "TargetPosition": [
+          0,
+          0,
+          0
+        ],
+        "TargetOffset": [
+          0,
+          0.8,
+          0
+        ],
+        "AimAtTarget": true,
+        "Start": 0,
+        "Duration": 8,
+        "Radius": 8,
+        "StartAngleDegrees": 0,
+        "OrbitDegrees": 360,
+        "StartHeight": 2,
+        "EndHeight": 2,
+        "Easing": "Linear",
+        "Path": {
+          "Enabled": false,
+          "Points": [],
+          "PointTimes": [],
+          "PointInterpolation": [],
+          "Start": 0,
+          "Duration": 8,
+          "OrientToPath": true
+        },
+        "AimPathEnabled": false,
+        "AimPath": {
+          "Enabled": false,
+          "Points": [],
+          "PointTimes": [],
+          "PointInterpolation": [],
+          "Start": 0,
+          "Duration": 8,
+          "OrientToPath": true
+        },
+        "PositionOffset": [
+          0,
+          0,
+          0
+        ],
+        "RotationOffset": [
+          0,
+          0,
+          0
+        ]
+      },
+      "Tracking": {
+        "FollowEnabled": false,
+        "FollowTargetId": "",
+        "FollowOffset": [
+          0,
+          2,
+          6
+        ],
+        "FollowSmoothness": 0,
+        "LookAtEnabled": false,
+        "LookAtTargetId": "",
+        "LookAtOffset": [
+          0,
+          0.8,
+          0
+        ],
+        "LookAtSmoothness": 0,
+        "TargetRelativeOffsets": false,
+        "RotationOffset": [
+          0,
+          0,
+          0
+        ]
+      },
+      "Reference": {
+        "Path": "",
+        "Enabled": true,
+        "Opacity": 0.5,
+        "Fill": false,
+        "OffsetSeconds": 0
+      },
+      "Id": "plan_camera",
+      "Name": "Static plan view",
+      "ShowLabel": true,
+      "Keys": [],
+      "Position": [
+        0,
+        27,
+        6
+      ],
+      "Rotation": [
+        -77.47119,
+        0,
+        0
+      ],
+      "FocalLength": 35,
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "LensKeys": []
+    }
+  ],
+  "ActiveCameraId": "plan_camera",
+  "DirectionalLightEnabled": false,
+  "SceneSettings": {
+    "BackgroundColor": [
+      0.87,
+      0.89,
+      0.9,
+      1
+    ],
+    "Brightness": 1,
+    "GroundVisible": true,
+    "GroundHeight": 0,
+    "GroundOpacity": 1,
+    "ObjectLabelsVisible": false
+  },
+  "Setup": {
+    "Width": 1920,
+    "Height": 1080,
+    "ReferencePath": "",
+    "ReferenceEnabled": true,
+    "ReferenceOpacity": 0.5,
+    "ReferenceFill": false,
+    "ReferenceOffsetSeconds": 0
+  }
+}

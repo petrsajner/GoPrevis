@@ -48,7 +48,7 @@ public partial class GoPrevisApp
     {
         _aiDialog=new AcceptDialog{Title="AI Director",Exclusive=true,Transient=true,Unresizable=false,WrapControls=false,MinSize=new Vector2I(620,600)};AddChild(_aiDialog);_aiDialog.GetOkButton().Hide();_aiDialog.CloseRequested+=()=>_aiCancellation?.Cancel();_aiDialog.Canceled+=()=>_aiCancellation?.Cancel();
         var panel=new VBoxContainer{CustomMinimumSize=new Vector2(610,575)};panel.AddThemeConstantOverride("separation",9);_aiDialog.AddChild(panel);
-        var intro=Text("Describe a shot. AI arranges the scene, animation and cameras using your library. Every result stays editable and can be undone in one step.",12,true);intro.CustomMinimumSize=new Vector2(600,0);intro.AutowrapMode=TextServer.AutowrapMode.WordSmart;panel.AddChild(intro);
+        var intro=Text("Optional AI assistance for building and editing shots. All manual tools and exports work without a key. Describe a shot below; AI uses your library and changes stay editable and undoable.",12,true);intro.CustomMinimumSize=new Vector2(600,0);intro.AutowrapMode=TextServer.AutowrapMode.WordSmart;panel.AddChild(intro);
         _aiModelChoice=new OptionButton{SizeFlagsHorizontal=SizeFlags.ExpandFill};foreach(string model in new[]{"GPT-6 Luna · OpenRouter","GPT-6 Luna · OpenAI","Gemini 3.8 Flash · Google","Custom model · OpenRouter","GPT-6.1 Sol · OpenRouter (quality)"})_aiModelChoice.AddItem(model);
         _aiModelChoice.Select(Math.Clamp(AiSettings.Selection,0,4));_aiModelChoice.ItemSelected+=index=>{AiSettings.Selection=(int)index;AiSettings.Save(AiSettingsPath);RefreshAiConnection();};panel.AddChild(Row(_aiModelChoice,Button("Connection…",OpenAiConnection)));
         _aiCustomModel=new LineEdit{PlaceholderText="OpenRouter model ID",Text=AiSettings.CustomModel};_aiCustomModel.TextChanged+=text=>{AiSettings.CustomModel=text;};panel.AddChild(_aiCustomModel);
@@ -75,8 +75,8 @@ public partial class GoPrevisApp
     {
         if(_aiDialog==null)return;
         _aiCustomModel.Visible=AiSettings.Selection==3;
-        bool available=AiCredentials.Has(AiSettings.Provider,AiSettings.UseVividia);
-        _aiConnectionStatus.Text=available?"API key available · "+(AiSettings.UseVividia&&AiSettings.Provider!="openai"?"VIVIDIA / local credential store":"local credential store / environment"):"No API key · open Connection to connect this provider";
+        bool available=AiCredentials.Has(AiSettings.Provider);
+        _aiConnectionStatus.Text=available?"API key available · GoPrevis credential store / environment":"No API key · open Connection to add your provider key";
         _aiBuild.Disabled=_aiBusy||!available;
     }
     async void OpenAiConnection()
@@ -89,7 +89,6 @@ public partial class GoPrevisApp
         _aiKeyInput=new LineEdit{Secret=true,PlaceholderText="API key · leave blank to keep the current connection"};panel.AddChild(_aiKeyInput);
         var connectionError=Text("",11,true);connectionError.AutowrapMode=TextServer.AutowrapMode.WordSmart;panel.AddChild(connectionError);
         panel.AddChild(Button("Save connection",()=>{try{if(!string.IsNullOrWhiteSpace(_aiKeyInput.Text))AiCredentials.Save(AiSettings.Provider,_aiKeyInput.Text);_aiKeyInput.Text="";AiSettings.Save(AiSettingsPath);RefreshAiConnection();_aiConnectionDialog.Hide();}catch(Exception error){connectionError.Text=error.Message;}}));
-        if(OperatingSystem.IsWindows()&&AiSettings.Provider!="openai")panel.AddChild(Button("Use existing VIVIDIA key",()=>{AiSettings.UseVividia=true;AiSettings.Save(AiSettingsPath);RefreshAiConnection();_aiConnectionDialog.Hide();}));
         var price=Text(AiSettings.Provider=="gemini"?"Gemini 3.8 Flash · $0.75 input / $3.75 output per 1M tokens through Dec 31, 2026. Higher rates apply from Jan 1, 2027.":AiSettings.Selection==4?"GPT-6.1 Sol · $2 input / $10 output per 1M tokens. High reasoning; use when planning quality matters more than price.":AiSettings.Selection==3?"Custom model prices depend on the selected model. Actual token usage is reported after planning.":"GPT-6 Luna · $0.10 input / $0.50 output per 1M tokens. OpenRouter account fees may apply.",11,true);price.CustomMinimumSize=new Vector2(500,0);price.AutowrapMode=TextServer.AutowrapMode.WordSmart;panel.AddChild(price);
         panel.AddChild(Button("Close",()=>{_aiKeyInput.Text="";_aiConnectionDialog.Hide();}));_aiConnectionDialog.CloseRequested+=()=>_aiKeyInput.Text="";_aiConnectionDialog.VisibilityChanged+=()=>{if(!_aiConnectionDialog.Visible)_aiKeyInput.Text="";};
         _aiConnectionDialog.Size=new Vector2I(550,320);for(int i=0;i<3;i++)await ToSignal(GetTree(),SceneTree.SignalName.ProcessFrame);
@@ -119,7 +118,7 @@ public partial class GoPrevisApp
         }
         string prompt=resume?_aiSession!.Prompt:_aiPrompt.Text.Trim();if(prompt==""){_aiResult.Text="Describe the shot first.";return;}
         string provider=resume?_aiSession!.Provider:AiSettings.Provider,model=resume?_aiSession!.Model:AiSettings.Model;
-        string? key=AiCredentials.Read(provider,AiSettings.UseVividia);if(key==null){OpenAiConnection();return;}
+        string? key=AiCredentials.Read(provider);if(key==null){OpenAiConnection();return;}
         if(!resume)
         {
             if(File.Exists(AiSessionPath)){string archive=Path.Combine(Path.GetDirectoryName(AiSessionPath)!,"previous-"+DateTime.UtcNow.ToString("yyyyMMdd-HHmmss-fff")+".json");File.Copy(AiSessionPath,archive);}
@@ -137,6 +136,4 @@ public partial class GoPrevisApp
         catch(Exception error){if(_aiShuttingDown)return;if(_aiSession!=null){_aiSession.Status="Paused";_aiSession.Save(AiSessionPath);}_aiResult.Text="Request paused. "+error.Message+"\nSaved work is available through Resume.\n"+(_aiSession==null?"":AiUsageText(_aiSession));_aiProgress.Text="Paused · draft saved · scene unchanged";}
         finally{_aiBusy=false;_aiCancellation?.Dispose();_aiCancellation=null;if(!_aiShuttingDown){_aiExamples.Disabled=false;_aiCustomModel.Editable=true;_aiModelChoice.Disabled=false;_aiModeChoice.Disabled=false;_aiPrompt.Editable=true;_aiCancel.Disabled=true;_aiActivity.Visible=false;_aiResume.Disabled=_aiSession==null||_aiSession.Status=="Completed";RefreshAiConnection();}}
     }
-    void ConfigureVividiaAiConnection()
-    {AiSettings.UseVividia=true;AiSettings.Selection=4;AiSettings.Save(AiSettingsPath);Status("AI Director uses GPT-6.1 Sol / High with the existing VIVIDIA OpenRouter key. No key was copied.");}
 }

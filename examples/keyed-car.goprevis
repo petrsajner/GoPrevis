@@ -1,0 +1,537 @@
+{
+  "Version": 7,
+  "Fps": 24,
+  "Duration": 8,
+  "Objects": [
+    {
+      "Id": "be31bd430c7e4ac1a0d11bf055fbf70b",
+      "Kind": "car",
+      "Name": "Keyed car",
+      "Position": [
+        0,
+        0,
+        0
+      ],
+      "Rotation": [
+        0,
+        25,
+        0
+      ],
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": null,
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": true,
+        "Points": [
+          [
+            -3,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            0
+          ]
+        ],
+        "PointTimes": [
+          0,
+          4,
+          8
+        ],
+        "PointInterpolation": [
+          {
+            "Mode": "Ease in/out",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          }
+        ],
+        "Start": 0,
+        "Duration": 8,
+        "OrientToPath": true
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [
+          {
+            "Id": "996cbabf4e9a47f886db71b0701c2a9a",
+            "Time": 0,
+            "Interpolation": {
+              "Mode": "Curved",
+              "Control1": [
+                0.33080807,
+                0.39487183
+              ],
+              "Control2": [
+                0.25,
+                1
+              ]
+            },
+            "Value": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "Id": "aadf9269b28540a88a5cd8aafd6af2de",
+            "Time": 4,
+            "Interpolation": {
+              "Mode": "Linear",
+              "Control1": [
+                0.25,
+                0.1
+              ],
+              "Control2": [
+                0.25,
+                1
+              ]
+            },
+            "Value": [
+              0,
+              0.6,
+              0
+            ]
+          }
+        ],
+        "Rotation": [
+          {
+            "Id": "5b5a5614301a49d6a5fc3e7b5fc51ce6",
+            "Time": 0,
+            "Interpolation": {
+              "Mode": "Linear",
+              "Control1": [
+                0.25,
+                0.1
+              ],
+              "Control2": [
+                0.25,
+                1
+              ]
+            },
+            "Value": [
+              0,
+              5,
+              0
+            ]
+          },
+          {
+            "Id": "fc71e65628774890969a979ea7ceae6f",
+            "Time": 4,
+            "Interpolation": {
+              "Mode": "Linear",
+              "Control1": [
+                0.25,
+                0.1
+              ],
+              "Control2": [
+                0.25,
+                1
+              ]
+            },
+            "Value": [
+              0,
+              45,
+              0
+            ]
+          }
+        ],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": null,
+        "ShowLabel": true
+      }
+    }
+  ],
+  "CameraKeys": [],
+  "ShotPosition": [
+    1.25,
+    2,
+    0
+  ],
+  "ShotRotation": [
+    -13.421133,
+    40.601295,
+    -4.3887235e-07
+  ],
+  "FocalLength": 25,
+  "Cameras": [
+    {
+      "Id": "7f7074fb17724da2bd650975b2ef08c7",
+      "Name": "Camera A",
+      "ShowLabel": true,
+      "Keys": [],
+      "Position": [
+        6,
+        3.2,
+        7
+      ],
+      "Rotation": [
+        -13.421134,
+        40.601295,
+        -4.388723e-07
+      ],
+      "FocalLength": 35,
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "TransformAnimation": {
+        "Position": [
+          {
+            "Id": "23f2a6ef94204155ba03cfcf91a38a49",
+            "Time": 0,
+            "Interpolation": {
+              "Mode": "Ease in/out",
+              "Control1": [
+                0.25,
+                0.1
+              ],
+              "Control2": [
+                0.25,
+                1
+              ]
+            },
+            "Value": [
+              0,
+              2,
+              0
+            ]
+          },
+          {
+            "Id": "4f3e7918274942459d48e3d6efe29958",
+            "Time": 4,
+            "Interpolation": {
+              "Mode": "Linear",
+              "Control1": [
+                0.25,
+                0.1
+              ],
+              "Control2": [
+                0.25,
+                1
+              ]
+            },
+            "Value": [
+              8,
+              2,
+              0
+            ]
+          }
+        ],
+        "Rotation": [
+          {
+            "Id": "b32e71ee3710497eb55b497f8cb7f588",
+            "Time": 0,
+            "Interpolation": {
+              "Mode": "Linear",
+              "Control1": [
+                0.25,
+                0.1
+              ],
+              "Control2": [
+                0.25,
+                1
+              ]
+            },
+            "Value": [
+              -13.421134,
+              40.6013,
+              -4.3887226e-07
+            ]
+          },
+          {
+            "Id": "906b9c81cbcf42d0806069ba8f2daee8",
+            "Time": 8,
+            "Interpolation": {
+              "Mode": "Linear",
+              "Control1": [
+                0.25,
+                0.1
+              ],
+              "Control2": [
+                0.25,
+                1
+              ]
+            },
+            "Value": [
+              -13.421134,
+              40.6013,
+              -4.3887226e-07
+            ]
+          }
+        ],
+        "Scale": []
+      },
+      "LensKeys": [
+        {
+          "Id": "bd6fe797d7614d3b819797c5f5d1e851",
+          "Time": 0,
+          "Value": 25,
+          "Interpolation": {
+            "Mode": "Hold",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          }
+        },
+        {
+          "Id": "a2c81ddb72ef4ed4b8bce748714b6e27",
+          "Time": 4,
+          "Value": 85,
+          "Interpolation": {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "Id": "260fa13ceacf43a39b3f7a4b15f19d2e",
+      "Name": "Camera B",
+      "ShowLabel": true,
+      "Keys": [],
+      "Position": [
+        6,
+        3.2,
+        7
+      ],
+      "Rotation": [
+        -13.421134,
+        40.601295,
+        -4.388723e-07
+      ],
+      "FocalLength": 35,
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "TransformAnimation": {
+        "Position": [
+          {
+            "Id": "ab4a59280e864a9d87342b782e6e4d69",
+            "Time": 0,
+            "Interpolation": {
+              "Mode": "Linear",
+              "Control1": [
+                0.25,
+                0.1
+              ],
+              "Control2": [
+                0.25,
+                1
+              ]
+            },
+            "Value": [
+              -1.5,
+              1.65,
+              4
+            ]
+          }
+        ],
+        "Rotation": [
+          {
+            "Id": "be3a4a4fc1d54acd8f6eda791bae0c5b",
+            "Time": 0,
+            "Interpolation": {
+              "Mode": "Linear",
+              "Control1": [
+                0.25,
+                0.1
+              ],
+              "Control2": [
+                0.25,
+                1
+              ]
+            },
+            "Value": [
+              -9.229889,
+              0,
+              0
+            ]
+          }
+        ],
+        "Scale": []
+      },
+      "LensKeys": [
+        {
+          "Id": "d2743091435b4d38a8826f94181de49d",
+          "Time": 0,
+          "Value": 35,
+          "Interpolation": {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "Id": "be5509afffd14ad99db477d9e727e37d",
+      "Name": "Camera C",
+      "ShowLabel": true,
+      "Keys": [],
+      "Position": [
+        6,
+        3.2,
+        7
+      ],
+      "Rotation": [
+        -13.421134,
+        40.601295,
+        -4.388723e-07
+      ],
+      "FocalLength": 35,
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "TransformAnimation": {
+        "Position": [
+          {
+            "Id": "ce586c94f34d4b60ae9b78567db9aed1",
+            "Time": 0,
+            "Interpolation": {
+              "Mode": "Linear",
+              "Control1": [
+                0.25,
+                0.1
+              ],
+              "Control2": [
+                0.25,
+                1
+              ]
+            },
+            "Value": [
+              -6,
+              3.5,
+              -5
+            ]
+          }
+        ],
+        "Rotation": [
+          {
+            "Id": "672ac1a4305e4eafbbf38a6e7c3ccca2",
+            "Time": 0,
+            "Interpolation": {
+              "Mode": "Linear",
+              "Control1": [
+                0.25,
+                0.1
+              ],
+              "Control2": [
+                0.25,
+                1
+              ]
+            },
+            "Value": [
+              -17.749466,
+              -129.80557,
+              -4.4822283e-07
+            ]
+          }
+        ],
+        "Scale": []
+      },
+      "LensKeys": [
+        {
+          "Id": "63a7bab33bd74ef8a308cc4ba15cf077",
+          "Time": 0,
+          "Value": 35,
+          "Interpolation": {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "ActiveCameraId": "7f7074fb17724da2bd650975b2ef08c7",
+  "DirectionalLightEnabled": false,
+  "SceneSettings": {
+    "BackgroundColor": [
+      0.14509805,
+      0.14509805,
+      0.16078432,
+      1
+    ],
+    "Brightness": 1,
+    "GroundVisible": true,
+    "GroundHeight": 0,
+    "GroundOpacity": 1,
+    "ObjectLabelsVisible": true
+  },
+  "Setup": {
+    "Width": 1920,
+    "Height": 1080,
+    "ReferencePath": "",
+    "ReferenceEnabled": true,
+    "ReferenceOpacity": 0.5,
+    "ReferenceFill": false,
+    "ReferenceOffsetSeconds": 0
+  }
+}

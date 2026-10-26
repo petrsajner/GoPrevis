@@ -1,0 +1,352 @@
+{
+  "Version": 13,
+  "Fps": 24,
+  "Duration": 8,
+  "Objects": [
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "orbit-subject",
+      "Kind": "box",
+      "Name": "Orbit subject",
+      "Position": [
+        0,
+        0,
+        0
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "box",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 8,
+        "OrientToPath": true
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": null,
+        "ShowLabel": true
+      }
+    },
+    {
+      "Link": null,
+      "Light": null,
+      "Id": "forward-walker",
+      "Kind": "actor",
+      "Name": "Forward walker",
+      "Position": [
+        0,
+        0,
+        0
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": "Walk & gesture",
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": "human-average",
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [
+        {
+          "IsPlaceholder": false,
+          "Id": "4d03c011e4ff40958af9c9463ef52f64",
+          "MotionPath": "smooth-orbit.assets/forward-walker_4d03c011e4ff40958af9c9463ef52f64.bvh",
+          "Name": "Walk & gesture",
+          "Start": 0,
+          "Duration": 8,
+          "SourceOffset": 0,
+          "Speed": 1,
+          "BlendIn": 0.3,
+          "Loop": true,
+          "InPlace": true,
+          "SourceScale": 0.01,
+          "SourceAnimation": null
+        }
+      ],
+      "Path": {
+        "Enabled": true,
+        "Points": [
+          [
+            -3,
+            0,
+            2
+          ],
+          [
+            -1,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            -2
+          ]
+        ],
+        "PointTimes": [
+          0,
+          3.1005447908673425,
+          8
+        ],
+        "PointInterpolation": [
+          {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          },
+          {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          },
+          {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          }
+        ],
+        "Start": 0,
+        "Duration": 8,
+        "OrientToPath": true
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "human",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": null,
+        "ShowLabel": true
+      }
+    }
+  ],
+  "CameraKeys": [],
+  "ShotPosition": [
+    3.799069,
+    2.9,
+    -4.6440363
+  ],
+  "ShotRotation": [
+    -21.801407,
+    140.715,
+    0
+  ],
+  "FocalLength": 35,
+  "Cameras": [
+    {
+      "Movement": {
+        "Mode": "Orbit",
+        "TargetId": "orbit-subject",
+        "TargetPosition": [
+          0,
+          0,
+          0
+        ],
+        "TargetOffset": [
+          0,
+          0.5,
+          0
+        ],
+        "AimAtTarget": true,
+        "Start": 0,
+        "Duration": 8,
+        "Radius": 6,
+        "StartAngleDegrees": 0,
+        "OrbitDegrees": 360,
+        "StartHeight": 2,
+        "EndHeight": 2,
+        "Easing": "Linear",
+        "Path": {
+          "Enabled": false,
+          "Points": [],
+          "PointTimes": [],
+          "PointInterpolation": [],
+          "Start": 0,
+          "Duration": 8,
+          "OrientToPath": true
+        },
+        "AimPathEnabled": false,
+        "AimPath": {
+          "Enabled": false,
+          "Points": [],
+          "PointTimes": [],
+          "PointInterpolation": [],
+          "Start": 0,
+          "Duration": 8,
+          "OrientToPath": true
+        },
+        "PositionOffset": [
+          0,
+          0.4000001,
+          0
+        ],
+        "RotationOffset": [
+          0,
+          0,
+          0
+        ]
+      },
+      "Tracking": {
+        "FollowEnabled": false,
+        "FollowTargetId": "",
+        "FollowOffset": [
+          0,
+          2,
+          6
+        ],
+        "FollowSmoothness": 0,
+        "LookAtEnabled": false,
+        "LookAtTargetId": "",
+        "LookAtOffset": [
+          0,
+          0.8,
+          0
+        ],
+        "LookAtSmoothness": 0,
+        "TargetRelativeOffsets": true,
+        "RotationOffset": [
+          0,
+          0,
+          0
+        ]
+      },
+      "Reference": {
+        "Path": "",
+        "Enabled": true,
+        "Opacity": 0.5,
+        "Fill": false,
+        "OffsetSeconds": 0
+      },
+      "Id": "native-orbit",
+      "Name": "Full orbit",
+      "ShowLabel": true,
+      "Keys": [],
+      "Position": [
+        6,
+        3.2,
+        7
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "FocalLength": 35,
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "LensKeys": []
+    }
+  ],
+  "ActiveCameraId": "native-orbit",
+  "DirectionalLightEnabled": false,
+  "SceneSettings": {
+    "BackgroundColor": [
+      0.14509805,
+      0.14509805,
+      0.16078432,
+      1
+    ],
+    "Brightness": 1,
+    "GroundVisible": true,
+    "GroundHeight": 0,
+    "GroundOpacity": 1,
+    "ObjectLabelsVisible": true
+  },
+  "Setup": {
+    "Width": 1920,
+    "Height": 1080,
+    "ReferencePath": "",
+    "ReferenceEnabled": true,
+    "ReferenceOpacity": 0.5,
+    "ReferenceFill": false,
+    "ReferenceOffsetSeconds": 0
+  }
+}
