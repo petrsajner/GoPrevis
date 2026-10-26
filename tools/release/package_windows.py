@@ -65,7 +65,7 @@ with zipfile.ZipFile(TARGET) as archive:
     for name in required:
         assert SOURCE.name + '/' + name in names
     assert not any('/output/' in name or 'kocka a mys' in name for name in names)
-report = {'version': '0.19.1', 'file': TARGET.name, 'files': len(files),
+report = {'version': '0.19.1', 'file': TARGET.name, 'files': len(names),
           'bytes': TARGET.stat().st_size, 'sha256': sha256(TARGET),
           'zipCrc': 'passed', 'publicDistribution': args.public, 'published': False}
 (TARGET.with_suffix('.zip.json')).write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
