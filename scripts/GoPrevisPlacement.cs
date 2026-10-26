@@ -14,9 +14,10 @@ public partial class GoPrevisApp
         var row=new HBoxContainer();_placeObjectButton=Button("Place on object",BeginPlaceOnObject);_placeGroundButton=Button("Place on ground",PlaceSelectedOnGround);_placeObjectButton.SizeFlagsHorizontal=SizeFlags.ExpandFill;_placeGroundButton.SizeFlagsHorizontal=SizeFlags.ExpandFill;row.AddChild(_placeObjectButton);row.AddChild(_placeGroundButton);_inspector.AddChild(row);
     }
     void UpdatePlacementInspector(){if(_placeGroundButton==null)return;_placeGroundButton.Disabled=_selected==null;_placeObjectButton.Disabled=_selected==null;}
+    Aabb PreparedEntryBounds(Entry entry)=>entry.Node is RiggedActor actor?actor.GetPreparedPoseBounds():entry.NativeTrack!=null&&entry.Data.ActorFamily.StartsWith("animal-common-",StringComparison.Ordinal)?entry.NativeTrack.SkinnedBounds(entry.Node):PropFactory.CalculateBounds(entry.Node);
     Aabb PlacementWorldBounds(Entry entry)
     {
-        var local=entry.Node is RiggedActor actor?actor.GetPreparedPoseBounds():PropFactory.CalculateBounds(entry.Node);var min=entry.Node.GlobalTransform*local.GetEndpoint(0);var max=min;
+        var local=PreparedEntryBounds(entry);var min=entry.Node.GlobalTransform*local.GetEndpoint(0);var max=min;
         for(int i=1;i<8;i++){var point=entry.Node.GlobalTransform*local.GetEndpoint(i);min=min.Min(point);max=max.Max(point);}return new Aabb(min,max-min);
     }
     Vector3 PlacementSupport(Entry entry,bool allowSeat)

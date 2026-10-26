@@ -36,8 +36,10 @@ public partial class GoPrevisApp
             {
                 var document=new GltfDocument();var state=new GltfState();var error=document.AppendFromFile(ContentCatalog.MaterializeSource(model),state);if(error!=Godot.Error.Ok)throw new InvalidOperationException("Could not inspect model geometry: "+error);
                 var node=document.GenerateScene(state) as Node3D??throw new InvalidOperationException("Model has no 3D root.");root.AddChild(node);node.Scale*=model.Scale;
-                var initial=PropFactory.CalculateBounds(root);node.Position-=Vector3.Up*initial.Position.Y;bounds=PropFactory.CalculateBounds(root);
-                bones=Descendants(node).OfType<Skeleton3D>().SelectMany(s=>Enumerable.Range(0,s.GetBoneCount()).Select(s.GetBoneName)).Where(name=>!name.StartsWith("PoleTarget",StringComparison.Ordinal)).ToArray();
+                if(model.ActorFamily.StartsWith("animal-common-",StringComparison.Ordinal)&&Descendants(node).OfType<AnimationPlayer>().FirstOrDefault() is {} animalPlayer)
+                {var native=new NativeMotionTrack(node,animalPlayer);var initial=native.SkinnedBounds(root);node.Position-=Vector3.Up*initial.Position.Y;bounds=native.SkinnedBounds(root);bones=native.PoseBoneNames.ToArray();}
+                else
+                {var initial=PropFactory.CalculateBounds(root);node.Position-=Vector3.Up*initial.Position.Y;bounds=PropFactory.CalculateBounds(root);bones=Descendants(node).OfType<Skeleton3D>().SelectMany(s=>Enumerable.Range(0,s.GetBoneCount()).Select(s.GetBoneName)).Where(name=>!name.StartsWith("PoleTarget",StringComparison.Ordinal)).ToArray();}
                 foreach(var player in Descendants(node).OfType<AnimationPlayer>())player.Stop();
             }
             return _aiGeometry[id]=new(bounds,bones,model.Animated);

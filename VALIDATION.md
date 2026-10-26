@@ -1,4 +1,18 @@
-# GoPrevis 0.18.3 validation
+# GoPrevis 0.19.0 validation
+
+Validation date: **2026-10-26**. Windows x64, English UI, schema **13**. Adds six ordinary-proportion rigged animals (Cat, Dog, Pig, Sheep, Rabbit, Eagle), 17 compatible native actions and all **84 usable actions** from the publisher's free Standard Universal Animation Libraries 1 and 2. No GobKit content or paid archive is included. Catalog totals: **290 models, 19 animals, 558 motion cards**. Original licenses and content/source hashes are retained.
+
+The 84 source humanoid actions are calibrated against the original A_TPose and exported as 30fps BVH for the existing prepared human rig. The source calibration action is excluded. Global rotation deltas, recognizable joints and correctly oriented leaf offsets preserve the retargeting convention. The actual forward-walk gait check measures face/travel approximately **0.99998**, toe/travel **0.99553** and stance opposition **0.98173**. These demonstrate direction and stepping; path speed still needs to match the chosen motion and there is no automatic foot locking.
+
+The new animals retain their actual multi-joint source skeletons and weighted feet. Unweighted control helpers are hidden from posing; friendly bone names and source-axis normalization are provided. Detached deforming pig/sheep feet are linked to their lower legs while source global animation is preserved. Skinned bounds support normalized dimensions, grounding, selection and framing for the new rigs. **133 content expansion checks** pass all humanoid retargets, gait, six model scales, weighted-paw IK movement, helper filtering and all native clips. **358 animal repair checks** verify source pose geometry and existing/new foot editing. The earlier content workflow now exercises **290 models / 558 motions / 18 prepared content animals**, with 291 checks including actual drops, compatible animation and portable save/reopen.
+
+The library is a continuous thumbnail grid with a widened dock, category/actor/source facets, multiword search, favorites, recent use and named collections. Settings restore queries, filters, selection and scroll state across sections/reloads. The scene remains visible for dragging; source animation loads only for the selected preview. **Collapse keeps two columns** after accounting for style margins, spacing and scrollbar; Expand increases the column count. **16 browser checks** verify these behaviors and real source application, with actual application screenshots. Library Delete is consumed without removing scene objects or bundled catalog data.
+
+Final native checks pass **133 content expansion**, **16 browser**, **291 complete content workflow**, **358 animal repair**, **38 interaction + 15 numeric + 14 trim**, **55 AI integration** (12 visual contracts), **22 semantic**, **35 timeline deletion**, **39 editor**, **55 pose + 13 pose timeline**, **181 project workflow**, **32 tracking**, **31 unsaved change**, **22 project files + 24 layout**, **14 rename** and **7 demo launch** checks. All native stderr logs are empty, the compiler has zero warnings/errors and the source smoke suite passes. No provider API calls were made for this release.
+
+Current build/test reports and runtime hashes are recorded in the portable validation folder and BUILD-INFO.json. Historical evidence follows.
+
+# Historical GoPrevis 0.18.3 validation
 
 Validation date: **2026-10-26**. Windows x64; project schema remains **13**. Fixes Delete and context deletion for selected human/animal motion clips, adds selectable camera movement spans and whole-track deletion, and fixes right-click removal of path points. Selection highlights identify the deletion target; clearing selection after deletion prevents a later Delete from removing another element or the model/camera. The existing inspector Remove clip shares the same operation.
 

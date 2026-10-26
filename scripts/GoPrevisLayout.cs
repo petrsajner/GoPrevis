@@ -59,10 +59,10 @@ public partial class GoPrevisApp
         _layoutLibraryObjectsSplit=new VSplitContainer{SizeFlagsHorizontal=SizeFlags.ExpandFill,SizeFlagsVertical=SizeFlags.ExpandFill,DraggerVisibility=SplitContainer.DraggerVisibilityEnum.Hidden};
         _layoutLibraryObjectsSplit.AddThemeConstantOverride("separation",5);
         var librarySection=new VBoxContainer{CustomMinimumSize=new Vector2(180,120),SizeFlagsVertical=SizeFlags.ExpandFill};librarySection.AddThemeConstantOverride("separation",5);
-        librarySection.AddChild(Text("LIBRARY",11,true));
+        _libraryExpanded=LibraryPrefs.Expanded;_libraryExpandButton=Button(_libraryExpanded?"Collapse":"Expand",ToggleLibrarySize);_libraryExpandButton.TooltipText="Expand the library for browsing and drag-and-drop";librarySection.AddChild(Row(Text("LIBRARY",11,true),Space(),_libraryExpandButton));
         var libraryScroll=new ScrollContainer{SizeFlagsVertical=SizeFlags.ExpandFill,SizeFlagsHorizontal=SizeFlags.ExpandFill,HorizontalScrollMode=ScrollContainer.ScrollMode.Disabled};
-        _library=new VBoxContainer{SizeFlagsHorizontal=SizeFlags.ExpandFill};_library.AddThemeConstantOverride("separation",5);libraryScroll.AddChild(_library);librarySection.AddChild(libraryScroll);_layoutLibraryObjectsSplit.AddChild(librarySection);
-        var sceneSection=new VBoxContainer{CustomMinimumSize=new Vector2(180,148),SizeFlagsHorizontal=SizeFlags.ExpandFill,SizeFlagsVertical=SizeFlags.ExpandFill};sceneSection.AddThemeConstantOverride("separation",5);sceneSection.AddChild(Text("SCENE",11,true));
+        _library=new VBoxContainer{SizeFlagsHorizontal=SizeFlags.ExpandFill,SizeFlagsVertical=SizeFlags.ExpandFill};_library.AddThemeConstantOverride("separation",5);libraryScroll.AddChild(_library);librarySection.AddChild(libraryScroll);_layoutLibraryObjectsSplit.AddChild(librarySection);
+        var sceneSection=new VBoxContainer{CustomMinimumSize=new Vector2(180,148),SizeFlagsHorizontal=SizeFlags.ExpandFill,SizeFlagsVertical=SizeFlags.Fill};sceneSection.AddThemeConstantOverride("separation",5);sceneSection.AddChild(Text("SCENE",11,true));
         _objectList=new ItemList{CustomMinimumSize=new Vector2(0,125),SizeFlagsHorizontal=SizeFlags.ExpandFill,SizeFlagsVertical=SizeFlags.ExpandFill};
         _objectList.ItemSelected+=HandleObjectListSelection;sceneSection.AddChild(_objectList);_layoutLibraryObjectsSplit.AddChild(sceneSection);
         _layoutLibraryDock=CompactPanel(_layoutLibraryObjectsSplit,6,6);_layoutLibraryDock.CustomMinimumSize=new Vector2(216,0);_layoutLibraryDock.SizeFlagsHorizontal=SizeFlags.Fill;_layoutLibraryDock.SizeFlagsVertical=SizeFlags.ExpandFill;_layoutLibrarySplit.AddChild(_layoutLibraryDock);
@@ -121,9 +121,9 @@ public partial class GoPrevisApp
     void ApplyResponsiveLayout()
     {
         if(_layoutRoot==null)return;float width=GetViewportRect().Size.X,height=GetViewportRect().Size.Y;int breakpoint=width<1450?0:width<2150?1:2;
-        if(breakpoint!=_layoutBreakpoint)
+        if(breakpoint!=_layoutBreakpoint||_libraryExpanded)
         {
-            _layoutBreakpoint=breakpoint;_layoutLibraryDock.CustomMinimumSize=new Vector2(breakpoint==0?198:breakpoint==1?216:232,0);_layoutInspectorDock.CustomMinimumSize=new Vector2(breakpoint==0?270:286,0);
+            _layoutBreakpoint=breakpoint;_layoutLibraryDock.CustomMinimumSize=new Vector2(_libraryExpanded?Math.Clamp(width*.38f,320,Math.Max(320,Math.Min(1000,width-740))):breakpoint==0?198:breakpoint==1?216:232,0);_layoutInspectorDock.CustomMinimumSize=new Vector2(breakpoint==0?270:286,0);
         }
         FitCompactPreview();_layoutTimelinePane.CustomMinimumSize=new Vector2(0,height<850?172:205);UpdateCompactChrome();
     }
@@ -133,10 +133,10 @@ public partial class GoPrevisApp
     /// <summary>Geometry-level checks for automated desktop layout validation.</summary>
     public async Task<int> RunResponsiveLayoutChecks()
     {
-        var window=GetWindow();var originalSize=window.Size;var originalMode=window.Mode;int checks=0;
+        var window=GetWindow();var originalSize=window.Size;var originalMode=window.Mode;bool originalLibraryExpanded=_libraryExpanded;int checks=0;
         try
         {
-            window.Mode=Window.ModeEnum.Windowed;
+            _libraryExpanded=false;_layoutBreakpoint=-1;window.Mode=Window.ModeEnum.Windowed;
             foreach(var size in new[]{new Vector2I(1280,800),new Vector2I(1920,1080),new Vector2I(2560,1440)})
             {
                 window.Size=new Vector2I((int)Math.Round(size.X*window.ContentScaleFactor),(int)Math.Round(size.Y*window.ContentScaleFactor));ApplyResponsiveLayout();for(int i=0;i<4;i++)await ToSignal(GetTree(),SceneTree.SignalName.ProcessFrame);ApplyResponsiveLayout();
@@ -154,6 +154,6 @@ public partial class GoPrevisApp
             }
             GD.Print("RESPONSIVE_LAYOUT_OK checks="+checks);return checks;
         }
-        finally{window.Size=originalSize;window.Mode=originalMode;ApplyResponsiveLayout();}
+        finally{_libraryExpanded=originalLibraryExpanded;_layoutBreakpoint=-1;window.Size=originalSize;window.Mode=originalMode;ApplyResponsiveLayout();}
     }
 }

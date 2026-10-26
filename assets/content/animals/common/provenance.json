@@ -1,0 +1,110 @@
+{
+  "RetrievedDate": "2026-10-26",
+  "Models": [
+    {
+      "Id": "animal-cat",
+      "Name": "Cat",
+      "Source": "output\\library-expansion-2026-10-26\\quaternius-cat.glb",
+      "SourceGlbSha256": "0a14d09a971b73d7af27b4d5f5a656e5b4b081ecb876fa534fe9d6f01ae7774b",
+      "PackedGlbSha256": "5ba84a4016ac56a45e3f28f09fa68205b91b0d7f17f84cb1734c777c580aa843",
+      "TargetHeightMetres": 0.62,
+      "SourceYawCorrectionDegrees": -90,
+      "Author": "Quaternius",
+      "SourceUrl": "https://opengameart.org/content/animated-animales-low-poly",
+      "License": "CC0-1.0",
+      "Scale": 0.13981445
+    },
+    {
+      "Id": "animal-dog-common",
+      "Name": "Dog",
+      "Source": "output\\library-expansion-2026-10-26\\quaternius-dog.glb",
+      "SourceGlbSha256": "6c7f41bbdba580c491aefdc8206144e4cf6dffa55bf797ea9e4011370668c9ce",
+      "PackedGlbSha256": "5ff387b0777c2a9af06ed7487a50fb27b575028e74c9e60afb81a1fd5b97edad",
+      "TargetHeightMetres": 0.85,
+      "SourceYawCorrectionDegrees": -90,
+      "Author": "Quaternius",
+      "SourceUrl": "https://opengameart.org/content/animated-animales-low-poly",
+      "License": "CC0-1.0",
+      "Scale": 0.19390944
+    },
+    {
+      "Id": "animal-pig",
+      "Name": "Pig",
+      "Source": "output\\library-expansion-2026-10-26\\quaternius-pig.glb",
+      "SourceGlbSha256": "d38d2d5f9e43a95bf9a1114253952fa3a37f08a0c41b27e0acad19ff9858c35e",
+      "PackedGlbSha256": "09ff8fa347bdf9aeac8647180c2ec645465bd78cc950ce1d54a927b862d16033",
+      "TargetHeightMetres": 0.95,
+      "SourceYawCorrectionDegrees": 0,
+      "Author": "Quaternius",
+      "SourceUrl": "https://opengameart.org/content/lowpoly-animated-farm-animal-pack",
+      "License": "CC0-1.0",
+      "Scale": 0.20702307
+    },
+    {
+      "Id": "animal-sheep",
+      "Name": "Sheep",
+      "Source": "output\\library-expansion-2026-10-26\\quaternius-sheep.glb",
+      "SourceGlbSha256": "8041e225dd76260509f0c8eb9e3e5940d50aecda165bf975928ea183b3221b4e",
+      "PackedGlbSha256": "2e44c52d7f44a2cd7f5ee3a85eb9592755df1dc5f8329c6b12d154c1927d067c",
+      "TargetHeightMetres": 1.15,
+      "SourceYawCorrectionDegrees": 0,
+      "Author": "Quaternius",
+      "SourceUrl": "https://opengameart.org/content/lowpoly-animated-farm-animal-pack",
+      "License": "CC0-1.0",
+      "Scale": 0.26348436
+    },
+    {
+      "Id": "animal-rabbit",
+      "Name": "Rabbit",
+      "Source": "output\\library-expansion-2026-10-26\\rabbit-cdmir.glb",
+      "SourceGlbSha256": "b830c0944db6a088f9bb5cbb9fcd160645e5ac221b5bb69b3fcdbcf1171c4f9e",
+      "PackedGlbSha256": "77e7389752f4c5fb93e5a411c6ecff84656ffd0b55bfffc16409870ab1c7fbd1",
+      "TargetHeightMetres": 0.7,
+      "SourceYawCorrectionDegrees": 0,
+      "Author": "CDmir / TinyWorlds",
+      "SourceUrl": "https://opengameart.org/content/rabbit-0",
+      "License": "CC0-1.0",
+      "Scale": 0.0461691
+    },
+    {
+      "Id": "animal-eagle",
+      "Name": "Eagle",
+      "Source": "output\\library-expansion-2026-10-26\\quaternius-eagle.glb",
+      "SourceGlbSha256": "fd3426df1c1207df142d8fed77019010fff1da6927f97fa5d0005309bdaf5176",
+      "PackedGlbSha256": "2d2d627c1026be2d9ee033d13ef1593fa25b0c4fad8e8f733ac7012972491c2d",
+      "TargetHeightMetres": 0.8,
+      "SourceYawCorrectionDegrees": 180,
+      "Author": "Quaternius",
+      "SourceUrl": "https://opengameart.org/content/animated-animales-low-poly",
+      "License": "CC0-1.0",
+      "Scale": 0.13558927
+    }
+  ],
+  "Archives": [
+    {
+      "Name": "Animal Pack Vol.2 by @Quaternius.zip",
+      "Sha256": "6d8f6789d65dbdb352ebad98a4209f26b41b384e87d81bc05e9ca76139db1248",
+      "Bytes": 2069972
+    },
+    {
+      "Name": "Farm Animals by @Quaternius.zip",
+      "Sha256": "9ff42b7e2445eaf259e4734c08172637db92e4b59a6145909ac56d946152c39b",
+      "Bytes": 6965696
+    },
+    {
+      "Name": "rabbit-FBX.7z",
+      "Sha256": "dacae75ed379be049d7ab79ee228454f47333b91c2f023df4b969f3b1cf97715",
+      "Bytes": 4413478
+    },
+    {
+      "Name": "rat_godot.zip",
+      "Sha256": "b01fb1976ae19ed80713853ec7c28b8cb098d1ced9e8c902791aa33fc4f7b28c",
+      "Bytes": 571697
+    },
+    {
+      "Name": "rat_source.7z",
+      "Sha256": "3c8ec130b6a3ec3c93e0290107bcebdd5b34e23fd9205fab373feffea27cc883",
+      "Bytes": 1167383
+    }
+  ]
+}

@@ -1,0 +1,450 @@
+{
+  "RetrievedDate": "2026-10-26",
+  "License": "CC0-1.0",
+  "Author": "Quaternius and Gonzalo Furnier",
+  "Method": "Global rotation deltas calibrated against A_TPose; 21 prepared-human names; 30 fps BVH; source geometry is not included",
+  "Libraries": [
+    {
+      "Name": "Universal Animation Library 1",
+      "Publisher": "https://quaternius.itch.io/universal-animation-library",
+      "ArchiveName": "universal-animation-library-standard.zip",
+      "ArchiveSha256": "cc73fc4e495b82958207316596317a3f40b9fa38065bde1027937452da537724",
+      "GlbSha256": "69591853d817488edaa8fd9bf8fc1d821eaeaf789f8627b3cd23b41c4ed67997",
+      "SourceClipCount": 43,
+      "PlayableClipCount": 42,
+      "CalibrationClip": "A_TPose"
+    },
+    {
+      "Name": "Universal Animation Library 2",
+      "Publisher": "https://quaternius.itch.io/universal-animation-library-2",
+      "ArchiveName": "universal-animation-library-2-standard.zip",
+      "ArchiveSha256": "4008ea208a604773a2b2177d965f0f5d3195498b5bf838c3f5785d68e95f2a68",
+      "GlbSha256": "8cee20ab1bc55130092447e810e26df22dd2803eccc54f52137a7d54d7ab88a8",
+      "SourceClipCount": 43,
+      "PlayableClipCount": 42,
+      "CalibrationClip": "A_TPose"
+    }
+  ],
+  "ConvertedFiles": [
+    {
+      "File": "UAL1_Crouch_Fwd_Loop.bvh",
+      "Sha256": "cd098de3e4d568b2ce74f598c7f3d7adf1c1eb81d2cea253f3f8e86fa286a8d6",
+      "Bytes": 47338
+    },
+    {
+      "File": "UAL1_Crouch_Idle_Loop.bvh",
+      "Sha256": "8229e5b003e53296e6f300bf28846cfe680c753a1f0078b49ce25042c2ad5c40",
+      "Bytes": 67958
+    },
+    {
+      "File": "UAL1_Dance_Loop.bvh",
+      "Sha256": "8ac61b10e0ab1324a65ed4f9cf01dda52c03608a293b0f8360c21d27f8b38bb8",
+      "Bytes": 24435
+    },
+    {
+      "File": "UAL1_Death01.bvh",
+      "Sha256": "b9ac0179bcff30f2c9e4bc85a3037de4d7e79a3b77544eecc5ea86d85b378d85",
+      "Bytes": 56428
+    },
+    {
+      "File": "UAL1_Driving_Loop.bvh",
+      "Sha256": "a1e8904cf45b82602e302ad99854a93a1e983e534fee745b22ca25776e77b58f",
+      "Bytes": 39404
+    },
+    {
+      "File": "UAL1_Fixing_Kneeling.bvh",
+      "Sha256": "da91f98b23df260967d81ece7ba8ceec42b8f61d9fb4cf937f6df09f75ed09d8",
+      "Bytes": 118180
+    },
+    {
+      "File": "UAL1_Hit_Chest.bvh",
+      "Sha256": "ee9abd9e4cc4b488f689383e67c4fd452e36387d55598c53d3ab2959d5289315",
+      "Bytes": 10864
+    },
+    {
+      "File": "UAL1_Hit_Head.bvh",
+      "Sha256": "b201c980f6eaa3ccbb3f25a4c8884004dc6f2e4530f3002d137d478f5b2cdc69",
+      "Bytes": 13009
+    },
+    {
+      "File": "UAL1_Idle_Loop.bvh",
+      "Sha256": "99e2688f3922564f8479e554658d493c1b8b188325ac0402183c2daa71395ba4",
+      "Bytes": 56662
+    },
+    {
+      "File": "UAL1_Idle_Talking_Loop.bvh",
+      "Sha256": "b559013057b4afed0c562c2c3d3324bb546ab319fdf9b1268010ca95954f2da3",
+      "Bytes": 66644
+    },
+    {
+      "File": "UAL1_Idle_Torch_Loop.bvh",
+      "Sha256": "1be2aa5e6471dd57cb9739b160d38f9f0fa4e61f880524db5ddc5d4f2054f125",
+      "Bytes": 30272
+    },
+    {
+      "File": "UAL1_Interact.bvh",
+      "Sha256": "9659db4ddb7a14f49e470c654c90e8314ee0b01bc2d850b07c471471f0c3b62b",
+      "Bytes": 46832
+    },
+    {
+      "File": "UAL1_Jog_Fwd_Loop.bvh",
+      "Sha256": "0973d3e7288d4006c9bd555ef6ac1fac3a65f61d8fe51e0b7c21216fb90101db",
+      "Bytes": 22973
+    },
+    {
+      "File": "UAL1_Jump_Land.bvh",
+      "Sha256": "7244dbb67da75cac155da97f3221065e7096cc91db8e90d31070f56877933f94",
+      "Bytes": 31363
+    },
+    {
+      "File": "UAL1_Jump_Loop.bvh",
+      "Sha256": "5f14eda2b68959133ec2205495176ff619ae7d2fbfee6c12a3c814f738257312",
+      "Bytes": 57378
+    },
+    {
+      "File": "UAL1_Jump_Start.bvh",
+      "Sha256": "f9917adbc00adef87949408020d282e83f7a99a5fa5f4d86b876d9d02343057e",
+      "Bytes": 32884
+    },
+    {
+      "File": "UAL1_PickUp_Table.bvh",
+      "Sha256": "1edf0e6f790f1a87d45709930904e4a8bc82a590cf4f7a95b7a77ddb6c6d807c",
+      "Bytes": 21719
+    },
+    {
+      "File": "UAL1_Pistol_Aim_Down.bvh",
+      "Sha256": "8a74aa00aee1e35211648b0e622b1a6c56824c1b70d635137f47b16a660b19f6",
+      "Bytes": 7353
+    },
+    {
+      "File": "UAL1_Pistol_Aim_Neutral.bvh",
+      "Sha256": "52a7e3f852af6b103e991d58a674f46522343e9b422a4b01ac19893b3a6341af",
+      "Bytes": 7317
+    },
+    {
+      "File": "UAL1_Pistol_Aim_Up.bvh",
+      "Sha256": "8fd401d7600f40e8c42edad1c28f45ca1b9986e1a0a00972cde7c77363c5837c",
+      "Bytes": 7383
+    },
+    {
+      "File": "UAL1_Pistol_Idle_Loop.bvh",
+      "Sha256": "068f5d83a7fdac91ccdf304a617cb2c78c12162c832822540916a9ad660597a8",
+      "Bytes": 38999
+    },
+    {
+      "File": "UAL1_Pistol_Reload.bvh",
+      "Sha256": "d7856dea719480a6614a9652757b4db93fe9bafbbae742bb2e285f56b0cf90dd",
+      "Bytes": 39748
+    },
+    {
+      "File": "UAL1_Pistol_Shoot.bvh",
+      "Sha256": "a0885a4765776ae6813fd5ac889775c907b51456976d2a5245a9a6fd18886391",
+      "Bytes": 17401
+    },
+    {
+      "File": "UAL1_Punch_Cross.bvh",
+      "Sha256": "bdee0c67045f69e1867366e375b50ec6502b830b3433d245688977fc5f31ec01",
+      "Bytes": 25573
+    },
+    {
+      "File": "UAL1_Punch_Jab.bvh",
+      "Sha256": "de7b8b4654ad081714e7d36ba8771ffed431bc4ba0395bec15ecac1237c4d360",
+      "Bytes": 22593
+    },
+    {
+      "File": "UAL1_Push_Loop.bvh",
+      "Sha256": "ca7cf02b2a0c7a585ab0bdb68d21b47f2730e3bee239686458ac215cae599a10",
+      "Bytes": 61620
+    },
+    {
+      "File": "UAL1_Roll.bvh",
+      "Sha256": "ed572c15522c9a95d52e3ca0feb5efabca5c730618f0b1488d955c1ca65b2648",
+      "Bytes": 35759
+    },
+    {
+      "File": "UAL1_Sitting_Enter.bvh",
+      "Sha256": "783a1271d8f710b660a746ab8d25885e77e6c3fddb15452d33c297433114836c",
+      "Bytes": 31956
+    },
+    {
+      "File": "UAL1_Sitting_Exit.bvh",
+      "Sha256": "20d000f7c45f39679cce4e3eb611cd3fe86e50313502cca70db3857bfd24d462",
+      "Bytes": 26232
+    },
+    {
+      "File": "UAL1_Sitting_Idle_Loop.bvh",
+      "Sha256": "429e78129037f5a26e07337033d25426443b9f5fab266e1d0085bb8cec8b9576",
+      "Bytes": 39140
+    },
+    {
+      "File": "UAL1_Sitting_Talking_Loop.bvh",
+      "Sha256": "d08a71c4156f0f9d8da08222ceb2313257c71b6730dc0cd340f7428ef77a829f",
+      "Bytes": 67135
+    },
+    {
+      "File": "UAL1_Spell_Simple_Enter.bvh",
+      "Sha256": "7d1443c8e80289c8455b62742f07209785acd6b9262351251a195167ebe03a52",
+      "Bytes": 15189
+    },
+    {
+      "File": "UAL1_Spell_Simple_Exit.bvh",
+      "Sha256": "54ed6cb7219980eb3cc9b4bd6c3100e69f5f7f582ab10c32247b86bf8186ab70",
+      "Bytes": 13034
+    },
+    {
+      "File": "UAL1_Spell_Simple_Idle_Loop.bvh",
+      "Sha256": "1e4b055056bc296eee81a276e7607aa5983bb8e6b7aa2a30ac4b3a02ba87fe8e",
+      "Bytes": 48198
+    },
+    {
+      "File": "UAL1_Spell_Simple_Shoot.bvh",
+      "Sha256": "8f390f68f50882dc62361673fc8e6b197ddeea323644f4e690f6b5b1c666ea5b",
+      "Bytes": 14471
+    },
+    {
+      "File": "UAL1_Sprint_Loop.bvh",
+      "Sha256": "4a9bac613291994a68799a229479fe4571f48dfdc104650f9236207417547ac8",
+      "Bytes": 17289
+    },
+    {
+      "File": "UAL1_Swim_Fwd_Loop.bvh",
+      "Sha256": "75f392baf6269835f90b3cc89c95bb192a27ef871ce43c0e465bc4d89e7ba020",
+      "Bytes": 32055
+    },
+    {
+      "File": "UAL1_Swim_Idle_Loop.bvh",
+      "Sha256": "759f47624f340cf7360ce5fc82a4bc6966d94413ae1dcd604ce3f8efefeac6e0",
+      "Bytes": 74097
+    },
+    {
+      "File": "UAL1_Sword_Attack.bvh",
+      "Sha256": "7940ef120546545cad58f8535d4bced52d38e6b0e1fab401a76d3493e78e3be4",
+      "Bytes": 37380
+    },
+    {
+      "File": "UAL1_Sword_Idle.bvh",
+      "Sha256": "adf39ecd00b9479c13744e24d938097ecb51e7f03ade81e4afb8f2a40fdc740b",
+      "Bytes": 40147
+    },
+    {
+      "File": "UAL1_Walk_Formal_Loop.bvh",
+      "Sha256": "b6480060ba0fdd21098edc42f7a1f7abce434bcff9ad9222e6baa4444264ed45",
+      "Bytes": 31205
+    },
+    {
+      "File": "UAL1_Walk_Loop.bvh",
+      "Sha256": "72e5516057543c66dd0dc2bddbd5149edea5e8c199692b7b1ae8383df8a7fece",
+      "Bytes": 31291
+    },
+    {
+      "File": "UAL2_Chest_Open.bvh",
+      "Sha256": "1c878c30bfb4f6112c990aa76e9b479f7a907fe47ec00a25ae5d62b2dff6af63",
+      "Bytes": 33470
+    },
+    {
+      "File": "UAL2_ClimbUp_1m.bvh",
+      "Sha256": "9ecbc2a464e79f9aad8b4d604a565e1fe895ac8257ddfbf14dd713ce87ee794b",
+      "Bytes": 18192
+    },
+    {
+      "File": "UAL2_Consume.bvh",
+      "Sha256": "93334ec39c5012a82738be707e7bf9be6ceabbbfcb2ee1b1fd6a949b8adec601",
+      "Bytes": 32577
+    },
+    {
+      "File": "UAL2_Farm_Harvest.bvh",
+      "Sha256": "04b1784337d717347ea0153a36f6c3d1b492a461ff9bf4a01ac1c5d0e48989eb",
+      "Bytes": 58246
+    },
+    {
+      "File": "UAL2_Farm_PlantSeed.bvh",
+      "Sha256": "4eed82baf9127a740fdf04163a284662b3e3c3c990cfd59fe6c3f82095808d6a",
+      "Bytes": 64074
+    },
+    {
+      "File": "UAL2_Farm_Watering.bvh",
+      "Sha256": "d975a995216b852d04a178a39b65c7b060df30e2b006659cfe392f304f88c280",
+      "Bytes": 86016
+    },
+    {
+      "File": "UAL2_Hit_Knockback.bvh",
+      "Sha256": "287ccacc33cda7ace3c36d9a1ecea28df08fe3c168b41b79ae80a39c7ecffef6",
+      "Bytes": 21908
+    },
+    {
+      "File": "UAL2_Idle_FoldArms_Loop.bvh",
+      "Sha256": "e207d4d4a25fabd5cc443f520480e8a2e5e6ed3b2cb4ce76edd1c5c251504b0e",
+      "Bytes": 57473
+    },
+    {
+      "File": "UAL2_Idle_Lantern_Loop.bvh",
+      "Sha256": "1494018227ae67171211c1b57d4e4b38a8f1403ca278451a19555956a4904594",
+      "Bytes": 56665
+    },
+    {
+      "File": "UAL2_Idle_No_Loop.bvh",
+      "Sha256": "56975a6dd2bba97b7c1e1bb745d29c347a6ecad7494944f81932992bb64dbc90",
+      "Bytes": 56560
+    },
+    {
+      "File": "UAL2_Idle_Rail_Call.bvh",
+      "Sha256": "698bf843f8059406f3a9491633f76ee7a738989e1208c0a3387c9697fa5cd965",
+      "Bytes": 58379
+    },
+    {
+      "File": "UAL2_Idle_Rail_Loop.bvh",
+      "Sha256": "e3648d729c617f935d1c65e10191e8c37cdc1159c3216ae135846a153bac28e5",
+      "Bytes": 57207
+    },
+    {
+      "File": "UAL2_Idle_Shield_Break.bvh",
+      "Sha256": "e661a9830b7c53d7c3ba4eeb52c3a06ac8aa43d727eb1137216aa78c9e282b2a",
+      "Bytes": 26986
+    },
+    {
+      "File": "UAL2_Idle_Shield_Loop.bvh",
+      "Sha256": "e4c2df1f00c29b83a57e1a8ff09949cc81121b76f07db68cc051574169b3294d",
+      "Bytes": 57088
+    },
+    {
+      "File": "UAL2_Idle_TalkingPhone_Loop.bvh",
+      "Sha256": "8a2708e5f03acd57801b1e51097535bf330d6ba32d2362acc56a6bea880f1a30",
+      "Bytes": 66939
+    },
+    {
+      "File": "UAL2_LayToIdle.bvh",
+      "Sha256": "d2674a260122aed0659f03aa355b887702c84fb7925a3115eb8833dc1e4360a6",
+      "Bytes": 37364
+    },
+    {
+      "File": "UAL2_Melee_Hook.bvh",
+      "Sha256": "fc29262964433fed1f72a5e62c4554961a12fc8499636657f4216f56a4241a4d",
+      "Bytes": 14111
+    },
+    {
+      "File": "UAL2_Melee_Hook_Rec.bvh",
+      "Sha256": "f2abe0b602e314be2faea7accd885e85f178a99e0a82878afb244d3ac703a99a",
+      "Bytes": 16874
+    },
+    {
+      "File": "UAL2_NinjaJump_Idle_Loop.bvh",
+      "Sha256": "6484b8ce201836eb186850e97ac506d62ceb16389afab196433e4a60bf39733a",
+      "Bytes": 46942
+    },
+    {
+      "File": "UAL2_NinjaJump_Land.bvh",
+      "Sha256": "bfa1f934fd8991b19095768c24fe194dfd748f639ab1004f36a492fad6251e05",
+      "Bytes": 31325
+    },
+    {
+      "File": "UAL2_NinjaJump_Start.bvh",
+      "Sha256": "422d83743f67c8a419aed395d671bebf123cb8c9b8f547e6669f34bca09cfcb6",
+      "Bytes": 25002
+    },
+    {
+      "File": "UAL2_OverhandThrow.bvh",
+      "Sha256": "d7278bc15c05a78e94bb9cb4905b3dd79249c5747014f9e125d49003cce6373a",
+      "Bytes": 32849
+    },
+    {
+      "File": "UAL2_Shield_Dash.bvh",
+      "Sha256": "7fcc1d59cfe9ba0387fc4059fdd21b2498fc498a038b03737ca3eb2bb32f5e7e",
+      "Bytes": 27640
+    },
+    {
+      "File": "UAL2_Shield_OneShot.bvh",
+      "Sha256": "baf1999eb5fbba2546c41b1bb90a06ac1d21371a67cd32fbde489444f07a3294",
+      "Bytes": 21777
+    },
+    {
+      "File": "UAL2_Slide_Exit.bvh",
+      "Sha256": "aaf53e3b2c3cda47b314cee90eef948057d202211570e03e326267a8edce1cad",
+      "Bytes": 14607
+    },
+    {
+      "File": "UAL2_Slide_Loop.bvh",
+      "Sha256": "603c0081f60148108d5be2668492e448e9df28874aaf02e7097a903cb149f0d4",
+      "Bytes": 46790
+    },
+    {
+      "File": "UAL2_Slide_Start.bvh",
+      "Sha256": "5bbdac05e0ccd74aa191c2186f8bdd73b4e83c850f02842d0f34d45d15c2b3fe",
+      "Bytes": 21835
+    },
+    {
+      "File": "UAL2_Sword_Block.bvh",
+      "Sha256": "eeb6e2666f6a2955fe59487774d08bb7184796fd95cd5bc1415020611a115e0b",
+      "Bytes": 30561
+    },
+    {
+      "File": "UAL2_Sword_Dash.bvh",
+      "Sha256": "5c1421de75566b7ac3e17190dfcdc4587d056f359090882aa137299eccda72e4",
+      "Bytes": 38077
+    },
+    {
+      "File": "UAL2_Sword_Heavy_Combo.bvh",
+      "Sha256": "107f02d27d15d70bc0fdeb006541b9807f8c7e8512114de97a1ec1e8c2e4617e",
+      "Bytes": 98549
+    },
+    {
+      "File": "UAL2_Sword_Regular_A.bvh",
+      "Sha256": "05d4f689a12acfffc7f3c1dd7c6b412b6162aca0a93a4d242d88656530a97885",
+      "Bytes": 13244
+    },
+    {
+      "File": "UAL2_Sword_Regular_A_Rec.bvh",
+      "Sha256": "9fe6055e10e7110d2bad928cbd013c7ce556b4e4f280abe53f2f11a8fd169a1b",
+      "Bytes": 24663
+    },
+    {
+      "File": "UAL2_Sword_Regular_B.bvh",
+      "Sha256": "0f98294f977bfe2247340e29c256ab2d9bb286fa016e00df8cc1a5135bae433a",
+      "Bytes": 15489
+    },
+    {
+      "File": "UAL2_Sword_Regular_B_Rec.bvh",
+      "Sha256": "1470ac200d7b525f4e49f5103e091835c7768fe01528fa4a490a7fc8ef89c518",
+      "Bytes": 26289
+    },
+    {
+      "File": "UAL2_Sword_Regular_C.bvh",
+      "Sha256": "82ab873cee39c8dde85092869316d317d0bd9a7f7863b085a4532b80304e6773",
+      "Bytes": 47154
+    },
+    {
+      "File": "UAL2_Sword_Regular_Combo.bvh",
+      "Sha256": "b421c737478e8cb166d4ff2e595ba6c4e052091a4804a4de35eead6e141287e8",
+      "Bytes": 69173
+    },
+    {
+      "File": "UAL2_TreeChopping_Loop.bvh",
+      "Sha256": "fcd8bdd307416ced4e5a4655dc0129556c81405ae929728d5e3e35ac1f0de45f",
+      "Bytes": 24179
+    },
+    {
+      "File": "UAL2_Walk_Carry_Loop.bvh",
+      "Sha256": "67eff68d0ce00096f37e8be974846556faeb276eb469e784f0d69c28a9d659e0",
+      "Bytes": 46240
+    },
+    {
+      "File": "UAL2_Yes.bvh",
+      "Sha256": "1e330776ec10c541c3cf96d5df34dc5116e12d5ed1cc844889474552fb97cbf4",
+      "Bytes": 57769
+    },
+    {
+      "File": "UAL2_Zombie_Idle_Loop.bvh",
+      "Sha256": "ec9a9cdc8d0b25190f501be610aa438d0152f4c427a1a4daa6096319b201e0f4",
+      "Bytes": 32043
+    },
+    {
+      "File": "UAL2_Zombie_Scratch.bvh",
+      "Sha256": "623b3b3c08ffafc5327182a91f2e34c3526b481dd13030ff70976c274aeee1cc",
+      "Bytes": 43353
+    },
+    {
+      "File": "UAL2_Zombie_Walk_Fwd_Loop.bvh",
+      "Sha256": "7bf9b4caee4b272cee165d1e7af962dba741ae87517ac885a1fb36c9ba91124c",
+      "Bytes": 31912
+    }
+  ]
+}

@@ -28,8 +28,8 @@ public partial class GoPrevisApp
         {
             Check(_tabs.Keys.Order().SequenceEqual(new[]{"Models","Objects","Poses","Motions","Cameras"}.Order()),"five coherent library sections replace the fragmented menu");
             Check(!_arrangeButton.GetParent().GetChildren().OfType<Button>().Any(b=>b.Text is "Select" or "Move"),"the viewport has one Arrange tool rather than competing Select and Move tools");
-            ShowCategory("Models");Check(Descendants(_library).OfType<LibraryCard>().Count()==19&&Descendants(_library).OfType<Button>().Any(b=>b.Text.Contains("People"))&&Descendants(_library).OfType<Button>().Any(b=>b.Text.Contains("Animals")),"Models contains both visibly grouped people and animals");
-            ShowCategory("Objects");Check(Descendants(_library).OfType<LibraryCard>().Count()==265,"Objects includes all props and environment models in one scrollable library");
+            _libraryPreferences=new();ShowCategory("Models");Check(_libraryGrid!.ItemCount==25&&Enumerable.Range(0,_libraryGroup!.ItemCount).Select(_libraryGroup.GetItemText).Contains("People")&&Enumerable.Range(0,_libraryGroup.ItemCount).Select(_libraryGroup.GetItemText).Contains("Animals"),"Models contains people and animal rigs with category facets");
+            ShowCategory("Objects");Check(_libraryGrid!.ItemCount==265,"Objects includes all props and environment models in one scrollable library");
             ShowCategory("Cameras");Check(CameraMoveCatalog.All.Count==24&&Descendants(_library).OfType<Label>().Any(b=>b.Text=="Dolly in")&&Descendants(_library).OfType<Label>().Any(b=>b.Text=="Orbit"),"camera movement presets live with the camera tools");
             _playing=false;StopPoseEditing();ClearObjects();ClearCameras();CreateCamera("Camera test",null,true);SetTime(0);
             await Settle();DropPose("pose-sit-upright",null,new Vector3(-2,0,0));var actorEntry=_selected!;var actor=(RiggedActor)actorEntry.Node;StartPoseEditing();await Settle();await ToSignal(GetTree(),SceneTree.SignalName.PhysicsFrame);SelectPoseBone("RightHand");SetPoseTool("Move");

@@ -1,12 +1,12 @@
 <img src="assets/goprevis.png" width="120" alt="GoPrevis icon">
 
-# GoPrevis 0.18.3 — 3D control clips for AI video
+# GoPrevis 0.19.0 — 3D control clips for AI video
 
 GoPrevis prepares 3D control clips for AI video generation. Build the scene, direct character and object motion, frame the camera, and export synchronized color, depth and pose guidance. It uses Godot 4.7.2 .NET, C# and .NET 10. The application UI, dialogs and authored errors are English.
 
 ## Run
 
-The Windows portable output is `build/GoPrevis-0.18.3-Windows/GoPrevis.exe`. Keep GoPrevis.exe, GoPrevis.pck and data_GoPrevis_windows_x86_64 together. The portable Windows build includes its runtime; using it does not require the Godot editor or .NET SDK.
+The Windows portable output is `build/GoPrevis-0.19.0-Windows/GoPrevis.exe`. Keep GoPrevis.exe, GoPrevis.pck and data_GoPrevis_windows_x86_64 together. The portable Windows build includes its runtime; using it does not require the Godot editor or .NET SDK.
 
 For development, open project.godot with Godot 4.7.2 .NET. Local tools are in the ignored .tools directory. The existing run.ps1 starts the source project; build.ps1 -Test builds, runs source checks and exports Windows x64.
 
@@ -155,35 +155,23 @@ Edits create additive correction keys above the blended native clips. Expand **P
 
 ## Model and motion libraries
 
-The library contains **284 ready-to-place model entries**: 255 new props, 12 new rigged animals, the original animated Fox, six prepared human mannequin variants and ten original procedural blockout models. The new props are organized as follows:
+The library contains **290 model entries**: six prepared human variants, **19 rigged animals**, 255 imported props and the original procedural blockout shapes. The six new ordinary animals are **Cat, Dog, Pig, Sheep, Rabbit and Eagle**. Their source joints include connected upper/lower limbs and actual skin-weighted paws/claws; the pose editor hides unweighted rig controls. The models use ordinary animal proportions and practical metre-based placement scales. **No GobKit content is included.**
 
-| Category | Models |
-| --- | ---: |
-| Furniture | 71 |
-| Vehicles | 20 |
-| Architecture | 63 |
-| Nature | 55 |
-| Props | 46 |
+**Motions contains 558 entries**: 302 existing human cards (300 bundled CMU takes plus the recorded-walk sample and synthetic test), **84 new authored human animations**, and **172 native animal motions**. The free Standard versions of Universal Animation Libraries 1 and 2 contain 42 usable animations each, plus a calibration T-pose excluded from the browser. All 84 are retargeted to the application's prepared human figures and work with source blends, paths and additive body corrections. They include walking, jogging, crouching, swimming, sitting/standing transitions, talking, work, parkour and combat. These authored cycles are separate from recorded CMU mocap.
 
-The new animals are Alpaca, Bull, Cow, Deer, Donkey, Fox, Horse, White Horse, Husky, Shiba Inu, Stag and Wolf. The selection includes breed and color variants. Models are bundled locally and use placement scales appropriate for a metre-based scene.
+The new animal sources supply **17 native actions**. Cat/Dog have Idle and Walking; Pig/Sheep have Idle and Jump; Eagle has Flying and Idle; Rabbit includes Running, Jump, Guarding, Sitting and Dying actions. Source actions that are empty or only calibration stills are excluded. An animal receives only the motions compatible with its own skeleton. The application does not advertise walking/running clips for species whose source lacks them.
 
-**Motions has 457 cards**:
+### Browse, find and reuse
 
-| Prepared actors | Cards | Content |
-| --- | ---: | --- |
-| Human | 302 | 300 newly bundled recorded CMU takes, plus the existing synthetic test and captured-walk sample cards |
-| New animals | 152 | Quaternius native skeletal animation cycles |
-| Original Fox | 3 | Walk, Run and Look around (native Survey) |
+Click **Expand** beside LIBRARY to widen the dock and show more thumbnail columns while keeping the scene visible. **Collapse** returns to the compact dock with two thumbnail columns, including space for its scrollbar. The library now gives most of its vertical space to browsing; the SCENE list remains below it. The continuous thumbnail grid replaces twelve-item pages. Only the selected detail preview loads and animates a source; the grid uses prepared thumbnail images.
 
-The 300 newly bundled CMU takes provide approximately **85 minutes of recorded human motion**, including locomotion, sports, interactions, actions, dance, climbing, everyday activities, sitting and gestures. The 152 new animal clips are **authored animation cycles, not recorded mocap**.
+Search accepts multiple words. Filter by **category, actor/species and source library**, then sort by Name, Category or Recently used. Select an item to see its preview, duration and source; drag it into the scene, double-click it, or use **Apply motion / add actor**. Selecting an asset alone does not place it in the scene.
 
-Use visible library groups, category filters and search to narrow the library. Long grouped lists scroll; motion/pose card pages remain bounded for performance. PNG covers show the actual models or sampled poses; animated hover previews initialize lazily. Drag an animal into the scene, or drop one of its motion cards onto empty ground to create the matching actor. Human motions apply to the prepared human rig; native animal cards apply to their matching prepared actor family. An incompatible drop does not retarget between species or unrelated rigs.
+Use **Favorite** to bookmark an item. The scope selector offers **All items, Favorites, Recently used** and your named collections. **Collection…** adds the current item to a collection or creates one. Searches, filters, selected items, scroll position, favorites, collections and recent usage are local preferences restored when returning to a library section or reopening the app. They are independent of scene Undo and saved projects.
 
-Import a personal BVH through **File → Import motion…** or the import action in Motions. Supported humanoid names include standard Mixamo/CMU-style skeletons. Bundled CMU sources use 0.055 metres per source unit; the synthetic source uses 0.01. Source scale is editable per clip.
+Import personal BVH files through **Import BVH…** or File → Import motion. Human sources use the fixed prepared skeleton; the original CMU unit conversion remains 0.055 metres per source unit. Recorded takes are not guaranteed to form seamless loops; trim the desired action on the timeline.
 
-The CMU cards use a source offset that skips the conversion's first calibration T-pose without modifying the BVH files. Their displayed duration excludes that frame, and **Loop source defaults to off** because recorded takes are not guaranteed to loop seamlessly. Several takes contain multiple actions; trim the desired section on the timeline.
-
-Sources, licenses and preparation notes are in [LICENSES/PROP-CONTENT.md](LICENSES/PROP-CONTENT.md), [LICENSES/ANIMAL-CONTENT.md](LICENSES/ANIMAL-CONTENT.md) and [LICENSES/CMU-MOTION-CONTENT.md](LICENSES/CMU-MOTION-CONTENT.md). The original Fox has separate attributions in [LICENSES/Fox-NOTICE.md](LICENSES/Fox-NOTICE.md); the original walk sample is documented in [samples/real/SOURCE-AND-LICENSE.md](samples/real/SOURCE-AND-LICENSE.md).
+Source-specific notices are in LICENSES/ANIMAL-CONTENT.md, LICENSES/COMMON-ANIMALS.md, LICENSES/UAL-MOTION-CONTENT.md, LICENSES/CMU-MOTION-CONTENT.md and LICENSES/PROP-CONTENT.md. The new assets are CC0, with creator credits and original license files retained. macOS/Linux delivery remains unbuilt and unverified.
 
 ## Scene display and object appearance
 

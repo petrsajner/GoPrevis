@@ -66,7 +66,11 @@ public partial class GoPrevisApp : Control
         var window=GetWindow();float dpiScale=Math.Clamp(Math.Max(DisplayServer.ScreenGetScale(),DisplayServer.ScreenGetDpi()/96f),1,2.5f);window.ContentScaleMode=Window.ContentScaleModeEnum.CanvasItems;window.ContentScaleSize=Vector2I.Zero;window.ContentScaleFactor=dpiScale;
         window.Title="GoPrevis "+AppVersion+" — 3D control clips for AI video";
         BuildTheme(); BuildUi(); BuildWorld(); StarterScene();InitializeProjectProtection();
-        if(OS.GetCmdlineUserArgs().Contains("--timeline-delete-test"))_=RunTimelineDeletionChecksAndQuit();
+        if(OS.GetCmdlineUserArgs().Contains("--library-ui-test"))OpenLibraryQa();
+        else if(OS.GetCmdlineUserArgs().Contains("--prepare-library-content-test"))_=RunContentExpansionChecksAndQuit(true);
+        else if(OS.GetCmdlineUserArgs().Contains("--content-expansion-test"))_=RunContentExpansionChecksAndQuit(false);
+        else if(OS.GetCmdlineUserArgs().Contains("--library-browser-test"))_=RunLibraryBrowserChecksAndQuit();
+        else if(OS.GetCmdlineUserArgs().Contains("--timeline-delete-test"))_=RunTimelineDeletionChecksAndQuit();
         else if(OS.GetCmdlineUserArgs().Contains("--unsaved-changes-test"))_=RunUnsavedChangesChecksAndQuit();
         else if(OS.GetCmdlineUserArgs().Contains("--project-files-test"))_=RunProjectFileChecksAndQuit();
         else if(OS.GetCmdlineUserArgs().Contains("--ai-reference-live-test"))_=RunAiReferenceChecksAndQuit();
@@ -313,12 +317,12 @@ public partial class GoPrevisApp : Control
             float units=data.LibraryModelId==null&&data.ActorFamily=="fox"?MotionCatalog.FoxModelScale:data.ModelUnitScale;
             if(!float.IsFinite(units)||units<=0)throw new InvalidDataException("The model unit scale is invalid.");
             model3d.Scale*=units;
-            if(data.ModelGrounded){var bounds=PropFactory.CalculateBounds(root);model3d.Position-=Vector3.Up*bounds.Position.Y;}
+            if(data.ModelGrounded&&!data.ActorFamily.StartsWith("animal-common-",StringComparison.Ordinal)){var bounds=PropFactory.CalculateBounds(root);model3d.Position-=Vector3.Up*bounds.Position.Y;}
         }
         foreach (var mesh in Descendants(model).OfType<MeshInstance3D>()) if (mesh.Mesh != null) { mesh.CreateTrimeshCollision(); foreach (Node child in mesh.GetChildren()) if (child is StaticBody3D body) body.SetMeta("scene_root", root); }
         var player = Descendants(model).OfType<AnimationPlayer>().FirstOrDefault(); string animation = data.ModelAnimation==""?"":data.ModelAnimation != null && player?.HasAnimation(data.ModelAnimation)==true ? data.ModelAnimation : player?.GetAnimationList().FirstOrDefault(a => a != "RESET") ?? "";
         if (player != null && animation != "") { player.Set("callback_mode_process", 2); player.Play(animation); }
-        var entry = new Entry { Data = data, Node = root, Player = player, Animation = animation,NativeTrack=player!=null&&Descendants(model).OfType<Skeleton3D>().Any(s=>s.GetBoneCount()>0)?new NativeMotionTrack(model,player):null }; _entries.Add(entry);return entry;
+        var entry = new Entry { Data = data, Node = root, Player = player, Animation = animation,NativeTrack=player!=null&&Descendants(model).OfType<Skeleton3D>().Any(s=>s.GetBoneCount()>0)?new NativeMotionTrack(model,player):null }; if(data.ModelGrounded&&entry.NativeTrack!=null&&data.ActorFamily.StartsWith("animal-common-",StringComparison.Ordinal)&&model is Node3D groundedModel){var bounds=entry.NativeTrack.SkinnedBounds(root);groundedModel.Position-=Vector3.Up*bounds.Position.Y;}_entries.Add(entry);return entry;
     }
     static IEnumerable<Node> Descendants(Node root) { yield return root; foreach (Node child in root.GetChildren()) foreach (Node nested in Descendants(child)) yield return nested; }
 
@@ -328,7 +332,7 @@ public partial class GoPrevisApp : Control
     void ApplyShot(string shot)=>ApplyCameraFraming(shot);
     void ResetEditorView() { _orbitTarget = new Vector3(0, .9f, 0); _yaw = .65f; _pitch = .42f; _distance = 12; UpdateOrbit(); }
     void UpdateOrbit() { if (_editorCamera == null) return; _editorCamera.Position = _orbitTarget + new Vector3(Mathf.Sin(_yaw) * Mathf.Cos(_pitch), Mathf.Sin(_pitch), Mathf.Cos(_yaw) * Mathf.Cos(_pitch)) * _distance; _editorCamera.LookAt(_orbitTarget); }
-    void FrameSelected() { if(_selectedCamera!=null){if(_pilot)TogglePilot();_orbitTarget=_selectedCamera.Rig.GlobalPosition;_distance=4;UpdateOrbit();return;}if (_selected == null) return; if (_pilot) TogglePilot(); var bounds=_selected.Node is RiggedActor actor?actor.GetPreparedPoseBounds():PropFactory.CalculateBounds(_selected.Node);_orbitTarget=_selected.Node.GlobalTransform*bounds.GetCenter();_distance=Math.Max(2.5f,(bounds.Size*_selected.Node.Scale).Length()*1.65f);UpdateOrbit(); }
+    void FrameSelected() { if(_selectedCamera!=null){if(_pilot)TogglePilot();_orbitTarget=_selectedCamera.Rig.GlobalPosition;_distance=4;UpdateOrbit();return;}if (_selected == null) return; if (_pilot) TogglePilot(); var bounds=PreparedEntryBounds(_selected);_orbitTarget=_selected.Node.GlobalTransform*bounds.GetCenter();_distance=Math.Max(2.5f,(bounds.Size*_selected.Node.Scale).Length()*1.65f);UpdateOrbit(); }
     void UpdatePreview()
     {
         if(_previewCamera==null||_shot==null)return;
@@ -434,7 +438,7 @@ public partial class GoPrevisApp : Control
     void UpdateSelection()
     {
         if (_selectionBox == null) return; _selectionBox.Visible = _selected != null&&!_poseEditing; if (_selected == null||_poseEditing) return;
-        var bounds = _selected.Node is RiggedActor actor ? actor.GetPreparedPoseBounds() : PropFactory.CalculateBounds(_selected.Node);
+        var bounds = PreparedEntryBounds(_selected);
         var mesh = new ImmediateMesh(); mesh.SurfaceBegin(Mesh.PrimitiveType.Lines); Vector3[] corners = Enumerable.Range(0, 8).Select(i => bounds.Position + new Vector3((i & 1) != 0 ? bounds.Size.X : 0, (i & 2) != 0 ? bounds.Size.Y : 0, (i & 4) != 0 ? bounds.Size.Z : 0)).ToArray();
         foreach (int i in Enumerable.Range(0, 8)) foreach (int bit in new[] { 1, 2, 4 }) if ((i & bit) == 0) { mesh.SurfaceAddVertex(corners[i]); mesh.SurfaceAddVertex(corners[i | bit]); } mesh.SurfaceEnd();
         _selectionBox.Mesh = mesh; _selectionBox.MaterialOverride = new StandardMaterial3D { AlbedoColor = _accent, ShadingMode = BaseMaterial3D.ShadingModeEnum.Unshaded }; _selectionBox.GlobalTransform = _selected.Node.GlobalTransform;

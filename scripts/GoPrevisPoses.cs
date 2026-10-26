@@ -19,9 +19,7 @@ public partial class GoPrevisApp
 
     void BuildPoseLibrary()
     {
-        var filter=new OptionButton{FitToLongestItem=false,ClipText=true};filter.AddItem("All poses");foreach(string category in AllLibraryPoses.Select(p=>p.Category).Distinct().Order())filter.AddItem(category);_library.AddChild(filter);
-        var search=new LineEdit{PlaceholderText="Search poses…",ClearButtonEnabled=true};_library.AddChild(search);
-        BuildPagedCards(()=>AllLibraryPoses.Where(p=>(filter.Selected==0||p.Category==filter.GetItemText(filter.Selected))&&(search.Text==""||(p.Name+" "+p.Description+" "+string.Join(' ',p.Tags)).Contains(search.Text,StringComparison.OrdinalIgnoreCase))).OrderBy(p=>p.Category switch{"My poses"=>0,"Sitting"=>1,"Floor sitting"=>2,"Kneeling"=>3,"Crouching"=>4,"Lying"=>5,_=>6}).Select(p=>new ContentCard(p.Id,p.Name,p.Category+(p.Pose.RigModelId==null?" · static human pose":" · static animal pose")+"\n"+p.Description+"\nDrop on a matching figure or empty ground. Replaces its motion clips.",null,null,p)).ToArray(),search,filter);
+        BuildLibraryBrowser("Poses",AllLibraryPoses.Select(p=>new ContentCard(p.Id,p.Name,p.Category+(p.Pose.RigModelId==null?" · static human pose":" · static animal pose")+"\n"+p.Description+"\nDrop on a matching figure or empty ground.",null,null,p)));
         var saved=new LineEdit{PlaceholderText="Name for saved pose",TooltipText="Capture the selected figure at the current frame, without changing its animation."};_library.AddChild(saved);
         _library.AddChild(Button("Save current pose",()=>{try{SaveCapturedPose(string.IsNullOrWhiteSpace(saved.Text)?DefaultPoseName():saved.Text);}catch(Exception ex){Error(ex.Message);}}));
         _library.AddChild(Button("Edit selected pose",StartPoseEditing));_library.AddChild(Button("Reset pose",ClearSelectedPose));
@@ -32,7 +30,7 @@ public partial class GoPrevisApp
         var pose=FindLibraryPose(id)??throw new InvalidDataException("This pose is not available.");
         if(target!=null&&!CompatiblePose(target,pose)){Status("This pose requires its matching human or animal rig.");return;}
         PushUndo();if(target==null){target=AddCatalogModel(ContentCatalog.Find(pose.Pose.RigModelId??"human-average")!,position,false);target.Data.Name=pose.Name;}
-        ApplyPoseToEntry(target,pose);Select(target);SetTime(_time);Status(pose.Name+" applied · static pose, no motion clip.");
+        ApplyPoseToEntry(target,pose);Select(target);SetTime(_time);RecordLibraryUse("pose",id);Status(pose.Name+" applied · static pose, no motion clip.");
     }
     void ApplyPoseToEntry(Entry target,LibraryPose pose)
     {

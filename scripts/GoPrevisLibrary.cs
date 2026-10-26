@@ -53,6 +53,8 @@ public partial class GoPrevisApp
     Rect2 ProjectedActorBounds(Entry entry)
     {
         bool found=false;Vector2 min=Vector2.Zero,max=Vector2.Zero;
+        if(entry.NativeTrack!=null&&entry.Data.ActorFamily.StartsWith("animal-common-",StringComparison.Ordinal))
+        {var bounds=PreparedEntryBounds(entry);for(int i=0;i<8;i++){var world=entry.Node.GlobalTransform*bounds.GetEndpoint(i);if(_editorCamera.IsPositionBehind(world))continue;var point=_editorCamera.UnprojectPosition(world);if(!found){min=max=point;found=true;}else{min=min.Min(point);max=max.Max(point);}}return found?new Rect2(min,max-min):new Rect2(new Vector2(-100000,-100000),Vector2.Zero);}
         foreach(var mesh in Descendants(entry.Node).OfType<MeshInstance3D>())
         {
             if(mesh.Mesh==null)continue;var bounds=mesh.GetAabb();for(int i=0;i<8;i++){var world=mesh.GlobalTransform*bounds.GetEndpoint(i);if(_editorCamera.IsPositionBehind(world))continue;var p=_editorCamera.UnprojectPosition(world);if(!found){min=max=p;found=true;}else{min=min.Min(p);max=max.Max(p);}}
@@ -62,7 +64,7 @@ public partial class GoPrevisApp
     bool CompatibleMotion(Entry entry,LibraryMotion motion)=>motion.ActorFamily=="human"?entry.Node is RiggedActor:entry.Data.ActorFamily==motion.ActorFamily&&entry.Player?.HasAnimation(motion.SourceAnimation??"")==true;
     void DropAsset(string kind,Vector3 position)
     {
-        PushUndo();var model=ContentCatalog.Find(kind);Entry entry=model!=null?AddCatalogModel(model,position,true):AddObject(kind,position);Select(entry);SetTime(_time);Status("Added "+entry.Data.Name+". Press K to key its transform.");
+        PushUndo();var model=ContentCatalog.Find(kind);Entry entry=model!=null?AddCatalogModel(model,position,true):AddObject(kind,position);Select(entry);SetTime(_time);RecordLibraryUse("asset",kind);Status("Added "+entry.Data.Name+". Press K to key its transform.");
     }
     void DropMotion(string id,Entry? target,Vector3 position)
     {
@@ -75,7 +77,7 @@ public partial class GoPrevisApp
         double duration=target.NativeTrack!=null&&motion.Loop&&previous==null?Math.Max(motion.Duration,Math.Max(3,_duration-start)):motion.Duration;
         var clip=new MotionClipData{MotionPath=source,Name=motion.Name,SourceAnimation=motion.SourceAnimation,SourceScale=motion.SourceScale,SourceOffset=motion.SourceOffset,Duration=duration,Start=start,BlendIn=blend,Loop=motion.Loop};
         target.Data.MotionClips.Add(clip);try{RebuildTrack(target);}catch{target.Data.MotionClips.Remove(clip);throw;}_selectedClipId=clip.Id;target.Data.SourceScale=motion.SourceScale;EnsureDuration(clip.Start+clip.Duration);
-        Select(target);ShowInspectorSection("Motion");SetTime(SelectedClip?.Start??_time);Status(motion.Name+" added to "+target.Data.Name+".");
+        Select(target);ShowInspectorSection("Motion");SetTime(SelectedClip?.Start??_time);RecordLibraryUse("motion",id);Status(motion.Name+" added to "+target.Data.Name+".");
     }
     Entry AddFox(Vector3 position,bool defaultMotion)
     {

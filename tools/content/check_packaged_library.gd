@@ -3,7 +3,7 @@ func _initialize():
  var failures=[]
  var sources={}
  var covers={}
- for file in ['animal-models','prop-models','human-motions','animal-motions']:
+ for file in ['animal-models','common-animal-models','prop-models','human-motions','ual-motions','animal-motions','common-animal-motions']:
   var path='res://assets/content/manifests/'+file+'.json'
   if not FileAccess.file_exists(path):
    failures.append(path)

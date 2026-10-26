@@ -6,6 +6,10 @@ Stav: funkční prototyp 0.3.1, 24. 10. 2026. Skutečný implementovaný rozsah 
 
 **Veškeré uživatelské rozhraní aplikace musí být anglicky**, včetně dialogů, chyb, nápovědy a názvů ovládacích prvků. Český text této studie je pouze popis specifikace.
 
+### Rozšíření knihovny 0.19.0
+
+Knihovna má rozšiřitelný dock, souvislý grid bez stránek po 12 položkách, fulltext více slov, filtry kategorie / typu aktéra / zdroje, oblíbené položky, historii použití a vlastní kolekce. Výběr a hledání se pamatují pro další návštěvu. V kompaktním režimu zůstávají dva sloupce; Expand zobrazí širší grid vedle scény. Nový obsah: kočka, pes, prase, ovce, králík a orel s normálními proporcemi a editovatelnými kostrami; 17 jejich nativních akcí a 84 lidských animací z volných Standard verzí obou Universal Animation Libraries. Celkem 290 modelů a 558 pohybů; GobKit není součástí. Aktuální rozsah a ověření jsou v README.md / VALIDATION.md.
+
 ### Zpřesnění pracovního postupu
 
 Petr po zkoušce 0.2.1 požaduje kompaktní moderní nástroj pro monitor 2560 × 1440 a přímý postup **knihovna → přetáhnout do scény → zaklíčovat → hotovo**. Vedlejší parametry nesmějí zaplňovat hlavní pracovní plochu. Tento požadavek upřesňuje dřívější vizuální předlohu Topview a má přednost před rozměry staršího mockupu.

@@ -38,10 +38,7 @@ public partial class GoPrevisApp
 
     void BuildMotionLibrary()
     {
-        var family=new OptionButton{FitToLongestItem=false};family.AddItem("All actors");family.AddItem("Human");family.AddItem("Animals");_library.AddChild(family);
-        var categories=new OptionButton{FitToLongestItem=false,ClipText=true};categories.AddItem("All categories");foreach(var category in MotionCatalog.All.Select(m=>m.Category).Where(c=>c!="").Distinct().Order())categories.AddItem(category);_library.AddChild(categories);
-        var search=new LineEdit{PlaceholderText="Search motions…",ClearButtonEnabled=true};_library.AddChild(search);
-        BuildPagedCards(()=>MotionCatalog.All.Where(m=>(family.Selected==0||family.Selected==1&&m.ActorFamily=="human"||family.Selected==2&&m.ActorFamily!="human")&&(categories.Selected==0||m.Category==categories.GetItemText(categories.Selected))&&(search.Text==""||(m.Name+" "+m.Description+" "+string.Join(' ',m.Tags)).Contains(search.Text,StringComparison.OrdinalIgnoreCase))).Select(m=>new ContentCard(m.Id,m.Name,$"{m.Category} · {m.Duration:0.#} s · {m.License}\n{m.Attribution}\nDrag onto a matching actor, or empty ground.",null,m)).ToArray(),search,categories,family);
+        BuildLibraryBrowser("Motions",MotionCatalog.All.Select(m=>new ContentCard(m.Id,m.Name,$"{m.Category} · {m.Duration:0.##} s · {m.License}\n{m.Description}\n{m.Attribution}\nDrag onto a matching actor or empty ground.",null,m)));
         _library.AddChild(Button("Import BVH…",ImportMotion));
     }
 
@@ -104,9 +101,9 @@ public partial class GoPrevisApp
                     if(item.Pose!=null)native.Evaluate(0,true,null,item.Pose.Pose);
                     else if(player.HasAnimation(animation)){native.SetClips(new[]{new MotionClipData{Name=animation,SourceAnimation=animation,Duration=player.GetAnimation(animation).Length,Loop=true}});native.Evaluate(.2,true);}
                 }
-                var bounds=PropFactory.CalculateBounds(wrapper);generated.Position-=Vector3.Up*bounds.Position.Y;
+                var bounds=native!=null&&model.ActorFamily.StartsWith("animal-common-",StringComparison.Ordinal)?native.SkinnedBounds(wrapper):PropFactory.CalculateBounds(wrapper);generated.Position-=Vector3.Up*bounds.Position.Y;
             }
-            var framing=actor!=null?actor.GetPreparedPoseBounds():PropFactory.CalculateBounds(wrapper);
+            var framing=actor!=null?actor.GetPreparedPoseBounds():native!=null&&model.ActorFamily.StartsWith("animal-common-",StringComparison.Ordinal)?native.SkinnedBounds(wrapper):PropFactory.CalculateBounds(wrapper);
             var camera=new Camera3D{Current=true,Fov=38,Near=.01f,Far=500};world.AddChild(camera);var target=framing.GetCenter();float radius=Math.Max(.4f,framing.Size.Length()*1.1f);var cameraPosition=target+new Vector3(radius*.65f,radius*.35f,item.Pose!=null?-radius:radius);camera.Transform=Transform3D.Identity.LookingAt(target-cameraPosition,Vector3.Up);camera.Position=cameraPosition;texture.Texture=viewport.GetTexture();
         }
         // Catalog pages load only PNGs. A source is parsed only while its motion card is hovered.

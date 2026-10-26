@@ -30,3 +30,7 @@ The portable Windows package invokes unmodified **FFmpeg and ffprobe 9.0.2** exe
 [LICENSES/FFMPEG-NOTICE.md](LICENSES/FFMPEG-NOTICE.md) records the pinned package, publisher checksum, matching FFmpeg core source location and integration boundary. The complete license text, original vendor README/build configuration/dependency versions, and provenance/binary hashes are retained in `LICENSES/FFMPEG-GPL-v3.txt`, `LICENSES/FFMPEG-VENDOR-README.txt` and `LICENSES/FFMPEG-PROVENANCE.json`. The notice distinguishes the FFmpeg core source archive from corresponding source for every statically linked dependency; it does not invent a complete-source claim or an author source offer. Redistribution of those tools remains subject to their license terms.
 
 The camera movement diagrams and control-pass renderer are project-authored. Topview screenshots inform workflow/layout references only; no Topview illustrations, source or model assets are bundled.
+
+## Additional library content in 0.19.0
+
+Additional common animals by Quaternius and CDmir / TinyWorlds are CC0. See LICENSES/COMMON-ANIMALS.md and the bundled original notices. The 84 authored human animations are converted from the free Standard Universal Animation Libraries 1 and 2 by Quaternius and Gonzalo Furnier, CC0; see LICENSES/UAL-MOTION-CONTENT.md and LICENSES/ual/. No GobKit asset is included.

@@ -22,7 +22,7 @@ public sealed partial class NativeMotionTrack
         for(int i=0;i<_bones.Length;i++)if(BoneName(i)==name)return i;
         throw new FormatException("This animal rig has no joint named '"+name+"'.");
     }
-    public IReadOnlyList<string> PoseBoneNames=>_poseNames??=Enumerable.Range(0,_bones.Length).Select(BoneName).Where(name=>!name.StartsWith("PoleTarget",StringComparison.OrdinalIgnoreCase)).ToArray();
+    public IReadOnlyList<string> PoseBoneNames=>_poseNames??=Enumerable.Range(0,_bones.Length).Select(BoneName).Where(name=>!name.StartsWith("PoleTarget",StringComparison.OrdinalIgnoreCase)&&!name.StartsWith("Control_",StringComparison.OrdinalIgnoreCase)).ToArray();
     public string RootBoneName=>BoneName(_roots[0]);
     public string DefaultPoseBone=>PoseBoneNames.FirstOrDefault(name=>name.Contains("head",StringComparison.OrdinalIgnoreCase))??RootBoneName;
     public bool IsEndJoint(string name){var bone=_bones[FindPoseBone(name)];return !Enumerable.Range(0,bone.Skeleton.GetBoneCount()).Any(i=>bone.Skeleton.GetBoneParent(i)==bone.Index);}
@@ -43,6 +43,7 @@ public sealed partial class NativeMotionTrack
     public Vector3 GetPoseBoneRotationDegrees(string name)=>new Basis(GetPoseBoneRotation(name)).GetEuler()*180f/Mathf.Pi;
     public void SetPoseBoneRotationDegrees(string name,Vector3 degrees)
     {
+        _skinBounds=null;
         if(!degrees.IsFinite())throw new FormatException("Joint rotation must contain finite values.");
         var bone=_bones[FindPoseBone(name)];bone.Skeleton.SetBonePoseRotation(bone.Index,Basis.FromEuler(degrees*Mathf.Pi/180f).GetRotationQuaternion());
     }
@@ -87,6 +88,7 @@ public sealed partial class NativeMotionTrack
     /// <summary>CCD rotates only ancestors of the grabbed joint. Its descendants retain their local transforms.</summary>
     public void MovePoseJointWorld(string name,Vector3 target)
     {
+        _skinBounds=null;
         if(!target.IsFinite())throw new FormatException("The joint target must contain finite values.");
         var selected=_bones[FindPoseBone(name)];var skeleton=selected.Skeleton;
         if(Math.Abs(skeleton.GlobalBasis.Determinant())<.00000001f)throw new FormatException("The animal scale is too small to edit its pose.");

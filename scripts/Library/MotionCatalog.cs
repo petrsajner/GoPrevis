@@ -46,6 +46,8 @@ public static class MotionCatalog
         };
         motions.AddRange(ContentCatalog.ReadManifest<LibraryMotion>("res://assets/content/manifests/human-motions.json"));
         motions.AddRange(ContentCatalog.ReadManifest<LibraryMotion>("res://assets/content/manifests/animal-motions.json"));
+        motions.AddRange(ContentCatalog.ReadManifest<LibraryMotion>("res://assets/content/manifests/common-animal-motions.json"));
+        motions.AddRange(ContentCatalog.ReadManifest<LibraryMotion>("res://assets/content/manifests/ual-motions.json"));
         ContentCatalog.ValidateUniqueIds(motions.Select(motion => motion.Id), "motion");
         return motions.AsReadOnly();
     }

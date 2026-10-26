@@ -69,6 +69,7 @@ public static class ContentCatalog
                 BuiltinKind=kind, Attribution="GoPrevis original procedural blockout model", License="GoPrevis project asset" });
         }
         models.AddRange(ReadManifest<LibraryModel>("res://assets/content/manifests/animal-models.json"));
+        models.AddRange(ReadManifest<LibraryModel>("res://assets/content/manifests/common-animal-models.json"));
         models.AddRange(ReadManifest<LibraryModel>("res://assets/content/manifests/prop-models.json"));
         ValidateUniqueIds(models.Select(model => model.Id), "model");
         return models.AsReadOnly();

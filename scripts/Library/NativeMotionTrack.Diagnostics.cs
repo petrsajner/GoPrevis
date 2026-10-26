@@ -21,6 +21,7 @@ public sealed partial class NativeMotionTrack
         var expectedRoot=expected[_roots[0]].Origin;var actualRoot=BoneTransform(_bones[_roots[0]],_bones[_roots[0]].Index).Origin;
         for(int i=0;i<_bones.Length;i++)
         {
+            if(BoneName(i).StartsWith("Control_",StringComparison.Ordinal))continue;
             var actual=BoneTransform(_bones[i],_bones[i].Index);error=Math.Max(error,(actual.Origin-actualRoot).DistanceTo(expected[i].Origin-expectedRoot));
             error=Math.Max(error,(actual.Basis.X-expected[i].Basis.X).Length());error=Math.Max(error,(actual.Basis.Y-expected[i].Basis.Y).Length());error=Math.Max(error,(actual.Basis.Z-expected[i].Basis.Z).Length());
         }

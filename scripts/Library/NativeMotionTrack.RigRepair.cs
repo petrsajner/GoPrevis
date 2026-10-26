@@ -21,7 +21,9 @@ public sealed partial class NativeMotionTrack
         foreach(var pair in _bones.Select((bone,index)=>(bone,index)))
         {
             string name=pair.bone.Skeleton.GetBoneName(pair.bone.Index);
-            string? parentName=name.StartsWith("IKFrontLeg.",StringComparison.Ordinal)?name.Replace("IKFrontLeg.","FrontLowerLeg.",StringComparison.Ordinal):name.StartsWith("IKBackLeg.",StringComparison.Ordinal)?name.Replace("IKBackLeg.","BackLowerLeg.",StringComparison.Ordinal):null;
+            string? parentName=name.StartsWith("IKFrontLeg.",StringComparison.Ordinal)?name.Replace("IKFrontLeg.","FrontLowerLeg.",StringComparison.Ordinal):name.StartsWith("IKBackLeg.",StringComparison.Ordinal)?name.Replace("IKBackLeg.","BackLowerLeg.",StringComparison.Ordinal):
+                name.StartsWith("FrontFoot_",StringComparison.Ordinal)&&_bones.Any(b=>b.Skeleton==pair.bone.Skeleton&&b.Skeleton.GetBoneName(b.Index)==name.Replace("FrontFoot_","FrontLowLeg_",StringComparison.Ordinal))?name.Replace("FrontFoot_","FrontLowLeg_",StringComparison.Ordinal):
+                name.StartsWith("BackFoot_",StringComparison.Ordinal)&&_bones.Any(b=>b.Skeleton==pair.bone.Skeleton&&b.Skeleton.GetBoneName(b.Index)==name.Replace("BackFoot_","BackLowLeg_",StringComparison.Ordinal))?name.Replace("BackFoot_","BackLowLeg_",StringComparison.Ordinal):null;
             if(parentName==null)continue;
             int parent=Array.FindIndex(_bones,b=>b.Skeleton==pair.bone.Skeleton&&b.Skeleton.GetBoneName(b.Index)==parentName);
             if(parent<0||_authoredParents[pair.index]==parent)continue;

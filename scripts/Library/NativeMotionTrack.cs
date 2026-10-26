@@ -58,7 +58,7 @@ public sealed partial class NativeMotionTrack
         var skeletons=Descendants(modelRoot).OfType<Skeleton3D>().ToArray();
         _bones=skeletons.SelectMany(s=>Enumerable.Range(0,s.GetBoneCount()).Select(i=>new Bone(s,i))).ToArray();
         if(_bones.Length==0)throw new FormatException("The imported model has no skeletal animation rig.");
-        _roots=Enumerable.Range(0,_bones.Length).Where(i=>_bones[i].Skeleton.GetBoneParent(_bones[i].Index)<0).ToArray();
+        _roots=Enumerable.Range(0,_bones.Length).Where(i=>_bones[i].Skeleton.GetBoneParent(_bones[i].Index)<0).OrderBy(i=>BoneName(i).StartsWith("Control_",StringComparison.Ordinal)?1:0).ToArray();
         if(_roots.Length==0)throw new FormatException("The imported model has no root bone.");
         _player.Set("callback_mode_process",2); // Manual: the scene timeline is the only clock.
         _player.PlaybackDefaultBlendTime=0;
@@ -66,7 +66,7 @@ public sealed partial class NativeMotionTrack
         foreach(var skeleton in skeletons)skeleton.ResetBonePoses();
         _rest=new Pose(_bones.Length,_nodes.Length);_result=new Pose(_bones.Length,_nodes.Length);_incoming=new Pose(_bones.Length,_nodes.Length);_source=new Pose(_bones.Length,_nodes.Length);_authoredRest=new Pose(_bones.Length,_nodes.Length);
         Capture(_authoredRest);Copy(_authoredRest,_rest);PrepareEditableHierarchy();
-        _roots=Enumerable.Range(0,_bones.Length).Where(i=>_bones[i].Skeleton.GetBoneParent(_bones[i].Index)<0).ToArray();_restRootRotation=_rest.Rotation[_roots[0]];
+        _roots=Enumerable.Range(0,_bones.Length).Where(i=>_bones[i].Skeleton.GetBoneParent(_bones[i].Index)<0).OrderBy(i=>BoneName(i).StartsWith("Control_",StringComparison.Ordinal)?1:0).ToArray();_restRootRotation=_rest.Rotation[_roots[0]];
         foreach(string name in _player.GetAnimationList())if(name!="RESET")
         {
             var animation=_player.GetAnimation(name);animation.LoopMode=Animation.LoopModeEnum.None;
@@ -164,6 +164,7 @@ public sealed partial class NativeMotionTrack
     }
     void Apply(Pose pose)
     {
+        _skinBounds=null;
         for(int i=0;i<_nodes.Length;i++){_nodes[i].Position=pose.NodePosition[i];_nodes[i].Quaternion=pose.NodeRotation[i];_nodes[i].Scale=pose.NodeScale[i];}
         for(int i=0;i<_bones.Length;i++){var b=_bones[i];b.Skeleton.SetBonePosePosition(b.Index,pose.Position[i]);b.Skeleton.SetBonePoseRotation(b.Index,pose.Rotation[i]);b.Skeleton.SetBonePoseScale(b.Index,pose.Scale[i]);}
     }

@@ -37,10 +37,10 @@ public partial class GoPrevisApp
             await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
             modelCount = ContentCatalog.All.Count;
             motionCount = MotionCatalog.All.Count;
-            Check(ContentCatalog.All.Count == 284, "284 usable model descriptors are available");
-            Check(MotionCatalog.All.Count == 457, "457 motion descriptors are available");
-            Check(ContentCatalog.All.Select(m => m.Id).Distinct().Count() == 284 && MotionCatalog.All.Select(m => m.Id).Distinct().Count() == 457, "all model and motion IDs are unique");
-            Check(ContentCatalog.ForCategory("People").Count() == 6 && ContentCatalog.ForCategory("Animals").Count() == 13, "six human variants and thirteen animal rigs are available");
+            Check(ContentCatalog.All.Count == 290, "290 usable model descriptors are available");
+            Check(MotionCatalog.All.Count == 558, "558 motion descriptors are available");
+            Check(ContentCatalog.All.Select(m => m.Id).Distinct().Count() == 290 && MotionCatalog.All.Select(m => m.Id).Distinct().Count() == 558, "all model and motion IDs are unique");
+            Check(ContentCatalog.ForCategory("People").Count() == 6 && ContentCatalog.ForCategory("Animals").Count() == 19, "six human variants and nineteen animal rigs are available");
             Check(PropFactory.Kinds.All(kind => ContentCatalog.Find(kind)?.BuiltinKind == kind), "all original blockout shapes remain placeable");
             Check(MotionCatalog.All.Count(m => m.Id.StartsWith("cmu-", StringComparison.Ordinal)) == 300, "300 recorded CMU takes retain their identities");
             Check(ContentCatalog.All.Where(m => !m.IsBuiltin).All(m => m.Scale > 0 && !string.IsNullOrEmpty(m.License) && !string.IsNullOrEmpty(m.SourceUrl)), "external model scale and provenance are present");
@@ -98,7 +98,7 @@ public partial class GoPrevisApp
                 animalModelsLoaded++;
                 entry.Data.MotionClips.Clear();
                 RebuildTrack(entry);
-                var motion = MotionCatalog.ForFamily(model.ActorFamily).First(m => (m.SourceAnimation ?? "").Contains("Walk", StringComparison.OrdinalIgnoreCase));
+                var motion = MotionCatalog.ForFamily(model.ActorFamily).OrderBy(m=>(m.SourceAnimation??"").Contains("Walk",StringComparison.OrdinalIgnoreCase)?0:m.Category=="Run"?1:2).First();
                 int before = _entries.Count;
                 DropMotion(motion.Id, entry, entry.Node.Position);
                 Check(_entries.Count == before && entry.Data.MotionClips.Count == 1 && entry.Data.MotionClips[0].SourceAnimation == motion.SourceAnimation, model.Name + " motion attaches to the same matching actor");
@@ -120,7 +120,7 @@ public partial class GoPrevisApp
                 Select(entry);
                 RefreshObjects();
             }
-            Check(animalEntries.Count == 12, "every new animal species completed the placement and motion workflow");
+            Check(animalEntries.Count == 18, "every prepared content animal completed the placement and motion workflow");
 
             var animal = animalEntries.First();
             animal.Data.MotionClips[0].Duration = 3;

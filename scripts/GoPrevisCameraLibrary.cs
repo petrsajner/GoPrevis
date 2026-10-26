@@ -71,14 +71,14 @@ public partial class GoPrevisApp
         {
             Vector3 position=_shot.GlobalPosition,forward=-_shot.GlobalBasis.Orthonormalized().Z;
             var candidates=_entries.Where(e=>e.Node is RiggedActor||e.NativeTrack!=null).ToArray();if(candidates.Length==0)candidates=_entries.ToArray();
-            entry=candidates.OrderByDescending(e=>{var b=e.Node is RiggedActor a?a.GetPreparedPoseBounds():PropFactory.CalculateBounds(e.Node);var delta=e.Node.GlobalTransform*b.GetCenter()-position;return delta.LengthSquared()<.00001f?1:forward.Dot(delta.Normalized());}).FirstOrDefault();
+            entry=candidates.OrderByDescending(e=>{var b=PreparedEntryBounds(e);var delta=e.Node.GlobalTransform*b.GetCenter()-position;return delta.LengthSquared()<.00001f?1:forward.Dot(delta.Normalized());}).FirstOrDefault();
             if(entry!=null)_framingSubjectId=entry.Data.Id;
         }
         if(entry==null)
         {
             Vector3 center=_shot.GlobalPosition-_shot.GlobalBasis.Orthonormalized().Z*6;return new FramingSubject(new Aabb(center-Vector3.One,Vector3.One*2),Vector3.Forward,center+Vector3.Up*.65f,Vector3.Forward,center+new Vector3(.3f,.45f,0),center+new Vector3(-.3f,.45f,0));
         }
-        var local=entry.Node is RiggedActor human?human.GetPreparedPoseBounds():PropFactory.CalculateBounds(entry.Node);bool found=false;Vector3 minimum=Vector3.Zero,maximum=Vector3.Zero;
+        var local=PreparedEntryBounds(entry);bool found=false;Vector3 minimum=Vector3.Zero,maximum=Vector3.Zero;
         for(int i=0;i<8;i++){var point=entry.Node.GlobalTransform*local.GetEndpoint(i);if(!found){minimum=maximum=point;found=true;}else{minimum=minimum.Min(point);maximum=maximum.Max(point);}}
         var bounds=new Aabb(minimum,maximum-minimum);var direction=entry.Node.GlobalBasis*(entry.NativeTrack?.AnimatedForward??Vector3.Forward);direction.Y=0;if(direction.LengthSquared()<.00001f)direction=Vector3.Forward;direction=direction.Normalized();
         var right=Vector3.Up.Cross(direction);var centerBounds=bounds.GetCenter();var head=centerBounds+Vector3.Up*bounds.Size.Y*.3f;var leftShoulder=centerBounds+Vector3.Up*bounds.Size.Y*.15f-right*bounds.Size.X*.25f;var rightShoulder=centerBounds+Vector3.Up*bounds.Size.Y*.15f+right*bounds.Size.X*.25f;
