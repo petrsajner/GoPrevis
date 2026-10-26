@@ -23,6 +23,7 @@ Copy-Item -LiteralPath 'docs\GoPrevis-User-Guide-EN.pdf' -Destination $previsOut
 $previsDocs = Join-Path $previsOutput 'docs'
 New-Item -ItemType Directory -Path $previsDocs -Force | Out-Null
 Copy-Item -LiteralPath 'docs\GoPrevis-User-Guide-EN.pdf' -Destination $previsDocs -Force
+Copy-Item -LiteralPath 'docs\images' -Destination $previsDocs -Recurse -Force
 Copy-Item -LiteralPath 'examples' -Destination $previsOutput -Recurse -Force
 $previsBrandAssets=Join-Path $previsOutput 'assets'
 New-Item -ItemType Directory -Path $previsBrandAssets -Force | Out-Null
