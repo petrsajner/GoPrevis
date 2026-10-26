@@ -95,7 +95,7 @@ public partial class GoPrevisApp
         BuildKeyInterpolationInspector();
         _motionHeader=Text("MOTION CLIPS",12,true);_inspector.AddChild(_motionHeader);
         _clipInfo=Text("Select a human actor to append motion clips.",11,true);_clipInfo.AutowrapMode=TextServer.AutowrapMode.WordSmart;_inspector.AddChild(_clipInfo);
-        _clipChoice=new OptionButton{FitToLongestItem=false,ClipText=true};_clipChoice.ItemSelected+=i=>{if(_refreshing||_selected==null||i<0||i>=_selected.Data.MotionClips.Count)return;_selectedClipId=_selected.Data.MotionClips[(int)i].Id;RefreshSequenceInspector();_timeline.QueueRedraw();};_inspector.AddChild(_clipChoice);
+        _clipChoice=new OptionButton{FitToLongestItem=false,ClipText=true};_clipChoice.ItemSelected+=i=>{if(_refreshing||_selected==null||i<0||i>=_selected.Data.MotionClips.Count)return;_timeline.SelectMotionClip(_selected,_selected.Data.MotionClips[(int)i]);};_inspector.AddChild(_clipChoice);
         _inspector.AddChild(Row(Button("Append BVH…",ImportMotion),Button("Remove clip",RemoveSelectedClip)));
         void Field(string name,SpinBox field){_inspector.AddChild(Row(Text(name,11,true),field));}
         _clipStart=Spin(0,MaxSceneDuration,1.0/_fps,0);Field("Start (s)",_clipStart);
@@ -154,7 +154,7 @@ public partial class GoPrevisApp
         if(_refreshing||_selected==null||SelectedClip==null)return;PushUndo();var before=JsonSerializer.Deserialize<List<MotionClipData>>(JsonSerializer.Serialize(_selected.Data.MotionClips))!;
         try{edit(SelectedClip);SelectedClip.IsPlaceholder=false;RebuildTrack(_selected);EnsureDuration(_selected.Data.MotionClips.Max(c=>c.Start+c.Duration));SetTime(_time);RefreshSequenceInspector();}catch(Exception ex){_selected.Data.MotionClips=before;RebuildTrack(_selected);Error(ex.Message);RefreshSequenceInspector();}
     }
-    void RemoveSelectedClip(){if(_selected==null||SelectedClip==null)return;PushUndo();_selected.Data.MotionClips.Remove(SelectedClip);_selectedClipId="";RebuildTrack(_selected);SetTime(_time);RefreshSequenceInspector();RefreshTimelineSize();}
+    void RemoveSelectedClip(){if(_selected==null||SelectedClip==null)return;_timeline.SelectMotionClip(_selected,SelectedClip);_timeline.DeleteSelectedItems();}
     void RebuildTrack(Entry entry){if(entry.Node is RiggedActor actor)actor.SetMotionClips(entry.Data.MotionClips);else if(entry.NativeTrack!=null)entry.NativeTrack.SetClips(entry.Data.MotionClips);entry.Data.MotionPath=entry.Data.MotionClips.FirstOrDefault()?.MotionPath;entry.Data.MotionName=entry.Data.MotionClips.FirstOrDefault()?.Name;RefreshTimelineSize();}
     void AppendMotion(Entry entry,string path,float scale)
     {
@@ -164,7 +164,7 @@ public partial class GoPrevisApp
         var candidate=new List<MotionClipData>(entry.Data.MotionClips){clip};((RiggedActor)entry.Node).SetMotionClips(candidate);entry.Data.MotionClips=candidate;entry.Data.MotionPath=clip.MotionPath;entry.Data.MotionName=clip.Name;entry.Data.SourceScale=scale;_selectedClipId=clip.Id;EnsureDuration(clip.Start+clip.Duration);RefreshTimelineSize();
     }
     void EnsureDuration(double end){if(end<=_duration)return;_duration=Math.Min(MaxSceneDuration,Math.Ceiling(end));_scrub.MaxValue=_duration;bool old=_refreshing;_refreshing=true;_durationField.Value=_duration;_refreshing=old;}
-    void SelectTimelineClip(Entry entry,MotionClipData clip){_selectedClipId=clip.Id;Select(entry);ShowInspectorSection("Motion");RefreshSequenceInspector();}
+    void SelectTimelineClip(Entry entry,MotionClipData clip){_selectedClipId=clip.Id;Select(entry);ShowInspectorSection("Motion");RefreshSequenceInspector();_timeline.MarkMotionSelected(entry,clip);}
     void RefreshTimelineSize(){if(_timeline!=null){_timeline.UpdateMinimumHeight();_timeline.QueueRedraw();}}
     void SelectPathKey(Entry entry,int index)
     {

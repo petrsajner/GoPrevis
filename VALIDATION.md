@@ -1,4 +1,14 @@
-# GoPrevis 0.18.2 validation
+# GoPrevis 0.18.3 validation
+
+Validation date: **2026-10-26**. Windows x64; project schema remains **13**. Fixes Delete and context deletion for selected human/animal motion clips, adds selectable camera movement spans and whole-track deletion, and fixes right-click removal of path points. Selection highlights identify the deletion target; clearing selection after deletion prevents a later Delete from removing another element or the model/camera. The existing inspector Remove clip shares the same operation.
+
+The timeline deletion suite passes **35 checks** through actual timeline mouse/keyboard/context-menu events and real animation data. Coverage includes one of two overlapping library motions; preservation of actors/cameras, paths and pose layers; corrected remaining blend overlap; one-step Undo/Redo and dirty state; targeting the right-clicked clip; stopping actual leg animation after final-clip removal; portable save/reopen without restoring deleted motion; native animal removal/restoration; imported-animation fallback removal/reopen; whole motion, transform, lens, joint, pose and path tracks; individual XYZ/lens/path/pose keys; camera movement deletion while retaining underlying keys; whole camera animation removal; out-of-range track keys; text-entry protection; empty-selection safety and selection replacement.
+
+Final native checks pass **35 timeline deletion**, **39 editor**, **55 pose + 13 pose timeline**, **38 interaction + 15 numeric + 14 trim**, **163 project workflow**, **22 camera/locomotion semantic**, **32 camera tracking**, **31 unsaved-change**, **22 project-file + 24 layout**, **315 animal repair**, **14 rename** and **7 demo-launch** checks. All native stderr logs are empty; the compiler has zero warnings/errors and the source smoke suite passes.
+
+Actual application screenshots show the selected clip and its English context menu. Source builds report zero warnings/errors. Final executable regression results and build identity are recorded in validation/ and BUILD-INFO.json. User-saved workspace projects remain untouched and excluded from the package. Historical validation follows.
+
+# Historical GoPrevis 0.18.2 validation
 
 Validation date: **2026-10-26**. Windows x64, schema **13**, English UI. Adds content-based dirty tracking, a header/native-title asterisk and Save / Discard / Cancel protection for native close, Open, New scene and opening the demo. Save/Save As and Undo/Redo update the dirty state; cancelling the save picker or a failed save blocks the pending action. Playback/scrubbing and working-view navigation are excluded. AI rehearsals suspend dirty polling; an in-progress AI/export operation restores its scene before a transition proceeds.
 

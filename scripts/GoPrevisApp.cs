@@ -66,7 +66,8 @@ public partial class GoPrevisApp : Control
         var window=GetWindow();float dpiScale=Math.Clamp(Math.Max(DisplayServer.ScreenGetScale(),DisplayServer.ScreenGetDpi()/96f),1,2.5f);window.ContentScaleMode=Window.ContentScaleModeEnum.CanvasItems;window.ContentScaleSize=Vector2I.Zero;window.ContentScaleFactor=dpiScale;
         window.Title="GoPrevis "+AppVersion+" — 3D control clips for AI video";
         BuildTheme(); BuildUi(); BuildWorld(); StarterScene();InitializeProjectProtection();
-        if(OS.GetCmdlineUserArgs().Contains("--unsaved-changes-test"))_=RunUnsavedChangesChecksAndQuit();
+        if(OS.GetCmdlineUserArgs().Contains("--timeline-delete-test"))_=RunTimelineDeletionChecksAndQuit();
+        else if(OS.GetCmdlineUserArgs().Contains("--unsaved-changes-test"))_=RunUnsavedChangesChecksAndQuit();
         else if(OS.GetCmdlineUserArgs().Contains("--project-files-test"))_=RunProjectFileChecksAndQuit();
         else if(OS.GetCmdlineUserArgs().Contains("--ai-reference-live-test"))_=RunAiReferenceChecksAndQuit();
         else if(OS.GetCmdlineUserArgs().Contains("--ai-reliability-test"))_=RunAiReliabilityChecksAndQuit();
@@ -315,7 +316,7 @@ public partial class GoPrevisApp : Control
             if(data.ModelGrounded){var bounds=PropFactory.CalculateBounds(root);model3d.Position-=Vector3.Up*bounds.Position.Y;}
         }
         foreach (var mesh in Descendants(model).OfType<MeshInstance3D>()) if (mesh.Mesh != null) { mesh.CreateTrimeshCollision(); foreach (Node child in mesh.GetChildren()) if (child is StaticBody3D body) body.SetMeta("scene_root", root); }
-        var player = Descendants(model).OfType<AnimationPlayer>().FirstOrDefault(); string animation = data.ModelAnimation != null && player?.HasAnimation(data.ModelAnimation)==true ? data.ModelAnimation : player?.GetAnimationList().FirstOrDefault(a => a != "RESET") ?? "";
+        var player = Descendants(model).OfType<AnimationPlayer>().FirstOrDefault(); string animation = data.ModelAnimation==""?"":data.ModelAnimation != null && player?.HasAnimation(data.ModelAnimation)==true ? data.ModelAnimation : player?.GetAnimationList().FirstOrDefault(a => a != "RESET") ?? "";
         if (player != null && animation != "") { player.Set("callback_mode_process", 2); player.Play(animation); }
         var entry = new Entry { Data = data, Node = root, Player = player, Animation = animation,NativeTrack=player!=null&&Descendants(model).OfType<Skeleton3D>().Any(s=>s.GetBoneCount()>0)?new NativeMotionTrack(model,player):null }; _entries.Add(entry);return entry;
     }
@@ -422,7 +423,7 @@ public partial class GoPrevisApp : Control
         if(_poseEditing&&key.Keycode==Key.Escape){StopPoseEditing();ShowInspectorSection("Object");return;}
         if(_poseEditing&&!_rightDown&&!_middleDown&&!_middleZoom&&(key.Keycode==Key.W||key.Keycode==Key.E)){SetPoseTool(key.Keycode==Key.W?"Move":"Rotate");return;}
         if(key.Keycode==Key.K){if(_poseEditing)CapturePoseCorrectionKey("All");else CaptureSelectedTransformKey("All");return;}
-        if(key.Keycode==Key.Delete&&(_timeline.DeleteSelectedKeys()||_timeline.HasFocus())){GetViewport().SetInputAsHandled();return;}
+        if(key.Keycode==Key.Delete&&(_timeline.DeleteSelectedItems()||_timeline.HasFocus())){GetViewport().SetInputAsHandled();return;}
         if (key.CtrlPressed && key.Keycode == Key.S) { if(key.ShiftPressed)SaveProjectAs();else SaveProject(); } else if (key.CtrlPressed && key.Keycode == Key.O) OpenProject(); else if (key.CtrlPressed && key.Keycode == Key.Z) {if(key.ShiftPressed)Redo();else Undo();} else if (key.CtrlPressed && key.Keycode == Key.Y) Redo(); else if (key.CtrlPressed && key.Keycode == Key.D) DuplicateSelected(); else if (key.Keycode == Key.Delete) DeleteSelected(); else if (key.Keycode == Key.F) FrameSelected(); else if (key.Keycode == Key.Space) { _playing = !_playing; _play.Text = _playing ? "Ⅱ Pause" : "▶ Play"; }
     }
     public override void _Input(InputEvent input)

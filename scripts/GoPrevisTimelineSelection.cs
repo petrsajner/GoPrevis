@@ -22,7 +22,7 @@ public partial class GoPrevisApp
             int row=Rows.FindIndex(r=>r.Kind==kind&&(r.Camera?.Id??r.Object?.Data.Id)==id&&r.Channel==channel);
             return row<0?new():new Rect2(Left,Top+row*RowHeight,TrackWidth,RowHeight);
         }
-        internal void ClearKeySelection(){_selectedKeys.Clear();_marquee=false;QueueRedraw();}
+        internal void ClearKeySelection(){_selectedKeys.Clear();_marquee=false;ClearItemSelection();QueueRedraw();}
 
         IEnumerable<KeyRef> RowKeyRefs(TrackRow row,double time)
         {
@@ -50,9 +50,10 @@ public partial class GoPrevisApp
         }
         IEnumerable<double> RowTimes(TrackRow row)=>row.Kind=="Path"
             ?ActorPathRuntime.PointTimes(row.Object!.Data.Path).Select(t=>t+row.Object.Data.Path.Start):row.Kind is "Transform" or "Pose"?KeyTimes(row):Array.Empty<double>();
-        bool IsTimelineKeySelected(TrackRow row,double time)=>RowKeyRefs(row,time).Any(_selectedKeys.Contains);
+        bool IsTimelineKeySelected(TrackRow row,double time)=>RowKeyRefs(row,time).Any(key=>_selectedKeys.Contains(key)||_selectedItem is {} item&&item.Kind=="Track"+row.Kind&&item.Target==(row.Camera?.Id??row.Object?.Data.Id)&&(item.Channel=="All"||item.Channel==key.Channel));
         void SelectTimelineKey(TrackRow row,double time,bool add)
         {
+            ClearItemSelection();
             if(!add)_selectedKeys.Clear();
             var keys=RowKeyRefs(row,time).ToArray();bool remove=add&&keys.Length>0&&keys.All(_selectedKeys.Contains);
             foreach(var key in keys){if(remove)_selectedKeys.Remove(key);else _selectedKeys.Add(key);}
@@ -61,11 +62,12 @@ public partial class GoPrevisApp
         bool HitTimelineItem(List<TrackRow> rows,int index,float x)
         {
             if(index<0||index>=rows.Count)return false;var row=rows[index];
-            return row.Kind=="Motion"?row.Object!.Data.MotionClips.Any(c=>x>=X(c.Start)&&x<=X(c.Start+c.Duration))
-                :RowTimes(row).Any(time=>Math.Abs(x-X(time))<9);
+            return row.Kind=="Motion"?row.Object!.Data.MotionClips.Any(c=>x>=X(c.Start)&&x<=X(c.Start+c.Duration))||row.Object.NativeTrack==null&&row.Object.Player!=null&&row.Object.Animation!=""
+                :HitCameraMove(row,x)||HitPathSpan(row,x)||RowTimes(row).Any(time=>Math.Abs(x-X(time))<9);
         }
         void BeginMarquee(InputEventMouseButton button)
         {
+            ClearItemSelection();
             _marquee=true;_marqueeFrom=_marqueeTo=button.Position;
             _marqueeBase=button.CtrlPressed||button.ShiftPressed?new(_selectedKeys):new();
             _selectedKeys.Clear();_selectedKeys.UnionWith(_marqueeBase);
@@ -124,7 +126,7 @@ public partial class GoPrevisApp
                 }
             }
             ClearKeySelection();App.SetTime(App._time);App.RefreshSequenceInspector();UpdateMinimumHeight();
-            App.Status("Deleted "+count+" parameter key(s). Undo restores the deleted keys.");return true;
+            GrabFocus();App.Status("Deleted "+count+" parameter key(s). Undo restores the deleted keys.");return true;
         }
     }
 }

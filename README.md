@@ -1,12 +1,12 @@
 <img src="assets/goprevis.png" width="120" alt="GoPrevis icon">
 
-# GoPrevis 0.18.2 — 3D control clips for AI video
+# GoPrevis 0.18.3 — 3D control clips for AI video
 
 GoPrevis prepares 3D control clips for AI video generation. Build the scene, direct character and object motion, frame the camera, and export synchronized color, depth and pose guidance. It uses Godot 4.7.2 .NET, C# and .NET 10. The application UI, dialogs and authored errors are English.
 
 ## Run
 
-The Windows portable output is `build/GoPrevis-0.18.2-Windows/GoPrevis.exe`. Keep GoPrevis.exe, GoPrevis.pck and data_GoPrevis_windows_x86_64 together. The portable Windows build includes its runtime; using it does not require the Godot editor or .NET SDK.
+The Windows portable output is `build/GoPrevis-0.18.3-Windows/GoPrevis.exe`. Keep GoPrevis.exe, GoPrevis.pck and data_GoPrevis_windows_x86_64 together. The portable Windows build includes its runtime; using it does not require the Godot editor or .NET SDK.
 
 For development, open project.godot with Godot 4.7.2 .NET. Local tools are in the ignored .tools directory. The existing run.ps1 starts the source project; build.ps1 -Test builds, runs source checks and exports Windows x64.
 
@@ -19,6 +19,14 @@ The top bar and native window title show the current project name. A new/unsaved
 An **asterisk (*)** beside the project name in the header and native title means the current content has unsaved changes. Successful Save/Save As clears it; Undo back to the saved content clears it too. Playback, scrubbing and navigation in the working view do not mark a project dirty. Changes to the active camera, animation, object/pose data and project settings are included.
 
 Closing the application, opening another project, creating a new scene or opening the demo protects unsaved work with **Save / Discard / Cancel**. Save completes before the requested action; an untitled project first opens Save As. Cancelling that picker or a failed save cancels the pending action. Discard continues without saving; Cancel keeps the current project open. Active AI/export work is cancelled and allowed to restore the working scene before deciding whether it needs saving; completed AI provider work remains in the existing resumable session.
+
+## Removing timeline animation
+
+Click the timeline element to select it, then press **Delete**. Motion clips (human and animal), transform/lens keys, path points, pose-correction keys and camera movement spans are removable. Right-click a clip for its **Delete** action; right-click a key removes the targeted key. Selected animation is visibly highlighted. After deletion the selection clears; another Delete without a selection does not remove another clip or a scene object.
+
+Click a track label and press Delete, or right-click the label, to clear that entire animation track. Expanded Position/Rotation/Scale/Lens and joint rows affect only their own keys. The path span selects the complete path. The camera's whole animation track includes its movement and transform/lens keys. Models and cameras remain in the scene. Each removal is one Undo/Redo action.
+
+Removing a motion preserves the actor's path, transforms and additive pose layer. Removing the last clip clears its fallback source and leaves the figure without source motion; it remains removed after save/reopen. Overlap blending on remaining clips is adjusted to the actual remaining neighbours. The inspector's Remove clip uses the same deletion operation. Text-entry controls keep Delete for editing text.
 
 ## AI Director
 
