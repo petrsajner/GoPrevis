@@ -28,14 +28,15 @@ public partial class GoPrevisApp
 
         var fileMenu=new MenuButton{Text="File",FocusMode=FocusModeEnum.None};
         var filePopup=fileMenu.GetPopup();
-        foreach(var item in new[]{"New scene","Open project…","Save project","Import motion…","Import 3D model…","Export shot…","Export frame…","Open car chase demo"})filePopup.AddItem(item);
-        filePopup.IdPressed+=id=>{switch(id){case 0:NewScene();break;case 1:OpenProject();break;case 2:SaveProject();break;case 3:ImportMotion();break;case 4:ImportModel();break;case 5:OpenShotExport();break;case 6:ExportFrame();break;case 7:OpenCarChaseDemo();break;}};
+        foreach(var (id,title) in new[]{(0,"New scene"),(1,"Open project…"),(2,"Save project"),(8,"Save project as…"),(3,"Import motion…"),(4,"Import 3D model…"),(5,"Export shot…"),(6,"Export frame…"),(7,"Open car chase demo")})filePopup.AddItem(title,id);
+        filePopup.IdPressed+=id=>{switch(id){case 0:NewScene();break;case 1:OpenProject();break;case 2:SaveProject();break;case 3:ImportMotion();break;case 4:ImportModel();break;case 5:OpenShotExport();break;case 6:ExportFrame();break;case 7:OpenCarChaseDemo();break;case 8:SaveProjectAs();break;}};
         var editMenu=new MenuButton{Text="Edit",FocusMode=FocusModeEnum.None};
         foreach(var item in new[]{"Undo","Redo","Duplicate selected","Delete selected"})editMenu.GetPopup().AddItem(item);
         editMenu.GetPopup().IdPressed+=id=>{switch(id){case 0:Undo();break;case 1:Redo();break;case 2:DuplicateSelected();break;case 3:DeleteSelected();break;}};
         var export=Button("Export shot",OpenShotExport);export.AddThemeStyleboxOverride("normal",Style(new Color("e5e2ec"),4));export.AddThemeColorOverride("font_color",new Color("202026"));
         _projectSetupButton=Button("Project · 16:9 · 24 fps",OpenProjectSetup);_projectSetupButton.TooltipText="Shot aspect ratio, resolution and frame rate";
-        var header=Row(Text("GOPREVIS "+AppVersion,14),fileMenu,editMenu,BuildHistoryControls(),Space(),Button("AI Director",OpenAiDirector),_projectSetupButton,Button("Save",SaveProject),export);
+        _projectNameLabel=Text("Untitled",13);_projectNameLabel.SizeFlagsHorizontal=SizeFlags.ExpandFill;_projectNameLabel.ClipText=true;_projectNameLabel.TextOverrunBehavior=TextServer.OverrunBehavior.TrimEllipsis;_projectNameLabel.HorizontalAlignment=HorizontalAlignment.Center;_projectNameLabel.MouseFilter=MouseFilterEnum.Pass;RefreshProjectIdentity();
+        var header=Row(Text("GOPREVIS "+AppVersion,14),fileMenu,editMenu,BuildHistoryControls(),_projectNameLabel,Button("AI Director",OpenAiDirector),_projectSetupButton,Button("Save",SaveProject),export);
         header.AddThemeConstantOverride("separation",6);_layoutHeader=CompactPanel(header,4,2);_layoutRoot.AddChild(_layoutHeader);
 
         _layoutWorkSplit=new VSplitContainer{SizeFlagsVertical=SizeFlags.ExpandFill,SizeFlagsHorizontal=SizeFlags.ExpandFill,DraggerVisibility=SplitContainer.DraggerVisibilityEnum.Hidden};

@@ -1,4 +1,14 @@
-# GoPrevis 0.18.0 validation
+# GoPrevis 0.18.1 validation
+
+Validation date: **2026-10-26**. Windows x64; schema remains **13**. Adds **File → Save project as… / Ctrl+Shift+S**, current project name in the application header and native title, Untitled for new scenes, full-path tooltip and ellipsis for long names.
+
+The project-file suite passes **22 checks plus 24 responsive-layout checks**: real Save As menu/picker, current folder/name, cancellation, shortcut routing, automatic extension, unchanged original file bytes, copied model/motion assets, reopening the portable copy, subsequent Ctrl+S writing only the active copy, retention of the copy after Undo/Redo of older edits, failed-save identity preservation, Open/New/Undo/Redo identity updates and layout at 1280×800, 1920×1080 and 2560×1440. Actual application screenshots verify the saved filename and Save As dialog. The Windows executable, smoke checks and relevant editor/history/demo/rename regressions are verified; exact logs accompany the delivery.
+
+Final native regressions pass **39 editor refinements, 9 history, 7 demo launch, 14 rename, 55 AI integration** (12 visual provider contracts), and **163 project workflow** checks. All native stderr logs are empty; the compiler reports zero warnings/errors and source smoke checks pass.
+
+The previous 0.18.0 AI/animation evidence below remains historical; this patch makes no provider calls to validate project saving. BUILD-INFO.json identifies the current source commit and runtime hashes.
+
+# Historical GoPrevis 0.18.0 validation
 
 Validation date: **2026-10-26**. Windows x64, Godot 4.7.2 .NET, bundled .NET 10.0.13. English UI. Format **13** adds independent camera aim paths and linked lines; formats 1–12 and legacy extensions remain readable. The private GitHub repository remains https://github.com/petrsajner/GoPrevis.
 

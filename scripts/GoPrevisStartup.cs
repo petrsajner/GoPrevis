@@ -44,7 +44,7 @@ public partial class GoPrevisApp
             int checks=0;
             void Check(bool condition,string name){Require(condition,"Demo launch: "+name);checks++;}
             var menu=Descendants(this).OfType<MenuButton>().Single(button=>button.Text=="File").GetPopup();
-            Check(menu.GetItemText(7)=="Open car chase demo","the example is discoverable in the File menu");
+            Check(menu.GetItemText(menu.GetItemIndex(7))=="Open car chase demo","the example is discoverable in the File menu");
             _name.GrabFocus();
             menu.EmitSignal(PopupMenu.SignalName.IdPressed,7L);
             Check(_pilot&&ActiveCameraId==DemoFollowCameraId&&_selectedCamera?.Id==DemoFollowCameraId,"opening the example selects its following camera and enters camera view");

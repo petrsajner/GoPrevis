@@ -54,7 +54,9 @@ public partial class GoPrevisApp : Control
     int _loadingVersion=ProjectData.CurrentVersion;
     Vector3 _orbitTarget = new(0, .9f, 0);
     float _yaw = .65f, _pitch = .42f, _distance = 12;
-    string _category = "Models", _projectPath = "";
+    string _category = "Models";
+    string _currentProjectPath = "";
+    string _projectPath { get=>_currentProjectPath; set { _currentProjectPath=value; RefreshProjectIdentity(); } }
 
     public override void _Ready()
     {
@@ -63,7 +65,8 @@ public partial class GoPrevisApp : Control
         var window=GetWindow();float dpiScale=Math.Clamp(Math.Max(DisplayServer.ScreenGetScale(),DisplayServer.ScreenGetDpi()/96f),1,2.5f);window.ContentScaleMode=Window.ContentScaleModeEnum.CanvasItems;window.ContentScaleSize=Vector2I.Zero;window.ContentScaleFactor=dpiScale;
         window.Title="GoPrevis "+AppVersion+" — 3D control clips for AI video";
         BuildTheme(); BuildUi(); BuildWorld(); StarterScene();
-        if(OS.GetCmdlineUserArgs().Contains("--ai-reference-live-test"))_=RunAiReferenceChecksAndQuit();
+        if(OS.GetCmdlineUserArgs().Contains("--project-files-test"))_=RunProjectFileChecksAndQuit();
+        else if(OS.GetCmdlineUserArgs().Contains("--ai-reference-live-test"))_=RunAiReferenceChecksAndQuit();
         else if(OS.GetCmdlineUserArgs().Contains("--ai-reliability-test"))_=RunAiReliabilityChecksAndQuit();
         else if(OS.GetCmdlineUserArgs().Contains("--ai-city-live-test"))_=RunAiCityChecksAndQuit();
         else if(OS.GetCmdlineUserArgs().Contains("--ai-semantic-live-test"))_=RunAiSemanticChecksAndQuit(true);
@@ -418,7 +421,7 @@ public partial class GoPrevisApp : Control
         if(_poseEditing&&!_rightDown&&!_middleDown&&!_middleZoom&&(key.Keycode==Key.W||key.Keycode==Key.E)){SetPoseTool(key.Keycode==Key.W?"Move":"Rotate");return;}
         if(key.Keycode==Key.K){if(_poseEditing)CapturePoseCorrectionKey("All");else CaptureSelectedTransformKey("All");return;}
         if(key.Keycode==Key.Delete&&(_timeline.DeleteSelectedKeys()||_timeline.HasFocus())){GetViewport().SetInputAsHandled();return;}
-        if (key.CtrlPressed && key.Keycode == Key.S) SaveProject(); else if (key.CtrlPressed && key.Keycode == Key.O) OpenProject(); else if (key.CtrlPressed && key.Keycode == Key.Z) {if(key.ShiftPressed)Redo();else Undo();} else if (key.CtrlPressed && key.Keycode == Key.Y) Redo(); else if (key.CtrlPressed && key.Keycode == Key.D) DuplicateSelected(); else if (key.Keycode == Key.Delete) DeleteSelected(); else if (key.Keycode == Key.F) FrameSelected(); else if (key.Keycode == Key.Space) { _playing = !_playing; _play.Text = _playing ? "Ⅱ Pause" : "▶ Play"; }
+        if (key.CtrlPressed && key.Keycode == Key.S) { if(key.ShiftPressed)SaveProjectAs();else SaveProject(); } else if (key.CtrlPressed && key.Keycode == Key.O) OpenProject(); else if (key.CtrlPressed && key.Keycode == Key.Z) {if(key.ShiftPressed)Redo();else Undo();} else if (key.CtrlPressed && key.Keycode == Key.Y) Redo(); else if (key.CtrlPressed && key.Keycode == Key.D) DuplicateSelected(); else if (key.Keycode == Key.Delete) DeleteSelected(); else if (key.Keycode == Key.F) FrameSelected(); else if (key.Keycode == Key.Space) { _playing = !_playing; _play.Text = _playing ? "Ⅱ Pause" : "▶ Play"; }
     }
     public override void _Input(InputEvent input)
     {
@@ -474,7 +477,7 @@ public partial class GoPrevisApp : Control
     }
     void SaveProject()
     {
-        if (_projectPath == "") ChooseFile("Save GoPrevis project", FileDialog.FileModeEnum.SaveFile, new[] { "*.goprevis ; GoPrevis project" }, SaveTo);
+        if (_projectPath == "") SaveProjectAs();
         else { try { SaveTo(_projectPath); } catch (Exception ex) { Error(ex.Message); } }
     }
     void SaveTo(string path)
@@ -500,7 +503,7 @@ public partial class GoPrevisApp : Control
                 string fileName = item.Id + (motion ? "_motion" : "_model") + Path.GetExtension(source); string target = Path.Combine(assetDirectory, fileName); if (!Path.GetFullPath(source).Equals(Path.GetFullPath(target), StringComparison.OrdinalIgnoreCase)) File.Copy(source, target, true);
                 if (motion) item.MotionPath = Path.Combine(assetFolder, fileName).Replace('\\','/'); else item.ModelPath = Path.Combine(assetFolder, fileName).Replace('\\','/'); }
         }
-        string temporary = path + ".tmp"; File.WriteAllText(temporary, JsonSerializer.Serialize(document, _json));if(File.Exists(path))File.Copy(path,path+".bak",true); File.Move(temporary, path, true); _projectPath = path; Status("Saved cameras, motion clips, paths and assets: " + Path.GetFileName(path));
+        string temporary = path + ".tmp"; File.WriteAllText(temporary, JsonSerializer.Serialize(document, _json));if(File.Exists(path))File.Copy(path,path+".bak",true); File.Move(temporary, path, true); RebindSavedProjectHistory(_projectPath,path);_projectPath = path; Status("Saved cameras, motion clips, paths and assets: " + Path.GetFileName(path));
     }
     void OpenProject() => ChooseFile("Open GoPrevis project", FileDialog.FileModeEnum.OpenFile, new[] { "*.goprevis,*.genprevis,*.previs ; GoPrevis projects (including legacy Previs)" },LoadProjectFromPath);
     void LoadProjectFromPath(string path)
