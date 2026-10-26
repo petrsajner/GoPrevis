@@ -12,12 +12,14 @@ public partial class GoPrevisApp
     string ProjectDisplayName=>string.IsNullOrEmpty(_projectPath)?"Untitled":Path.GetFileNameWithoutExtension(_projectPath);
     void RefreshProjectIdentity()
     {
-        if(_projectNameLabel!=null){_projectNameLabel.Text=ProjectDisplayName;_projectNameLabel.TooltipText=_projectPath==""?"This project has not been saved.":Path.GetFullPath(_projectPath);}
-        if(IsInsideTree())GetWindow().Title="GoPrevis "+AppVersion+" — "+ProjectDisplayName+" — 3D control clips for AI video";
+        string name=ProjectDisplayName+(_projectDirty?" *":"");
+        if(_projectNameLabel!=null){_projectNameLabel.Text=name;_projectNameLabel.TooltipText=_projectPath==""?"This project has not been saved.":Path.GetFullPath(_projectPath);}
+        if(IsInsideTree())GetWindow().Title="GoPrevis "+AppVersion+" — "+name+" — 3D control clips for AI video";
     }
-    void SaveProjectAs()
+    void SaveProjectAs()=>ChooseProjectSaveAs(SaveTo);
+    void ChooseProjectSaveAs(Action<string> save,Action? cancel=null)
     {
-        ChooseFile("Save project as",FileDialog.FileModeEnum.SaveFile,new[]{"*.goprevis ; GoPrevis project"},SaveTo);
+        ChooseFile("Save project as",FileDialog.FileModeEnum.SaveFile,new[]{"*.goprevis ; GoPrevis project"},save,cancel);
         if(_projectPath!="")_fileDialog.CurrentDir=Path.GetDirectoryName(Path.GetFullPath(_projectPath))!;
         _fileDialog.CurrentFile=ProjectDisplayName+".goprevis";_fileDialog.GetLineEdit().SelectAll();
     }

@@ -105,7 +105,7 @@ public partial class GoPrevisApp
         var timelineScroll=new ScrollContainer{SizeFlagsVertical=SizeFlags.ExpandFill,SizeFlagsHorizontal=SizeFlags.ExpandFill,HorizontalScrollMode=ScrollContainer.ScrollMode.Disabled};timelineScroll.AddChild(_timeline);var tracksPanel=CompactPanel(timelineScroll,2,2);tracksPanel.SizeFlagsVertical=SizeFlags.ExpandFill;timelinePane.AddChild(tracksPanel);
         _status=Text("Ready",11,true);_status.ClipText=true;_status.SizeFlagsHorizontal=SizeFlags.ExpandFill;_status.TooltipText="RMB orbit · MMB pan · Alt+MMB zoom · Shift: 3D transforms · F frame selection";_layoutRoot.AddChild(CompactPanel(Row(_status,Text(AppCopyright,10,true)),6,1));
 
-        _fileDialog=new FileDialog{Access=FileDialog.AccessEnum.Filesystem,UseNativeDialog=false};_fileDialog.FileSelected+=path=>{try{_fileAction?.Invoke(path);}catch(Exception ex){Error(ex.Message);}};AddChild(_fileDialog);
+        _fileDialog=new FileDialog{Access=FileDialog.AccessEnum.Filesystem,UseNativeDialog=false};_fileDialog.FileSelected+=path=>{var action=_fileAction;_fileAction=null;_fileCancelled=null;_fileDialog.Hide();try{action?.Invoke(path);}catch(Exception ex){Error(ex.Message);}};_fileDialog.Canceled+=()=>{var cancelled=_fileCancelled;_fileCancelled=null;_fileAction=null;cancelled?.Invoke();};AddChild(_fileDialog);
         _message=new AcceptDialog{Title="GoPrevis"};AddChild(_message);
         Resized+=ApplyResponsiveLayout;ApplyResponsiveLayout();Callable.From(ApplyResponsiveLayout).CallDeferred();
     }

@@ -1,12 +1,12 @@
 <img src="assets/goprevis.png" width="120" alt="GoPrevis icon">
 
-# GoPrevis 0.18.1 — 3D control clips for AI video
+# GoPrevis 0.18.2 — 3D control clips for AI video
 
 GoPrevis prepares 3D control clips for AI video generation. Build the scene, direct character and object motion, frame the camera, and export synchronized color, depth and pose guidance. It uses Godot 4.7.2 .NET, C# and .NET 10. The application UI, dialogs and authored errors are English.
 
 ## Run
 
-The Windows portable output is `build/GoPrevis-0.18.1-Windows/GoPrevis.exe`. Keep GoPrevis.exe, GoPrevis.pck and data_GoPrevis_windows_x86_64 together. The portable Windows build includes its runtime; using it does not require the Godot editor or .NET SDK.
+The Windows portable output is `build/GoPrevis-0.18.2-Windows/GoPrevis.exe`. Keep GoPrevis.exe, GoPrevis.pck and data_GoPrevis_windows_x86_64 together. The portable Windows build includes its runtime; using it does not require the Godot editor or .NET SDK.
 
 For development, open project.godot with Godot 4.7.2 .NET. Local tools are in the ignored .tools directory. The existing run.ps1 starts the source project; build.ps1 -Test builds, runs source checks and exports Windows x64.
 
@@ -15,6 +15,10 @@ For development, open project.godot with Godot 4.7.2 .NET. Local tools are in th
 **File → Save project as…** or **Ctrl+Shift+S** saves the current scene under a new name or in another folder and makes that copy active. The picker starts with the current filename and folder. Enter a name; `.goprevis` is appended automatically. Used sources are bundled in the copy's own `.assets` folder. The original project is preserved. **Save / Ctrl+S** writes subsequent changes to the active copy, including after Undo/Redo of edits made before Save As.
 
 The top bar and native window title show the current project name. A new/unsaved scene shows **Untitled**. Hover over the header name for the full path. Long names shorten visually so the toolbar stays compact. Open, Save As, New scene and their applicable Undo/Redo actions update the displayed name.
+
+An **asterisk (*)** beside the project name in the header and native title means the current content has unsaved changes. Successful Save/Save As clears it; Undo back to the saved content clears it too. Playback, scrubbing and navigation in the working view do not mark a project dirty. Changes to the active camera, animation, object/pose data and project settings are included.
+
+Closing the application, opening another project, creating a new scene or opening the demo protects unsaved work with **Save / Discard / Cancel**. Save completes before the requested action; an untitled project first opens Save As. Cancelling that picker or a failed save cancels the pending action. Discard continues without saving; Cancel keeps the current project open. Active AI/export work is cancelled and allowed to restore the working scene before deciding whether it needs saving; completed AI provider work remains in the existing resumable session.
 
 ## AI Director
 

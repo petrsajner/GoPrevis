@@ -1,4 +1,14 @@
-# GoPrevis 0.18.1 validation
+# GoPrevis 0.18.2 validation
+
+Validation date: **2026-10-26**. Windows x64, schema **13**, English UI. Adds content-based dirty tracking, a header/native-title asterisk and Save / Discard / Cancel protection for native close, Open, New scene and opening the demo. Save/Save As and Undo/Redo update the dirty state; cancelling the save picker or a failed save blocks the pending action. Playback/scrubbing and working-view navigation are excluded. AI rehearsals suspend dirty polling; an in-progress AI/export operation restores its scene before a transition proceeds.
+
+The unsaved-changes suite exercises actual controls and the native close signal: clean playback, object/camera/pose/duration edits, exact Undo/Redo restoration, manual value restoration, Save/Discard/Cancel, preservation after cancellation or failed save, guarded Open/New, untitled Save As, cancellation of a pending action and duplicate request suppression. The exported package also verifies user-saved projects and adjacent .assets folders are excluded from resources. Existing user project files in the workspace are preserved and excluded from the change commit and package.
+
+Final Windows checks pass **31 unsaved-change**, **22 project-file + 24 layout**, **39 editor**, **9 history**, **7 demo launch**, **14 rename**, **55 AI integration** (12 visual contracts), **22 semantic**, **163 project workflow** and **29 camera reference** checks. The compiler reports zero warnings/errors; source smoke checks pass and all native stderr logs are empty. Temporary AI rendering preserves the clean document; an exclusive AI window releases correctly before the save prompt; pending inspector text is committed before the check. No provider API calls were made for this patch.
+
+Final Windows logs, reports and actual rendered screenshots are in validation/. BUILD-INFO.json records the exact source commit and runtime hashes. Prior release validation follows as historical evidence.
+
+# Historical GoPrevis 0.18.1 validation
 
 Validation date: **2026-10-26**. Windows x64; schema remains **13**. Adds **File → Save project as… / Ctrl+Shift+S**, current project name in the application header and native title, Untitled for new scenes, full-path tooltip and ellipsis for long names.
 

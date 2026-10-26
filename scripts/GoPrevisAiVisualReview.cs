@@ -46,7 +46,7 @@ public partial class GoPrevisApp
     {
         if(DisplayServer.GetName()=="headless")throw new InvalidOperationException("AI visual review requires the graphics renderer.");
         var original=Snapshot();string project=_projectPath;double originalTime=_time;string? selected=_selected?.Data.Id,selectedCamera=_selectedCamera?.Id;var undo=_undo.ToArray();var redo=_redo.ToArray();bool pilot=_pilot;var editor=_editorCamera.Transform;
-        var review=new AiVisualReview();SubViewport? view=null;var images=new List<Image>();
+        var review=new AiVisualReview();SubViewport? view=null;var images=new List<Image>();_dirtyTrackingSuspended++;
         try
         {
             if(_aiProgress!=null)_aiProgress.Text="Rehearsing proposed shot · checking the actual rendered animation…";
@@ -93,7 +93,7 @@ public partial class GoPrevisApp
         finally
         {
             foreach(var image in images)image.Dispose();view?.QueueFree();Restore(original,"");_projectPath=project;SetTime(originalTime);RestoreInteractionSelection(selected,selectedCamera);_pilot=pilot;_editorCamera.Transform=editor;
-            _undo.Clear();_redo.Clear();foreach(var item in undo.Reverse())_undo.Push(item);foreach(var item in redo.Reverse())_redo.Push(item);RefreshHistoryControls();
+            _undo.Clear();_redo.Clear();foreach(var item in undo.Reverse())_undo.Push(item);foreach(var item in redo.Reverse())_redo.Push(item);RefreshHistoryControls();_dirtyTrackingSuspended--;RefreshProjectDirtyState();
         }
         static string Sheet(IReadOnlyList<Image> frames,int columns)
         {

@@ -41,7 +41,7 @@ public partial class GoPrevisApp
             string second=Path.Combine(secondDirectory,"Street shot.v2.goprevis");
             Check(File.Exists(second)&&Path.GetFullPath(_projectPath)==second&&_projectNameLabel.Text=="Street shot.v2","accepting a bare new name creates the extension and makes the copy active");
             Check(originalBytes.SequenceEqual(File.ReadAllBytes(first)),"Save As leaves the original project unchanged");
-            Undo();Check(Path.GetFullPath(_projectPath)==second&&_projectNameLabel.Text=="Street shot.v2"&&!_entries.Any(e=>e.Data.Name=="Copy-only object"),"undoing an edit made before Save As keeps the copy active");
+            Undo();Check(Path.GetFullPath(_projectPath)==second&&_projectNameLabel.Text=="Street shot.v2 *"&&!_entries.Any(e=>e.Data.Name=="Copy-only object"),"undoing an edit made before Save As keeps the copy active and marks the differing content");
             Redo();Check(Path.GetFullPath(_projectPath)==second&&_entries.Any(e=>e.Data.Name=="Copy-only object"),"redoing the older edit keeps the copy active too");
             var copy=JsonSerializer.Deserialize<ProjectData>(File.ReadAllText(second))!;
             var sources=copy.Objects.SelectMany(o=>new[]{o.ModelPath,o.MotionPath}.Concat(o.MotionClips.Select(c=>c.MotionPath))).Concat(copy.Cameras.Select(c=>c.Reference.Path)).Where(p=>!string.IsNullOrEmpty(p)).ToArray();
@@ -57,7 +57,7 @@ public partial class GoPrevisApp
             Check(_projectNameLabel.Text=="Untitled","New scene clears the previous filename");Undo();
             Check(_projectNameLabel.Text=="Street shot.v1","Undo of New scene restores its saved project name");
             string longName="A very long shot name - "+new string('x',150);_projectPath=Path.Combine(folder,longName+".goprevis");int layout=await RunResponsiveLayoutChecks();await Settle();
-            Check(layout==24&&_projectNameLabel!.Text==longName&&_projectNameLabel.GetGlobalRect().End.X<=_projectSetupButton!.GetGlobalRect().Position.X,"long project names retain the full value and fit the responsive header at all three tested resolutions");
+            Check(layout==24&&ProjectDisplayName==longName&&_projectNameLabel!.GetGlobalRect().End.X<=_projectSetupButton!.GetGlobalRect().Position.X,"long project names retain the full value and fit the responsive header at all three tested resolutions");
             LoadProjectFromPath(second);await Screenshot("named-project-header.png");passed=true;GD.Print("PROJECT_FILES_OK checks="+checks+" layout="+layout+" output="+folder);
         }
         catch(Exception error){failure=error.ToString();throw;}

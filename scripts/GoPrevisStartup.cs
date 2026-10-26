@@ -22,7 +22,8 @@ public partial class GoPrevisApp
         }
         catch(Exception ex){Error(ex.Message);}
     }
-    void OpenCarChaseDemo()
+    void OpenCarChaseDemo()=>RequestProjectTransition(OpenCarChaseDemoCore,"opening the demo");
+    void OpenCarChaseDemoCore()
     {
         if(_exportBusy)return;
         try
@@ -31,7 +32,7 @@ public partial class GoPrevisApp
             string adjacent=Path.Combine(Path.GetDirectoryName(OS.GetExecutablePath())!,"examples","car-chase.goprevis");
             string path=File.Exists(adjacent)?adjacent:SamplePath("samples/car-chase.goprevis");
             LoadProjectFromPath(path);_projectPath="";SetTime(0);
-            SelectCamera(_cameras.First(camera=>camera.Rig==_shot));if(!_pilot)TogglePilot();
+            SelectCamera(_cameras.First(camera=>camera.Rig==_shot));if(!_pilot)TogglePilot();MarkProjectClean();
             Status("Car chase demo · Space: play / pause · Camera background…: this camera's image or video · Save creates your own project.");
         }
         catch(Exception ex){Error("The car chase demo could not be opened: "+ex.Message);}

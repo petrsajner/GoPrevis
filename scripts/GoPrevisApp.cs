@@ -48,6 +48,7 @@ public partial class GoPrevisApp : Control
     FileDialog _fileDialog = null!;
     AcceptDialog _message = null!;
     Action<string>? _fileAction;
+    Action? _fileCancelled;
     bool _refreshing, _playing, _pilot, _rightDown, _middleDown;
     double _time, _duration = 8;
     int _fps = 24;
@@ -64,8 +65,9 @@ public partial class GoPrevisApp : Control
         MigrateLegacyUserData();
         var window=GetWindow();float dpiScale=Math.Clamp(Math.Max(DisplayServer.ScreenGetScale(),DisplayServer.ScreenGetDpi()/96f),1,2.5f);window.ContentScaleMode=Window.ContentScaleModeEnum.CanvasItems;window.ContentScaleSize=Vector2I.Zero;window.ContentScaleFactor=dpiScale;
         window.Title="GoPrevis "+AppVersion+" — 3D control clips for AI video";
-        BuildTheme(); BuildUi(); BuildWorld(); StarterScene();
-        if(OS.GetCmdlineUserArgs().Contains("--project-files-test"))_=RunProjectFileChecksAndQuit();
+        BuildTheme(); BuildUi(); BuildWorld(); StarterScene();InitializeProjectProtection();
+        if(OS.GetCmdlineUserArgs().Contains("--unsaved-changes-test"))_=RunUnsavedChangesChecksAndQuit();
+        else if(OS.GetCmdlineUserArgs().Contains("--project-files-test"))_=RunProjectFileChecksAndQuit();
         else if(OS.GetCmdlineUserArgs().Contains("--ai-reference-live-test"))_=RunAiReferenceChecksAndQuit();
         else if(OS.GetCmdlineUserArgs().Contains("--ai-reliability-test"))_=RunAiReliabilityChecksAndQuit();
         else if(OS.GetCmdlineUserArgs().Contains("--ai-city-live-test"))_=RunAiCityChecksAndQuit();
@@ -348,7 +350,7 @@ public partial class GoPrevisApp : Control
             if (Input.IsPhysicalKeyPressed(Key.Q)) direction -= Vector3.Up; if (Input.IsPhysicalKeyPressed(Key.E)) direction += Vector3.Up;
             if (direction.LengthSquared() > 0) { Vector3 move = direction.Normalized() * (float)delta * (Input.IsPhysicalKeyPressed(Key.Shift) ? 10 : 3); _editorCamera.Position += move; _orbitTarget += move; if (_pilot) {_shot.GlobalTransform = _editorCamera.GlobalTransform;StorePilotedCameraPose();} }
         }
-        UpdatePreview();
+        UpdatePreview();PollProjectDirtyState(delta);
     }
     void SetTime(double seconds)
     {
@@ -437,15 +439,16 @@ public partial class GoPrevisApp : Control
         _selectionBox.Mesh = mesh; _selectionBox.MaterialOverride = new StandardMaterial3D { AlbedoColor = _accent, ShadingMode = BaseMaterial3D.ShadingModeEnum.Unshaded }; _selectionBox.GlobalTransform = _selected.Node.GlobalTransform;
     }
 
-    void ChooseFile(string title, FileDialog.FileModeEnum mode, string[] filters, Action<string> action)
-    { _playing = false; _play.Text = "▶ Play"; _fileAction = action; _fileDialog.Title = title; _fileDialog.FileMode = mode; _fileDialog.Filters = filters; _fileDialog.PopupCentered(new Vector2I(900, 600)); }
+    void ChooseFile(string title, FileDialog.FileModeEnum mode, string[] filters, Action<string> action,Action? cancelled=null)
+    { _playing = false; _play.Text = "▶ Play"; _fileAction = action;_fileCancelled=cancelled; _fileDialog.Title = title; _fileDialog.FileMode = mode; _fileDialog.Filters = filters; _fileDialog.PopupCentered(new Vector2I(900, 600)); }
     void Status(string text) { if (_status != null) _status.Text = text; }
     void Error(string message) { Status(message); _message.Title = "GoPrevis — action could not be completed"; _message.DialogText = message; _message.PopupCentered(new Vector2I(640, 230)); GD.PushWarning(message); }
-    void NewScene() { if(_drawingPath)CancelDrawingPath();PushUndo(); ClearObjects(); ClearCameras();CreateCamera("Camera A",null,true);_shot.ClearKeys();_lighting.DirectionalEnabled=false;ApplySceneSettings(new());ApplyProjectSetup(new()); _projectPath = ""; SetTime(0); Status("New neutral scene. Add an actor or prop from the library."); }
+    void NewScene()=>RequestProjectTransition(NewSceneCore,"creating a new scene");
+    void NewSceneCore() { if(_drawingPath)CancelDrawingPath();PushUndo(); ClearObjects(); ClearCameras();CreateCamera("Camera A",null,true);_shot.ClearKeys();_lighting.DirectionalEnabled=false;ApplySceneSettings(new());ApplyProjectSetup(new()); _projectPath = ""; SetTime(0);MarkProjectClean(); Status("New neutral scene. Add an actor or prop from the library."); }
     void ClearObjects() {_timeline?.ClearKeySelection();CancelPlacement();ClearObjectAppearanceStates();_poseBaseSnapshots.Clear(); foreach (var e in _entries) { _world.RemoveChild(e.Node); e.Node.QueueFree(); } _entries.Clear(); _selected = null; RefreshObjects(); Select(null); }
     void PushUndo() { if (_world == null) return;if(_numericGesture){if(_numericUndoPushed)return;_numericUndoPushed=true;} _undo.Push((Snapshot(),_projectPath)); _redo.Clear();RefreshHistoryControls(); }
-    void Undo() { if (_undo.Count == 0||_exportBusy) return;StopHistoryPlayback();string? poseId=_poseEditing?_selected?.Data.Id:null;string? objectId=_selected?.Data.Id,cameraId=_selectedCamera?.Id;ReleasePoseViewportDrag();ReleaseObjectGizmoDrag();EndArrangeDrag(); _redo.Push((Snapshot(),_projectPath)); var previous=_undo.Pop();Restore(previous.Document, "");_projectPath=previous.Path;RestoreInteractionSelection(objectId,cameraId);RestorePoseEditorSelection(poseId); RefreshHistoryControls();Status("Undo."); }
-    void Redo() { if (_redo.Count == 0||_exportBusy) return;StopHistoryPlayback();string? poseId=_poseEditing?_selected?.Data.Id:null;string? objectId=_selected?.Data.Id,cameraId=_selectedCamera?.Id;ReleasePoseViewportDrag();ReleaseObjectGizmoDrag();EndArrangeDrag(); _undo.Push((Snapshot(),_projectPath)); var next=_redo.Pop();Restore(next.Document, "");_projectPath=next.Path;RestoreInteractionSelection(objectId,cameraId);RestorePoseEditorSelection(poseId); RefreshHistoryControls();Status("Redo."); }
+    void Undo() { if (_undo.Count == 0||_exportBusy) return;StopHistoryPlayback();string? poseId=_poseEditing?_selected?.Data.Id:null;string? objectId=_selected?.Data.Id,cameraId=_selectedCamera?.Id;ReleasePoseViewportDrag();ReleaseObjectGizmoDrag();EndArrangeDrag(); _redo.Push((Snapshot(),_projectPath)); var previous=_undo.Pop();Restore(previous.Document, "");_projectPath=previous.Path;RestoreInteractionSelection(objectId,cameraId);RestorePoseEditorSelection(poseId); RefreshHistoryControls();RefreshProjectDirtyState();Status("Undo."); }
+    void Redo() { if (_redo.Count == 0||_exportBusy) return;StopHistoryPlayback();string? poseId=_poseEditing?_selected?.Data.Id:null;string? objectId=_selected?.Data.Id,cameraId=_selectedCamera?.Id;ReleasePoseViewportDrag();ReleaseObjectGizmoDrag();EndArrangeDrag(); _undo.Push((Snapshot(),_projectPath)); var next=_redo.Pop();Restore(next.Document, "");_projectPath=next.Path;RestoreInteractionSelection(objectId,cameraId);RestorePoseEditorSelection(poseId); RefreshHistoryControls();RefreshProjectDirtyState();Status("Redo."); }
     static float[] Array3(Vector3 v) => new[] { v.X, v.Y, v.Z };
     static Vector3 Vector(float[] v, Vector3 fallback = default) => v.Length == 3 && v.All(float.IsFinite) ? new Vector3(v[0], v[1], v[2]) : fallback;
     ObjectData SnapshotObject(Entry e) {var d=JsonSerializer.Deserialize<ObjectData>(JsonSerializer.Serialize(e.Data))!;d.ModelAnimation=e.Animation;return d;}
@@ -503,13 +506,13 @@ public partial class GoPrevisApp : Control
                 string fileName = item.Id + (motion ? "_motion" : "_model") + Path.GetExtension(source); string target = Path.Combine(assetDirectory, fileName); if (!Path.GetFullPath(source).Equals(Path.GetFullPath(target), StringComparison.OrdinalIgnoreCase)) File.Copy(source, target, true);
                 if (motion) item.MotionPath = Path.Combine(assetFolder, fileName).Replace('\\','/'); else item.ModelPath = Path.Combine(assetFolder, fileName).Replace('\\','/'); }
         }
-        string temporary = path + ".tmp"; File.WriteAllText(temporary, JsonSerializer.Serialize(document, _json));if(File.Exists(path))File.Copy(path,path+".bak",true); File.Move(temporary, path, true); RebindSavedProjectHistory(_projectPath,path);_projectPath = path; Status("Saved cameras, motion clips, paths and assets: " + Path.GetFileName(path));
+        string temporary = path + ".tmp";string text=JsonSerializer.Serialize(document,_json); File.WriteAllText(temporary,text);if(File.Exists(path))File.Copy(path,path+".bak",true); File.Move(temporary, path, true); RebindSavedProjectHistory(_projectPath,path);_projectPath = path;MarkProjectClean(text); Status("Saved cameras, motion clips, paths and assets: " + Path.GetFileName(path));
     }
-    void OpenProject() => ChooseFile("Open GoPrevis project", FileDialog.FileModeEnum.OpenFile, new[] { "*.goprevis,*.genprevis,*.previs ; GoPrevis projects (including legacy Previs)" },LoadProjectFromPath);
+    void OpenProject() => ChooseFile("Open GoPrevis project", FileDialog.FileModeEnum.OpenFile, new[] { "*.goprevis,*.genprevis,*.previs ; GoPrevis projects (including legacy Previs)" },path=>RequestProjectTransition(()=>LoadProjectFromPath(path),"opening another project"));
     void LoadProjectFromPath(string path)
     {
-        var document = JsonSerializer.Deserialize<ProjectData>(File.ReadAllText(path)) ?? throw new InvalidDataException("The project is empty."); var before = Snapshot();
-        try { Restore(document, Path.GetDirectoryName(path)!); PushUndoSnapshot(before); _projectPath = path; Status("Opened " + Path.GetFileName(path)); } catch { Restore(before, ""); throw; }
+        string text=File.ReadAllText(path);var document = JsonSerializer.Deserialize<ProjectData>(text) ?? throw new InvalidDataException("The project is empty."); var before = Snapshot();
+        try { Restore(document, Path.GetDirectoryName(path)!); PushUndoSnapshot(before); _projectPath = path;MarkProjectClean(text); Status("Opened " + Path.GetFileName(path)); } catch { Restore(before, ""); throw; }
     }
     void PushUndoSnapshot(ProjectData document) { _undo.Push((document,_projectPath)); _redo.Clear();RefreshHistoryControls(); }
     void ExportFrame() => ChooseFile("Export "+ActiveCameraName+" frame ("+ProjectResolution.X+" × "+ProjectResolution.Y+")", FileDialog.FileModeEnum.SaveFile, new[] { "*.png ; PNG image" }, path => { _ = ExportFrameSafe(path); });
