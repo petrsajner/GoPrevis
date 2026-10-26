@@ -40,6 +40,7 @@ public sealed class AiObject
     public bool ReplacePoseKeys {get;set;}
     public List<AiPoseKey> PoseKeys {get;set;}=new();
     public SceneLightData? Light {get;set;}
+    public ObjectLinkData? Link {get;set;}
 }
 public sealed class AiPathPoint
 {
@@ -108,6 +109,8 @@ public sealed class AiCameraMovement
     public float StartHeight {get;set;}=2;
     public float EndHeight {get;set;}=2;
     public string Easing {get;set;}="Linear";
-    public string PathTiming {get;set;}="Constant speed";
+    public string PathTiming {get;set;}="Smooth authored";
     public List<AiPathPoint> Path {get;set;}=new();
+    public List<AiPathPoint> AimPath {get;set;}=new();
+    public string AimPathTiming {get;set;}="Smooth authored";
 }

@@ -21,6 +21,8 @@ public sealed class CameraMovementData
     public float EndHeight {get;set;}=2;
     public string Easing {get;set;}="Linear";
     public ActorPathData Path {get;set;}=new();
+    public bool AimPathEnabled {get;set;}
+    public ActorPathData AimPath {get;set;}=new();
     public float[] PositionOffset {get;set;}=new float[3];
     public float[] RotationOffset {get;set;}=new float[3];
 
@@ -33,6 +35,7 @@ public sealed class CameraMovementData
         if(!float.IsFinite(Radius)||Radius<.1f||Radius>2000||!float.IsFinite(StartAngleDegrees)||Math.Abs(StartAngleDegrees)>36000||!float.IsFinite(OrbitDegrees)||Math.Abs(OrbitDegrees)>3600||!float.IsFinite(StartHeight)||!float.IsFinite(EndHeight)||Math.Abs(StartHeight)>1000||Math.Abs(EndHeight)>1000)throw new ArgumentException("Invalid camera orbit radius, angle or height.");
         if(!KeyInterpolation.Modes.Contains(Easing))throw new ArgumentException("Unknown camera movement easing.");
         var path=System.Text.Json.JsonSerializer.Deserialize<ActorPathData>(System.Text.Json.JsonSerializer.Serialize(Path??new()))!;
+        var aimPath=System.Text.Json.JsonSerializer.Deserialize<ActorPathData>(System.Text.Json.JsonSerializer.Serialize(AimPath??new()))!;
         if(Mode=="Path")
         {
             if(path.Points.Count<2||path.Points.Count>256||path.PointTimes.Count!=path.Points.Count)throw new ArgumentException("A camera path needs 2–256 points and matching arrival times.");
@@ -40,7 +43,12 @@ public sealed class CameraMovementData
             foreach(double time in path.PointTimes){if(!double.IsFinite(time)||time<0||time<=before||time>600)throw new ArgumentException("Camera path times must strictly increase.");before=time;}
             path.Enabled=true;
         }
-        return new(){Mode=Mode,TargetId=TargetId??"",TargetPosition=Copy(TargetPosition,"Camera target"),TargetOffset=Copy(TargetOffset,"Camera aim offset"),AimAtTarget=AimAtTarget,Start=Start,Duration=Duration,Radius=Radius,StartAngleDegrees=StartAngleDegrees,OrbitDegrees=OrbitDegrees,StartHeight=StartHeight,EndHeight=EndHeight,Easing=Easing,Path=path,PositionOffset=Copy(PositionOffset,"Camera position correction"),RotationOffset=Copy(RotationOffset,"Camera rotation correction")};
+        if(AimPathEnabled)
+        {
+            if(aimPath.Points.Count<2||aimPath.Points.Count!=aimPath.PointTimes.Count)throw new ArgumentException("An aim path needs matching points and arrival times.");
+            foreach(var point in aimPath.Points)Copy(point,"Camera aim path");double previous=-1;foreach(double time in aimPath.PointTimes){if(!double.IsFinite(time)||time<0||time<=previous||time>600)throw new ArgumentException("Camera aim arrival times must strictly increase.");previous=time;}aimPath.Enabled=true;
+        }
+        return new(){Mode=Mode,TargetId=TargetId??"",TargetPosition=Copy(TargetPosition,"Camera target"),TargetOffset=Copy(TargetOffset,"Camera aim offset"),AimAtTarget=AimAtTarget,Start=Start,Duration=Duration,Radius=Radius,StartAngleDegrees=StartAngleDegrees,OrbitDegrees=OrbitDegrees,StartHeight=StartHeight,EndHeight=EndHeight,Easing=Easing,Path=path,AimPathEnabled=AimPathEnabled,AimPath=aimPath,PositionOffset=Copy(PositionOffset,"Camera position correction"),RotationOffset=Copy(RotationOffset,"Camera rotation correction")};
     }
 }
 

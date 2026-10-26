@@ -85,7 +85,7 @@ public partial class GoPrevisApp
         void Check(bool value,string message){Require(value,"Live AI semantics: "+message);checks++;GD.Print("PASS live AI semantics: "+message);}
         try
         {
-            OpenAiDirector();AiSettings.UseVividia=true;AiSettings.Selection=0;_aiModelChoice.Select(0);RefreshAiConnection();_aiModeChoice.Select(1);
+            OpenAiDirector();AiSettings.UseVividia=true;AiSettings.Selection=4;_aiModelChoice.Select(4);RefreshAiConnection();_aiModeChoice.Select(1);
             _aiPrompt.Text="Vytvoř 8sekundový záběr. Jedna zarigovaná postava jde normálně dopředu po mírně zahnuté trase od [-3,0,1] přes [0,0,0] do [3,0,-1]. Použij mocap chůze. Vedle je statická krabice. Kamera udělá plynulý celý oblet 360 stupňů kolem krabice, konstantní rychlostí a stále se na ni dívá. Postava má být otočená ve směru své chůze. Nová scéna, jen dva objekty a jedna kamera.";
             _aiLastResult=null;await BuildAiShot();var result=_aiLastResult??throw new Exception(_aiResult.Text);
             Check(result.Actions.Contains("inspect_scene_plan")&&result.Actions.Contains("apply_scene_plan"),"the live agent inspects its actual proposal before committing it");

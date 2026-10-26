@@ -24,7 +24,7 @@ public static class AiToolSchema
             if(property.Name=="Easing")schema["enum"]=new JsonArray(KeyInterpolation.Modes.Select(mode=>(JsonNode)JsonValue.Create(mode)!).ToArray());
             if(property.Name=="Channel")schema["enum"]=new JsonArray("Position","Rotation","Scale","Lens");
             if(property.Name=="TravelFacing")schema["enum"]=new JsonArray("Forward","Backward","Left","Right","Fixed","InPlace","Manual");
-            if(property.Name=="PathTiming")schema["enum"]=new JsonArray("Authored","Constant speed");
+            if(property.Name is "PathTiming" or "AimPathTiming")schema["enum"]=new JsonArray("Authored","Constant speed","Smooth authored");
             if(property.Name=="Intent")schema["enum"]=new JsonArray("Auto","Static","Follow","Orbit","Dolly","Crane","Path","Manual");
             if(type==typeof(AiCameraMovement)&&property.Name=="Mode")schema["enum"]=new JsonArray("None","Orbit","Path");
             if(new NullabilityInfoContext().Create(property).ReadState==NullabilityState.Nullable)schema=new JsonObject{["anyOf"]=new JsonArray(schema,new JsonObject{["type"]="null"})};

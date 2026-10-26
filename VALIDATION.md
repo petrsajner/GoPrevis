@@ -1,4 +1,28 @@
-# GoPrevis 0.17.0 validation
+# GoPrevis 0.18.0 validation
+
+Validation date: **2026-10-26**. Windows x64, Godot 4.7.2 .NET, bundled .NET 10.0.13. English UI. Format **13** adds independent camera aim paths and linked lines; formats 1–12 and legacy extensions remain readable. The private GitHub repository remains https://github.com/petrsajner/GoPrevis.
+
+## Resumable director and reference sketches
+
+**GPT-6.1 Sol / High through OpenRouter is the default**, explicitly requested by Petr. Former application-wide step, output-token and scene-context character limits are removed. Known model native completion capacity is requested; intrinsic provider context/output limits still apply. Every successful paid response and completed tool is checkpointed before continuing. Staged scene sections, original scene, input images, preview decisions and usage survive a pause/restart. Resume reuses received work and restores the original starting scene when needed, retaining the current scene in Undo. No key is serialized or bundled. Additional provider calls on resume are still billable.
+
+Deterministic reliability checks exercise 90000 aggregate output tokens, saved paid-response replay without another charge, provider-truncated JSON retention/continuation, 150-object staging and compilation, independent held-camera pan and flight, continuous velocity after a hold, retiming both camera curves through the real inspector, a leash following an actual animated hand, schema-13 save/reopen, the real compact sketch UI and initial image payloads for all three providers. Source builds pass with zero warnings/errors. Final executable results are recorded in the portable validation logs and BUILD-INFO.json.
+
+**Live sketch interpretation:** Sol / High receives an actual hand-drawn top view made through the application, with a rectangle and circle and a symbol legend. The textual prompt gives no left/right or depth positions. The resulting car is correctly left/front of the tree, using X/Z ground coordinates; the agent receives and assesses real rendered composition before committing. Five live checks cover spatial interpretation, visual assessment, retained attachment and 48-frame export. This demonstrates this input case, not universal understanding of any ambiguous sketch. Input PNG, drawing UI, generated scene, plan, usage and rendered video accompany the delivery.
+
+**Live curved walk and orbit:** Sol / High builds a mocap walk on an oriented curved route and a continuous analytic 360-degree camera orbit. Eight checks verify no baked route/orbit approximations, explicit preview assessment, visible face/velocity agreement, uniform orbit speed and full 192-frame RGB/depth/pose export. The 22 deterministic semantic checks also retain the independent actual-foot diagnostic and deliberately reversed-character counterexample.
+
+The final Windows executable passes **20 reliability**, **14 rename**, **55 AI integration** (including the 12 visual transport contracts), **22 semantic**, **39 editor**, **32 tracking**, **163 project workflow**, **55 additive pose + 13 timeline**, **21 scene settings + 27 appearance + 72 framing**, and **13 GPU scene-display** checks. Live native Sol / High tests pass **8 walk/orbit** and **5 sketch-reference** checks. All these native stderr logs are empty; the compiler reports zero warnings/errors and the source smoke suite passes. Normal user preferences are verified as OpenRouter / openai/gpt-6.1-sol with the existing authorized VIVIDIA connection source.
+
+## Supplied 15-second city shot
+
+The complete Czech brief is exercised verbatim through the actual director. Sol / High stages the scene, renders several proposals, then revises tree occlusion, building/shop-front visibility and final two-person framing before accepting and applying it. Result: **103 objects**, four road lanes, opposing moving traffic, parked cars, walking pedestrians/dogs with live attached leashes, trees, buildings and shop fronts. Its camera has **separate position and aim paths**, rising over the road, descending beside the shop wall and ending in a frontal upper-body two-shot.
+
+**13 live checks pass**, including traffic in both directions, animated dogs/leashes, storefronts, independent camera paths, the rise, both faces visible and facing the final camera, useful final framing, and a **360-frame 1280×720 / 24fps export** with RGB/depth/pose PNG sequences and three MP4 videos. The director used **28 provider requests**, **1488709 cumulative input tokens**, **47526 output tokens**, provider-reported usage **$0.9051937**. It continued successfully beyond both former step/output limits. These figures describe this run, not a fixed scene price. The camera/mannequin/streetscape images are actual application renders.
+
+The portable city example has its own source-asset folder and requires no API request to open, edit or play. BUILD-INFO.json ties runtime hashes, test results and live records to the source commit. ZIP entries are read back for CRC verification. Historical evidence follows.
+
+# Historical GoPrevis 0.17.0 validation
 
 Validation date: **2026-10-26**. Windows x64; Godot 4.7.2 .NET / .NET 10.0.13. Product, assembly, executable, source namespace and private GitHub repository are renamed **GoPrevis**. UI remains English. Project format **12** adds native camera Orbit/Path data. `.goprevis` is the default extension; `.genprevis`/`.previs` and formats 1–11 remain readable. GenPrevis user settings/poses migrate once; existing OS credentials are referenced without copying them into projects or builds.
 

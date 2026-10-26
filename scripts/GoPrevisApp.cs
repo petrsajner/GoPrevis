@@ -63,7 +63,10 @@ public partial class GoPrevisApp : Control
         var window=GetWindow();float dpiScale=Math.Clamp(Math.Max(DisplayServer.ScreenGetScale(),DisplayServer.ScreenGetDpi()/96f),1,2.5f);window.ContentScaleMode=Window.ContentScaleModeEnum.CanvasItems;window.ContentScaleSize=Vector2I.Zero;window.ContentScaleFactor=dpiScale;
         window.Title="GoPrevis "+AppVersion+" — 3D control clips for AI video";
         BuildTheme(); BuildUi(); BuildWorld(); StarterScene();
-        if(OS.GetCmdlineUserArgs().Contains("--ai-semantic-live-test"))_=RunAiSemanticChecksAndQuit(true);
+        if(OS.GetCmdlineUserArgs().Contains("--ai-reference-live-test"))_=RunAiReferenceChecksAndQuit();
+        else if(OS.GetCmdlineUserArgs().Contains("--ai-reliability-test"))_=RunAiReliabilityChecksAndQuit();
+        else if(OS.GetCmdlineUserArgs().Contains("--ai-city-live-test"))_=RunAiCityChecksAndQuit();
+        else if(OS.GetCmdlineUserArgs().Contains("--ai-semantic-live-test"))_=RunAiSemanticChecksAndQuit(true);
         else if(OS.GetCmdlineUserArgs().Contains("--ai-semantic-test"))_=RunAiSemanticChecksAndQuit(false);
         else if (OS.GetCmdlineUserArgs().Contains("--ai-live-test")) _ = RunAiChecksAndQuit(true);
         else if (OS.GetCmdlineUserArgs().Contains("--ai-test")) _ = RunAiChecksAndQuit(false);
@@ -358,7 +361,7 @@ public partial class GoPrevisApp : Control
             else if (e.Player != null && e.Animation != "") { var anim = e.Player.GetAnimation(e.Animation); double t = _time * e.Data.Speed; if (anim.Length > 0) t = e.Data.Loop ? t % anim.Length : Math.Min(t, anim.Length); e.Player.Seek(t, true); e.Player.Advance(0); }
             ApplyEntryPath(e);
         }
-        foreach(var camera in _cameras)EvaluateCamera(camera,_time); if(_pilot)_editorCamera.GlobalTransform = _shot.GlobalTransform;
+        UpdateObjectLinks();foreach(var camera in _cameras)EvaluateCamera(camera,_time); if(_pilot)_editorCamera.GlobalTransform = _shot.GlobalTransform;
         bool previous = _refreshing; _refreshing = true; _scrub.Value = _time; _lens.Value = _shot.FocalLengthMm; _refreshing = previous;
         int frame = (int)Math.Floor(_time * _fps + .00001); _timeLabel.Text = $"{frame / _fps / 60:00}:{frame / _fps % 60:00}:{frame % _fps:00}"; _timeline.QueueRedraw();UpdateTransformFields(); UpdateSelection(); UpdatePreview();DrawPaths();UpdatePoseInspector();RefreshAllObjectLabels();
     }

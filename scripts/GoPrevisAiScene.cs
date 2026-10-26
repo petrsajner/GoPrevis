@@ -32,7 +32,7 @@ public partial class GoPrevisApp
                 bones=e.NativeTrack?.PoseBoneNames??(e.Node is RiggedActor?AiHumanBones:Array.Empty<string>())}),
             cameras=(replace?Enumerable.Empty<CameraEntry>():_cameras).Select(c=>new{id=c.Id,name=c.Name,position=Array3(c.BasePosition),rotation=Array3(c.BaseRotation),focalLength=c.BaseLens,tracking=c.Tracking,movement=c.Movement,keys=c.Animation}),
             capabilities=new{travel="paths with tangent orientation; transform keys are correction layers",camera="exact parametric Orbit, smooth Path, live Follow/Look at",workflow="get_program_guide, get_asset_details, inspect_scene_plan, then apply_scene_plan by reviewed planId"}};
-        string json=JsonSerializer.Serialize(context,AiDirectorClient.Json);if(json.Length>180000)throw new InvalidOperationException("This scene is too large for the first AI Director prototype. Use a smaller shot.");return json;
+        string json=JsonSerializer.Serialize(context,AiDirectorClient.Json);return json;
     }
     Task<string> AiReadTool(string name,JsonObject args)
     {
@@ -70,8 +70,23 @@ public partial class GoPrevisApp
     {if(!KeyInterpolation.Modes.Contains(name))throw new ArgumentException("Easing must be Linear, Ease in/out, Curved, Stop or Hold.");return new(){Mode=name};}
     static void AiPathTiming(ActorPathData path,string mode)
     {
-        if(mode is not("Authored" or "Constant speed"))throw new ArgumentException("Path timing must be Authored or Constant speed.");
-        if(mode!="Constant speed"||path.PointTimes.Count<2)return;
+        if(mode is not("Authored" or "Constant speed" or "Smooth authored"))throw new ArgumentException("Path timing must be Authored, Smooth authored or Constant speed.");
+        if(path.PointTimes.Count<2)return;
+        if(mode=="Smooth authored")
+        {
+            var f=ActorPathRuntime.WaypointFractions(path);int n=f.Length;var slopes=new double[n];var speeds=new double[n-1];
+            for(int i=0;i<n-1;i++){double dt=path.PointTimes[i+1]-path.PointTimes[i];if(dt<=0)throw new ArgumentException("Smooth timing needs increasing arrival times.");speeds[i]=(f[i+1]-f[i])/dt;}
+            for(int i=1;i<n-1;i++)if(speeds[i-1]>0&&speeds[i]>0)slopes[i]=Math.Min(2*speeds[i-1]*speeds[i]/(speeds[i-1]+speeds[i]),3*Math.Min(speeds[i-1],speeds[i]));
+            path.PointInterpolation.Clear();
+            for(int i=0;i<n;i++)
+            {
+                if(i==n-1||f[i+1]-f[i]<1e-9){path.PointInterpolation.Add(new(){Mode="Hold"});continue;}
+                double scale=(path.PointTimes[i+1]-path.PointTimes[i])/(f[i+1]-f[i]);
+                path.PointInterpolation.Add(new(){Mode="Curved",Control1=new[]{1f/3,(float)(slopes[i]*scale/3)},Control2=new[]{2f/3,(float)(1-slopes[i+1]*scale/3)}});
+            }
+            return;
+        }
+        if(mode!="Constant speed")return;
         double start=path.PointTimes[0],duration=path.PointTimes[^1]-start;var fractions=ActorPathRuntime.WaypointFractions(path);
         path.PointTimes=fractions.Select(f=>start+duration*f).ToList();path.PointInterpolation=fractions.Select(_=>new KeyInterpolationData()).ToList();
     }
@@ -91,7 +106,7 @@ public partial class GoPrevisApp
     }
     ProjectData CompileAiPlan(AiScenePlan plan,bool replace)
     {
-        if(plan.Objects==null||plan.Cameras==null||plan.RemoveIds==null||plan.Objects.Count>100||plan.Cameras.Count>12||plan.RemoveIds.Count>500)throw new ArgumentException("A plan supports up to 100 object changes, 12 cameras and 500 removals.");
+        if(plan.Objects==null||plan.Cameras==null||plan.RemoveIds==null||plan.Objects.Count>500||plan.Cameras.Count>100||plan.RemoveIds.Count>500)throw new ArgumentException("A plan supports up to 500 object changes, 100 cameras and 500 removals.");
         if(plan.Objects.Count+plan.Cameras.Count+plan.RemoveIds.Count==0)throw new ArgumentException("The plan must modify at least one scene item.");
         if(plan.Summary==null||plan.Summary.Length>3000)throw new ArgumentException("Keep the scene summary within 3000 characters.");
         var document=AiClone(Snapshot());
@@ -123,7 +138,8 @@ public partial class GoPrevisApp
             if(item.Position.Length==3)data.Position=item.Position.ToArray();if(item.Rotation.Length==3)data.Rotation=item.Rotation.ToArray();if(item.Scale.Length==3)data.Scale=item.Scale.ToArray();
             AiVector(item.PathOffset,"Path correction");if(item.PathOffset.Length==3)data.PathOffset=item.PathOffset.ToArray();
             if(item.ReplaceKeys)data.TransformAnimation=new();if(item.ReplacePoseKeys)data.PoseCorrections=new();
-            if(item.Color is not{Length:0}){AiVector(item.Color,"Object color",false);if(item.Color.Any(x=>x<0||x>1))throw new ArgumentException("Object RGB colors are zero to one.");data.Appearance.ColorOverride=item.Color.ToArray();}
+            if(item.Color is{Length:4})item.Color=item.Color.Take(3).ToArray();if(item.Color is not{Length:0}){AiVector(item.Color,"Object color",false);if(item.Color.Any(x=>x<0||x>1))throw new ArgumentException("Object RGB colors are zero to one.");data.Appearance.ColorOverride=item.Color.ToArray();}
+            if(item.Link!=null){if(data.Kind!="cylinder")throw new ArgumentException("Linked lines use the cylinder asset.");data.Link=item.Link.ValidatedCopy();}
             if(item.Light!=null){if(!IsSceneLightKind(data.Kind))throw new ArgumentException("Only light assets accept Light properties.");data.Light=item.Light.ValidatedCopy();}
             if(item.PoseId!="")
             {
@@ -194,9 +210,11 @@ public partial class GoPrevisApp
                 if(movement.TargetId!=""&&!document.Objects.Any(o=>o.Id==movement.TargetId))throw new ArgumentException("Camera movement target is missing: "+movement.TargetId);
                 AiTime(movement.Start,document.Duration,"Camera movement start");AiTime(movement.Start+movement.Duration,document.Duration,"Camera movement end");
                 camera.Movement=new CameraMovementData{Mode=movement.Mode,TargetId=movement.TargetId,TargetPosition=movement.TargetPosition,TargetOffset=movement.TargetOffset,AimAtTarget=movement.AimAtTarget,Start=movement.Start,Duration=movement.Duration,Radius=movement.Radius,StartAngleDegrees=movement.StartAngleDegrees,OrbitDegrees=movement.OrbitDegrees,StartHeight=movement.StartHeight,EndHeight=movement.EndHeight,Easing=movement.Easing,Path=curve}.ValidatedCopy();
+                if(movement.AimPath.Count>0){var aim=new ActorPathData{Enabled=true,Start=movement.Start,Duration=movement.Duration};foreach(var point in movement.AimPath){AiVector(point.Position,"Aim path point",false);AiTime(point.Time,document.Duration,"Aim path arrival");aim.Points.Add(point.Position.ToArray());aim.PointTimes.Add(point.Time-movement.Start);aim.PointInterpolation.Add(AiEasing(point.Easing));}AiPathTiming(aim,movement.AimPathTiming);camera.Movement.AimPathEnabled=true;camera.Movement.AimPath=aim;camera.Movement=camera.Movement.ValidatedCopy();}
                 if(movement.Mode!="None"&&item.Follow)throw new ArgumentException("Camera movement and Follow cannot both control position. Use Orbit/Path plus aim-at-target, or disable movement for Follow.");
             }
         }
+        foreach(var linked in document.Objects.Where(o=>o.Link!=null)){var link=linked.Link!;if(!document.Objects.Any(o=>o.Id==link.StartTargetId)||!document.Objects.Any(o=>o.Id==link.EndTargetId))throw new ArgumentException("Linked-line endpoint target is missing.");}
         if(document.Objects.Count>500||document.Cameras.Count>100)throw new ArgumentException("Project object/camera limit exceeded.");
         if(document.Cameras.Count==0)document.Cameras.Add(new(){Name="Camera A",Position=new[]{6f,3f,7f},Rotation=Array3(Basis.LookingAt(new Vector3(-6,-2,-7),Vector3.Up).GetEuler()*180/Mathf.Pi)});
         if(plan.ActiveCameraId!=""){if(!document.Cameras.Any(c=>c.Id==plan.ActiveCameraId))throw new ArgumentException("Active camera is missing: "+plan.ActiveCameraId);document.ActiveCameraId=plan.ActiveCameraId;}

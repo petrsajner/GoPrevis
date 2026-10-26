@@ -17,10 +17,11 @@ public partial class GoPrevisApp
     Vector3 CameraBasePosition(CameraEntry camera,double time)=>CameraMovementActive(camera)
         ?CameraMovementRuntime.Position(camera.Movement,time,CameraMovementCenter(camera,time))
         :TransformLayerRuntime.EvaluateVector(camera.Animation.Position,time,camera.BasePosition);
+    Vector3 CameraAimCenter(CameraEntry camera,double time)=>camera.Movement.AimPathEnabled?ActorPathRuntime.Evaluate(camera.Movement.AimPath,time).Position:CameraMovementCenter(camera,time);
     Quaternion CameraBaseRotation(CameraEntry camera,double time)
     {
         var fallback=Quaternion.FromEuler(TransformLayerRuntime.EvaluateVector(camera.Animation.Rotation,time,camera.BaseRotation,true)*Mathf.Pi/180);
-        return CameraMovementActive(camera)?CameraMovementRuntime.Aim(camera.Movement,CameraBasePosition(camera,time),CameraMovementCenter(camera,time),fallback):fallback;
+        return CameraMovementActive(camera)?CameraMovementRuntime.Aim(camera.Movement,CameraBasePosition(camera,time),CameraAimCenter(camera,time),fallback):fallback;
     }
     bool TryEditCameraMovement(CameraEntry camera,string group,Vector3 desired)
     {

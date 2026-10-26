@@ -5,7 +5,7 @@ namespace GoPrevis;
 
 public sealed class ProjectData
 {
-    public const int CurrentVersion=12;
+    public const int CurrentVersion=13;
     public int Version { get; set; } = CurrentVersion;
     public int Fps { get; set; } = 24;
     public double Duration { get; set; } = 8;
@@ -23,6 +23,7 @@ public sealed class ProjectData
 
 public sealed class ObjectData
 {
+    public ObjectLinkData? Link {get;set;}
     public SceneLightData? Light { get; set; }
     public string Id { get; set; } = Guid.NewGuid().ToString("N");
     public string Kind { get; set; } = "box";
