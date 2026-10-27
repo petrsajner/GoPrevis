@@ -75,8 +75,8 @@ public partial class GoPrevisApp
     {
         if(_aiDialog==null)return;
         _aiCustomModel.Visible=AiSettings.Selection==3;
-        bool available=AiCredentials.Has(AiSettings.Provider);
-        _aiConnectionStatus.Text=available?"API key available · GoPrevis credential store / environment":"No API key · open Connection to add your provider key";
+        bool available=AiCredentials.Has(AiSettings.Provider,AiSettings.UseVividia);
+        _aiConnectionStatus.Text=available?"API key available · "+AiCredentials.Source(AiSettings.Provider,AiSettings.UseVividia):"No API key · open Connection to add your provider key";
         _aiBuild.Disabled=_aiBusy||!available;
     }
     async void OpenAiConnection()
@@ -89,6 +89,9 @@ public partial class GoPrevisApp
         _aiKeyInput=new LineEdit{Secret=true,PlaceholderText="API key · leave blank to keep the current connection"};panel.AddChild(_aiKeyInput);
         var connectionError=Text("",11,true);connectionError.AutowrapMode=TextServer.AutowrapMode.WordSmart;panel.AddChild(connectionError);
         panel.AddChild(Button("Save connection",()=>{try{if(!string.IsNullOrWhiteSpace(_aiKeyInput.Text))AiCredentials.Save(AiSettings.Provider,_aiKeyInput.Text);_aiKeyInput.Text="";AiSettings.Save(AiSettingsPath);RefreshAiConnection();_aiConnectionDialog.Hide();}catch(Exception error){connectionError.Text=error.Message;}}));
+        // Vividia's key, read where Vividia keeps it — offered when Vividia has one for this provider.
+        if(AiCredentials.VividiaHas(AiSettings.Provider)||AiSettings.UseVividia)
+            panel.AddChild(Button(AiSettings.UseVividia?"Stop using the Vividia key":"Use existing Vividia key",()=>{try{AiSettings.UseVividia=!AiSettings.UseVividia;AiSettings.Save(AiSettingsPath);RefreshAiConnection();_aiConnectionDialog.Hide();}catch(Exception error){connectionError.Text=error.Message;}}));
         var price=Text(AiSettings.Provider=="gemini"?"Gemini 3.8 Flash · $0.75 input / $3.75 output per 1M tokens through Dec 31, 2026. Higher rates apply from Jan 1, 2027.":AiSettings.Selection==4?"GPT-6.1 Sol · $2 input / $10 output per 1M tokens. High reasoning; use when planning quality matters more than price.":AiSettings.Selection==3?"Custom model prices depend on the selected model. Actual token usage is reported after planning.":"GPT-6 Luna · $0.10 input / $0.50 output per 1M tokens. OpenRouter account fees may apply.",11,true);price.CustomMinimumSize=new Vector2(500,0);price.AutowrapMode=TextServer.AutowrapMode.WordSmart;panel.AddChild(price);
         panel.AddChild(Button("Close",()=>{_aiKeyInput.Text="";_aiConnectionDialog.Hide();}));_aiConnectionDialog.CloseRequested+=()=>_aiKeyInput.Text="";_aiConnectionDialog.VisibilityChanged+=()=>{if(!_aiConnectionDialog.Visible)_aiKeyInput.Text="";};
         _aiConnectionDialog.Size=new Vector2I(550,320);for(int i=0;i<3;i++)await ToSignal(GetTree(),SceneTree.SignalName.ProcessFrame);
@@ -118,7 +121,7 @@ public partial class GoPrevisApp
         }
         string prompt=resume?_aiSession!.Prompt:_aiPrompt.Text.Trim();if(prompt==""){_aiResult.Text="Describe the shot first.";return;}
         string provider=resume?_aiSession!.Provider:AiSettings.Provider,model=resume?_aiSession!.Model:AiSettings.Model;
-        string? key=AiCredentials.Read(provider);if(key==null){OpenAiConnection();return;}
+        string? key=AiCredentials.Read(provider,AiSettings.UseVividia);if(key==null){OpenAiConnection();return;}
         if(!resume)
         {
             if(File.Exists(AiSessionPath)){string archive=Path.Combine(Path.GetDirectoryName(AiSessionPath)!,"previous-"+DateTime.UtcNow.ToString("yyyyMMdd-HHmmss-fff")+".json");File.Copy(AiSessionPath,archive);}

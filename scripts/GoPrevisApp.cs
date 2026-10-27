@@ -67,6 +67,7 @@ public partial class GoPrevisApp : Control
         window.Title="GoPrevis "+AppVersion+" — 3D control clips for AI video";
         BuildTheme(); BuildUi(); BuildWorld(); StarterScene();InitializeProjectProtection();
         if(OS.GetCmdlineUserArgs().Contains("--credential-isolation-test"))_=RunCredentialIsolationChecksAndQuit();
+        else if(OS.GetCmdlineUserArgs().Contains("--vividia-link-test"))_=RunVividiaLinkChecksAndQuit();
         else if(OS.GetCmdlineUserArgs().Contains("--release-media-test"))_=RunReleaseMediaAndQuit();
         else if(OS.GetCmdlineUserArgs().Contains("--library-ui-test"))OpenLibraryQa();
         else if(OS.GetCmdlineUserArgs().Contains("--prepare-library-content-test"))_=RunContentExpansionChecksAndQuit(true);

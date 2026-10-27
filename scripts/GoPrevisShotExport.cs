@@ -84,7 +84,7 @@ public partial class GoPrevisApp
         {
             settings.Validate(_duration);_exportCancellation=new();_shotExportCurtain!.Show();_shotExportCurtain.GrabFocus();_shotExportProgressDialog!.GetOkButton().Disabled=false;_shotExportProgress.Value=0;_shotExportProgressDialog.PopupCentered(new Vector2I(490,150));
             var result=await ExportShotAsync(settings,_exportCancellation.Token);_shotExportProgressDialog.Hide();Status("Exported "+result.FrameCount+" frames and selected passes to "+result.Directory);
-            _message.Title="Shot exported";_message.DialogText="Export complete.\n\n"+result.Directory;_message.PopupCentered(new Vector2I(660,210));
+            ShowShotExported(result);
         }
         catch(OperationCanceledException){_shotExportProgressDialog?.Hide();Status("Export cancelled. The manifest records any completed frames.");}
         catch(Exception ex){_shotExportProgressDialog?.Hide();Error("Shot export failed: "+ex.Message);}
@@ -120,18 +120,21 @@ public partial class GoPrevisApp
         var frameDirectories=passes.ToDictionary(pass=>pass,pass=>Path.Combine(settings.ExportPngSequence?directory:scratch,pass));foreach(var folder in frameDirectories.Values)Directory.CreateDirectory(folder);
         string poseAnnotations=Path.Combine(directory,"pose");if(settings.IncludePose)Directory.CreateDirectory(poseAnnotations);
         var frames=new List<object>();var videos=new Dictionary<string,VideoProbeInfo>();string status="rendering";string? failure=null;SubViewport? view=null;ControlPassRenderer? controls=null;
-        void WriteManifest()=>File.WriteAllText(manifestPath,JsonSerializer.Serialize(new{application="GoPrevis",version=AppVersion,status,failure,createdUtc=DateTime.UtcNow,camera=new{id=cameraId,name=cameraName},settings,frameCount=settings.FrameCount,completedFrames=frames.Count,mediaDurationSeconds=settings.MediaDuration,timeSampling="start + frameIndex / fps; end exclusive",depthEncoding="linear camera-Z: white near, black far/background; RGB8",poseFormat=settings.IncludeNativeRigs?"human COCO-18 + native animal rigs":"human COCO-18 body",editorHelpersExcluded=true,frames,videos},_json));
+        // The shot's content for the manifest (GoPrevisShotContent.cs): the document as exported, and when the camera sees each object.
+        var shotDocument=Snapshot();var visibility=new ShotFrameTracker();var stillBounds=new Dictionary<string,Aabb>(StringComparer.Ordinal);
+        void WriteManifest()=>File.WriteAllText(manifestPath,JsonSerializer.Serialize(new{application="GoPrevis",version=AppVersion,status,failure,createdUtc=DateTime.UtcNow,camera=new{id=cameraId,name=cameraName},settings,frameCount=settings.FrameCount,completedFrames=frames.Count,mediaDurationSeconds=settings.MediaDuration,timeSampling="start + frameIndex / fps; end exclusive",depthEncoding="linear camera-Z: white near, black far/background; RGB8",poseFormat=settings.IncludeNativeRigs?"human COCO-18 + native animal rigs":"human COCO-18 body",editorHelpersExcluded=true,shot=ShotContent(shotDocument,cameraId,visibility,settings.FrameTime(0)+frames.Count/(double)settings.Fps),frames,videos},_json));
         _exportBusy=true;_playing=false;_play.Text="▶";
         try
         {
             WriteManifest();view=new SubViewport{Size=new Vector2I(settings.Width,settings.Height),World3D=_sceneViewport.World3D,RenderTargetUpdateMode=SubViewport.UpdateMode.Once,PositionalShadowAtlasSize=2048,Msaa3D=Viewport.Msaa.Msaa4X};AddChild(view);
-            var camera=new Camera3D{Current=true,CullMask=1,KeepAspect=Camera3D.KeepAspectEnum.Width};view.AddChild(camera);controls=new ControlPassRenderer(_world,camera,settings.DepthNear,settings.DepthFar);
+            var camera=new Camera3D{Current=true,CullMask=1,KeepAspect=Camera3D.KeepAspectEnum.Width};view.AddChild(camera);controls=new ControlPassRenderer(_world,camera,settings.DepthNear,settings.DepthFar);stillBounds=ShotStillBounds();var frameSize=new Vector2(settings.Width,settings.Height);
             var humans=_entries.Where(e=>e.Node is RiggedActor).Select(e=>new PoseActorSample(e.Data.Id,e.Data.Name,(RiggedActor)e.Node)).ToArray();
             var native=settings.IncludeNativeRigs?_entries.Where(e=>e.NativeTrack!=null).Select(e=>new NativePoseActorSample(e.Data.Id,e.Data.Name,e.NativeTrack!.ModelRoot as Node3D??e.Node)).ToArray():Array.Empty<NativePoseActorSample>();
             for(int frame=0;frame<settings.FrameCount;frame++)
             {
                 cancellation.ThrowIfCancellationRequested();double sampleTime=settings.FrameTime(frame);SetTime(sampleTime);var shot=_cameras.Single(c=>c.Id==cameraId).Rig.ShotCamera;
                 camera.GlobalTransform=new Transform3D(shot.GlobalBasis.Orthonormalized(),shot.GlobalPosition);camera.Fov=shot.Fov;camera.Near=shot.Near;camera.Far=shot.Far;string filename=frame.ToString("D6")+".png";
+                TrackShotVisibility(visibility,camera,frameSize,sampleTime,stillBounds);
                 if(settings.IncludeColor){using var image=await CaptureShotImage(view,cancellation);SaveShotPng(image,Path.Combine(frameDirectories["color"],filename));}
                 Image? depth=null;
                 try

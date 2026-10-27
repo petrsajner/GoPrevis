@@ -9,6 +9,8 @@ public sealed class AiConnectionSettings
     public int Selection {get;set;}=4;
     public int DefaultsRevision {get;set;}=2;
     public string CustomModel {get;set;}="openai/gpt-6-luna";
+    /// <summary>Read the OpenRouter / Gemini key Vividia keeps on this computer (nothing is copied).</summary>
+    public bool UseVividia {get;set;}
     public static AiConnectionSettings Load(string path)
     {
         try

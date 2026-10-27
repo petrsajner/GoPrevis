@@ -60,6 +60,12 @@ public partial class GoPrevisApp
                 Check(pose.Width==full.Width&&pose.Height==full.Height&&pose.TimeSeconds==0&&person.PoseKeypoints2D.Length==54&&person.Joints.Count==18,"pose annotations carry the same resolution/time and complete human COCO-18 data");
                 Check(person.Joints.Count(j=>j.Visible)>=8&&person.Joints.Where(j=>j.Visible).All(j=>j.InsideFrame&&j.Confidence>0),"a visible performer produces visible, confident pose joints");
                 Check(pose.NativeRigs.Count>0&&pose.NativeRigs.All(r=>r.JointNames.Length==r.Joints.Count&&r.Parents.Length==r.Joints.Count),"animal/native rigs retain their own complete topology rather than human relabelling");
+                // 0.20.0: the shot's content for Vividia's Director.
+                var shot=data.GetProperty("shot");var objects=shot.GetProperty("objects");var walker=objects.EnumerateArray().Single(o=>o.GetProperty("id").GetString()==human.Data.Id);
+                Check(shot.GetProperty("schema").GetInt32()==1&&objects.GetArrayLength()==_entries.Count&&shot.GetProperty("exportedCameraId").GetString()==cameraB.Id&&shot.GetProperty("cameras").EnumerateArray().Count(c=>c.GetProperty("exported").GetBoolean())==1,"the manifest carries the shot's content: every object and the exported camera");
+                Check(walker.GetProperty("motions").GetArrayLength()>=1&&walker.GetProperty("motions")[0].GetProperty("end").GetDouble()>walker.GetProperty("motions")[0].GetProperty("start").GetDouble()&&walker.GetProperty("path").ValueKind==JsonValueKind.Object&&Math.Abs(walker.GetProperty("path").GetProperty("end").GetDouble()-8)<1e-6,"the walking figure's motion and path carry their times");
+                var seen=walker.GetProperty("inFrame");
+                Check(seen.GetArrayLength()>=1&&Math.Abs(seen[0][0].GetDouble())<1e-9&&seen.EnumerateArray().All(s=>s[1].GetDouble()<=8+1e-9&&s[1].GetDouble()>s[0].GetDouble()),"the figure the pose pass sees in frame 0 is in frame from 0 s, in spans within the shot");
                 var frame=frames[0];var viewport=new SubViewport{Size=new Vector2I(full.Width,full.Height),OwnWorld3D=true};AddChild(viewport);
                 try
                 {

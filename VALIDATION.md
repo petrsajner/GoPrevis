@@ -1,4 +1,10 @@
-# GoPrevis 0.19.1 validation
+# GoPrevis 0.20.0 validation
+
+Validation date: **2026-10-27**. Windows x64, schema **13**, English UI. Restores reading Vividia's existing OpenRouter / Gemini key on the same computer (**Use existing Vividia key** / **Stop using the Vividia key**, offered only when Vividia keeps a key for the provider; nothing is copied), adds the shot's content to the export manifest (`shot`, schema 1: objects with colours, motions, paths and in-frame spans, cameras with their movement) and **→ Vividia** / **→ Vividia Pro** in the *Shot exported* window.
+
+The exported **GoPrevis.exe 0.20.0** passes **9 credential** checks (Vividia's entry names only for OpenRouter and Gemini, the choice survives save and load, Vividia's key is read only when chosen, the button is offered exactly when Vividia keeps a key, no key reaches the UI, the status names Vividia's key), **34 shot-export** checks (the earlier 31 plus the manifest's shot content, the walking figure's motion and path times, and its in-frame spans) and **4 Vividia-link** checks against Vividia and Vividia Pro 0.15.37 (a Vividia found by its `vividia-app.json`, a short shot exported with its content, the export window offering the Vividia, the hand-over). Vividia's own check confirmed each import: three clips of the shot with its content (14/14 in Vividia and in Vividia Pro). All native stderr logs are empty; the C# build has zero warnings and errors. No paid AI calls.
+
+# Historical GoPrevis 0.19.1 validation
 
 Validation date: **2026-10-26**. Windows x64, schema **13**, English UI. Removes the external VIVIDIA credential bridge from production code, UI, startup flags and live-test configuration. AI uses only provider environment variables, this product's own OS credential names or session keys. Existing external-source flags are ignored and are omitted when preferences are saved; no secret was copied or modified in another application.
 

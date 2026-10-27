@@ -12,7 +12,7 @@ if ($Test) {
     & $previsGodot --headless --path $PSScriptRoot -- --smoke-test
     if ($LASTEXITCODE -ne 0) { throw 'Headless smoke checks failed.' }
 }
-$previsOutput = Join-Path $PSScriptRoot 'build\GoPrevis-0.19.1-Windows'
+$previsOutput = Join-Path $PSScriptRoot 'build\GoPrevis-0.20.0-Windows'
 New-Item -ItemType Directory -Path $previsOutput -Force | Out-Null
 New-Item -ItemType Directory -Path (Join-Path $PSScriptRoot 'output') -Force | Out-Null
 $previsLog = Join-Path $PSScriptRoot 'output\export.log'

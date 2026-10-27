@@ -58,7 +58,7 @@ def prepare(draft):
     final = Image.open(shot / 'color/000359.png')
     final.save(media / 'street-final-frame.png')
     manifest = {
-        'product': 'GoPrevis', 'version': '0.19.1', 'date': '2026-10-26',
+        'product': 'GoPrevis', 'version': '0.20.0', 'date': '2026-10-27',
         'status': 'draft_prepared_for_review', 'published': False,
         'publicationAuthorized': False, 'noNewApiCalls': True,
         'example': 'city-street-15s.goprevis', 'durationSeconds': 15, 'fps': 24,
@@ -86,7 +86,7 @@ def prepare(draft):
     files += [(shot / (name + '.mp4'), 'Video/' + name + '.mp4') for name in ['color', 'depth', 'pose']]
     files += [(media / 'street-color-depth-pose.mp4', 'Video/street-color-depth-pose.mp4')]
     files += [(media / name, 'Images/' + name) for name in ['street-storyboard.png', 'street-final-frame.png']]
-    target = draft / 'GoPrevis-0.19.1-Release-Review.zip'
+    target = draft / 'GoPrevis-0.20.0-Release-Review.zip'
     with zipfile.ZipFile(target, 'w', zipfile.ZIP_DEFLATED) as archive:
         for source, name in files:
             archive.write(source, name)

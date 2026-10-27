@@ -4,6 +4,6 @@ namespace GoPrevis;
 
 public partial class GoPrevisApp
 {
-    static string AppVersion=>ProjectSettings.GetSetting("application/config/version","0.19.1").AsString();
+    static string AppVersion=>ProjectSettings.GetSetting("application/config/version","0.20.0").AsString();
     const string AppCopyright="© Petr Sajner 2026";
 }

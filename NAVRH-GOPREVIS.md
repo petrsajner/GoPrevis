@@ -236,7 +236,7 @@ Windows je hlavní vývojová platforma. Od prvního technického průřezu budo
 | **A — ověření základu** | Vlastní jednoduché UI, připravený člověk a pes, skutečný BVH/FBX import na člověka, kompatibilní zvířecí pohyb, dráha, dvě kamery, přesný skok na snímek, video pozadí a první hloubka/maska. Zkouška všech tří OS. |
 | **B — první použitelná verze** | Celý postup od stavby scény přes mocap a kameru po AI balíček; kurátorská knihovna lidí, zvířat a rekvizit; ukládání/přenos projektu, undo, náhledy, více záběrů. |
 | **C — rozšíření obsahu** | Stovky připravených klipů, správce velkých kolekcí, NC kolekce, další druhy zvířat, sestavy prostředí a párové akce. |
-| **D — návazné workflow** | Ověřený export scén/kamer do Blenderu a Nuke, profily podkladů pro konkrétní AI workflow, případně napojení na Director. Scéna z textu/obrázku až jako další samostatná funkce. |
+| **D — návazné workflow** | Ověřený export scén/kamer do Blenderu a Nuke, profily podkladů pro konkrétní AI workflow, případně napojení na Director. Scéna z textu/obrázku až jako další samostatná funkce. **0.20.0 (27. 10. 2026):** napojení na Vividii — obsah záběru v manifestu (`shot`), **→ Vividia** po exportu, klíč z Vividie zpět; Director Vividie z obsahu píše figury, časy a kameru. |
 
 Import mocapu a export vodicích podkladů jsou již součástí B, ne dodatečné rozšíření. Rozsah první verze se měří dokončeným záběrem, ne počtem obsloužených rigů nebo tlačítek.
 

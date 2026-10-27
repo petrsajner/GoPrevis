@@ -10,17 +10,32 @@ namespace GoPrevis;
 public static class AiCredentials
 {
     const string Service="com.petrsajner.goprevis.ai.v1";
+    // Vividia keeps its provider keys in the same Windows credential store
+    // (src-tauri/src/lib.rs in Vividia: service "com.vividia.personal-providers.v1",
+    // entry "<storage key>.<service>"). "Use existing Vividia key" reads them
+    // there; nothing is copied or written (Petr, 27. 10. 2026).
+    const string Vividia="com.vividia.personal-providers.v1";
     static readonly Dictionary<string,string> Session=new(StringComparer.Ordinal);
     internal static string[] CredentialTargets(string provider)=>new[]{provider+"."+Service,provider+".com.petrsajner.genprevis.ai.v1"};
-    public static string? Read(string provider)
+    internal static string? VividiaTarget(string provider)=>provider switch{"openrouter"=>"gis_openrouter_apikey."+Vividia,"gemini"=>"gis_apikey."+Vividia,_=>null};
+    /// <summary>Vividia keeps a key for this provider on this computer.</summary>
+    public static bool VividiaHas(string provider)=>VividiaTarget(provider) is string target&&!string.IsNullOrWhiteSpace(ReadWindows(target));
+    public static string? Read(string provider,bool useVividia=false)
     {
         string[] variables=provider switch{"openrouter"=>new[]{"OPENROUTER_API_KEY"},"gemini"=>new[]{"GEMINI_API_KEY","GOOGLE_API_KEY"},_=>new[]{"OPENAI_API_KEY"}};
         foreach(string variable in variables){string? value=Environment.GetEnvironmentVariable(variable);if(!string.IsNullOrWhiteSpace(value))return value.Trim();}
         if(Session.TryGetValue(provider,out string? session))return session;
         foreach(string target in CredentialTargets(provider)){string? own=ReadWindows(target);if(!string.IsNullOrWhiteSpace(own))return own;}
+        if(useVividia&&VividiaTarget(provider) is string vividia){string? shared=ReadWindows(vividia);if(!string.IsNullOrWhiteSpace(shared))return shared;}
         return null;
     }
-    public static bool Has(string provider)=>!string.IsNullOrWhiteSpace(Read(provider));
+    public static bool Has(string provider,bool useVividia=false)=>!string.IsNullOrWhiteSpace(Read(provider,useVividia));
+    /// <summary>Where the key in use comes from, for the connection status.</summary>
+    public static string Source(string provider,bool useVividia)
+    {
+        if(!string.IsNullOrWhiteSpace(Read(provider)))return "GoPrevis credential store / environment";
+        return useVividia&&VividiaHas(provider)?"Vividia's key on this computer":"";
+    }
     public static void Save(string provider,string value)
     {
         value=value.Trim();if(value.Length<12||value.Length>4096||value.Contains('\r')||value.Contains('\n'))throw new ArgumentException("Enter a valid provider API key.");
