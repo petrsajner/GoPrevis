@@ -11,6 +11,12 @@ public partial class RiggedActor
     /// <summary>Number of prepared clips; changing clip timing never reloads a cached source.</summary>
     public int MotionTrackClipCount => _motionTrack.Length;
     public int MotionTrackPreparedSourceCount => _preparedMotions.Count;
+    public double MotionSourceDuration(MotionClipData clip)
+    {
+        string prefix=Path.GetFullPath(clip.MotionPath)+"\n";
+        foreach(var pair in _preparedMotions)if(pair.Key.StartsWith(prefix,OperatingSystem.IsWindows()?StringComparison.OrdinalIgnoreCase:StringComparison.Ordinal))return pair.Value.Motion.DurationSeconds;
+        return 0;
+    }
     public double MotionTrackDurationSeconds => _motionTrack.Length == 0 ? 0 : _motionTrack.Max(clip => clip.End);
     public string MotionTrackSummary => _motionTrack.Length == 0
         ? _staticPose == null ? "No motion clips. Import a BVH motion to begin." : "Static pose · " + _staticPose.Name

@@ -7,10 +7,10 @@ import subprocess
 import zipfile
 
 REPO = Path(__file__).resolve().parents[2]
-SOURCE = REPO / 'build/GoPrevis-0.21.0-Windows'
+SOURCE = REPO / 'build/GoPrevis-0.21.1-Windows'
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--public', action='store_true', help='Ship user documentation and runtime files without development reports or debug symbols.')
-parser.add_argument('--output', type=Path, default=REPO / 'build/GoPrevis-0.21.0-Windows.zip')
+parser.add_argument('--output', type=Path, default=REPO / 'build/GoPrevis-0.21.1-Windows.zip')
 args = parser.parse_args()
 TARGET = args.output.resolve()
 TARGET.parent.mkdir(parents=True, exist_ok=True)
@@ -49,9 +49,9 @@ with zipfile.ZipFile(TARGET, 'w', zipfile.ZIP_DEFLATED, compresslevel=6) as arch
         archive.write(path, SOURCE.name + '/' + path.relative_to(SOURCE).as_posix())
     if args.public:
         identity = {
-            'product': 'GoPrevis', 'version': '0.21.0', 'platform': 'Windows x64',
+            'product': 'GoPrevis', 'version': '0.21.1', 'platform': 'Windows x64',
             'releaseChannel': 'alpha', 'developmentStatus': 'under active development',
-            'releaseTag': 'v0.21.0-alpha',
+            'releaseTag': 'v0.21.1-alpha',
             'repository': 'https://github.com/petrsajner/GoPrevis',
             'sourceRevision': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=REPO, text=True).strip(),
             'applicationCodeRevision': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=REPO, text=True).strip(),
@@ -65,7 +65,7 @@ with zipfile.ZipFile(TARGET) as archive:
     for name in required:
         assert SOURCE.name + '/' + name in names
     assert not any('/output/' in name or 'kocka a mys' in name for name in names)
-report = {'version': '0.21.0', 'file': TARGET.name, 'files': len(names),
+report = {'version': '0.21.1', 'file': TARGET.name, 'files': len(names),
           'bytes': TARGET.stat().st_size, 'sha256': sha256(TARGET),
           'zipCrc': 'passed', 'publicDistribution': args.public, 'published': False}
 (TARGET.with_suffix('.zip.json')).write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')

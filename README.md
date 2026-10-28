@@ -1,6 +1,6 @@
 # GoPrevis 0.19.1 Alpha - Fast 3D previs for AI video
 
-Development build **0.21.0** adds independent XYZ property channels, a dope sheet and value/speed graph editing. See the [animation editor guide](docs/ANIMATION-EDITOR.md). The download links below refer to the published release.
+Development build **0.21.1** adds independent XYZ property channels, a dope sheet and value/speed graphs, with directly editable property values, grouped key dragging and motion clip Duplicate / Copy / Paste. Recorded motion ranges show unused source data beside the active trim. See the [animation editor guide](docs/ANIMATION-EDITOR.md). The download links below refer to the published release.
 
 **Alpha release - under active development.** Features and workflows are still evolving. Feedback is welcome and will help shape the next versions.
 

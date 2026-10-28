@@ -1,4 +1,4 @@
-# Animation system in GoPrevis 0.21.0
+# Animation system in GoPrevis 0.21.1
 
 See [Animation editor](docs/ANIMATION-EDITOR.md) for the property hierarchy, independent XYZ axes, value/speed graphs, interpolation handles and playback-rate workflow. New projects save as schema14; existing grouped animation is preserved on load. The older technical details below document compatible source-motion/path behavior.
 
@@ -18,7 +18,7 @@ The editable manual source and reproducible ReportLab builder are in `docs/manua
 
 ## Run
 
-The Windows portable output is `build/GoPrevis-0.19.1-Windows/GoPrevis.exe`. Keep GoPrevis.exe, GoPrevis.pck and data_GoPrevis_windows_x86_64 together. The portable Windows build includes its runtime; using it does not require the Godot editor or .NET SDK.
+The current local Windows portable output is `build/GoPrevis-0.21.1-Windows/GoPrevis.exe`. Keep GoPrevis.exe, GoPrevis.pck and data_GoPrevis_windows_x86_64 together. The portable Windows build includes its runtime; using it does not require the Godot editor or .NET SDK.
 
 For development, open project.godot with Godot 4.7.2 .NET. Local tools are in the ignored .tools directory. The existing run.ps1 starts the source project; build.ps1 -Test builds, runs source checks and exports Windows x64.
 

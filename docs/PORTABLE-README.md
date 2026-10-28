@@ -1,4 +1,4 @@
-# GoPrevis 0.21.0 Alpha - Animation editor update
+# GoPrevis 0.21.1 Alpha - Animation editor update
 
 This is an alpha development build. Extract the complete archive and launch **GoPrevis.exe**. Keep the executable, PCK, runtime directory and tools together. Godot and the .NET SDK do not need to be installed.
 
@@ -15,7 +15,9 @@ Read **docs/ANIMATION-EDITOR.md** for controls, keyframes, curve handles, filter
 - Independent XYZ transform and joint-correction channels.
 - Expandable property hierarchy; animated/selected/search/pinned filters.
 - Value and signed-speed graphs with weighted Bezier handles and numeric Time/Value/Speed editing.
-- Multi-key selection, retiming, Delete, Undo/Redo, copy/paste and duplicate.
+- Editable numeric property fields directly in Dope sheet and Graph, with precise scrubbing.
+- Multi-key selection and group retiming across layers, Delete and Undo/Redo.
+- Motion Duplicate / Copy / Paste, plus grey source handles showing unused recorded data and Fit source.
 - Keyable lights, colors, visibility, camera and environment settings, paths and motion playback controls.
 - Integrated mocap source time, additive body corrections and synchronized color/depth/pose exports.
 

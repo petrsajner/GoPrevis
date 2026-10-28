@@ -51,6 +51,7 @@ public sealed partial class NativeMotionTrack
 
     public int ClipCount=>_clips.Length;
     public int PreparedSourceCount=>_cycles.Count;
+    public double MotionSourceDuration(string name)=>_player.HasAnimation(name)?_player.GetAnimation(name).Length:0;
     public Node ModelRoot=>_modelRoot;
     public double DurationSeconds=>_clips.Length==0?0:_clips.Max(c=>c.End);
     public Vector3 AnimatedForward { get; private set; } = Vector3.Back;

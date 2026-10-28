@@ -1,4 +1,14 @@
-# GoPrevis 0.21.0 validation
+# GoPrevis 0.21.1 validation
+
+Validation date: **2026-10-28**. Windows x64 local alpha build, English UI, schema **14**. Numeric values in both animation hierarchies are editable with precise scrubbing; motion clips support Duplicate / Copy / Paste; selected keys retain their group during dragging; and the timeline distinguishes active motion from unused recorded source data. Fit source changes only the view range. Loop boundaries, actual BVH/native source lengths and held source ends remain explicit.
+
+The final exported **GoPrevis.exe 0.21.1** passes **70 targeted animation-editing checks**, exercising real numeric controls, keyboard shortcuts, context menus and mouse drags. Coverage includes cross-object/grouped keys, partially selected summaries, common frame/boundary/collision constraints, no-op history, path relative-time validity and structural edits with Auto key; deep clip copies, compatible human/native paste, retained animated playback phase and source poses, IN limits from integrated rates, Bezier source-offset trim and body movement; actual source-duration reads, paused/disabled time curves and Fit source / Shot range. Actual final-build UI images were inspected.
+
+The exported executable also passes property animation **122**, timeline deletion **35**, interaction **38 +15 numeric +14 trim**, pose corrections **55 +13 timeline**, camera tracking **32**, project workflow **181**, project files **22 +24 layout**, and unsaved changes **31** checks. The property suite includes real synchronized color/depth/pose frame rendering. All nine native suites exit zero and their stderr files are empty. Build and headless smoke checks pass with zero C# warnings/errors.
+
+Evidence is in `output/native-0.21.1-regression-summary.json`, the matching native logs and final-build `output/` reports. The portable ZIP excludes diagnostic output and user projects; its CRC, required runtime files and SHA-256 are verified by `tools/release/package_windows.py`. English usage details are in `docs/ANIMATION-EDITOR.md`. This is a local build; no publication, push or paid AI request is part of this task.
+
+# Historical GoPrevis 0.21.0 validation
 
 Validation date: **2026-10-28**. Local Windows x64 development build, English UI, schema **14**. Adds shared scalar property channels with independent transform and joint XYZ, weighted value Bezier curves, signed velocity editing, property hierarchy and filters, key clipboard and inspector integration. Animated source rates integrate time consistently for BVH/native motion and tracking; source blending, additive pose corrections, paths and final transforms retain their order.
 

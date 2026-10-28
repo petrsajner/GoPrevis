@@ -358,14 +358,14 @@ public partial class PropertyGraphEditor : Control
         _gesture = false; _down = _last = mouse.Position;
         if (mouse.Position.Y < Plot.Position.Y)
         { _drag = DragMode.Scrub; Scrub?.Invoke(Snap(Seconds(mouse.Position.X))); AcceptEvent(); return; }
-        var handle = HitHandle(mouse.Position);
+        var picked = HitKey(mouse.Position);
+        var handle = picked != null ? null : HitHandle(mouse.Position);
         if (handle is { } selectedHandle)
         {
             _activeIdentity = selectedHandle.Key.Binding.Identity; _activeKeyId = selectedHandle.Key.Key.Id;
             _drag = selectedHandle.Incoming ? DragMode.InHandle : DragMode.OutHandle;
             RememberKeys(); AcceptEvent(); return;
         }
-        var picked = HitKey(mouse.Position);
         if (picked != null)
         {
             if (mouse.CtrlPressed)
@@ -422,10 +422,10 @@ public partial class PropertyGraphEditor : Control
         if (_drag == DragMode.Marquee)
         { _marquee = new Rect2(new Vector2(Math.Min(_down.X, at.X), Math.Min(_down.Y, at.Y)), new Vector2(Math.Abs(at.X - _down.X), Math.Abs(at.Y - _down.Y))); QueueRedraw(); return; }
         if (!_gesture && at.DistanceTo(_down) < 2) return;
-        StartMutation();
-        var active = ActiveKey(); if (active == null) return;
         if (_drag is DragMode.InHandle or DragMode.OutHandle)
         {
+            StartMutation();
+            var active = ActiveKey(); if (active == null) return;
             bool incoming = _drag == DragMode.InHandle;
             SetHandle(active, incoming, at, fine); NotifyChanged(); return;
         }
@@ -433,13 +433,25 @@ public partial class PropertyGraphEditor : Control
         if (keys.Length == 0) return;
         double multiplier = fine ? .1 : 1;
         double dt = (Seconds(at.X) - Seconds(_down.X)) * multiplier;
-        double min = keys.Min(k => _original[k.Identity].Time), max = keys.Max(k => _original[k.Identity].Time);
-        dt = Math.Clamp(dt, -min, Math.Max(-min, Duration - max));
-        dt = Math.Round(dt * Math.Max(1, Fps)) / Math.Max(1, Fps);
+        dt = GroupKeyRetiming.ResolveDelta(
+            keys.Select(k=>new KeyGroupPoint(k.Binding.Identity,k.Key.Id,_original[k.Identity].Time)),
+            AllKeys().Select(k=>new KeyGroupPoint(k.Binding.Identity,k.Key.Id,_original.TryGetValue(k.Identity,out var originalKey)?originalKey.Time:k.Key.Time)),
+            dt,Duration,Fps);
         double dv = (Value(at.Y) - Value(_down.Y)) * multiplier;
+        // Do not materialize inherited curves or record Undo for movement that
+        // disappears through frame snapping or parameter limits.
+        bool changes=keys.Any(key=>
+        {
+            var original=_original[key.Identity];
+            return Math.Abs(key.Key.Time-(original.Time+dt))>1e-9||
+                (!SpeedMode?Math.Abs(key.Key.Value-ClampValue(key.Binding,original.Value+dv))>1e-9:
+                    !key.Binding.Discrete&&Math.Abs(dv)>1e-9);
+        });
+        if(!_gesture&&!changes)return;
+        StartMutation();keys=SelectedKeys().ToArray();
         foreach (var key in keys)
         {
-            var original = _original[key.Identity]; key.Key.Time = Math.Clamp(original.Time + dt, 0, Duration);
+            var original = _original[key.Identity]; key.Key.Time = original.Time + dt;
             if (!SpeedMode) key.Key.Value = ClampValue(key.Binding, original.Value + dv);
             else if (!key.Binding.Discrete)
             {
@@ -492,8 +504,9 @@ public partial class PropertyGraphEditor : Control
     }
     void MergeCollisions()
     {
-        foreach (var selected in SelectedKeys().ToArray())
-            selected.Curve.Keys.RemoveAll(other => other.Id != selected.Key.Id && !_selected.Contains(selected.Binding.Identity + "/" + other.Id) && Math.Abs(other.Time - selected.Key.Time) < .000001);
+        // Group retiming resolves collisions before applying a common delta.
+        // Never silently remove a key outside the active selection.
+        foreach(var curve in SelectedKeys().Select(k=>k.Curve).Distinct().ToArray())curve.Keys.Sort((a,b)=>a.Time.CompareTo(b.Time));
         NotifyChanged();
     }
     void Zoom(Vector2 at, double factor, bool horizontal, bool vertical)
@@ -530,8 +543,9 @@ public partial class PropertyGraphEditor : Control
     public void SetSelectedTime(double time)
     {
         var keys = SelectedKeys().ToArray(); if (keys.Length == 0 || !double.IsFinite(time)) return;
-        double delta = Snap(time) - keys[0].Key.Time;
-        delta = Math.Clamp(delta, -keys.Min(k => k.Key.Time), Math.Max(0, Duration - keys.Max(k => k.Key.Time)));
+        double delta = GroupKeyRetiming.ResolveDelta(keys.Select(k=>new KeyGroupPoint(k.Binding.Identity,k.Key.Id,k.Key.Time)),
+            AllKeys().Select(k=>new KeyGroupPoint(k.Binding.Identity,k.Key.Id,k.Key.Time)),time-keys[0].Key.Time,Duration,Fps);
+        if(Math.Abs(delta)<1e-9)return;
         BeginEdit?.Invoke(); MaterializeSelectedCurves(); foreach (var key in SelectedKeys().ToArray()) key.Key.Time += delta;
         MergeCollisions();
     }

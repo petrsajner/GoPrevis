@@ -66,7 +66,8 @@ public partial class GoPrevisApp : Control
         var window=GetWindow();float dpiScale=Math.Clamp(Math.Max(DisplayServer.ScreenGetScale(),DisplayServer.ScreenGetDpi()/96f),1,2.5f);window.ContentScaleMode=Window.ContentScaleModeEnum.CanvasItems;window.ContentScaleSize=Vector2I.Zero;window.ContentScaleFactor=dpiScale;
         window.Title="GoPrevis "+AppVersion+" — 3D control clips for AI video";
         BuildTheme(); BuildUi(); BuildWorld(); StarterScene();InitializeProjectProtection();
-        if(OS.GetCmdlineUserArgs().Contains("--property-animation-test"))_=RunPropertyAnimationChecksAndQuit();
+        if(OS.GetCmdlineUserArgs().Contains("--animation-editing-test"))_=RunAnimationEditingChecksAndQuit();
+        else if(OS.GetCmdlineUserArgs().Contains("--property-animation-test"))_=RunPropertyAnimationChecksAndQuit();
         else if(OS.GetCmdlineUserArgs().Contains("--credential-isolation-test"))_=RunCredentialIsolationChecksAndQuit();
         else if(OS.GetCmdlineUserArgs().Contains("--vividia-link-test"))_=RunVividiaLinkChecksAndQuit();
         else if(OS.GetCmdlineUserArgs().Contains("--release-media-test"))_=RunReleaseMediaAndQuit();
@@ -440,6 +441,7 @@ public partial class GoPrevisApp : Control
         if (GetViewport().GuiGetFocusOwner() is LineEdit or TextEdit) return;
         if(_poseEditing&&key.Keycode==Key.Escape){StopPoseEditing();ShowInspectorSection("Object");return;}
         if(_poseEditing&&!_rightDown&&!_middleDown&&!_middleZoom&&(key.Keycode==Key.W||key.Keycode==Key.E)){SetPoseTool(key.Keycode==Key.W?"Move":"Rotate");return;}
+        if(HandleMotionClipboardShortcut(key))return;
         if(HandleAnimationWorkspaceShortcut(key))return;
         if(key.Keycode==Key.K){if(_poseEditing)CapturePoseCorrectionKey("All");else CaptureSelectedTransformKey("All");return;}
         if(key.Keycode==Key.Delete&&(_timeline.DeleteSelectedItems()||_timeline.HasFocus())){GetViewport().SetInputAsHandled();return;}

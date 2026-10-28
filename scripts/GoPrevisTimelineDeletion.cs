@@ -53,11 +53,11 @@ public partial class GoPrevisApp
             "TrackTransform" when _selectedItem.Channel=="All"&&App._cameras.Any(c=>c.Id==_selectedItem.Target)=>"Delete camera animation",_=>"Delete transform keys"};
         void ShowItemMenu(Vector2 point)
         {
-            _itemMenu??=CreateItemMenu();_itemMenu.Clear();_itemMenu.AddItem(DeleteItemLabel,0);
+            _itemMenu??=CreateItemMenu();_itemMenu.Clear();AddMotionClipboardMenuItems(_itemMenu);_itemMenu.AddItem(DeleteItemLabel,0);
             _itemMenu.Position=(Vector2I)(GetViewport().GuiEmbedSubwindows?GetGlobalTransformWithCanvas()*point:GetScreenTransform()*point);_itemMenu.Popup();
         }
         PopupMenu CreateItemMenu()
-        {var menu=new PopupMenu();AddChild(menu);menu.IdPressed+=_=>DeleteSelectedItems();return menu;}
+        {var menu=new PopupMenu();AddChild(menu);menu.IdPressed+=id=>InvokeMotionClipboardAction((int)id);return menu;}
         internal bool ItemMenuVisible=>_itemMenu?.Visible==true;
         internal void InvokeItemMenuDelete()=>_itemMenu!.EmitSignal(PopupMenu.SignalName.IdPressed,0L);
 

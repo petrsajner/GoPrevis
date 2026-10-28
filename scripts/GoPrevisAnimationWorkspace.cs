@@ -79,6 +79,7 @@ public partial class GoPrevisApp
         foreach(string preset in new[]{"Linear","Bezier","Hold","Ease in/out","Stop","Auto","Flat"})_animationPreset.AddItem(preset);
         _animationPreset.ItemSelected+=i=>{if(i<=0)return;string preset=_animationPreset.GetItemText((int)i);if(_animationWorkspaceMode=="Graph")_animationGraph?.SetPreset(preset);else _animationDope?.ApplySelectedPreset(preset);_animationPreset.Select(0);};toolbar.AddChild(_animationPreset);
         _animationFit=Button("Fit",()=>{if(_animationWorkspaceMode=="Graph")_animationGraph?.FitCurves();else _animationDope?.FitTime();});toolbar.AddChild(_animationFit);
+        BuildMotionSourceViewButton(toolbar);
         var toolbarRows=new VBoxContainer();toolbarRows.AddThemeConstantOverride("separation",1);toolbarRows.AddChild(toolbar);
         _animationToolbarSecondary=new HBoxContainer{Visible=false};_animationToolbarSecondary.AddThemeConstantOverride("separation",5);toolbarRows.AddChild(_animationToolbarSecondary);
         _animationToolbarSpacer=new Control{SizeFlagsHorizontal=SizeFlags.ExpandFill};_animationToolbarSecondary.AddChild(_animationToolbarSpacer);
@@ -155,6 +156,7 @@ public partial class GoPrevisApp
         foreach(var control in new Control?[]{_animationSearch,_animationAnimatedOnly,_animationSelectedOnly,_animationPinnedOnly,_animationExpandButton,_animationKeyButton})if(control!=null)control.Visible=mode!="Clips";
         if(_animationPreset!=null)_animationPreset.Visible=mode!="Clips";
         if(_animationFit!=null)_animationFit.Visible=mode!="Clips";
+        if(_motionSourceViewButton!=null)_motionSourceViewButton.Visible=mode=="Clips";
         ApplyAnimationToolbarLayout(true);
         RefreshAnimationWorkspace();
     }
@@ -288,20 +290,88 @@ public partial class GoPrevisApp
         Vector2 _dragFrom,_marqueeTo;bool _dragging,_mutation,_marquee,_scrubbing;
         HashSet<(string Channel,string Key)> _marqueeBase=new();
         PopupMenu? _menu;double _menuTime;
+        readonly Dictionary<string,PrecisionSpinBox> _valueEditors=new(StringComparer.Ordinal);
+        bool _refreshingValueEditors;
         readonly List<ClipboardKey> _clipboard=PropertyKeyClipboard.Items;
         double End=>_viewEnd<0?App._duration:Math.Max(_viewStart+1.0/App._fps,_viewEnd);
         double Time(float x)=>Math.Clamp(_viewStart+(x-Left)/TrackWidth*(End-_viewStart),0,App._duration);
         double Snap(double time)=>Math.Clamp(Math.Round(time*App._fps)/App._fps,0,App._duration);
         float X(double time)=>Left+TrackWidth*(float)((time-_viewStart)/(End-_viewStart));
         IEnumerable<AnimationChannelBinding> Channels(AnimationWorkspaceRow row)=>App.AnimationRowChannels(row);
-        public override void _Ready(){FocusMode=FocusModeEnum.All;MouseFilter=MouseFilterEnum.Pass;ClipContents=true;TooltipText="Expand objects and properties. Click a channel, Ctrl-click to add. Double-click a track to key. Drag keys or select a rectangle; Delete removes animation. Ctrl+C/V copies/pastes keys. Ctrl+wheel zooms time.";}
+        public override void _Ready()
+        {
+            FocusMode=FocusModeEnum.All;MouseFilter=MouseFilterEnum.Pass;ClipContents=true;
+            TooltipText="Expand objects and properties. Edit the numeric value directly or scrub its arrow strip. Click a channel, Ctrl-click to add. Double-click a track to key. Drag selected keys together; Delete removes animation. Ctrl+C/V copies/pastes keys. Ctrl+wheel zooms time.";
+            Resized+=SyncValueEditors;VisibilityChanged+=SyncValueEditors;SyncValueEditors();
+        }
         public override string _GetTooltip(Vector2 at)
         {
             int index=RowAt(at);if(index<0||index>=App._animationRows.Count)return TooltipText;
             var row=App._animationRows[index];var binding=!row.IsGroup?Channels(row).FirstOrDefault():null;
-            return binding==null?row.Label+" · expand to see its animated properties. Double-click the track to capture a group key.":binding.TargetName+" · "+binding.Group+" / "+binding.Label+"\n"+binding.Read().ToString("0.###",CultureInfo.InvariantCulture)+" "+binding.Unit+"\nDiamond: key this property · Star: pin channel · Ctrl-click: add to selection";
+            return binding==null?row.Label+" · expand to see its animated properties. Double-click the track to capture a group key.":binding.TargetName+" · "+binding.Group+" / "+binding.Label+"\n"+binding.Read().ToString("0.###",CultureInfo.InvariantCulture)+" "+binding.Unit+"\nValue: type a number or scrub arrows · Diamond: key this property · Star: pin channel · Ctrl-click: add to selection";
         }
-        public void RefreshRows(){CustomMinimumSize=new Vector2(HierarchyOnly?215:0,Top+Math.Max(3,App._animationRows.Count)*RowHeight+10);QueueRedraw();}
+        public void RefreshRows(){CustomMinimumSize=new Vector2(HierarchyOnly?215:0,Top+Math.Max(3,App._animationRows.Count)*RowHeight+10);SyncValueEditors();QueueRedraw();}
+        public override void _Process(double delta)=>SyncValueEditors();
+        internal SpinBox? ValueEditor(string identity)=>_valueEditors.GetValueOrDefault(identity);
+        internal SpinBox? GetInlineValueEditor(string identity)=>ValueEditor(identity);
+        internal int SelectedKeyCount=>SelectedKeys().Count;
+        internal Rect2 GroupRowRect(string targetId,int depth=0)
+        {int i=App._animationRows.FindIndex(row=>row.TargetId==targetId&&row.IsGroup&&row.Depth==depth);return i<0?new():new Rect2(0,Top+i*RowHeight,Size.X,RowHeight);}
+        internal Rect2 ValueRect(string identity)
+        {var row=RowRect(identity);return row.Size.Y==0?new():new Rect2(Left-116,row.Position.Y+1,76,RowHeight-2);}
+        bool ValueEditorActive(PrecisionSpinBox field)=>field.ArrowDragging||field.HasFocus()||field.GetLineEdit().HasFocus();
+        PrecisionSpinBox CreateValueEditor(string identity,AnimationChannelBinding initial)
+        {
+            var field=(PrecisionSpinBox)App.Spin(initial.Minimum,initial.Maximum,initial.Discrete?1:initial.Unit=="°"?.1:.001,initial.Read());
+            field.Name="PropertyValue";field.CustomMinimumSize=new Vector2(76,RowHeight-2);field.MouseFilter=MouseFilterEnum.Stop;
+            var entry=field.GetLineEdit();entry.AddThemeFontSizeOverride("font_size",10);
+            var normal=new StyleBoxFlat{BgColor=new Color("2a2932"),CornerRadiusTopLeft=3,CornerRadiusTopRight=3,CornerRadiusBottomLeft=3,CornerRadiusBottomRight=3,ContentMarginLeft=4,ContentMarginRight=3,ContentMarginTop=1,ContentMarginBottom=1};
+            entry.AddThemeStyleboxOverride("normal",normal);
+            var focus=(StyleBoxFlat)normal.Duplicate();focus.BorderColor=App._accent;focus.SetBorderWidthAll(1);entry.AddThemeStyleboxOverride("focus",focus);
+            double textStart=field.Value;
+            field.ValueChanged+=value=>
+            {
+                if(_refreshingValueEditors||App._refreshing||App._propertyEvaluating)return;
+                if(App._animationChannelMap.TryGetValue(identity,out var current))current.Write?.Invoke(value);
+            };
+            entry.FocusEntered+=()=>{textStart=field.Value;App.StopHistoryPlayback();App.BeginNumericGesture();};
+            entry.FocusExited+=()=>App.EndNumericGesture();
+            entry.TextSubmitted+=_=>{field.Apply();entry.ReleaseFocus();};
+            entry.GuiInput+=input=>
+            {
+                if(input is not InputEventKey{Pressed:true,Echo:false,Keycode:Key.Escape})return;
+                _refreshingValueEditors=true;
+                try{field.Value=textStart;entry.Text=textStart.ToString("0.###############",CultureInfo.InvariantCulture);}
+                finally{_refreshingValueEditors=false;}
+                entry.ReleaseFocus();entry.AcceptEvent();
+            };
+            AddChild(field);return field;
+        }
+        void SyncValueEditors()
+        {
+            if(App==null||!IsInsideTree())return;
+            float viewportHeight=GetParent() is ScrollContainer sc?sc.Size.Y:Size.Y;
+            int first=Math.Max(0,(int)Math.Floor((HeaderOffset-Top)/RowHeight)),last=Math.Min(App._animationRows.Count,(int)Math.Ceiling((HeaderOffset+viewportHeight)/RowHeight));
+            var wanted=new HashSet<string>(StringComparer.Ordinal);
+            if(IsVisibleInTree())for(int i=first;i<last;i++)
+            {
+                var row=App._animationRows[i];if(row.IsGroup)continue;
+                var binding=Channels(row).FirstOrDefault();if(binding==null)continue;wanted.Add(binding.Identity);
+                if(!_valueEditors.TryGetValue(binding.Identity,out var field))_valueEditors[binding.Identity]=field=CreateValueEditor(binding.Identity,binding);
+                var rect=ValueRect(binding.Identity);field.Position=rect.Position;field.Size=rect.Size;
+                field.Visible=rect.Position.Y>=HeaderOffset+Top-1;field.TooltipText=binding.TargetName+" · "+binding.Group+" / "+binding.Label+(binding.Unit==""?"":" ("+binding.Unit+")")+"\nType a value and press Enter. Escape cancels typing. Drag the arrow strip for a precise adjustment.";
+                if(ValueEditorActive(field))continue;
+                _refreshingValueEditors=true;
+                try{field.MinValue=binding.Minimum;field.MaxValue=binding.Maximum;field.Step=binding.Discrete?1:binding.Unit=="°"?.1:.001;field.Value=binding.Read();}
+                finally{_refreshingValueEditors=false;}
+            }
+            foreach(var pair in _valueEditors.ToArray())
+            {
+                if(wanted.Contains(pair.Key))continue;
+                if(IsVisibleInTree()&&ValueEditorActive(pair.Value))continue;
+                RemoveChild(pair.Value);pair.Value.QueueFree();_valueEditors.Remove(pair.Key);
+            }
+        }
         public void FitTime(){_viewStart=0;_viewEnd=-1;QueueRedraw();}
         internal Rect2 RowRect(string identity)
         {int i=App._animationRows.FindIndex(row=>row.Channels.Contains(identity)&&!row.IsGroup);return i<0?new():new Rect2(0,Top+i*RowHeight,Size.X,RowHeight);}
@@ -328,11 +398,10 @@ public partial class GoPrevisApp
                 {
                     var points=row.Expanded?new[]{new Vector2(indent,y+9),new Vector2(indent+8,y+9),new Vector2(indent+4,y+14)}:new[]{new Vector2(indent+2,y+6),new Vector2(indent+2,y+15),new Vector2(indent+8,y+10.5f)};DrawColoredPolygon(points,App._muted);
                 }
-                var color=leaf?.Color??(row.Depth==0?App._text:App._muted);float reserve=leaf==null?10:94;
+                var color=leaf?.Color??(row.Depth==0?App._text:App._muted);float reserve=leaf==null?10:120;
                 DrawString(font,new(label,y+16),Fit(row.Label,Left-label-reserve),fontSize:11,modulate:color);
                 if(leaf!=null)
                 {
-                    string value=leaf.Read().ToString("0.###",CultureInfo.InvariantCulture);DrawString(font,new(Left-88,y+16),Fit(value,46),fontSize:10,modulate:App._muted);
                     Diamond(Left-31,y+12,AnimationHasKeys(leaf)?App._accent:App._muted,3.2f);
                     DrawString(font,new(Left-17,y+16),App._animationPinnedChannels.Contains(leaf.Identity)?"★":"☆",fontSize:12,modulate:App._animationPinnedChannels.Contains(leaf.Identity)?new Color("e4c47f"):App._muted);
                 }
@@ -398,9 +467,17 @@ public partial class GoPrevisApp
             }
             if(hit.Count>0)
             {
-                bool selected=hit.All(k=>_keys.Contains((k.Channel.Identity,k.Key.Id)));
-                if(add&&selected){foreach(var k in hit)_keys.Remove((k.Channel.Identity,k.Key.Id));}
-                else{if(!add&&!selected){_keys.Clear();App._animationSelectedChannels.Clear();}foreach(var k in hit){_keys.Add((k.Channel.Identity,k.Key.Id));App._animationSelectedChannels.Add(k.Channel.Identity);}App.RefreshAnimationWorkspace();BeginSelectedDrag(b.Position);}
+                bool selected=hit.Any(k=>_keys.Contains((k.Channel.Identity,k.Key.Id)));
+                bool allSelected=hit.All(k=>_keys.Contains((k.Channel.Identity,k.Key.Id)));
+                if(b.CtrlPressed&&allSelected){foreach(var k in hit)_keys.Remove((k.Channel.Identity,k.Key.Id));}
+                else
+                {
+                    if(!add&&!selected){_keys.Clear();App._animationSelectedChannels.Clear();}
+                    // An existing selection is a group: pressing one of its keys must
+                    // not replace it, including a collapsed summary with mixed keys.
+                    if(add||!selected)foreach(var k in hit){_keys.Add((k.Channel.Identity,k.Key.Id));App._animationSelectedChannels.Add(k.Channel.Identity);}
+                    App.RefreshAnimationWorkspace();BeginSelectedDrag(b.Position);
+                }
             }
             else if(b.DoubleClick){App.SetTime(Snap(Time(b.Position.X)));App.KeyAnimationChannels(Channels(row).ToList());}
             else{_marquee=true;_dragFrom=_marqueeTo=b.Position;_marqueeBase=add?new(_keys):new();_keys.Clear();_keys.UnionWith(_marqueeBase);}
@@ -419,13 +496,16 @@ public partial class GoPrevisApp
                 foreach(var item in _keys)App._animationSelectedChannels.Add(item.Channel);App.RefreshAnimationWorkspace();QueueRedraw();GetViewport().SetInputAsHandled();return;
             }
             if(!_mutation&&Math.Abs(at.X-_dragFrom.X)<3)return;
+            var originals=_dragOriginal.SelectMany(pair=>pair.Value.Keys.Where(k=>_keys.Contains((pair.Key,k.Id))).Select(k=>new KeyGroupPoint(pair.Key,k.Id,k.Time))).ToArray();if(originals.Length==0)return;
+            var all=_dragOriginal.SelectMany(pair=>pair.Value.Keys.Select(k=>new KeyGroupPoint(pair.Key,k.Id,k.Time))).ToArray();
+            double desiredDelta=(at.X-_dragFrom.X)/TrackWidth*(End-_viewStart);
+            double delta=GroupKeyRetiming.ResolveDelta(originals,all,desiredDelta,App._duration,App._fps);
+            if(!_mutation&&Math.Abs(delta)<.0000001)return;
             if(!_mutation){App.StopHistoryPlayback();App.PushUndo();_mutation=true;}
-            var originals=_dragOriginal.SelectMany(pair=>pair.Value.Keys.Where(k=>_keys.Contains((pair.Key,k.Id)))).ToArray();if(originals.Length==0)return;
-            double delta=Math.Round((at.X-_dragFrom.X)/TrackWidth*(End-_viewStart)*App._fps)/App._fps;delta=Math.Clamp(delta,-originals.Min(k=>k.Time),App._duration-originals.Max(k=>k.Time));
             foreach(var pair in _dragOriginal)
             {
                 if(!App._animationChannelMap.TryGetValue(pair.Key,out var binding))continue;var curve=binding.EnsureCurve();curve.Keys.Clear();curve.Keys.AddRange(PropertyCurveRuntime.Copy(pair.Value).Keys);
-                var moving=curve.Keys.Where(k=>_keys.Contains((pair.Key,k.Id))).ToArray();var destination=moving.Select(k=>k.Time+delta).ToArray();curve.Keys.RemoveAll(k=>!_keys.Contains((pair.Key,k.Id))&&destination.Any(t=>At(t,k.Time)));foreach(var k in moving)k.Time+=delta;curve.Keys.Sort((a,b)=>a.Time.CompareTo(b.Time));
+                var moving=curve.Keys.Where(k=>_keys.Contains((pair.Key,k.Id))).ToArray();foreach(var k in moving)k.Time+=delta;curve.Keys.Sort((a,b)=>a.Time.CompareTo(b.Time));
             }
             App.AnimationWorkspaceChanged();QueueRedraw();GetViewport().SetInputAsHandled();
         }

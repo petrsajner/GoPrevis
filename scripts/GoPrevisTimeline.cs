@@ -18,6 +18,7 @@ public partial class GoPrevisApp
         private Entry? _dragEntry, _dragPathEntry, _dragKeyEntry;
         private CameraEntry? _dragKeyCamera;
         private MotionClipData? _dragClip;
+        private PropertyAnimationData? _clipPropertySnapshot;
         private readonly Dictionary<string,double> _clipBlendSnapshot=new();
         private int _dragPathIndex;
         private enum ClipDrag { Move, In, Out }
@@ -29,8 +30,8 @@ public partial class GoPrevisApp
         private string _selectedKeyTarget = "", _selectedKeyChannel = "";
         private double _selectedKeyTime = double.NaN;
         private float TrackWidth => Math.Max(1, Size.X - Left - 18);
-        private float X(double seconds) => Left + TrackWidth * (float)(seconds / App._duration);
-        private double Seconds(float x) => Math.Clamp((x - Left) / TrackWidth * App._duration, 0, App._duration);
+        private float X(double seconds) => Left + TrackWidth * (float)((seconds-ViewStart) / ViewDuration);
+        private double Seconds(float x) => Math.Clamp(ViewStart+(x - Left) / TrackWidth * ViewDuration, 0, App._duration);
         private double Snap(double seconds) => Math.Clamp(Math.Round(seconds * App._fps) / App._fps, 0, App._duration);
 
         private sealed record TrackRow(string Kind, string Label, Entry? Object = null,
@@ -54,7 +55,7 @@ public partial class GoPrevisApp
                 }
                 foreach (Entry entry in App._entries)
                 {
-                    bool motion = entry.Data.MotionClips.Count > 0 || entry.NativeTrack == null && entry.Player != null && entry.Animation!="";
+                    bool motion = entry.Node is RiggedActor || entry.NativeTrack!=null || entry.Data.MotionClips.Count > 0 || entry.Player != null && entry.Animation!="";
                     if (motion) rows.Add(new TrackRow("Motion", entry.Data.Name + " · Motion", Object: entry));
                     if (entry.Data.Path.Points.Count > 0)
                         rows.Add(new TrackRow("Path", entry.Data.Name + " · Path", Object: entry));
@@ -103,7 +104,7 @@ public partial class GoPrevisApp
         public override void _Ready()
         {
             FocusMode=FocusModeEnum.All;
-            TooltipText = "Select a clip, key or track and press Delete to remove its animation. Right-click a clip or track for Delete. Ctrl/Shift adds keys. Drag the ruler to scrub; clip edges trim IN/OUT.";
+            TooltipText = "Select a clip, key or track and press Delete to remove its animation. Right-click a clip for Duplicate, Copy, Paste or Delete. Ctrl/Shift adds keys. Drag the ruler to scrub; clip edges trim IN/OUT. Grey blocks show unused recorded source data.";
             UpdateMinimumHeight();
         }
 
@@ -124,6 +125,7 @@ public partial class GoPrevisApp
 
         private void EndDrag()
         {
+            EndSelectedKeyDrag();
             _marquee=false;QueueRedraw();
             _dragClip = null; _dragEntry = null; _dragPathEntry = null;
             _dragKeyEntry = null; _dragKeyCamera = null; _dragKey = false; _dragPoseKey=false;
@@ -139,10 +141,11 @@ public partial class GoPrevisApp
 
         private void UpdatePointer(float x)
         {
+            if(UpdateSelectedKeyDrag(x))return;
             if (_dragKey)
             {
                 if (!BeginMutation(x)) return;
-                double time = Snap(_keyOriginalTime + (x - _dragX) / TrackWidth * App._duration);
+                double time = Snap(_keyOriginalTime + (x - _dragX) / TrackWidth * ViewDuration);
                 if (Math.Abs(time - _lastKeyTime) < KeyTolerance) return;
                 if(_dragPoseKey&&_dragKeyEntry!=null)App.RetimePoseCorrection(_dragKeyEntry,_dragKeyChannel,_lastKeyTime,time);
                 else App.RetimeTransform(_dragKeyEntry, _dragKeyCamera, _dragKeyChannel, _lastKeyTime, time);
@@ -155,19 +158,22 @@ public partial class GoPrevisApp
             {
                 if (!BeginMutation(x)) return;
                 App.SetPathKeyTime(_dragPathEntry, _dragPathIndex,
-                    _pathKeyStart + (x - _dragX) / TrackWidth * App._duration, false);
+                    _pathKeyStart + (x - _dragX) / TrackWidth * ViewDuration, false);
             }
             else if (_dragClip != null && _dragEntry != null)
             {
                 if (!BeginMutation(x)) return;
-                _dragClip.IsPlaceholder=false;double change = (x - _dragX) / TrackWidth * App._duration;
+                _dragClip.IsPlaceholder=false;if(_clipPropertySnapshot!=null)_dragClip.PropertyAnimation=CloneAnimationState(_clipPropertySnapshot);double change = (x - _dragX) / TrackWidth * ViewDuration;
                 if (_clipDrag==ClipDrag.In)
                 {
                     double minimum=Math.Min(1.0/App._fps,_length),outPoint=_start+_length;
-                    double low=Math.Max(0,_start-_offset/Math.Max(.000001,_dragClip.Speed));
+                    double low=EarliestMotionTrimStart(_dragClip,_start,_offset);
+                    if(_start+change<_start&&_dragClip.PropertyAnimation.Channels.TryGetValue("SourceOffset",out var remap)&&PropertyCurveRuntime.HasKeys(remap))App.Status("Animated Source IN: earlier extension is locked to preserve the time remap. Edit Source IN keys to reveal earlier footage.");
                     double start=Math.Clamp(Snap(_start+change),low,Math.Max(low,outPoint-minimum));
                     _dragClip.Start=start;_dragClip.Duration=outPoint-start;
-                    _dragClip.SourceOffset=Math.Max(0,_offset+(start-_start)*_dragClip.Speed);
+                    double sourceShift=PropertyCurveRuntime.Integrate(_dragClip.PropertyAnimation.Channels.GetValueOrDefault("Speed"),_start,start,_dragClip.Speed,0,double.PositiveInfinity);
+                    _dragClip.SourceOffset=Math.Max(0,_offset+sourceShift);
+                    if(_dragClip.PropertyAnimation.Channels.TryGetValue("SourceOffset",out var offsetCurve))foreach(var key in offsetCurve.Keys)key.Value=Math.Max(0,key.Value+sourceShift);
                     UpdateClipBlend(_dragEntry,_dragClip,true);
                 }
                 else if (_clipDrag==ClipDrag.Out)
@@ -179,9 +185,13 @@ public partial class GoPrevisApp
                 else
                 {
                     _dragClip.Start = Math.Clamp(Snap(_start + change), 0, Math.Max(0, App._duration - _dragClip.Duration));
+                    ShiftMotionPropertyKeys(_dragClip,_dragClip.Start-_start);
                     UpdateClipBlend(_dragEntry,_dragClip);
                 }
-                try { App.RebuildTrack(_dragEntry); App.SetTime(App._time); App.RefreshSequenceInspector(); }
+                // Clip scheduling updates both its source base and authored
+                // parameter curves. Do not reinterpret that edit as an inspector
+                // value change and insert a second key at the playhead.
+                try { App.RebuildTrack(_dragEntry); App._propertyEditBefore=null; App.SetTime(App._time); App.RefreshSequenceInspector(); }
                 catch (Exception ex) { App.Status(ex.Message); }
             }
             else if (_scrubbing) App.SetTime(Snap(Seconds(x)));
@@ -220,8 +230,10 @@ public partial class GoPrevisApp
             var entry=rows[index].Object!;var clip=SelectedClipEdge(entry,atPosition.X)??entry.Data.MotionClips.OrderByDescending(c=>c.Start).FirstOrDefault(c=>atPosition.X>=X(c.Start)&&atPosition.X<=X(c.Start+c.Duration));
             if(clip==null)return TooltipText;
             float left=atPosition.X-X(clip.Start),right=X(clip.Start+clip.Duration)-atPosition.X;
+            double sourceLength=App.MotionSourceLength(entry,clip);
             string action=left<8&&left<=right?"Trim IN · drag to choose a later or earlier source start":right<8?"Trim OUT · drag to change the clip end":"Drag to move this clip";
-            return $"{clip.Name}\n{action}\nDelete removes the selected clip · Right-click for Delete\nTimeline {clip.Start:0.###}–{clip.Start+clip.Duration:0.###} s\nSource IN {clip.SourceOffset:0.###} s · OUT {clip.SourceOffset+clip.Duration*clip.Speed:0.###} s";
+            double sourceIn=MotionClipClock.SourceTime(clip.PropertyAnimation,clip.Start,clip.Start,clip.Duration,clip.SourceOffset,clip.Speed),sourceOut=MotionClipClock.SourceTime(clip.PropertyAnimation,clip.Start+clip.Duration,clip.Start,clip.Duration,clip.SourceOffset,clip.Speed);
+            return $"{clip.Name}\nRecorded source: {sourceLength:0.###} s · grey = unused source · color = active clip\n{(clip.Loop?"Loop source is enabled; repeat marks do not represent additional captured data.":"Past the source end, the last frame holds.")}\n{(clip.PropertyAnimation.Channels.Count>0?"With animated source time, grey tails project the boundary rate; source duration remains the actual recording length. Paused boundaries have no finite tail projection.":"")}\n{action}\nRight-click for Duplicate / Copy / Paste / Delete\nTimeline {clip.Start:0.###}–{clip.Start+clip.Duration:0.###} s\nSource IN {sourceIn:0.###} s · OUT {sourceOut:0.###} s";
         }
 
         private TransformAnimationData Animation(TrackRow row) => row.Camera?.Animation ?? row.Object!.Data.TransformAnimation;
@@ -266,9 +278,10 @@ public partial class GoPrevisApp
             {
                 float x = Left + TrackWidth * i / ticks;
                 DrawLine(new Vector2(x, Top - 6), new Vector2(x, end), App._line);
-                string label = (App._duration * i / ticks).ToString("0.##", CultureInfo.InvariantCulture) + " s";
+                string label = (ViewStart+ViewDuration * i / ticks).ToString("0.##", CultureInfo.InvariantCulture) + " s";
                 DrawString(font, new Vector2(Math.Min(x, Size.X - 34), 15), label, fontSize: 11, modulate: App._muted);
             }
+            if(ViewEnd>App._duration+.01){float endX=X(App._duration);DrawLine(new(endX,Top),new(endX,end),new Color("b89b6d"));DrawString(font,new(endX+4,Top+13),"Shot end",fontSize:9,modulate:new Color("b89b6d"));}
             for (int index = 0; index < rows.Count; index++)
             {
                 TrackRow row = rows[index]; float y = Top + index * RowHeight;
@@ -337,9 +350,10 @@ public partial class GoPrevisApp
                 DrawRect(new Rect2(Left, y + 2, TrackWidth, 19), new Color("3c3548"));
                 DrawString(font, new Vector2(Left + 7, y + 16), Fit(actor.Animation, TrackWidth - 14), fontSize: 11, modulate: App._text); return;
             }
-            foreach (MotionClipData clip in clips.Where(c => c.Start < App._duration))
+            DrawMotionSourceHandles(actor,clips,y);
+            foreach (MotionClipData clip in clips.Where(c => c.Start < ViewEnd && c.Start+c.Duration > ViewStart))
             {
-                float start = X(clip.Start), finish = X(Math.Min(App._duration, clip.Start + clip.Duration));
+                float start = X(Math.Max(ViewStart,clip.Start)), finish = X(Math.Min(ViewEnd, clip.Start + clip.Duration));
                 bool chosen = _selectedItem is {} item&&item.Target==actor.Data.Id&&(item.Kind=="TrackMotion"||item.Kind=="MotionClip"&&item.Id==clip.Id);
                 var rect = new Rect2(start, y + 2, Math.Max(2, finish - start), 19);
                 DrawRect(rect, chosen ? new Color("67507f") : new Color("43364f"));
@@ -352,9 +366,10 @@ public partial class GoPrevisApp
                     DrawRect(new Rect2(start, y + 2, blendEnd - start, 19), new Color("8a72a6"));
                     DrawLine(new Vector2(start, y + 20), new Vector2(blendEnd, y + 3), new Color("c6afe5"));
                 }
+                DrawMotionSourceStatus(actor,clip,rect,y);
                 DrawLine(new Vector2(start + 3, y + 5), new Vector2(start + 3, y + 18), new Color("d3c2df"), 2);
                 DrawLine(new Vector2(finish - 3, y + 5), new Vector2(finish - 3, y + 18), new Color("d3c2df"), 2);
-                DrawString(font, new Vector2(start + 9, y + 16), Fit(clip.Name+(clip.SourceOffset>1.0/App._fps?$" · IN {clip.SourceOffset:0.##} s":""), rect.Size.X - 24), fontSize: 11, modulate: App._text);
+                DrawString(font, new Vector2(start + 9, y + 16), Fit(clip.Name+(clip.Loop?" ↻":"")+" · source "+App.MotionSourceLength(actor,clip).ToString("0.##")+" s"+(clip.SourceOffset>1.0/App._fps?$" · IN {clip.SourceOffset:0.##} s":""), rect.Size.X - 24), fontSize: 11, modulate: App._text);
             }
             // Selected trim handles remain visible and reachable when an
             // overlapping incoming clip is drawn above the outgoing clip.
@@ -418,6 +433,7 @@ public partial class GoPrevisApp
                     {
                         SelectTimelineKey(row,actor.Data.Path.Start+times[point],button.CtrlPressed||button.ShiftPressed);
                         if(button.ButtonIndex==MouseButton.Right){DeleteSelectedKeys();AcceptEvent();return;}
+                        if(!BeginSelectedKeyDrag(row,actor.Data.Path.Start+times[point],button.Position.X)){AcceptEvent();return;}
                         App.SelectPathKey(actor, point); _dragPathEntry = actor; _dragPathIndex = point; _dragX = button.Position.X;
                         _pathKeyStart = actor.Data.Path.Start + times[point]; _hasDragged = false; AcceptEvent(); return;
                     }
@@ -434,13 +450,14 @@ public partial class GoPrevisApp
                     App._playing = false; App._play.Text = "▶ Play";SelectMotionClip(actor,clip);
                     if(button.ButtonIndex==MouseButton.Right){ShowItemMenu(button.Position);AcceptEvent();return;}
                     _hasDragged = false; _dragEntry = actor; _dragClip = clip; _dragX = button.Position.X;
-                    _start = clip.Start; _length = clip.Duration; _offset=clip.SourceOffset;
+                    _start = clip.Start; _length = clip.Duration; _offset=clip.SourceOffset;_clipPropertySnapshot=CloneAnimationState(clip.PropertyAnimation);
                     _clipBlendSnapshot.Clear();foreach(var source in actor.Data.MotionClips)_clipBlendSnapshot[source.Id]=source.BlendIn;
                     float fromStart=button.Position.X-X(clip.Start),fromEnd=X(clip.Start+clip.Duration)-button.Position.X;
                     _clipDrag=fromStart<8&&fromStart<=fromEnd?ClipDrag.In:fromEnd<8?ClipDrag.Out:ClipDrag.Move;
                     AcceptEvent(); return;
                 }
                 if(actor.NativeTrack==null&&actor.Player!=null&&actor.Animation!=""){SelectTrack(row);if(button.ButtonIndex==MouseButton.Right)ShowItemMenu(button.Position);AcceptEvent();return;}
+                if(button.ButtonIndex==MouseButton.Right){SelectTrack(row);ShowItemMenu(button.Position);AcceptEvent();return;}
                 if(button.ButtonIndex==MouseButton.Left){ClearKeySelection();_scrubbing = true; App.SetTime(Snap(Seconds(button.Position.X))); AcceptEvent();}
             }
             else if (input is InputEventMouseMotion motion && (_dragClip != null || _dragPathEntry != null || _dragKey || _scrubbing))
@@ -466,6 +483,7 @@ public partial class GoPrevisApp
                 if(button.ButtonIndex==MouseButton.Right){SelectTimelineKey(row,nearest,false);DeleteSelectedKeys();AcceptEvent();return;}
                 App._playing=false;App._play.Text="▶";App.SelectPoseCorrectionTimeline(row.Object!,row.Channel,nearest);App.SelectKeyInterpolation("Pose",row.Object,null,row.Channel,nearest);
                 SelectTimelineKey(row,nearest,button.CtrlPressed||button.ShiftPressed);
+                if(!BeginSelectedKeyDrag(row,nearest,button.Position.X)){AcceptEvent();return;}
                 _selectedKeyTarget=row.Target;_selectedKeyChannel=row.Channel;_selectedKeyTime=nearest;
                 _dragKey=true;_dragPoseKey=true;_dragKeyEntry=row.Object;_dragKeyCamera=null;_dragKeyChannel=row.Channel;_dragX=button.Position.X;_keyOriginalTime=_lastKeyTime=nearest;_hasDragged=false;AcceptEvent();return;
             }
@@ -500,6 +518,7 @@ public partial class GoPrevisApp
                 App._playing = false; App._play.Text = "▶ Play";
                 App.SelectTransformTimeline(row.Object, row.Camera, row.Channel, nearest);
                 SelectTimelineKey(row,nearest,button.CtrlPressed||button.ShiftPressed);
+                if(!BeginSelectedKeyDrag(row,nearest,button.Position.X)){AcceptEvent();return;}
                 _selectedKeyTarget = row.Target; _selectedKeyChannel = row.Channel; _selectedKeyTime = nearest;
                 _dragKey = true; _dragPoseKey=false; _dragKeyEntry = row.Object; _dragKeyCamera = row.Camera; _dragKeyChannel = row.Channel;
                 _dragX = button.Position.X; _keyOriginalTime = _lastKeyTime = nearest; _hasDragged = false; AcceptEvent(); return;

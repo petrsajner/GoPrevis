@@ -22,7 +22,7 @@ public partial class GoPrevisApp
             int row=Rows.FindIndex(r=>r.Kind==kind&&(r.Camera?.Id??r.Object?.Data.Id)==id&&r.Channel==channel);
             return row<0?new():new Rect2(Left,Top+row*RowHeight,TrackWidth,RowHeight);
         }
-        internal void ClearKeySelection(){_selectedKeys.Clear();_marquee=false;ClearItemSelection();QueueRedraw();}
+        internal void ClearKeySelection(){EndSelectedKeyDrag();_selectedKeys.Clear();_marquee=false;ClearItemSelection();QueueRedraw();}
 
         IEnumerable<KeyRef> RowKeyRefs(TrackRow row,double time)
         {
@@ -54,8 +54,12 @@ public partial class GoPrevisApp
         void SelectTimelineKey(TrackRow row,double time,bool add)
         {
             ClearItemSelection();
+            var keys=RowKeyRefs(row,time).ToArray();
+            // A normal press inside the current selection starts a group drag.
+            // Only pressing an unselected key replaces the current selection.
+            if(!add&&keys.Any(_selectedKeys.Contains)){QueueRedraw();return;}
             if(!add)_selectedKeys.Clear();
-            var keys=RowKeyRefs(row,time).ToArray();bool remove=add&&keys.Length>0&&keys.All(_selectedKeys.Contains);
+            bool remove=add&&keys.Length>0&&keys.All(_selectedKeys.Contains);
             foreach(var key in keys){if(remove)_selectedKeys.Remove(key);else _selectedKeys.Add(key);}
             QueueRedraw();
         }
