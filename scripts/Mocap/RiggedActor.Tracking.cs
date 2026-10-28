@@ -9,6 +9,7 @@ public partial class RiggedActor
     public (Vector3 Root,Vector3 Facing) SampleTrackingMotion(double time,bool forceInPlace,PoseCorrectionAnimationData? corrections)
     {
         EnsureRig();time=double.IsFinite(time)?Math.Max(0,time):0;
+        RefreshAnimatedTrackAlignment();
         Vector3 root;Quaternion[] rotations=new Quaternion[_bones.Count];
         if(_motionTrack.Length==0)
         {

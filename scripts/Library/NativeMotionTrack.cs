@@ -19,6 +19,7 @@ public sealed partial class NativeMotionTrack
     readonly Pose _rest, _result, _incoming, _source, _authoredRest;
     readonly Quaternion _restRootRotation;
     Clip[] _clips = Array.Empty<Clip>();
+    ulong _clipAnimationStamp;
     readonly Dictionary<string,Cycle> _cycles=new(StringComparer.Ordinal);
     sealed record Cycle(Vector3[] Bones,Vector3 Node);
 
@@ -37,10 +38,15 @@ public sealed partial class NativeMotionTrack
     {
         public required string Name;
         public double Start, Duration, Offset, Speed, Blend;
+        public double BlendLimit;
+        public PropertyAnimationData Properties = new();
         public bool Loop, InPlace;
         public Vector3[] BoneAlignment=Array.Empty<Vector3>();
         public Vector3 NodeAlignment;
         public double End=>Start+Duration;
+        public double SourceTime(double time)=>MotionClipClock.SourceTime(Properties,time,Start,Duration,Offset,Speed);
+        public bool Loops(double time)=>MotionClipClock.Flag(Properties,"Loop",MotionClipClock.ParameterTime(time,Start,Duration),Loop);
+        public bool IsInPlace(double time)=>MotionClipClock.Flag(Properties,"InPlace",MotionClipClock.ParameterTime(time,Start,Duration),InPlace);
     }
 
     public int ClipCount=>_clips.Length;
@@ -88,8 +94,8 @@ public sealed partial class NativeMotionTrack
             if(string.IsNullOrWhiteSpace(name)||!_player.HasAnimation(name)||!_cycles.ContainsKey(name))throw new FormatException("This model has no playable animation named '"+name+"'. Drop a motion compatible with its rig.");
             if(!double.IsFinite(data.Start)||data.Start<0||!double.IsFinite(data.Duration)||data.Duration<=0||!double.IsFinite(data.Start+data.Duration))throw new FormatException("Motion start and duration must be finite; duration must be greater than zero.");
             if(!double.IsFinite(data.SourceOffset)||data.SourceOffset<0||!double.IsFinite(data.Speed)||data.Speed<=0||!double.IsFinite(data.BlendIn)||data.BlendIn<0)throw new FormatException("Motion offset, speed and blend time are invalid.");
-            var clip=new Clip{Name=name,Start=data.Start,Duration=data.Duration,Offset=data.SourceOffset,Speed=data.Speed,Loop=data.Loop,InPlace=data.InPlace,BoneAlignment=new Vector3[_roots.Length]};
-            if(prepared.Count>0)clip.Blend=Math.Min(data.BlendIn,Math.Min(clip.Duration,Math.Max(0,prepared[^1].End-clip.Start)));
+            var clip=new Clip{Name=name,Start=data.Start,Duration=data.Duration,Offset=data.SourceOffset,Speed=data.Speed,Loop=data.Loop,InPlace=data.InPlace,BoneAlignment=new Vector3[_roots.Length],Properties=data.PropertyAnimation??new()};
+            if(prepared.Count>0){clip.BlendLimit=Math.Min(clip.Duration,Math.Max(0,prepared[^1].End-clip.Start));clip.Blend=Math.Min(data.BlendIn,clip.BlendLimit);}
             prepared.Add(clip);
         }
         // Validation above is atomic; sampling below cannot encounter missing source animations.
@@ -101,12 +107,13 @@ public sealed partial class NativeMotionTrack
             for(int root=0;root<_roots.Length;root++)clip.BoneAlignment[root]=Horizontal(_result.Position[_roots[root]]-_incoming.Position[_roots[root]]);
             if(_nodes.Length>0)clip.NodeAlignment=Horizontal(_result.NodePosition[0]-_incoming.NodePosition[0]);
         }
-        _clips=prepared.ToArray();Evaluate(0);
+        _clips=prepared.ToArray();_clipAnimationStamp=ClipAnimationStamp();Evaluate(0);
     }
 
     public void Evaluate(double sceneSeconds, bool forceInPlace=false, PoseCorrectionAnimationData? corrections=null, StaticPoseData? staticPose=null)
     {
         if(!double.IsFinite(sceneSeconds))sceneSeconds=0;
+        RefreshAnimatedAlignments();
         if(_clips.Length==0){Copy(_rest,_result);ApplyStaticPose(_result,staticPose);}else EvaluatePrepared(_clips,sceneSeconds,_result);
         if(forceInPlace)
         {
@@ -123,30 +130,52 @@ public sealed partial class NativeMotionTrack
         AnimatedForward=forward.LengthSquared()>.000001f?forward.Normalized():Vector3.Back;
     }
 
-    void EvaluatePrepared(IReadOnlyList<Clip> clips,double seconds,Pose result)
+    void EvaluatePrepared(IReadOnlyList<Clip> clips,double seconds,Pose result,int count=int.MaxValue)
     {
         Sample(clips[0],seconds,result);ApplyAlignment(clips[0],result);
-        for(int i=1;i<clips.Count;i++)
+        for(int i=1;i<Math.Min(clips.Count,count);i++)
         {
             var clip=clips[i];if(seconds<clip.Start)break;
             Sample(clip,seconds,_incoming);ApplyAlignment(clip,_incoming);
-            float weight=clip.Blend<=0?1:(float)Math.Clamp((seconds-clip.Start)/clip.Blend,0,1);
+            float weight=ClipWeight(clip,seconds);
             Blend(result,_incoming,weight);
         }
     }
     void Sample(Clip clip,double seconds,Pose output)
     {
-        double t=clip.Offset+Math.Clamp(seconds-clip.Start,0,clip.Duration)*clip.Speed;
+        double t=clip.SourceTime(seconds);
         double length=_player.GetAnimation(clip.Name).Length;
-        double loops=clip.Loop&&length>0?Math.Floor(t/length):0;
-        t=length<=0?0:clip.Loop?((t%length)+length)%length:Math.Clamp(t,0,length);
+        bool loop=clip.Loops(seconds);
+        double loops=loop&&length>0?Math.Floor(t/length):0;
+        t=length<=0?0:loop?((t%length)+length)%length:Math.Clamp(t,0,length);
         SampleAt(clip.Name,t,output);
         if(loops!=0){var cycle=_cycles[clip.Name];for(int i=0;i<_roots.Length;i++)output.Position[_roots[i]]+=cycle.Bones[i]*(float)loops;if(_nodes.Length>0)output.NodePosition[0]+=cycle.Node*(float)loops;}
-        if(clip.InPlace)
+        if(clip.IsInPlace(seconds))
         {
             foreach(int root in _roots){output.Position[root].X=_rest.Position[root].X;output.Position[root].Z=_rest.Position[root].Z;}
             if(_nodes.Length>0){output.NodePosition[0].X=_rest.NodePosition[0].X;output.NodePosition[0].Z=_rest.NodePosition[0].Z;}
         }
+    }
+    static float ClipWeight(Clip clip,double time)
+    {
+        double blend=MotionClipClock.BlendDuration(clip.Properties,time,clip.Start,clip.Duration,clip.Blend,clip.BlendLimit);
+        return blend<=0?1:(float)Math.Clamp((time-clip.Start)/blend,0,1);
+    }
+    ulong ClipAnimationStamp()
+    {
+        ulong value=0;foreach(var clip in _clips)value=(value*1099511628211UL)^MotionClipClock.Fingerprint(clip.Properties);return value;
+    }
+    void RefreshAnimatedAlignments()
+    {
+        ulong stamp=ClipAnimationStamp();if(stamp==_clipAnimationStamp)return;
+        for(int i=0;i<_clips.Length;i++)
+        {
+            var clip=_clips[i];if(i==0)Copy(_rest,_result);else EvaluatePrepared(_clips,clip.Start,_result,i);
+            Sample(clip,clip.Start,_incoming);
+            for(int root=0;root<_roots.Length;root++)clip.BoneAlignment[root]=Horizontal(_result.Position[_roots[root]]-_incoming.Position[_roots[root]]);
+            if(_nodes.Length>0)clip.NodeAlignment=Horizontal(_result.NodePosition[0]-_incoming.NodePosition[0]);
+        }
+        _clipAnimationStamp=stamp;
     }
     void SampleAt(string animation,double seconds,Pose output)
     {

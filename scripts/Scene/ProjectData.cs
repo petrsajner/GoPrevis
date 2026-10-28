@@ -5,7 +5,7 @@ namespace GoPrevis;
 
 public sealed class ProjectData
 {
-    public const int CurrentVersion=13;
+    public const int CurrentVersion=14;
     public int Version { get; set; } = CurrentVersion;
     public int Fps { get; set; } = 24;
     public double Duration { get; set; } = 8;
@@ -18,11 +18,14 @@ public sealed class ProjectData
     public string ActiveCameraId { get; set; } = "";
     public bool DirectionalLightEnabled { get; set; }
     public SceneSettingsData SceneSettings { get; set; } = new();
+    public PropertyAnimationData PropertyAnimation { get; set; } = new();
     public ProjectSetupData Setup { get; set; } = new();
 }
 
 public sealed class ObjectData
 {
+    public PropertyAnimationData PropertyAnimation { get; set; } = new();
+    public bool Visible { get; set; } = true;
     public ObjectLinkData? Link {get;set;}
     public SceneLightData? Light { get; set; }
     public string Id { get; set; } = Guid.NewGuid().ToString("N");
@@ -54,6 +57,7 @@ public sealed class ObjectData
 
 public sealed class MotionClipData
 {
+    public PropertyAnimationData PropertyAnimation { get; set; } = new();
     public bool IsPlaceholder { get; set; }
     public string Id { get; set; } = Guid.NewGuid().ToString("N");
     public string MotionPath { get; set; } = "";
@@ -71,6 +75,7 @@ public sealed class MotionClipData
 
 public sealed class ActorPathData
 {
+    public float? ProgressOverride { get; set; }
     public bool Enabled { get; set; }
     public List<float[]> Points { get; set; } = new();
     public List<double> PointTimes { get; set; } = new();
@@ -82,6 +87,9 @@ public sealed class ActorPathData
 
 public sealed class CameraTrackData
 {
+    public float[] PositionCorrection { get; set; } = new float[3];
+    public float[] RotationCorrection { get; set; } = new float[3];
+    public PropertyAnimationData PropertyAnimation { get; set; } = new();
     public CameraMovementData Movement {get;set;}=new();
     public CameraTrackingData Tracking { get; set; } = new();
     public CameraReferenceData Reference { get; set; } = new();

@@ -63,11 +63,11 @@ public partial class GoPrevisApp
     void BuildLightInspector()
     {
         _lightPanel=new VBoxContainer{Visible=false};_inspector.AddChild(_lightPanel);_lightPanel.AddChild(Text("LIGHT",11,true));
-        _lightEnabled=new CheckButton{Text="Enabled"};_lightEnabled.Toggled+=value=>ChangeSceneLight(data=>data.Enabled=value);_lightPanel.AddChild(_lightEnabled);
-        _lightColor=new ColorPickerButton{EditAlpha=false,CustomMinimumSize=new Vector2(92,25)};_lightColor.ColorChanged+=value=>ChangeSceneLight(data=>data.Color=new[]{value.R,value.G,value.B});_lightPanel.AddChild(Row(Text("Color",11,true),Space(),_lightColor));
-        _lightEnergy=Spin(0,16,.01,1);_lightEnergy.ValueChanged+=value=>ChangeSceneLight(data=>data.Energy=(float)value);_lightPanel.AddChild(Row(Text("Intensity",11,true),Space(),_lightEnergy));
-        _lightRange=Spin(.1,500,.1,10);_lightRange.ValueChanged+=value=>ChangeSceneLight(data=>data.Range=(float)value);_lightRangeRow=Row(Text("Range (m)",11,true),Space(),_lightRange);_lightPanel.AddChild(_lightRangeRow);
-        _lightShadows=new CheckButton{Text="Cast shadows"};_lightShadows.Toggled+=value=>ChangeSceneLight(data=>data.Shadows=value);_lightPanel.AddChild(_lightShadows);
+        _lightEnabled=new CheckButton{Text="Enabled"};_lightEnabled.Toggled+=value=>ChangeSceneLight(data=>data.Enabled=value);_lightPanel.AddChild(Row(_lightEnabled,Space(),AnimatedParameterKey("Light.Enabled")));
+        _lightColor=new ColorPickerButton{EditAlpha=false,CustomMinimumSize=new Vector2(92,25)};_lightColor.ColorChanged+=value=>ChangeSceneLight(data=>data.Color=new[]{value.R,value.G,value.B});_lightPanel.AddChild(Row(Text("Color",11,true),Space(),_lightColor,AnimatedParameterKey("Light.Color",group:true)));
+        _lightEnergy=Spin(0,16,.01,1);_lightEnergy.ValueChanged+=value=>ChangeSceneLight(data=>data.Energy=(float)value);_lightPanel.AddChild(Row(Text("Intensity",11,true),Space(),_lightEnergy,AnimatedParameterKey("Light.Energy")));
+        _lightRange=Spin(.1,500,.1,10);_lightRange.ValueChanged+=value=>ChangeSceneLight(data=>data.Range=(float)value);_lightRangeRow=Row(Text("Range (m)",11,true),Space(),_lightRange,AnimatedParameterKey("Light.Range"));_lightPanel.AddChild(_lightRangeRow);
+        _lightShadows=new CheckButton{Text="Cast shadows"};_lightShadows.Toggled+=value=>ChangeSceneLight(data=>data.Shadows=value);_lightPanel.AddChild(Row(_lightShadows,Space(),AnimatedParameterKey("Light.Shadows")));
         var help=Text("Move/rotate with Shift. Shadows update in the viewport and color exports.",11,true);help.AutowrapMode=TextServer.AutowrapMode.WordSmart;_lightPanel.AddChild(help);
     }
     void RefreshLightInspector()

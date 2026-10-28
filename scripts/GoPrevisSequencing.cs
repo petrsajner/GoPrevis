@@ -12,6 +12,8 @@ public partial class GoPrevisApp
 {
     sealed class CameraEntry
     {
+        public Vector3 PositionCorrection,RotationCorrection;
+        public PropertyAnimationData PropertyAnimation=new();
         public string Id=Guid.NewGuid().ToString("N");
         public string Name="Camera";
         public bool ShowLabel=true;
@@ -48,8 +50,9 @@ public partial class GoPrevisApp
 
     CameraEntry CreateCamera(string name,CameraTrackData? data,bool activate)
     {
-        var item=new CameraEntry {Name=name,Id=data?.Id??Guid.NewGuid().ToString("N"),ShowLabel=data?.ShowLabel??true,Reference=(data?.Reference??new()).ValidatedCopy(),Movement=(data?.Movement??new()).ValidatedCopy(),Tracking=(data?.Tracking??new()).ValidatedCopy(),Rig=new StudioCameraRig()};
+        var item=new CameraEntry {PropertyAnimation=data?.PropertyAnimation??new(),Name=name,Id=data?.Id??Guid.NewGuid().ToString("N"),ShowLabel=data?.ShowLabel??true,Reference=(data?.Reference??new()).ValidatedCopy(),Movement=(data?.Movement??new()).ValidatedCopy(),Tracking=(data?.Tracking??new()).ValidatedCopy(),Rig=new StudioCameraRig()};
         _world.AddChild(item.Rig);item.Rig.ShotCamera.Current=false;
+        item.PositionCorrection=Vector(data?.PositionCorrection??new float[3]);item.RotationCorrection=Vector(data?.RotationCorrection??new float[3]);
         item.BasePosition=item.Rig.GlobalPosition;item.BaseRotation=item.Rig.GlobalRotationDegrees;
         if(data!=null)
         {
@@ -87,7 +90,7 @@ public partial class GoPrevisApp
         if(_cameras.Count<=1){Status("A scene must keep at least one camera.");return;}PushUndo();var item=_cameras.First(c=>c.Rig==_shot);_cameras.Remove(item);_world.RemoveChild(item.Rig);item.Rig.QueueFree();RefreshObjects();SelectCamera(_cameras[0]);if(_category=="Cameras")ShowCategory("Cameras");Status(item.Name+" removed.");
     }
     void ClearCameras(){foreach(var c in _cameras){_world.RemoveChild(c.Rig);c.Rig.QueueFree();}_cameras.Clear();}
-    CameraTrackData SnapshotCamera(CameraEntry item){EnsureCameraAnimation(item);return JsonSerializer.Deserialize<CameraTrackData>(JsonSerializer.Serialize(new CameraTrackData{Id=item.Id,Name=item.Name,ShowLabel=item.ShowLabel,Reference=item.Reference.ValidatedCopy(),Tracking=item.Tracking.ValidatedCopy(),Movement=item.Movement.ValidatedCopy(),Position=Array3(item.BasePosition),Rotation=Array3(item.BaseRotation),Scale=Array3(item.BaseScale),FocalLength=item.BaseLens,TransformAnimation=item.Animation,LensKeys=item.LensKeys,Keys=new()}))!;}
+    CameraTrackData SnapshotCamera(CameraEntry item){EnsureCameraAnimation(item);return JsonSerializer.Deserialize<CameraTrackData>(JsonSerializer.Serialize(new CameraTrackData{PositionCorrection=Array3(item.PositionCorrection),RotationCorrection=Array3(item.RotationCorrection),PropertyAnimation=item.PropertyAnimation,Id=item.Id,Name=item.Name,ShowLabel=item.ShowLabel,Reference=item.Reference.ValidatedCopy(),Tracking=item.Tracking.ValidatedCopy(),Movement=item.Movement.ValidatedCopy(),Position=Array3(item.BasePosition),Rotation=Array3(item.BaseRotation),Scale=Array3(item.BaseScale),FocalLength=item.BaseLens,TransformAnimation=item.Animation,LensKeys=item.LensKeys,Keys=new()}))!;}
     void BuildCameraLibrary()=>BuildIllustratedCameraLibrary();
 
     void BuildSequenceInspector()
@@ -218,6 +221,8 @@ public partial class GoPrevisApp
     {
         var path=entry.Data.Path;Vector3 facing=entry.Node is RiggedActor actor?actor.AnimatedForward:entry.NativeTrack?.AnimatedForward??Vector3.Forward;
         var value=TransformLayerRuntime.Evaluate(Vector(entry.Data.Position),Vector(entry.Data.Rotation),Vector(entry.Data.Scale,Vector3.One),entry.Data.TransformAnimation,path,_time,facing);
-        entry.Node.Position=value.Position+(path.Enabled?Vector(entry.Data.PathOffset):Vector3.Zero);entry.Node.RotationDegrees=value.RotationDegrees;entry.Node.Scale=value.Scale;
+        var legacyPosition=LegacyObjectManual(entry,"Position",_time);var legacyRotation=LegacyObjectManual(entry,"Rotation",_time);
+        entry.Node.Position=value.Position+(path.Enabled?Vector(entry.Data.PathOffset):Vector3.Zero)+AnimatedObjectManual(entry,"Position",_time)-legacyPosition;
+        entry.Node.RotationDegrees=value.RotationDegrees+AnimatedObjectManual(entry,"Rotation",_time)-legacyRotation;entry.Node.Scale=AnimatedObjectManual(entry,"Scale",_time);
     }
 }

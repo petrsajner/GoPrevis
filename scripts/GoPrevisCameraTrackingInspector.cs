@@ -27,7 +27,7 @@ public partial class GoPrevisApp
         _trackingContent=new VBoxContainer();_trackingContent.AddThemeConstantOverride("separation",5);_trackingPanel.AddChild(_trackingContent);
         _trackingFollow=new CheckButton{Text="Follow"};_trackingFollowTarget=new OptionButton{FitToLongestItem=false,ClipText=true,SizeFlagsHorizontal=SizeFlags.ExpandFill};_trackingContent.AddChild(Row(_trackingFollow,_trackingFollowTarget));
         _trackingSide=Spin(-1000,1000,.001,0);_trackingHeight=Spin(-1000,1000,.001,3);_trackingDistance=Spin(-1000,1000,.001,6);
-        void Field(string label,Control value)=>_trackingContent.AddChild(Row(Text(label,11,true),value));
+        void Field(string label,Control value){string? path=label switch {"Side (m)"=>"Tracking.FollowOffset.X","Height (m)"=>"Tracking.FollowOffset.Y","Distance (m)"=>"Tracking.FollowOffset.Z","Follow smoothness (s)"=>"Tracking.FollowSmoothness","Look smoothness (s)"=>"Tracking.LookAtSmoothness",_=>null};_trackingContent.AddChild(path==null?Row(Text(label,11,true),value):Row(Text(label,11,true),value,AnimatedParameterKey(path)));}
         Field("Side (m)",_trackingSide);Field("Height (m)",_trackingHeight);Field("Distance (m)",_trackingDistance);
         _trackingDistance.TooltipText="Positive distance is behind the target; negative distance is in front of it.";
         _trackingFollowSmooth=Spin(0,5,.01,0);_trackingFollowSmooth.TooltipText="Follow lag in seconds. Zero follows exactly; larger values ease the camera behind movement.";Field("Follow smoothness (s)",_trackingFollowSmooth);

@@ -1,3 +1,7 @@
+# Animation system in GoPrevis 0.21.0
+
+See [Animation editor](docs/ANIMATION-EDITOR.md) for the property hierarchy, independent XYZ axes, value/speed graphs, interpolation handles and playback-rate workflow. New projects save as schema14; existing grouped animation is preserved on load. The older technical details below document compatible source-motion/path behavior.
+
 <img src="assets/goprevis.png" width="120" alt="GoPrevis icon">
 
 # GoPrevis 0.20.0 — 3D control clips for AI video

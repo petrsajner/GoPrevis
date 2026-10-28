@@ -61,15 +61,15 @@ public partial class GoPrevisApp
             var desiredRotation=camera.Rig.GlobalRotationDegrees+new Vector3(2,7,0);PushUndo();ApplySelectedManualTransform("Rotation",desiredRotation);
             Check(Math.Abs(camera.Rig.GlobalBasis.Orthonormalized().GetRotationQuaternion().Dot(Basis.FromEuler(desiredRotation*Mathf.Pi/180).GetRotationQuaternion()))>.99999f,"manual camera rotation adds an angle correction above Look at");
             RefreshCameraTrackingInspector();UpdateTransformFields();
-            Check(_parameterKeyButtons["Position"].Disabled&&_parameterKeyButtons["Rotation"].Disabled,"controlled source-channel key buttons explain that live offsets are being edited");
+            Check(!_parameterKeyButtons["Position"].Disabled&&!_parameterKeyButtons["Rotation"].Disabled,"live camera channels expose key capture for their correction offsets");
             CaptureSelectedTransformKey("Position");CaptureSelectedTransformKey("Rotation");
-            Check(JsonSerializer.Serialize(camera.Animation)==source,"key capture cannot accidentally bake or replace controlled source camera channels");
+            Check(JsonSerializer.Serialize(camera.Animation)==source&&camera.PropertyAnimation.Channels.ContainsKey("Tracking.FollowOffset.X")&&camera.PropertyAnimation.Channels.ContainsKey("Tracking.RotationOffset.Y"),"key capture stores independent live offsets without baking or replacing camera source channels");
             _trackingExpanded=true;RefreshCameraTrackingInspector();
             Check(_trackingPanel!.Visible&&_trackingContent!.Visible&&_trackingHeader!.Text.Contains(car.Data.Name),"the camera inspector identifies the enabled target and exposes its live settings");
             var offset=camera.Tracking.FollowOffset.ToArray();int history=_undo.Count;EditCameraTracking(data=>data.FollowOffset[1]+=.4f);Undo();camera=_cameras.Single(item=>item.Id==cameraId);car=_entries.Single(item=>item.Data.Id==carId);
             Check(camera.Tracking.FollowOffset.SequenceEqual(offset),"Undo restores a live camera parameter without removing its target binding");
             Redo();camera=_cameras.Single(item=>item.Id==cameraId);car=_entries.Single(item=>item.Data.Id==carId);
-            Check(Math.Abs(camera.Tracking.FollowOffset[1]-offset[1]-.4f)<.0001,"Redo restores the live follow parameter");
+            Check(Math.Abs(AnimationBindings(cameraId).Single(b=>b.Path=="Tracking.FollowOffset.Y").Read()-offset[1]-.4f)<.0001&&camera.Tracking.FollowOffset.SequenceEqual(offset),"Redo restores the keyed live follow value while preserving its authored base");
             SetTime(3);var restoredPose=camera.Rig.GlobalTransform;string file=Path.Combine(output,"tracking.previs");SaveTo(file);LoadProjectFromPath(file);SetTime(3);camera=_cameras.Single(item=>item.Id==cameraId);car=_entries.Single(item=>item.Data.Id==carId);
             Check(camera.Rig.GlobalTransform.IsEqualApprox(restoredPose)&&camera.Tracking.FollowTargetId==carId&&Snapshot().Version==ProjectData.CurrentVersion,"project current format reopens bindings, offsets and the exact live camera pose");
             var duplicate=SnapshotCamera(camera);duplicate.Id=Guid.NewGuid().ToString("N");var copy=CreateCamera("Tracking copy",duplicate,false);copy.Tracking.FollowOffset[0]+=3;

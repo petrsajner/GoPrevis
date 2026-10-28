@@ -27,6 +27,7 @@ public partial class GoPrevisApp
         async Task Screenshot(string name){await Settle();if(DisplayServer.GetName()!="headless"){await ToSignal(RenderingServer.Singleton,RenderingServer.SignalName.FramePostDraw);GetViewport().GetTexture().GetImage().SavePng(Path.Combine(folder,name));}}
         try
         {
+            SetAnimationWorkspaceMode("Clips");
             var plan=AiFixturePlan();var humanPlan=plan.Objects.Single(o=>o.Id=="ai-walker");humanPlan.Motions[0].Duration=4;humanPlan.Motions.Add(new(){MotionId="human-walk-gesture",Start=3.5,Duration=4.5,BlendIn=.5,Loop=true,InPlace=true});
             var dogModel=ContentCatalog.Find("animal-husky")!;var dogMotion=MotionCatalog.ForFamily(dogModel.ActorFamily).First(m=>m.SourceAnimation=="Walk");
             plan.Objects.Add(new(){Id="timeline-dog",AssetId=dogModel.Id,Motions=new(){new(){MotionId=dogMotion.Id,Duration=8,Loop=true,InPlace=true}}});

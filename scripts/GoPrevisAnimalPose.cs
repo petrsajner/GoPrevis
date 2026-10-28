@@ -17,7 +17,7 @@ public partial class GoPrevisApp
         _playing=false;_play.Text="▶";SetTime(_time);
         if(!_poseEditing||_poseSelectionId!=_selected.Data.Id)
         {
-            ReleasePoseViewportDrag();EndPoseGesture();_poseEditing=true;_poseSelectionId=_selected.Data.Id;_poseCorrectionBaseline=CopyPoseCorrections(_selected.Data.PoseCorrections);
+            ReleasePoseViewportDrag();EndPoseGesture();_poseEditing=true;_poseSelectionId=_selected.Data.Id;_poseCorrectionBaseline=CopyPoseCorrections(_selected.Data.PoseCorrections);CapturePropertyPoseBaseline(_selected);
             _poseBone=native.DefaultPoseBone;_poseTool=(native.IsEndJoint(_poseBone)||native.IsFootEffector(_poseBone))?"Move":"Rotate";
         }
         FrameSelected();ShowInspectorSection("Pose");UpdatePoseInspector();UpdateSelection();RefreshUnifiedWorkflow();
@@ -36,6 +36,7 @@ public partial class GoPrevisApp
         foreach(string bone in PoseCorrectionRuntime.ChangedBones(before,edited))_poseGestureBones.Add(bone);
         _poseGestureRoot|=PoseCorrectionRuntime.RootChanged(before,edited);
         PoseCorrectionRuntime.WriteDifferences(_selected.Data.PoseCorrections,source,edited,_time,_poseGestureBones,_poseGestureRoot);
+        SyncPropertyPoseEdits(_selected,_poseGestureBones,_poseGestureRoot);
         SetTime(_time);RefreshTimelineSize();UpdatePoseInspector();
     }
     void CaptureAnimalPoseCorrectionKey(string channel)
@@ -44,6 +45,7 @@ public partial class GoPrevisApp
         ReleasePoseViewportDrag();EndPoseGesture();SetTime(_time);PushUndo();
         PoseCorrectionRuntime.WriteDifferences(_selected.Data.PoseCorrections,native.CaptureSourcePose(),native.CaptureEvaluatedPose(),_time,
             channel=="All"?native.PoseBoneNames:channel=="Root"?Array.Empty<string>():new[]{channel},channel is "All" or "Root");
+        SyncPropertyPoseEdits(_selected,channel=="All"?native.PoseBoneNames:channel=="Root"?Array.Empty<string>():new[]{channel},channel is "All" or "Root");
         SetTime(_time);RefreshTimelineSize();UpdatePoseInspector();Status("Animal pose correction key added.");
     }
     void UpdateAnimalPoseInspector()

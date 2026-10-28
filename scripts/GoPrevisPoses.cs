@@ -36,13 +36,13 @@ public partial class GoPrevisApp
     {
         if(pose.Pose.RigModelId!=null){ApplyAnimalLibraryPose(target,pose);return;}
         if(target.Node is not RiggedActor actor)throw new InvalidDataException("Choose a prepared human figure for this pose.");
-        actor.EndPoseCorrectionEdit();target.Data.PoseCorrections=new();actor.SetStaticPose(pose.Pose);target.Data.StaticPose=actor.GetStaticPoseSnapshot();target.Data.MotionClips.Clear();target.Data.MotionPath=null;target.Data.MotionName=null;_selectedClipId="";RebuildTrack(target);
+        actor.EndPoseCorrectionEdit();ClearPropertyPoseChannels(target);target.Data.PoseCorrections=new();actor.SetStaticPose(pose.Pose);target.Data.StaticPose=actor.GetStaticPoseSnapshot();target.Data.MotionClips.Clear();target.Data.MotionPath=null;target.Data.MotionName=null;_selectedClipId="";RebuildTrack(target);
     }
     void ClearSelectedPose()
     {
-        if(_selected?.NativeTrack!=null){PushUndo();_selected.Data.PoseCorrections=new();_selected.Data.StaticPose=null;SetTime(_time);Select(_selected);Status("Animal pose restored; motion clips remain active.");return;}
+        if(_selected?.NativeTrack!=null){PushUndo();ClearPropertyPoseChannels(_selected);_selected.Data.PoseCorrections=new();_selected.Data.StaticPose=null;SetTime(_time);Select(_selected);Status("Animal pose restored; motion clips remain active.");return;}
         if(_selected?.Node is not RiggedActor actor){Status("Select a human figure to reset its pose.");return;}
-        PushUndo();actor.EndPoseCorrectionEdit();_selected.Data.PoseCorrections=new();_selected.Data.StaticPose=null;actor.SetStaticPose(null);SetTime(_time);Select(_selected);Status(_selected.Data.MotionClips.Count==0?"Standing pose restored.":"Stored pose cleared; motion clips remain active.");
+        PushUndo();actor.EndPoseCorrectionEdit();ClearPropertyPoseChannels(_selected);_selected.Data.PoseCorrections=new();_selected.Data.StaticPose=null;actor.SetStaticPose(null);SetTime(_time);Select(_selected);Status(_selected.Data.MotionClips.Count==0?"Standing pose restored.":"Stored pose cleared; motion clips remain active.");
     }
     string DefaultPoseName()=>(_selected?.Data.Name??"Figure")+" · frame "+(int)Math.Round(_time*_fps);
     void CaptureSelectedPose(){try{SaveCapturedPose(DefaultPoseName());}catch(Exception ex){Error(ex.Message);}}

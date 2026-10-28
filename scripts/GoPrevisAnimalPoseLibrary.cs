@@ -13,7 +13,7 @@ public partial class GoPrevisApp
     void ApplyAnimalLibraryPose(Entry entry,LibraryPose pose)
     {
         if(!CompatiblePose(entry,pose))throw new InvalidDataException("This animal pose requires its matching library model.");
-        entry.Data.StaticPose=JsonSerializer.Deserialize<StaticPoseData>(JsonSerializer.Serialize(pose.Pose))!;entry.Data.PoseCorrections=new();entry.Data.MotionClips.Clear();entry.Data.MotionPath=null;entry.Data.MotionName=null;_selectedClipId="";RebuildTrack(entry);
+        entry.Data.StaticPose=JsonSerializer.Deserialize<StaticPoseData>(JsonSerializer.Serialize(pose.Pose))!;ClearPropertyPoseChannels(entry);entry.Data.PoseCorrections=new();entry.Data.MotionClips.Clear();entry.Data.MotionPath=null;entry.Data.MotionName=null;_selectedClipId="";RebuildTrack(entry);
     }
     LibraryPose SaveAnimalCapturedPose(string name)
     {

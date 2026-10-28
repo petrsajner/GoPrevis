@@ -17,6 +17,8 @@ public partial class GoPrevisApp
     void ApplySelectedManualTransform(string group,Vector3 value)
     {
         if(!value.IsFinite()||group=="Scale"&&(value.X<=0||value.Y<=0||value.Z<=0))throw new ArgumentException("Transform values must be finite; scale must be positive.");
+        if(_selectedCamera is {} live&&TryEditLiveAnimatedCamera(live,group,value))return;
+        if(TryWritePropertyTransform(group,value))return;
         if(_selectedCamera is {} camera)
         {
             if(TryEditConstrainedCamera(camera,group,value)){SetTime(_time);RefreshCameraTrackingInspector();return;}

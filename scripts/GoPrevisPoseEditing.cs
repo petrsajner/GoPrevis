@@ -70,7 +70,7 @@ public partial class GoPrevisApp
         _playing=false;_play.Text="▶";SetTime(_time);
         if(!_poseEditing||_poseSelectionId!=_selected.Data.Id)
         {
-            ReleasePoseViewportDrag();EndPoseGesture();_poseEditing=true;_poseSelectionId=_selected.Data.Id;_poseCorrectionBaseline=CopyPoseCorrections(_selected.Data.PoseCorrections);
+            ReleasePoseViewportDrag();EndPoseGesture();_poseEditing=true;_poseSelectionId=_selected.Data.Id;_poseCorrectionBaseline=CopyPoseCorrections(_selected.Data.PoseCorrections);CapturePropertyPoseBaseline(_selected);
         }
         if(ProjectedActorBounds(_selected).Size.Y<260)
         {
@@ -120,6 +120,7 @@ public partial class GoPrevisApp
         foreach(string bone in PoseCorrectionRuntime.ChangedBones(initial,edited))_poseGestureBones.Add(bone);
         _poseGestureRoot|=PoseCorrectionRuntime.RootChanged(initial,edited);
         PoseCorrectionRuntime.WriteDifferences(_selected.Data.PoseCorrections,source,edited,_time,_poseGestureBones,_poseGestureRoot);
+        SyncPropertyPoseEdits(_selected,_poseGestureBones,_poseGestureRoot);
         SetTime(_time);RefreshTimelineSize();UpdatePoseInspector();
     }
     void CapturePoseCorrectionKey(string channel)
@@ -134,6 +135,7 @@ public partial class GoPrevisApp
             var keys=_selected.Data.PoseCorrections.Root;if(keys.Count==0&&_time>0)TransformLayerRuntime.Upsert(keys,0,Vector3.Zero);
             TransformLayerRuntime.Upsert(keys,_time,PoseCorrectionRuntime.RootValue(displayed)-PoseCorrectionRuntime.RootValue(source));
         }
+        SyncPropertyPoseEdits(_selected,bones,channel is "All" or "Root");
         SetTime(_time);RefreshTimelineSize();UpdatePoseInspector();Status("Pose correction key added at "+_time.ToString("0.###")+" s.");
     }
     void EditPoseNumber(Action update)
@@ -143,7 +145,7 @@ public partial class GoPrevisApp
     }
     void ResetManualPoseEdits()
     {
-        if((_selected?.Node is not RiggedActor&&_selected?.NativeTrack==null)||_poseCorrectionBaseline==null)return;ReleasePoseViewportDrag();EndPoseGesture();PushUndo();_selected!.Data.PoseCorrections=CopyPoseCorrections(_poseCorrectionBaseline);SetTime(_time);RefreshTimelineSize();
+        if((_selected?.Node is not RiggedActor&&_selected?.NativeTrack==null)||_poseCorrectionBaseline==null)return;ReleasePoseViewportDrag();EndPoseGesture();PushUndo();_selected!.Data.PoseCorrections=CopyPoseCorrections(_poseCorrectionBaseline);RestorePropertyPoseBaseline(_selected);SetTime(_time);RefreshTimelineSize();
     }
     void SyncPoseEditorSelection()
     {
@@ -152,7 +154,7 @@ public partial class GoPrevisApp
     }
     void RestorePoseEditorSelection(string? id)
     {
-        if(id==null)return;var entry=_entries.FirstOrDefault(e=>e.Data.Id==id&&(e.Node is RiggedActor||e.NativeTrack!=null));if(entry==null)return;Select(entry);_poseEditing=true;_poseSelectionId=id;_poseCorrectionBaseline=CopyPoseCorrections(entry.Data.PoseCorrections);OpenPoseInspector();
+        if(id==null)return;var entry=_entries.FirstOrDefault(e=>e.Data.Id==id&&(e.Node is RiggedActor||e.NativeTrack!=null));if(entry==null)return;Select(entry);_poseEditing=true;_poseSelectionId=id;_poseCorrectionBaseline=CopyPoseCorrections(entry.Data.PoseCorrections);CapturePropertyPoseBaseline(entry);OpenPoseInspector();
     }
     void UpdatePoseInspector()
     {

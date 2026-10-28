@@ -10,11 +10,11 @@ public partial class GoPrevisApp
     public async Task<int> RunTimelineTrimChecks()
     {
         var original=Snapshot();string originalPath=_projectPath;double originalTime=_time;bool playing=_playing;
-        var undo=_undo.ToArray();var redo=_redo.ToArray();int checks=0;
+        var undo=_undo.ToArray();var redo=_redo.ToArray();int checks=0;string workspace=_animationWorkspaceMode;
         void Check(bool condition,string text){Require(condition,"Timeline trim: "+text);checks++;}
         try
         {
-            _playing=false;ClearObjects();_duration=8;_scrub.MaxValue=8;SetTime(0);
+            SetAnimationWorkspaceMode("Clips");_playing=false;ClearObjects();_duration=8;_scrub.MaxValue=8;SetTime(0);
             var entry=AddObject("actor",Vector3.Zero);string entryId=entry.Data.Id;
             string path=MotionCatalog.MaterializeSource(MotionCatalog.Find("human-walk-gesture")!);
             var previous=new MotionClipData{MotionPath=path,Name="Previous",Start=0,Duration=3.4,SourceScale=.01f,BlendIn=0,Loop=false};
@@ -55,7 +55,7 @@ public partial class GoPrevisApp
         }
         finally
         {
-            Restore(original,"");_projectPath=originalPath;SetTime(originalTime);_playing=playing;_undo.Clear();_redo.Clear();foreach(var item in undo.Reverse())_undo.Push(item);foreach(var item in redo.Reverse())_redo.Push(item);
+            Restore(original,"");_projectPath=originalPath;SetTime(originalTime);_playing=playing;_undo.Clear();_redo.Clear();foreach(var item in undo.Reverse())_undo.Push(item);foreach(var item in redo.Reverse())_redo.Push(item);SetAnimationWorkspaceMode(workspace);
         }
     }
 }

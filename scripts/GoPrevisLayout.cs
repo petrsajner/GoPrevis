@@ -39,7 +39,7 @@ public partial class GoPrevisApp
         var header=Row(Text("GOPREVIS "+AppVersion,14),fileMenu,editMenu,BuildHistoryControls(),_projectNameLabel,Button("AI Director",OpenAiDirector),_projectSetupButton,Button("Save",SaveProject),export);
         header.AddThemeConstantOverride("separation",6);_layoutHeader=CompactPanel(header,4,2);_layoutRoot.AddChild(_layoutHeader);
 
-        _layoutWorkSplit=new VSplitContainer{SizeFlagsVertical=SizeFlags.ExpandFill,SizeFlagsHorizontal=SizeFlags.ExpandFill,DraggerVisibility=SplitContainer.DraggerVisibilityEnum.Hidden};
+        _layoutWorkSplit=new VSplitContainer{SizeFlagsVertical=SizeFlags.ExpandFill,SizeFlagsHorizontal=SizeFlags.ExpandFill,DraggerVisibility=SplitContainer.DraggerVisibilityEnum.Visible};
         _layoutWorkSplit.AddThemeConstantOverride("separation",5);_layoutRoot.AddChild(_layoutWorkSplit);
         var upper=new HBoxContainer{SizeFlagsVertical=SizeFlags.ExpandFill,SizeFlagsHorizontal=SizeFlags.ExpandFill};upper.AddThemeConstantOverride("separation",1);_layoutWorkSplit.AddChild(upper);
 
@@ -54,9 +54,9 @@ public partial class GoPrevisApp
         }
         rail.AddChild(new Control{SizeFlagsVertical=SizeFlags.ExpandFill});upper.AddChild(CompactPanel(rail,2,5));
 
-        _layoutLibrarySplit=new HSplitContainer{SizeFlagsHorizontal=SizeFlags.ExpandFill,SizeFlagsVertical=SizeFlags.ExpandFill,DraggerVisibility=SplitContainer.DraggerVisibilityEnum.Hidden};
+        _layoutLibrarySplit=new HSplitContainer{SizeFlagsHorizontal=SizeFlags.ExpandFill,SizeFlagsVertical=SizeFlags.ExpandFill,DraggerVisibility=SplitContainer.DraggerVisibilityEnum.Visible};
         _layoutLibrarySplit.AddThemeConstantOverride("separation",5);upper.AddChild(_layoutLibrarySplit);
-        _layoutLibraryObjectsSplit=new VSplitContainer{SizeFlagsHorizontal=SizeFlags.ExpandFill,SizeFlagsVertical=SizeFlags.ExpandFill,DraggerVisibility=SplitContainer.DraggerVisibilityEnum.Hidden};
+        _layoutLibraryObjectsSplit=new VSplitContainer{SizeFlagsHorizontal=SizeFlags.ExpandFill,SizeFlagsVertical=SizeFlags.ExpandFill,DraggerVisibility=SplitContainer.DraggerVisibilityEnum.Visible};
         _layoutLibraryObjectsSplit.AddThemeConstantOverride("separation",5);
         var librarySection=new VBoxContainer{CustomMinimumSize=new Vector2(180,120),SizeFlagsVertical=SizeFlags.ExpandFill};librarySection.AddThemeConstantOverride("separation",5);
         _libraryExpanded=LibraryPrefs.Expanded;_libraryExpandButton=Button(_libraryExpanded?"Collapse":"Expand",ToggleLibrarySize);_libraryExpandButton.TooltipText="Expand the library for browsing and drag-and-drop";librarySection.AddChild(Row(Text("LIBRARY",11,true),Space(),_libraryExpandButton));
@@ -67,7 +67,7 @@ public partial class GoPrevisApp
         _objectList.ItemSelected+=HandleObjectListSelection;sceneSection.AddChild(_objectList);_layoutLibraryObjectsSplit.AddChild(sceneSection);
         _layoutLibraryDock=CompactPanel(_layoutLibraryObjectsSplit,6,6);_layoutLibraryDock.CustomMinimumSize=new Vector2(216,0);_layoutLibraryDock.SizeFlagsHorizontal=SizeFlags.Fill;_layoutLibraryDock.SizeFlagsVertical=SizeFlags.ExpandFill;_layoutLibrarySplit.AddChild(_layoutLibraryDock);
 
-        _layoutInspectorSplit=new HSplitContainer{SizeFlagsHorizontal=SizeFlags.ExpandFill,SizeFlagsVertical=SizeFlags.ExpandFill,DraggerVisibility=SplitContainer.DraggerVisibilityEnum.Hidden};
+        _layoutInspectorSplit=new HSplitContainer{SizeFlagsHorizontal=SizeFlags.ExpandFill,SizeFlagsVertical=SizeFlags.ExpandFill,DraggerVisibility=SplitContainer.DraggerVisibilityEnum.Visible};
         _layoutInspectorSplit.AddThemeConstantOverride("separation",5);_layoutLibrarySplit.AddChild(_layoutInspectorSplit);
         var center=new VBoxContainer{CustomMinimumSize=new Vector2(340,180),SizeFlagsHorizontal=SizeFlags.ExpandFill,SizeFlagsVertical=SizeFlags.ExpandFill};center.AddThemeConstantOverride("separation",1);_layoutInspectorSplit.AddChild(center);
         _drawPathButton=Button("Draw path",StartDrawingPath,true);_finishPathButton=Button("Finish",FinishDrawingPath);_finishPathButton.Visible=false;
@@ -95,7 +95,7 @@ public partial class GoPrevisApp
         foreach(var option in Descendants(_inspector).OfType<OptionButton>()){option.FitToLongestItem=false;option.ClipText=true;}
         _layoutInspectorDock=CompactPanel(right,7,6);_layoutInspectorDock.CustomMinimumSize=new Vector2(286,0);_layoutInspectorDock.SizeFlagsHorizontal=SizeFlags.Fill;_layoutInspectorDock.SizeFlagsVertical=SizeFlags.ExpandFill;_layoutInspectorSplit.AddChild(_layoutInspectorDock);
 
-        var timelinePane=new VBoxContainer{CustomMinimumSize=new Vector2(0,205),SizeFlagsHorizontal=SizeFlags.ExpandFill};timelinePane.AddThemeConstantOverride("separation",1);_layoutWorkSplit.AddChild(timelinePane);_layoutTimelinePane=timelinePane;
+        var timelinePane=new VBoxContainer{CustomMinimumSize=new Vector2(0,300),SizeFlagsHorizontal=SizeFlags.ExpandFill};timelinePane.AddThemeConstantOverride("separation",1);_layoutWorkSplit.AddChild(timelinePane);_layoutTimelinePane=timelinePane;
         _play=Button("▶",()=>{_playing=!_playing;_play.Text=_playing?"Ⅱ":"▶";});_play.TooltipText="Play / pause (Space)";_play.CustomMinimumSize=new Vector2(28,0);
         _timeLabel=Text("00:00:00",13);_scrub=new HSlider{MinValue=0,MaxValue=_duration,Step=1.0/_fps,SizeFlagsHorizontal=SizeFlags.ExpandFill};_scrub.ValueChanged+=v=>{if(!_refreshing)SetTime(v);};
         _durationField=Spin(1,MaxSceneDuration,.1,_duration);_durationField.CustomMinimumSize=new Vector2(64,0);_durationField.SizeFlagsHorizontal=SizeFlags.ShrinkEnd;_durationField.TooltipText="Scene duration in seconds";_durationField.ValueChanged+=v=>{if(_refreshing)return;_duration=v;_scrub.MaxValue=v;SetTime(Math.Min(_time,v));};
@@ -103,6 +103,7 @@ public partial class GoPrevisApp
         var transport=Row(_play,Button("|◀",()=>SetTime(0)),_timeLabel,_scrub,Text("Length",11,true),_durationField,Text("fps",11,true),_fpsChoice);transport.AddThemeConstantOverride("separation",5);timelinePane.AddChild(CompactPanel(transport,6,2));
         _timeline=new TimelineView{App=this,CustomMinimumSize=new Vector2(0,150),SizeFlagsHorizontal=SizeFlags.ExpandFill};
         var timelineScroll=new ScrollContainer{SizeFlagsVertical=SizeFlags.ExpandFill,SizeFlagsHorizontal=SizeFlags.ExpandFill,HorizontalScrollMode=ScrollContainer.ScrollMode.Disabled};timelineScroll.AddChild(_timeline);var tracksPanel=CompactPanel(timelineScroll,2,2);tracksPanel.SizeFlagsVertical=SizeFlags.ExpandFill;timelinePane.AddChild(tracksPanel);
+        InstallAnimationWorkspace(timelinePane,tracksPanel);BuildAnimatedPropertyInspector();
         _status=Text("Ready",11,true);_status.ClipText=true;_status.SizeFlagsHorizontal=SizeFlags.ExpandFill;_status.TooltipText="RMB orbit · MMB pan · Alt+MMB zoom · Shift: 3D transforms · F frame selection";_layoutRoot.AddChild(CompactPanel(Row(_status,Text(AppCopyright,10,true)),6,1));
 
         _fileDialog=new FileDialog{Access=FileDialog.AccessEnum.Filesystem,UseNativeDialog=false};_fileDialog.FileSelected+=path=>{var action=_fileAction;_fileAction=null;_fileCancelled=null;_fileDialog.Hide();try{action?.Invoke(path);}catch(Exception ex){Error(ex.Message);}};_fileDialog.Canceled+=()=>{var cancelled=_fileCancelled;_fileCancelled=null;_fileAction=null;cancelled?.Invoke();};AddChild(_fileDialog);
@@ -125,7 +126,7 @@ public partial class GoPrevisApp
         {
             _layoutBreakpoint=breakpoint;_layoutLibraryDock.CustomMinimumSize=new Vector2(_libraryExpanded?Math.Clamp(width*.38f,320,Math.Max(320,Math.Min(1000,width-740))):breakpoint==0?198:breakpoint==1?216:232,0);_layoutInspectorDock.CustomMinimumSize=new Vector2(breakpoint==0?270:286,0);
         }
-        FitCompactPreview();_layoutTimelinePane.CustomMinimumSize=new Vector2(0,height<850?172:205);UpdateCompactChrome();
+        FitCompactPreview();_layoutTimelinePane.CustomMinimumSize=new Vector2(0,Math.Clamp(height*.30f,250,430));UpdateCompactChrome();
     }
     void FitCompactPreview(){if(_previewAspect==null||_previewAspect.Size.X<1)return;float height=Math.Min(280,Mathf.Round(_previewAspect.Size.X/ProjectAspect));if(Math.Abs(_previewAspect.CustomMinimumSize.Y-height)>.5f)_previewAspect.CustomMinimumSize=new Vector2(0,height);_previewAspect.Ratio=ProjectAspect;}
     void UpdateCompactChrome(){if(_finishPathButton!=null)_finishPathButton.Visible=_drawingPath;}

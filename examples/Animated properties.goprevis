@@ -1,0 +1,1046 @@
+{
+  "Version": 14,
+  "Fps": 24,
+  "Duration": 4,
+  "Objects": [
+    {
+      "PropertyAnimation": {
+        "Channels": {
+          "Transform.Position.X": {
+            "Enabled": true,
+            "Discrete": false,
+            "Keys": [
+              {
+                "Id": "e224e0d19f674de3a0d21ab105a11c65",
+                "Time": 0,
+                "Value": 1,
+                "Interpolation": "Bezier",
+                "InSlope": 0,
+                "OutSlope": 0,
+                "InWeight": 0.3333333333333333,
+                "OutWeight": 0.3333333333333333,
+                "BrokenTangents": false
+              },
+              {
+                "Id": "c8da65b8c1764413963065df04878c1d",
+                "Time": 4,
+                "Value": 10.357712011635302,
+                "Interpolation": "Linear",
+                "InSlope": 2.6482318366702273,
+                "OutSlope": 2.6482318366702273,
+                "InWeight": 0.3333333333333333,
+                "OutWeight": 0.3333333333333333,
+                "BrokenTangents": false
+              }
+            ]
+          },
+          "Transform.Position.Y": {
+            "Enabled": true,
+            "Discrete": false,
+            "Keys": [
+              {
+                "Id": "c1a9f9a3017049b5a7837e0b960da6b8",
+                "Time": 0,
+                "Value": 2,
+                "Interpolation": "Linear",
+                "InSlope": 0,
+                "OutSlope": 0,
+                "InWeight": 0.3333333333333333,
+                "OutWeight": 0.3333333333333333,
+                "BrokenTangents": false
+              },
+              {
+                "Id": "50ff23e1db324ef8b9b501cb636246c5",
+                "Time": 2,
+                "Value": 6,
+                "Interpolation": "Linear",
+                "InSlope": 0,
+                "OutSlope": 0,
+                "InWeight": 0.3333333333333333,
+                "OutWeight": 0.3333333333333333,
+                "BrokenTangents": false
+              }
+            ]
+          },
+          "Transform.Scale.X": {
+            "Enabled": true,
+            "Discrete": false,
+            "Keys": [
+              {
+                "Id": "f0137910a9ba456cb3c60245b982ca9f",
+                "Time": 0,
+                "Value": 1,
+                "Interpolation": "Linear",
+                "InSlope": 0,
+                "OutSlope": 0,
+                "InWeight": 0.3333333333333333,
+                "OutWeight": 0.3333333333333333,
+                "BrokenTangents": false
+              },
+              {
+                "Id": "25c8fecd06054d148f97eeadb83f090a",
+                "Time": 2,
+                "Value": 2,
+                "Interpolation": "Linear",
+                "InSlope": 0,
+                "OutSlope": 0,
+                "InWeight": 0.3333333333333333,
+                "OutWeight": 0.3333333333333333,
+                "BrokenTangents": false
+              }
+            ]
+          },
+          "Transform.Rotation.Y": {
+            "Enabled": true,
+            "Discrete": false,
+            "Keys": [
+              {
+                "Id": "686070aeff3d4ffd96c681d1e6b49fe1",
+                "Time": 0,
+                "Value": 0,
+                "Interpolation": "Linear",
+                "InSlope": 0,
+                "OutSlope": 0,
+                "InWeight": 0.3333333333333333,
+                "OutWeight": 0.3333333333333333,
+                "BrokenTangents": false
+              },
+              {
+                "Id": "b454228d6a674b2199a8a399890a6b5c",
+                "Time": 4,
+                "Value": 720,
+                "Interpolation": "Linear",
+                "InSlope": 0,
+                "OutSlope": 0,
+                "InWeight": 0.3333333333333333,
+                "OutWeight": 0.3333333333333333,
+                "BrokenTangents": false
+              }
+            ]
+          },
+          "Color.R": {
+            "Enabled": true,
+            "Discrete": false,
+            "Keys": [
+              {
+                "Id": "76ca85db44a04250922521f7ec0112bb",
+                "Time": 0,
+                "Value": 0.1,
+                "Interpolation": "Linear",
+                "InSlope": 0,
+                "OutSlope": 0,
+                "InWeight": 0.3333333333333333,
+                "OutWeight": 0.3333333333333333,
+                "BrokenTangents": false
+              },
+              {
+                "Id": "c06afe89d87a4ca793b630860689f7e2",
+                "Time": 2,
+                "Value": 0.9,
+                "Interpolation": "Linear",
+                "InSlope": 0,
+                "OutSlope": 0,
+                "InWeight": 0.3333333333333333,
+                "OutWeight": 0.3333333333333333,
+                "BrokenTangents": false
+              }
+            ]
+          }
+        }
+      },
+      "Visible": true,
+      "Link": null,
+      "Light": null,
+      "Id": "fe71214aaa774b779757c9f4587ed3e3",
+      "Kind": "box",
+      "Name": "Property box",
+      "Position": [
+        1,
+        2,
+        3
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": null,
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "ProgressOverride": null,
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 8,
+        "OrientToPath": true
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": null,
+        "ShowLabel": true
+      }
+    },
+    {
+      "PropertyAnimation": {
+        "Channels": {
+          "Light.Energy": {
+            "Enabled": true,
+            "Discrete": false,
+            "Keys": [
+              {
+                "Id": "da38fb405e25415d96a7888e6d436d89",
+                "Time": 0,
+                "Value": 0,
+                "Interpolation": "Linear",
+                "InSlope": 0,
+                "OutSlope": 0,
+                "InWeight": 0.3333333333333333,
+                "OutWeight": 0.3333333333333333,
+                "BrokenTangents": false
+              },
+              {
+                "Id": "ceb89cc334ea4f29a211b2b6199fd45e",
+                "Time": 4,
+                "Value": 4,
+                "Interpolation": "Linear",
+                "InSlope": 0,
+                "OutSlope": 0,
+                "InWeight": 0.3333333333333333,
+                "OutWeight": 0.3333333333333333,
+                "BrokenTangents": false
+              }
+            ]
+          },
+          "Light.Color.R": {
+            "Enabled": true,
+            "Discrete": false,
+            "Keys": [
+              {
+                "Id": "3d650842ba774904a6d28facaf3b2c3a",
+                "Time": 0,
+                "Value": 0.1,
+                "Interpolation": "Linear",
+                "InSlope": 0,
+                "OutSlope": 0,
+                "InWeight": 0.3333333333333333,
+                "OutWeight": 0.3333333333333333,
+                "BrokenTangents": false
+              },
+              {
+                "Id": "3ca5745e0b1c481b89bf9fb13b7de8c6",
+                "Time": 4,
+                "Value": 0.9,
+                "Interpolation": "Linear",
+                "InSlope": 0,
+                "OutSlope": 0,
+                "InWeight": 0.3333333333333333,
+                "OutWeight": 0.3333333333333333,
+                "BrokenTangents": false
+              }
+            ]
+          }
+        }
+      },
+      "Visible": true,
+      "Link": null,
+      "Light": {
+        "Enabled": true,
+        "Color": [
+          1,
+          1,
+          1
+        ],
+        "Energy": 1,
+        "Range": 10,
+        "Shadows": true
+      },
+      "Id": "61a41adf25cf4c05a19847ae721f4ee2",
+      "Kind": "point_light",
+      "Name": "Animated point light",
+      "Position": [
+        0,
+        4,
+        3
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": null,
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": null,
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [],
+      "Path": {
+        "ProgressOverride": null,
+        "Enabled": false,
+        "Points": [],
+        "PointTimes": [],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 8,
+        "OrientToPath": true
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {},
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": null,
+        "ShowLabel": true
+      }
+    },
+    {
+      "PropertyAnimation": {
+        "Channels": {
+          "Transform.Position.Y": {
+            "Enabled": true,
+            "Discrete": false,
+            "Keys": [
+              {
+                "Id": "9afce7dea0424e7eaf9002495be9c9d2",
+                "Time": 0,
+                "Value": 0,
+                "Interpolation": "Linear",
+                "InSlope": 0,
+                "OutSlope": 0,
+                "InWeight": 0.3333333333333333,
+                "OutWeight": 0.3333333333333333,
+                "BrokenTangents": false
+              },
+              {
+                "Id": "5c9afdc02ee848808533bc226e558334",
+                "Time": 4,
+                "Value": 0.4,
+                "Interpolation": "Linear",
+                "InSlope": 0,
+                "OutSlope": 0,
+                "InWeight": 0.3333333333333333,
+                "OutWeight": 0.3333333333333333,
+                "BrokenTangents": false
+              }
+            ]
+          },
+          "Pose.Bones.RightUpperArm.Rotation.X": {
+            "Enabled": true,
+            "Discrete": false,
+            "Keys": [
+              {
+                "Id": "5e286bc3a6834760a8d46d8c2a4af55b",
+                "Time": 0,
+                "Value": 0,
+                "Interpolation": "Linear",
+                "InSlope": 0,
+                "OutSlope": 0,
+                "InWeight": 0.3333333333333333,
+                "OutWeight": 0.3333333333333333,
+                "BrokenTangents": false
+              },
+              {
+                "Id": "db52a486da114329b80457abdea6d985",
+                "Time": 1,
+                "Value": -1.1692155599594116,
+                "Interpolation": "Linear",
+                "InSlope": 0,
+                "OutSlope": 0,
+                "InWeight": 0.3333333333333333,
+                "OutWeight": 0.3333333333333333,
+                "BrokenTangents": false
+              },
+              {
+                "Id": "31e38e1dcf834d37ab28ca0eb9b6507c",
+                "Time": 4,
+                "Value": 0,
+                "Interpolation": "Linear",
+                "InSlope": 0,
+                "OutSlope": 0,
+                "InWeight": 0.3333333333333333,
+                "OutWeight": 0.3333333333333333,
+                "BrokenTangents": false
+              }
+            ]
+          },
+          "Pose.Bones.RightUpperArm.Rotation.Y": {
+            "Enabled": true,
+            "Discrete": false,
+            "Keys": [
+              {
+                "Id": "6ac5f90eb01043a1b88affd616ed7085",
+                "Time": 0,
+                "Value": 0,
+                "Interpolation": "Linear",
+                "InSlope": 0,
+                "OutSlope": 0,
+                "InWeight": 0.3333333333333333,
+                "OutWeight": 0.3333333333333333,
+                "BrokenTangents": false
+              },
+              {
+                "Id": "bd9678e322e143cc93e4ec9611a456ab",
+                "Time": 1,
+                "Value": -15.230786323547363,
+                "Interpolation": "Linear",
+                "InSlope": 0,
+                "OutSlope": 0,
+                "InWeight": 0.3333333333333333,
+                "OutWeight": 0.3333333333333333,
+                "BrokenTangents": false
+              },
+              {
+                "Id": "81eaeacb53df42629d582cd68b08c4af",
+                "Time": 4,
+                "Value": 0,
+                "Interpolation": "Linear",
+                "InSlope": 0,
+                "OutSlope": 0,
+                "InWeight": 0.3333333333333333,
+                "OutWeight": 0.3333333333333333,
+                "BrokenTangents": false
+              }
+            ]
+          },
+          "Pose.Bones.RightUpperArm.Rotation.Z": {
+            "Enabled": true,
+            "Discrete": false,
+            "Keys": [
+              {
+                "Id": "134d277db9f54875a1225fe12bf645c0",
+                "Time": 0,
+                "Value": 0,
+                "Interpolation": "Linear",
+                "InSlope": 0,
+                "OutSlope": 0,
+                "InWeight": 0.3333333333333333,
+                "OutWeight": 0.3333333333333333,
+                "BrokenTangents": false
+              },
+              {
+                "Id": "51a843e2078c4d5cbda26273870741e9",
+                "Time": 1,
+                "Value": -8.728311538696289,
+                "Interpolation": "Linear",
+                "InSlope": 0,
+                "OutSlope": 0,
+                "InWeight": 0.3333333333333333,
+                "OutWeight": 0.3333333333333333,
+                "BrokenTangents": false
+              },
+              {
+                "Id": "9c0eecbb411241c28232ba164068147a",
+                "Time": 4,
+                "Value": 0,
+                "Interpolation": "Linear",
+                "InSlope": 0,
+                "OutSlope": 0,
+                "InWeight": 0.3333333333333333,
+                "OutWeight": 0.3333333333333333,
+                "BrokenTangents": false
+              }
+            ]
+          }
+        }
+      },
+      "Visible": true,
+      "Link": null,
+      "Light": null,
+      "Id": "e4ff3c9430eb495ca55acb8510f37326",
+      "Kind": "actor",
+      "Name": "Walking actor",
+      "Position": [
+        -2,
+        0,
+        0
+      ],
+      "Rotation": [
+        0,
+        0,
+        0
+      ],
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "MotionPath": null,
+      "MotionName": "synthetic-walk-gesture",
+      "ModelPath": null,
+      "ModelAnimation": "",
+      "LibraryModelId": null,
+      "ModelUnitScale": 1,
+      "ModelGrounded": false,
+      "SourceScale": 0.01,
+      "Loop": true,
+      "InPlace": false,
+      "Speed": 1,
+      "MotionClips": [
+        {
+          "PropertyAnimation": {
+            "Channels": {
+              "Speed": {
+                "Enabled": true,
+                "Discrete": false,
+                "Keys": [
+                  {
+                    "Id": "de70d51d325e48b78a1146b5b9b9879c",
+                    "Time": 0,
+                    "Value": 1,
+                    "Interpolation": "Linear",
+                    "InSlope": 0,
+                    "OutSlope": 0,
+                    "InWeight": 0.3333333333333333,
+                    "OutWeight": 0.3333333333333333,
+                    "BrokenTangents": false
+                  },
+                  {
+                    "Id": "b38a18cff4624693926fc45c3f8cebdb",
+                    "Time": 2,
+                    "Value": 3,
+                    "Interpolation": "Linear",
+                    "InSlope": 0,
+                    "OutSlope": 0,
+                    "InWeight": 0.3333333333333333,
+                    "OutWeight": 0.3333333333333333,
+                    "BrokenTangents": false
+                  }
+                ]
+              }
+            }
+          },
+          "IsPlaceholder": false,
+          "Id": "94582e5c877f4233b36e07fada3714c7",
+          "MotionPath": "Animated properties.assets/e4ff3c9430eb495ca55acb8510f37326_94582e5c877f4233b36e07fada3714c7.bvh",
+          "Name": "synthetic-walk-gesture",
+          "Start": 0,
+          "Duration": 4,
+          "SourceOffset": 0,
+          "Speed": 1,
+          "BlendIn": 0,
+          "Loop": true,
+          "InPlace": false,
+          "SourceScale": 0.01,
+          "SourceAnimation": null
+        }
+      ],
+      "Path": {
+        "ProgressOverride": null,
+        "Enabled": true,
+        "Points": [
+          [
+            -2,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            0
+          ]
+        ],
+        "PointTimes": [
+          0,
+          4
+        ],
+        "PointInterpolation": [],
+        "Start": 0,
+        "Duration": 4,
+        "OrientToPath": true
+      },
+      "PathOffset": [
+        0,
+        0,
+        0
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "ActorFamily": "human",
+      "StaticPose": null,
+      "PoseCorrections": {
+        "Bones": {
+          "RightUpperArm": [
+            {
+              "Id": "ca5d2123cdfa40f9b99f1e4879d8aa40",
+              "Time": 0,
+              "Interpolation": {
+                "Mode": "Linear",
+                "Control1": [
+                  0.25,
+                  0.1
+                ],
+                "Control2": [
+                  0.25,
+                  1
+                ]
+              },
+              "Rotation": [
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "Id": "40d2b83b59444990b71dca31d8707d31",
+              "Time": 1,
+              "Interpolation": {
+                "Mode": "Linear",
+                "Control1": [
+                  0.25,
+                  0.1
+                ],
+                "Control2": [
+                  0.25,
+                  1
+                ]
+              },
+              "Rotation": [
+                -1.4901163E-08,
+                -0.13290115,
+                -0.076768406,
+                0.98815185
+              ]
+            }
+          ],
+          "RightLowerArm": [
+            {
+              "Id": "9096fe42b834462aa054add8bb08136e",
+              "Time": 0,
+              "Interpolation": {
+                "Mode": "Linear",
+                "Control1": [
+                  0.25,
+                  0.1
+                ],
+                "Control2": [
+                  0.25,
+                  1
+                ]
+              },
+              "Rotation": [
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "Id": "f07445b32224450b84d38e2a11f9c44c",
+              "Time": 1,
+              "Interpolation": {
+                "Mode": "Linear",
+                "Control1": [
+                  0.25,
+                  0.1
+                ],
+                "Control2": [
+                  0.25,
+                  1
+                ]
+              },
+              "Rotation": [
+                -1.8626451E-09,
+                0.25852102,
+                0.16038926,
+                0.9525977
+              ]
+            }
+          ],
+          "RightHand": [
+            {
+              "Id": "46f260aa77a84d068d6e105adc1ec7ea",
+              "Time": 0,
+              "Interpolation": {
+                "Mode": "Linear",
+                "Control1": [
+                  0.25,
+                  0.1
+                ],
+                "Control2": [
+                  0.25,
+                  1
+                ]
+              },
+              "Rotation": [
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "Id": "cdf1416f3e2c4f2bbb9a1481d54bb45f",
+              "Time": 1,
+              "Interpolation": {
+                "Mode": "Linear",
+                "Control1": [
+                  0.25,
+                  0.1
+                ],
+                "Control2": [
+                  0.25,
+                  1
+                ]
+              },
+              "Rotation": [
+                -0.0008574277,
+                -0.12982677,
+                -0.08370519,
+                0.9879968
+              ]
+            }
+          ]
+        },
+        "Root": []
+      },
+      "Appearance": {
+        "ColorOverride": null,
+        "ShowLabel": true
+      }
+    }
+  ],
+  "CameraKeys": [],
+  "ShotPosition": [
+    7,
+    4,
+    8
+  ],
+  "ShotRotation": [
+    -17.640623,
+    32.005375,
+    -8.959025E-07
+  ],
+  "FocalLength": 35,
+  "Cameras": [
+    {
+      "PositionCorrection": [
+        0,
+        0,
+        0
+      ],
+      "RotationCorrection": [
+        0,
+        0,
+        0
+      ],
+      "PropertyAnimation": {
+        "Channels": {
+          "Lens": {
+            "Enabled": true,
+            "Discrete": false,
+            "Keys": [
+              {
+                "Id": "3298d23d258145f7bb04fb102fc2bc16",
+                "Time": 0,
+                "Value": 28,
+                "Interpolation": "Linear",
+                "InSlope": 0,
+                "OutSlope": 0,
+                "InWeight": 0.3333333333333333,
+                "OutWeight": 0.3333333333333333,
+                "BrokenTangents": false
+              },
+              {
+                "Id": "453908bb3d09431da2b82cff204c88f7",
+                "Time": 4,
+                "Value": 56,
+                "Interpolation": "Linear",
+                "InSlope": 0,
+                "OutSlope": 0,
+                "InWeight": 0.3333333333333333,
+                "OutWeight": 0.3333333333333333,
+                "BrokenTangents": false
+              }
+            ]
+          },
+          "Tracking.FollowOffset.Z": {
+            "Enabled": true,
+            "Discrete": false,
+            "Keys": [
+              {
+                "Id": "1a6a4f4e5116442db020d82c309066f8",
+                "Time": 0,
+                "Value": 6,
+                "Interpolation": "Linear",
+                "InSlope": 0,
+                "OutSlope": 0,
+                "InWeight": 0.3333333333333333,
+                "OutWeight": 0.3333333333333333,
+                "BrokenTangents": false
+              },
+              {
+                "Id": "2c7ca2884d224ac2afa420a1097c5efe",
+                "Time": 4,
+                "Value": 10,
+                "Interpolation": "Linear",
+                "InSlope": 0,
+                "OutSlope": 0,
+                "InWeight": 0.3333333333333333,
+                "OutWeight": 0.3333333333333333,
+                "BrokenTangents": false
+              }
+            ]
+          }
+        }
+      },
+      "Movement": {
+        "Mode": "None",
+        "TargetId": "",
+        "TargetPosition": [
+          0,
+          0,
+          0
+        ],
+        "TargetOffset": [
+          0,
+          0.8,
+          0
+        ],
+        "AimAtTarget": true,
+        "Start": 0,
+        "Duration": 8,
+        "Radius": 8,
+        "StartAngleDegrees": 0,
+        "OrbitDegrees": 360,
+        "StartHeight": 2,
+        "EndHeight": 2,
+        "Easing": "Linear",
+        "Path": {
+          "ProgressOverride": null,
+          "Enabled": false,
+          "Points": [],
+          "PointTimes": [],
+          "PointInterpolation": [],
+          "Start": 0,
+          "Duration": 8,
+          "OrientToPath": true
+        },
+        "AimPathEnabled": false,
+        "AimPath": {
+          "ProgressOverride": null,
+          "Enabled": false,
+          "Points": [],
+          "PointTimes": [],
+          "PointInterpolation": [],
+          "Start": 0,
+          "Duration": 8,
+          "OrientToPath": true
+        },
+        "PositionOffset": [
+          0,
+          0,
+          0
+        ],
+        "RotationOffset": [
+          0,
+          0,
+          0
+        ]
+      },
+      "Tracking": {
+        "FollowEnabled": false,
+        "FollowTargetId": "",
+        "FollowOffset": [
+          0,
+          3,
+          6
+        ],
+        "FollowSmoothness": 0,
+        "LookAtEnabled": false,
+        "LookAtTargetId": "",
+        "LookAtOffset": [
+          0,
+          0.8,
+          0
+        ],
+        "LookAtSmoothness": 0,
+        "TargetRelativeOffsets": true,
+        "RotationOffset": [
+          0,
+          0,
+          0
+        ]
+      },
+      "Reference": {
+        "Path": "",
+        "Enabled": true,
+        "Opacity": 0.5,
+        "Fill": false,
+        "OffsetSeconds": 0
+      },
+      "Id": "ff95d95042144a6ba4c056716c594a2f",
+      "Name": "Animation camera",
+      "ShowLabel": true,
+      "Keys": [],
+      "Position": [
+        7,
+        4,
+        8
+      ],
+      "Rotation": [
+        -17.640627,
+        32.005383,
+        -4.4795124E-07
+      ],
+      "FocalLength": 35,
+      "Scale": [
+        1,
+        1,
+        1
+      ],
+      "TransformAnimation": {
+        "Position": [],
+        "Rotation": [],
+        "Scale": []
+      },
+      "LensKeys": [
+        {
+          "Id": "9d046aea314a4f218b793bdacb4ab3ca",
+          "Time": 0,
+          "Value": 20,
+          "Interpolation": {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          }
+        },
+        {
+          "Id": "b6e9447650d045d7a53da2393eb408fe",
+          "Time": 4,
+          "Value": 90,
+          "Interpolation": {
+            "Mode": "Linear",
+            "Control1": [
+              0.25,
+              0.1
+            ],
+            "Control2": [
+              0.25,
+              1
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "ActiveCameraId": "ff95d95042144a6ba4c056716c594a2f",
+  "DirectionalLightEnabled": false,
+  "SceneSettings": {
+    "BackgroundColor": [
+      0.14509805,
+      0.14509805,
+      0.16078432,
+      1
+    ],
+    "Brightness": 1,
+    "GroundVisible": true,
+    "GroundHeight": 0,
+    "GroundOpacity": 1,
+    "ObjectLabelsVisible": true
+  },
+  "PropertyAnimation": {
+    "Channels": {
+      "Scene.Brightness": {
+        "Enabled": true,
+        "Discrete": false,
+        "Keys": [
+          {
+            "Id": "efdb44b0fb3b43f794fd90a5e685fda5",
+            "Time": 0,
+            "Value": 0.25,
+            "Interpolation": "Linear",
+            "InSlope": 0,
+            "OutSlope": 0,
+            "InWeight": 0.3333333333333333,
+            "OutWeight": 0.3333333333333333,
+            "BrokenTangents": false
+          },
+          {
+            "Id": "077cae28086d4a6b83f60012330ce164",
+            "Time": 4,
+            "Value": 1.25,
+            "Interpolation": "Linear",
+            "InSlope": 0,
+            "OutSlope": 0,
+            "InWeight": 0.3333333333333333,
+            "OutWeight": 0.3333333333333333,
+            "BrokenTangents": false
+          }
+        ]
+      }
+    }
+  },
+  "Setup": {
+    "Width": 1920,
+    "Height": 1080,
+    "ReferencePath": "",
+    "ReferenceEnabled": true,
+    "ReferenceOpacity": 0.5,
+    "ReferenceFill": false,
+    "ReferenceOffsetSeconds": 0
+  }
+}

@@ -41,6 +41,7 @@ public partial class GoPrevisApp
 
     /// <summary>An object whose place and shape do not change during the shot.</summary>
     static bool ShotStill(Entry entry)=>entry.Node is not RiggedActor&&entry.NativeTrack==null&&entry.Data.Link==null&&entry.Data.MotionClips.Count==0
+        &&!entry.Data.PropertyAnimation.Channels.Values.Any(c=>c.Keys.Count>0)
         &&!(entry.Data.Path.Enabled&&entry.Data.Path.Points.Count>1)&&ShotKeyCount(entry.Data.TransformAnimation)<=3;
 
     /// <summary>World bounds for the frame test; a figure moved by its mocap's root is centred on its hips.</summary>
@@ -90,7 +91,7 @@ public partial class GoPrevisApp
             {
                 try{box=ShotBounds(entry);}catch{continue;}
             }
-            tracker.Record(entry.Data.Id,InShotView(camera,size,box),time);
+            tracker.Record(entry.Data.Id,entry.Node.IsVisibleInTree()&&InShotView(camera,size,box),time);
         }
     }
 
@@ -102,6 +103,8 @@ public partial class GoPrevisApp
         return new
         {
             schema=1,
+            animationSchema=1,
+            sceneAnimation=document.PropertyAnimation,
             durationSeconds=R(document.Duration),
             fps=document.Fps,
             activeCameraId=document.ActiveCameraId,
@@ -113,9 +116,10 @@ public partial class GoPrevisApp
                 {
                     id=o.Id,name=o.Name,kind=o.Kind,family=o.ActorFamily,model=o.LibraryModelId,light=o.Light!=null,
                     color=o.Appearance?.ColorOverride,
-                    motions=o.MotionClips.Select(c=>new{name=c.Name,start=R(c.Start),end=R(c.Start+c.Duration),loop=c.Loop,speed=c.Speed,automatic=c.IsPlaceholder}).ToArray(),
+                    propertyAnimation=o.PropertyAnimation,
+                    motions=o.MotionClips.Select(c=>new{name=c.Name,start=R(c.Start),end=R(c.Start+c.Duration),loop=c.Loop,speed=c.Speed,automatic=c.IsPlaceholder,propertyAnimation=c.PropertyAnimation}).ToArray(),
                     path=times.Length>1?new{start=R(o.Path.Start+times[0]),end=R(o.Path.Start+times[^1]),points=o.Path.Points.Count,orientToPath=o.Path.OrientToPath}:null,
-                    keyed=ShotKeyCount(o.TransformAnimation)>3,
+                    keyed=ShotKeyCount(o.TransformAnimation)>3||o.PropertyAnimation.Channels.Values.Any(c=>c.Keys.Count>0),
                     link=o.Link==null?null:new{from=NameOf(o.Link.StartTargetId),to=NameOf(o.Link.EndTargetId)},
                     pose=o.StaticPose?.Name,
                     inFrame=tracker.For(o.Id,end),
@@ -123,7 +127,7 @@ public partial class GoPrevisApp
             }).ToArray(),
             cameras=document.Cameras.Select(c=>new
             {
-                id=c.Id,name=c.Name,exported=c.Id==cameraId,focalLengthMm=c.FocalLength,
+                id=c.Id,name=c.Name,exported=c.Id==cameraId,focalLengthMm=c.FocalLength,propertyAnimation=c.PropertyAnimation,
                 lensKeys=c.LensKeys.Select(k=>new{time=R(k.Time),mm=k.Value}).ToArray(),
                 movement=c.Movement.Mode=="None"?null:new{mode=c.Movement.Mode,start=R(c.Movement.Start),end=R(c.Movement.Start+c.Movement.Duration),targetId=c.Movement.TargetId,target=NameOf(c.Movement.TargetId),orbitDegrees=c.Movement.OrbitDegrees,radius=c.Movement.Radius,startHeight=c.Movement.StartHeight,endHeight=c.Movement.EndHeight,easing=c.Movement.Easing,aimPath=c.Movement.AimPathEnabled},
                 follow=c.Tracking.FollowEnabled?NameOf(c.Tracking.FollowTargetId):null,

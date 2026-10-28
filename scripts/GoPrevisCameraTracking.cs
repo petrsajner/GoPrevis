@@ -16,10 +16,12 @@ public partial class GoPrevisApp
 
     TrackingTargetPose SampleTrackingTarget(Entry entry,double time)
     {
+        using var propertyState=EvaluateEntryPropertyState(entry,time);
         bool path=entry.Data.Path.Enabled&&entry.Data.Path.Points.Count>=2;
-        var motion=entry.Node is RiggedActor actor?actor.SampleTrackingMotion(time,path,entry.Data.PoseCorrections):entry.NativeTrack is {} native?native.SampleTrackingMotion(time,path,entry.Data.PoseCorrections,entry.Data.StaticPose):(Vector3.Zero,Vector3.Forward);
+        var motion=entry.Node is RiggedActor actor?actor.SampleTrackingMotion(time,path,EvaluatedPropertyPose(entry,time)):entry.NativeTrack is {} native?native.SampleTrackingMotion(time,path,EvaluatedPropertyPose(entry,time),entry.Data.StaticPose):(Vector3.Zero,Vector3.Forward);
         var value=TransformLayerRuntime.Evaluate(Vector(entry.Data.Position),Vector(entry.Data.Rotation),Vector(entry.Data.Scale,Vector3.One),entry.Data.TransformAnimation,entry.Data.Path,time,motion.Item2);
-        var basis=Basis.FromEuler(value.RotationDegrees*Mathf.Pi/180);var scaled=new Basis(basis.X*value.Scale.X,basis.Y*value.Scale.Y,basis.Z*value.Scale.Z);var localPosition=value.Position+(path?Vector(entry.Data.PathOffset):Vector3.Zero)+scaled*motion.Item1;
+        var rotation=value.RotationDegrees+AnimatedObjectManual(entry,"Rotation",time)-LegacyObjectManual(entry,"Rotation",time);var scale=AnimatedObjectManual(entry,"Scale",time);
+        var basis=Basis.FromEuler(rotation*Mathf.Pi/180);var scaled=new Basis(basis.X*scale.X,basis.Y*scale.Y,basis.Z*scale.Z);var localPosition=value.Position+(path?Vector(entry.Data.PathOffset):Vector3.Zero)+AnimatedObjectManual(entry,"Position",time)-LegacyObjectManual(entry,"Position",time)+scaled*motion.Item1;
         var facing=motion.Item2;facing.Y=0;if(facing.LengthSquared()<.00001f)facing=Vector3.Forward;
         var semanticBasis=basis*Basis.LookingAt(facing.Normalized(),Vector3.Up);
         var parent=entry.Node.GetParentNode3D();return parent==null?new(localPosition,semanticBasis):new(parent.GlobalTransform*localPosition,parent.GlobalBasis.Orthonormalized()*semanticBasis);
@@ -72,5 +74,5 @@ public partial class GoPrevisApp
         return false;
     }
     void DisableCameraTrackingForPreset(CameraEntry camera)
-    {camera.Movement=new();camera.Tracking.FollowEnabled=false;camera.Tracking.LookAtEnabled=false;RefreshCameraTrackingInspector();}
+    {foreach(string path in camera.PropertyAnimation.Channels.Keys.Where(k=>k.StartsWith("Movement.")||k.StartsWith("Tracking.")||k.StartsWith("Correction.")||k.StartsWith("Transform.")||k=="Lens").ToArray())camera.PropertyAnimation.Channels.Remove(path);camera.Movement=new();camera.Tracking.FollowEnabled=false;camera.Tracking.LookAtEnabled=false;RefreshCameraTrackingInspector();}
 }

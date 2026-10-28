@@ -1,5 +1,7 @@
 # GoPrevis 0.19.1 Alpha - Fast 3D previs for AI video
 
+Development build **0.21.0** adds independent XYZ property channels, a dope sheet and value/speed graph editing. See the [animation editor guide](docs/ANIMATION-EDITOR.md). The download links below refer to the published release.
+
 **Alpha release - under active development.** Features and workflows are still evolving. Feedback is welcome and will help shape the next versions.
 
 **[Download Windows x64](https://github.com/petrsajner/GoPrevis/releases/download/v0.19.1-alpha/GoPrevis-0.19.1-Windows.zip)** · [English PDF manual](docs/GoPrevis-User-Guide-EN.pdf) · [Watch the street flyover](https://github.com/petrsajner/GoPrevis/releases/download/v0.19.1-alpha/GoPrevis-Street-Flyover.mp4) · [All releases](https://github.com/petrsajner/GoPrevis/releases)

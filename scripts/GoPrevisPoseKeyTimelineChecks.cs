@@ -10,12 +10,12 @@ public partial class GoPrevisApp
     /// <summary>Actual correction-lane widget input, source preservation and reversible key editing.</summary>
     public async Task<int> RunPoseKeyTimelineChecks()
     {
-        var original=Snapshot();string path=_projectPath;double time=_time;var undo=_undo.ToArray();var redo=_redo.ToArray();int checks=0;
+        var original=Snapshot();string path=_projectPath;double time=_time;var undo=_undo.ToArray();var redo=_redo.ToArray();int checks=0;string workspace=_animationWorkspaceMode;
         void Check(bool value,string message){Require(value,"Pose key timeline: "+message);checks++;}
         async Task Settle(){for(int i=0;i<3;i++)await ToSignal(GetTree(),SceneTree.SignalName.ProcessFrame);}
         try
         {
-            _playing=false;StopPoseEditing();ClearObjects();_duration=8;_scrub.MaxValue=8;SetTime(0);
+            SetAnimationWorkspaceMode("Clips");_playing=false;StopPoseEditing();ClearObjects();_duration=8;_scrub.MaxValue=8;SetTime(0);
             var entry=AddObject("actor",Vector3.Zero,"Pose key test");string id=entry.Data.Id;
             var motion=MotionCatalog.Find("human-walk-gesture")!;AppendMotion(entry,MotionCatalog.MaterializeSource(motion),motion.SourceScale);
             var headTurn=new Quaternion(Vector3.Up,Mathf.DegToRad(40));var armRaise=new Quaternion(Vector3.Forward,Mathf.DegToRad(20));
@@ -55,7 +55,7 @@ public partial class GoPrevisApp
         }
         finally
         {
-            StopPoseEditing();Restore(original,"");_projectPath=path;SetTime(time);_undo.Clear();_redo.Clear();foreach(var item in undo.Reverse())_undo.Push(item);foreach(var item in redo.Reverse())_redo.Push(item);
+            StopPoseEditing();Restore(original,"");_projectPath=path;SetTime(time);_undo.Clear();_redo.Clear();foreach(var item in undo.Reverse())_undo.Push(item);foreach(var item in redo.Reverse())_redo.Push(item);SetAnimationWorkspaceMode(workspace);
         }
     }
 }

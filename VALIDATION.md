@@ -1,4 +1,13 @@
-# GoPrevis 0.20.0 validation
+# GoPrevis 0.21.0 validation
+
+Validation date: **2026-10-28**. Local Windows x64 development build, English UI, schema **14**. Adds shared scalar property channels with independent transform and joint XYZ, weighted value Bezier curves, signed velocity editing, property hierarchy and filters, key clipboard and inspector integration. Animated source rates integrate time consistently for BVH/native motion and tracking; source blending, additive pose corrections, paths and final transforms retain their order.
+
+The new source suite passes **122 checks** including actual value/speed graph and dope-sheet events; light/Follow/scene inspector writes; IK over mocap after channel splitting; source-time pause; path progress and travel-duration changes; base-state/dirty stability; one-step Undo; empty-lens deletion without legacy reactivation; schema14 persistence and actual schema13 loading; real synchronized color/depth/pose exports; and layout/rendered UI checks at1100×700,1280×800 and2560×1440. Compilation has zero warnings/errors. The final executable also passes the122-check property suite and32 camera-tracking checks with empty stderr. Native regression coverage also passes project workflow181, pose corrections55 +13 timeline, timeline deletion35, interaction38 +15 numeric +14 trim, project files22 +24 layout, unsaved changes31, and shot export34 with192 frames /3 passes. Final reports accompany the local build.
+
+The English animation-editor guide is docs/ANIMATION-EDITOR.md. This version does not claim complete Blender/Maya DCC equivalence: modeling, arbitrary rig construction, shape keys, expressions/drivers, simulation baking and a general NLA/constraint editor remain outside this change. No release or paid AI calls are part of this implementation task. Deferred3DGS research remains separate.
+
+# Historical GoPrevis 0.20.0 validation
+
 
 Validation date: **2026-10-27**. Windows x64, schema **13**, English UI. Restores reading Vividia's existing OpenRouter / Gemini key on the same computer (**Use existing Vividia key** / **Stop using the Vividia key**, offered only when Vividia keeps a key for the provider; nothing is copied), adds the shot's content to the export manifest (`shot`, schema 1: objects with colours, motions, paths and in-frame spans, cameras with their movement) and **→ Vividia** / **→ Vividia Pro** in the *Shot exported* window.
 

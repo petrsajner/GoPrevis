@@ -12,17 +12,18 @@ if ($Test) {
     & $previsGodot --headless --path $PSScriptRoot -- --smoke-test
     if ($LASTEXITCODE -ne 0) { throw 'Headless smoke checks failed.' }
 }
-$previsOutput = Join-Path $PSScriptRoot 'build\GoPrevis-0.20.0-Windows'
+$previsOutput = Join-Path $PSScriptRoot 'build\GoPrevis-0.21.0-Windows'
 New-Item -ItemType Directory -Path $previsOutput -Force | Out-Null
 New-Item -ItemType Directory -Path (Join-Path $PSScriptRoot 'output') -Force | Out-Null
 $previsLog = Join-Path $PSScriptRoot 'output\export.log'
 & $previsGodot --headless --path $PSScriptRoot --export-release 'Windows Desktop' *> $previsLog
 if ($LASTEXITCODE -ne 0 -or (Select-String -LiteralPath $previsLog -Pattern '^ERROR:' -Quiet)) { Get-Content -LiteralPath $previsLog -Tail 25; throw 'Windows export failed.' }
-Copy-Item -LiteralPath 'README.md', 'THIRD-PARTY-NOTICES.md', 'NAVRH-GOPREVIS.md' -Destination $previsOutput -Force
+Copy-Item -LiteralPath 'THIRD-PARTY-NOTICES.md', 'NAVRH-GOPREVIS.md' -Destination $previsOutput -Force
+Copy-Item -LiteralPath 'docs\PORTABLE-README.md' -Destination (Join-Path $previsOutput 'README.md') -Force
 Copy-Item -LiteralPath 'docs\GoPrevis-User-Guide-EN.pdf' -Destination $previsOutput -Force
 $previsDocs = Join-Path $previsOutput 'docs'
 New-Item -ItemType Directory -Path $previsDocs -Force | Out-Null
-Copy-Item -LiteralPath 'docs\GoPrevis-User-Guide-EN.pdf' -Destination $previsDocs -Force
+Copy-Item -LiteralPath 'docs\GoPrevis-User-Guide-EN.pdf', 'docs\ANIMATION-EDITOR.md' -Destination $previsDocs -Force
 Copy-Item -LiteralPath 'docs\images' -Destination $previsDocs -Recurse -Force
 Copy-Item -LiteralPath 'examples' -Destination $previsOutput -Recurse -Force
 $previsBrandAssets=Join-Path $previsOutput 'assets'

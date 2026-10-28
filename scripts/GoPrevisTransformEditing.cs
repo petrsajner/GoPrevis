@@ -10,7 +10,7 @@ public partial class GoPrevisApp
 {
     CameraEntry? _selectedCamera;
     bool _autoKey;
-    int ActiveCameraKeyCount(){var camera=_cameras.FirstOrDefault(c=>c.Rig==_shot);return camera==null?0:camera.Animation.Position.Concat(camera.Animation.Rotation).Concat(camera.Animation.Scale).Select(k=>k.Time).Concat(camera.LensKeys.Select(k=>k.Time)).Distinct().Count();}
+    int ActiveCameraKeyCount(){var camera=_cameras.FirstOrDefault(c=>c.Rig==_shot);return camera==null?0:camera.Animation.Position.Concat(camera.Animation.Rotation).Concat(camera.Animation.Scale).Select(k=>k.Time).Concat(camera.LensKeys.Select(k=>k.Time)).Concat(camera.PropertyAnimation.Channels.Values.SelectMany(c=>c.Keys).Select(k=>k.Time)).Distinct().Count();}
     readonly Dictionary<string,Button> _parameterKeyButtons=new();
     readonly Dictionary<string,Label> _parameterLabels=new();
 
@@ -23,7 +23,7 @@ public partial class GoPrevisApp
     {
         if(_selected!=null)_lastTrackingTargetId=_selected.Data.Id;
         if(_drawingPath)CancelDrawingPath();CancelPlacement();_selected=null;SyncPoseEditorSelection();_selectedCamera=camera;SetActiveCamera(camera.Id);_refreshing=true;_name.Text=camera.Name;
-        _cameraQuickControls.Visible=true;ShowInspectorSection("Object");UpdateTransformFields();int i=_cameras.IndexOf(camera);if(i>=0)_objectList.Select(_entries.Count+i);_refreshing=false;UpdateSelection();RefreshAllObjectLabels();UpdateObjectAppearanceInspector();UpdatePlacementInspector();
+        _cameraQuickControls.Visible=true;ShowInspectorSection("Object");UpdateTransformFields();int i=_cameras.IndexOf(camera);if(i>=0)_objectList.Select(_entries.Count+i);_refreshing=false;UpdateSelection();RefreshAllObjectLabels();UpdateObjectAppearanceInspector();UpdatePlacementInspector();RefreshAnimatedProperties();
     }
     void EnsureCameraAnimation(CameraEntry camera)
     {
@@ -40,29 +40,30 @@ public partial class GoPrevisApp
     {
         EnsureCameraAnimation(camera);camera.Rig.GlobalPosition=CameraBasePosition(camera,time);
         camera.Rig.Quaternion=CameraBaseRotation(camera,time);
-        camera.Rig.Scale=TransformLayerRuntime.EvaluateVector(camera.Animation.Scale,time,camera.BaseScale);
+        camera.Rig.Scale=AnimatedCameraVector(camera,"Scale",time,TransformLayerRuntime.EvaluateVector(camera.Animation.Scale,time,camera.BaseScale));
         camera.Rig.FocalLengthMm=EvaluateLens(camera,time);
         ApplyCameraTracking(camera,time);
+        ApplyCameraPropertyCorrections(camera,time);
     }
     float EvaluateLens(CameraEntry camera,double time)
+        =>(float)PropertyCurveRuntime.Evaluate(camera.PropertyAnimation.Channels.GetValueOrDefault("Lens"),time,camera.PropertyAnimation.Channels.ContainsKey("Lens")?camera.BaseLens:EvaluateLensLegacy(camera,time));
+    float EvaluateLensLegacy(CameraEntry camera,double time)
     {
         var keys=camera.LensKeys.OrderBy(k=>k.Time).ToList();if(keys.Count==0)return camera.BaseLens;if(time<=keys[0].Time)return keys[0].Value;
         for(int i=1;i<keys.Count;i++)if(time<=keys[i].Time){var a=keys[i-1];var b=keys[i];return Mathf.Lerp(a.Value,b.Value,KeyInterpolation.Weight(a.Interpolation,(time-a.Time)/Math.Max(.00001,b.Time-a.Time)));}return keys[^1].Value;
     }
     void SyncCameraFromRig(CameraEntry camera)
     {
-        camera.BasePosition=camera.Rig.GlobalPosition;camera.BaseRotation=camera.Rig.GlobalRotationDegrees;camera.BaseScale=camera.Rig.Scale;camera.BaseLens=camera.Rig.FocalLengthMm;
+        foreach(string path in camera.PropertyAnimation.Channels.Keys.Where(k=>k.StartsWith("Transform.")||k.StartsWith("Correction.")||k=="Lens").ToArray())camera.PropertyAnimation.Channels.Remove(path);
+        camera.PositionCorrection=Vector3.Zero;camera.RotationCorrection=Vector3.Zero;camera.BasePosition=camera.Rig.GlobalPosition;camera.BaseRotation=camera.Rig.GlobalRotationDegrees;camera.BaseScale=camera.Rig.Scale;camera.BaseLens=camera.Rig.FocalLengthMm;
         camera.Animation=new();camera.LensKeys.Clear();camera.AnimationInitialized=false;EnsureCameraAnimation(camera);
     }
     void ClearCameraAnimation()
     {
-        PushUndo();var camera=_cameras.First(c=>c.Rig==_shot);camera.BasePosition=camera.Rig.GlobalPosition;camera.BaseRotation=camera.Rig.GlobalRotationDegrees;camera.BaseScale=camera.Rig.Scale;camera.BaseLens=camera.Rig.FocalLengthMm;camera.Animation=new();camera.Movement=new();camera.LensKeys.Clear();camera.Rig.ClearKeys();camera.AnimationInitialized=true;SetTime(_time);Status("Camera animation cleared.");
+        PushUndo();var camera=_cameras.First(c=>c.Rig==_shot);camera.PropertyAnimation=new();camera.PositionCorrection=Vector3.Zero;camera.RotationCorrection=Vector3.Zero;camera.BasePosition=camera.Rig.GlobalPosition;camera.BaseRotation=camera.Rig.GlobalRotationDegrees;camera.BaseScale=camera.Rig.Scale;camera.BaseLens=camera.Rig.FocalLengthMm;camera.Animation=new();camera.Movement=new();camera.LensKeys.Clear();camera.Rig.ClearKeys();camera.AnimationInitialized=true;SetTime(_time);Status("Camera animation cleared.");
     }
     Vector3 ManualValue(Entry entry,string group)
-    {
-        var keys=TransformLayerRuntime.Channel(entry.Data.TransformAnimation,group);var value=TransformLayerRuntime.EvaluateVector(keys,_time,group=="Scale"?Vector3.One:Vector3.Zero,group=="Rotation");
-        return group switch{"Position"=>(entry.Data.Path.Enabled?Vector(entry.Data.PathOffset):Vector(entry.Data.Position))+value,"Rotation"=>Vector(entry.Data.Rotation)+value,_=>Vector(entry.Data.Scale,Vector3.One)*value};
-    }
+        =>AnimatedObjectManual(entry,group,_time);
     void UpdateTransformFields()
     {
         bool old=_refreshing;_refreshing=true;
@@ -78,41 +79,39 @@ public partial class GoPrevisApp
             var animation=_selectedCamera?.Animation??_selected?.Data.TransformAnimation;
             bool keyed=animation!=null&&TransformLayerRuntime.Channel(animation,pair.Key).Any(k=>Math.Abs(k.Time-_time)<.5/_fps);
             bool controlled=_selectedCamera is {} constrained&&(pair.Key=="Position"&&CameraPositionControlled(constrained)||pair.Key=="Rotation"&&CameraRotationControlled(constrained));
-            pair.Value.Text=keyed?"◆":"◇";pair.Value.Disabled=animation==null||controlled;pair.Value.TooltipText=controlled?"This channel is controlled by camera movement / Follow / Look at. Adjust its offsets, or disable the constraint to edit the retained keys.":"Key all XYZ axes of "+pair.Key;
+            pair.Value.Text=keyed?"◆":"◇";pair.Value.Disabled=animation==null;pair.Value.TooltipText=controlled?"This channel is controlled by camera movement / Follow / Look at. Adjust its offsets, or disable the constraint to edit the retained keys.":"Key all XYZ axes of "+pair.Key;
         }
         foreach(var pair in _parameterLabels){bool offset=_selectedCamera==null&&_selected?.Data.Path.Enabled==true;pair.Value.Text=pair.Key+(_selectedCamera is {} tracking&&(pair.Key=="Position"&&CameraPositionControlled(tracking)||pair.Key=="Rotation"&&CameraRotationControlled(tracking))?" · live":"")+(offset&&pair.Key!="Scale"?" offset":"")+(pair.Key=="Position"?" (m)":pair.Key=="Rotation"?" (°)":"");}
         _refreshing=old;RefreshKeyInterpolationInspector();
     }
     void StorePilotedCameraPose()
     {
-        var camera=_cameras.First(c=>c.Rig==_shot);EnsureCameraAnimation(camera);
-        if(!TryEditConstrainedCamera(camera,"Position",_shot.GlobalPosition)){if(_autoKey||camera.Animation.Position.Count>0)TransformLayerRuntime.Upsert(camera.Animation.Position,_time,_shot.GlobalPosition);else camera.BasePosition=_shot.GlobalPosition;}
-        if(!TryEditConstrainedCamera(camera,"Rotation",_shot.GlobalRotationDegrees)){if(_autoKey||camera.Animation.Rotation.Count>0)TransformLayerRuntime.Upsert(camera.Animation.Rotation,_time,_shot.GlobalRotationDegrees);else camera.BaseRotation=_shot.GlobalRotationDegrees;}
-        UpdateTransformFields();_timeline.QueueRedraw();
+        var camera=_cameras.First(c=>c.Rig==_shot);StoreCameraView(camera,_shot.GlobalPosition,_shot.GlobalRotationDegrees,false);UpdateTransformFields();_timeline.QueueRedraw();
     }
     void EditSelectedTransform(string group,int axis,float value)
     {
         if(_refreshing||_selected==null&&_selectedCamera==null)return;
         var vector=_selectedCamera is {} camera?group=="Position"?camera.Rig.GlobalPosition:group=="Rotation"?camera.Rig.GlobalRotationDegrees:camera.Rig.Scale:ManualValue(_selected!,group);
-        vector[axis]=value;PushUndo();ApplySelectedManualTransform(group,vector);
+        vector[axis]=value;PushUndo();if(_selectedCamera is {} live&&TryEditLiveAnimatedCamera(live,group,vector))return;if(TryWritePropertyTransform(group,vector,axis))return;ApplySelectedManualTransform(group,vector);
     }
 
     void CaptureSelectedTransformKey(string group)
     {
         if(_selected==null&&_selectedCamera==null){Status("Select an object or camera to add a key.");return;}
-        if(_selectedCamera is {} constrained&&(group=="Position"&&CameraPositionControlled(constrained)||group=="Rotation"&&CameraRotationControlled(constrained))){Status("This camera channel is controlled live. Adjust Follow / Look at offsets or disable the constraint to key its retained animation.");return;}PushUndo();
+        if(_selectedCamera is {} constrained&&LiveAnimationPath(constrained,group) is string livePath){PushUndo();foreach(var b in AnimationBindings().Where(b=>b.TargetId==constrained.Id&&b.Path.StartsWith(livePath+".")))PropertyCurveRuntime.Upsert(b.EnsureCurve(),_time,b.Read());SetTime(_time);return;}PushUndo();
         foreach(string channel in group=="All"?new[]{"Position","Rotation","Scale"}:group=="Lens"?Array.Empty<string>():new[]{group})
         {
             if(_selectedCamera is {} camera){if(channel=="Position"&&CameraPositionControlled(camera)||channel=="Rotation"&&CameraRotationControlled(camera))continue;EnsureCameraAnimation(camera);var value=channel=="Position"?camera.Rig.GlobalPosition:channel=="Rotation"?camera.Rig.GlobalRotationDegrees:camera.Rig.Scale;TransformLayerRuntime.Upsert(TransformLayerRuntime.Channel(camera.Animation,channel),_time,value);}
             else if(_selected is {} entry){var list=TransformLayerRuntime.Channel(entry.Data.TransformAnimation,channel);var correction=TransformLayerRuntime.EvaluateVector(list,_time,channel=="Scale"?Vector3.One:Vector3.Zero,channel=="Rotation");TransformLayerRuntime.Upsert(list,_time,correction);}
         }
         if(_selectedCamera is {} cam&&(group=="All"||group=="Lens"))UpsertLens(cam,_time,cam.Rig.FocalLengthMm);
+        CapturePropertyTransform(group,false);
         _timeline.QueueRedraw();if(_selected!=null)_timeline.ExpandObject(_selected.Data.Id);UpdateTransformFields();SelectKeyInterpolation("Transform",_selected,_selectedCamera,group,_time);Status(group+" key added at "+_time.ToString("0.###")+" s.");
     }
     void UpsertLens(CameraEntry camera,double time,float value){var existing=camera.LensKeys.FirstOrDefault(k=>Math.Abs(k.Time-time)<.00001);if(existing==null)camera.LensKeys.Add(new LensKeyData{Time=time,Value=value});else existing.Value=value;}
     void ChangeCameraLens(double value)
     {
-        if(_refreshing||_shot==null)return;var camera=_cameras.FirstOrDefault(c=>c.Rig==_shot);if(camera==null)return;PushUndo();EnsureCameraAnimation(camera);if(_autoKey||camera.LensKeys.Count>0)UpsertLens(camera,_time,(float)value);else camera.BaseLens=(float)value;SetTime(_time);
+        if(_refreshing||_shot==null)return;var camera=_cameras.FirstOrDefault(c=>c.Rig==_shot);if(camera==null)return;PushUndo();EnsureCameraAnimation(camera);if(camera.PropertyAnimation.Channels.ContainsKey("Lens")){var binding=AnimationBindings().First(b=>b.TargetId==camera.Id&&b.Path=="Lens");SetAnimationBindingValue(binding,value);SetTime(_time);return;}if(_autoKey||camera.LensKeys.Count>0)UpsertLens(camera,_time,(float)value);else camera.BaseLens=(float)value;SetTime(_time);
     }
     void SelectTransformTimeline(Entry? entry,CameraEntry? camera,string channel,double time)
     {if(camera!=null)SelectCamera(camera);else Select(entry);SetTime(time);ShowInspectorSection("Object");SelectKeyInterpolation("Transform",entry,camera,channel,time);}

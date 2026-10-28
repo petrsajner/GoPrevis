@@ -33,8 +33,8 @@ public partial class GoPrevisApp
         var load=Button("Load image / video…",()=>ChooseCameraBackground(camera(),panel));
         var remove=Button("Remove",()=>EditCameraBackground(camera(),data=>data.Path=""));panel.AddChild(Row(load,remove));
         var enabled=new CheckButton{Text="Show camera background"};panel.AddChild(enabled);
-        var opacity=Spin(0,100,1,50);var fit=new OptionButton{FitToLongestItem=false,SizeFlagsHorizontal=SizeFlags.ExpandFill,CustomMinimumSize=new Vector2(76,0)};fit.AddItem("Fit");fit.AddItem("Fill / crop");panel.AddChild(Row(Text("Opacity",11,true),opacity,Text("%",11,true),fit));
-        var offset=Spin(-86400,86400,.01,0);panel.AddChild(Row(Text("Video offset",11,true),offset,Text("s",11,true)));
+        var opacity=Spin(0,100,1,50);var fit=new OptionButton{FitToLongestItem=false,SizeFlagsHorizontal=SizeFlags.ExpandFill,CustomMinimumSize=new Vector2(76,0)};fit.AddItem("Fit");fit.AddItem("Fill / crop");panel.AddChild(Row(Text("Opacity",11,true),opacity,Text("%",11,true),fit,AnimatedParameterKey("Reference.Opacity",activeCamera:true)));
+        var offset=Spin(-86400,86400,.01,0);panel.AddChild(Row(Text("Video offset",11,true),offset,Text("s",11,true),AnimatedParameterKey("Reference.OffsetSeconds",activeCamera:true)));
         var note=Text("This camera only · editor guide · never exported",10,true);note.AutowrapMode=TextServer.AutowrapMode.WordSmart;panel.AddChild(note);
         enabled.Toggled+=value=>{if(!_refreshingCameraBackground)EditCameraBackground(camera(),data=>data.Enabled=value);};
         opacity.ValueChanged+=value=>{if(!_refreshingCameraBackground)EditCameraBackground(camera(),data=>data.Opacity=(float)value/100);};

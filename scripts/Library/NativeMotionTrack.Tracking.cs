@@ -27,11 +27,7 @@ public sealed partial class NativeMotionTrack
     }
     void SampleTrackingClip(Clip clip,double seconds,Pose output)
     {
-        double t=clip.Offset+Math.Clamp(seconds-clip.Start,0,clip.Duration)*clip.Speed;var animation=_player.GetAnimation(clip.Name);double length=animation.Length;
-        double loops=clip.Loop&&length>0?Math.Floor(t/length):0;t=length<=0?0:clip.Loop?((t%length)+length)%length:Math.Clamp(t,0,length);
-        ReadAuthoredAnimation(clip.Name,t,output);ConvertAuthoredPose(output);
-        if(loops!=0){var cycle=_cycles[clip.Name];for(int i=0;i<_roots.Length;i++)output.Position[_roots[i]]+=cycle.Bones[i]*(float)loops;if(_nodes.Length>0)output.NodePosition[0]+=cycle.Node*(float)loops;}
-        if(clip.InPlace){foreach(int root in _roots){output.Position[root].X=_rest.Position[root].X;output.Position[root].Z=_rest.Position[root].Z;}if(_nodes.Length>0){output.NodePosition[0].X=_rest.NodePosition[0].X;output.NodePosition[0].Z=_rest.NodePosition[0].Z;}}
+        Sample(clip,seconds,output);
         ApplyAlignment(clip,output);
     }
     void ReadAuthoredAnimation(string name,double t,Pose output)
@@ -55,12 +51,13 @@ public sealed partial class NativeMotionTrack
     /// <summary>Reads native animation tracks directly. It never seeks an AnimationPlayer or changes bone/node transforms.</summary>
     public (Vector3 Root,Vector3 Facing) SampleTrackingMotion(double time,bool forceInPlace,PoseCorrectionAnimationData? corrections,StaticPoseData? staticPose)
     {
+        RefreshAnimatedAlignments();
         var result=new Pose(_bones.Length,_nodes.Length);var incoming=new Pose(_bones.Length,_nodes.Length);
         if(_clips.Length==0){Copy(_rest,result);ApplyStaticPose(result,staticPose);}
         else
         {
             SampleTrackingClip(_clips[0],time,result);
-            for(int i=1;i<_clips.Length;i++){var clip=_clips[i];if(time<clip.Start)break;SampleTrackingClip(clip,time,incoming);Blend(result,incoming,clip.Blend<=0?1:(float)Math.Clamp((time-clip.Start)/clip.Blend,0,1));}
+            for(int i=1;i<_clips.Length;i++){var clip=_clips[i];if(time<clip.Start)break;SampleTrackingClip(clip,time,incoming);Blend(result,incoming,ClipWeight(clip,time));}
         }
         if(forceInPlace){foreach(int root in _roots){result.Position[root].X=_rest.Position[root].X;result.Position[root].Z=_rest.Position[root].Z;}if(_nodes.Length>0){result.NodePosition[0].X=_rest.NodePosition[0].X;result.NodePosition[0].Z=_rest.NodePosition[0].Z;}}
         Quaternion rootDelta=(result.Rotation[_roots[0]]*_restRootRotation.Inverse()).Normalized();

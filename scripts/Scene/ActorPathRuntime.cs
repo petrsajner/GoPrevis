@@ -20,6 +20,7 @@ public static class ActorPathRuntime
     public static (Vector3 Position, Vector3 Tangent) Evaluate(ActorPathData path, double seconds)
     {
         Curve curve = GetCurve(path);
+        if(path.ProgressOverride is float progress&&float.IsFinite(progress))return curve.AtDistance(Math.Clamp(progress,0,1)*curve.TotalLength);
         double start = double.IsFinite(path.Start) ? path.Start : 0;
         if (ValidPointTimes(path.PointTimes, curve.WaypointFractions.Length))
         {
@@ -39,6 +40,13 @@ public static class ActorPathRuntime
 
     /// <summary>Approximate arc length in world units, using the same curve as evaluation.</summary>
     public static float Length(ActorPathData path) => (float)GetCurve(path).TotalLength;
+    public static double Progress(ActorPathData path,double seconds)
+    {
+        if(path.ProgressOverride is float value&&float.IsFinite(value))return Math.Clamp(value,0,1);
+        var curve=GetCurve(path);
+        return ValidPointTimes(path.PointTimes,curve.WaypointFractions.Length)?TimedFraction(path.PointTimes,curve.WaypointFractions,path.PointInterpolation,seconds-path.Start)
+            :Math.Clamp((seconds-path.Start)/Math.Max(.000001,path.Duration),0,1);
+    }
 
     /// <summary>
     /// Arc-length fraction at each original control point, including duplicates. Invalid

@@ -21,6 +21,7 @@ public partial class RiggedActor
         OperatingSystem.IsWindows() ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal);
     private Quaternion[] _trackPose = Array.Empty<Quaternion>();
     private Quaternion[] _trackIncomingPose = Array.Empty<Quaternion>();
+    private ulong _trackAnimationStamp;
 
     private sealed class PreparedMotion
     {
@@ -41,10 +42,14 @@ public partial class RiggedActor
         public required PreparedMotion Source;
         public required string Name;
         public double Start, Duration, SourceOffset, Speed, FadeDuration;
+        public double FadeLimit;
+        public PropertyAnimationData Properties = new();
         public bool Loop, InPlace;
         public Vector3 Alignment;
         public double End => Start + Duration;
-        public double SourceTime(double sceneSeconds) => SourceOffset + Math.Clamp(sceneSeconds - Start, 0, Duration) * Speed;
+        public double SourceTime(double sceneSeconds) => MotionClipClock.SourceTime(Properties, sceneSeconds, Start, Duration, SourceOffset, Speed);
+        public bool Loops(double sceneSeconds) => MotionClipClock.Flag(Properties, "Loop", MotionClipClock.ParameterTime(sceneSeconds, Start, Duration), Loop);
+        public bool IsInPlace(double sceneSeconds) => MotionClipClock.Flag(Properties, "InPlace", MotionClipClock.ParameterTime(sceneSeconds, Start, Duration), InPlace);
     }
 
     /// <summary>
@@ -85,19 +90,24 @@ public partial class RiggedActor
             var clip = new PreparedMotionClip
             {
                 Source = source, Name = label, Start = data.Start, Duration = data.Duration,
-                SourceOffset = data.SourceOffset, Speed = data.Speed, Loop = data.Loop, InPlace = data.InPlace
+                SourceOffset = data.SourceOffset, Speed = data.Speed, Loop = data.Loop, InPlace = data.InPlace,
+                Properties = data.PropertyAnimation ?? new()
             };
             // Align against the preceding composite at the exact overlap/gap boundary, rather
             // than against a previously played frame. Random-access scrubbing is then identical.
             Vector3 previousRoot = stagedClips.Count == 0 ? Vector3.Up * source.GroundCorrection : EvaluateTrackRoot(stagedClips, clip.Start);
             clip.Alignment = previousRoot - SampleClipRoot(clip, clip.Start);
             if (stagedClips.Count > 0)
-                clip.FadeDuration = Math.Min(data.BlendIn, Math.Min(clip.Duration, Math.Max(0, stagedClips[^1].End - clip.Start)));
+            {
+                clip.FadeLimit = Math.Min(clip.Duration, Math.Max(0, stagedClips[^1].End - clip.Start));
+                clip.FadeDuration = Math.Min(data.BlendIn, clip.FadeLimit);
+            }
             stagedClips.Add(clip);
         }
         // No playable state or shared cache changes until every source and clip has succeeded.
         foreach (var item in stagedSources) _preparedMotions.Add(item.Key, item.Value);
         _motionTrack = stagedClips.ToArray();
+        _trackAnimationStamp = MotionAnimationStamp();
         if (_trackPose.Length != _bones.Count)
         {
             _trackPose = new Quaternion[_bones.Count];
@@ -119,6 +129,7 @@ public partial class RiggedActor
     {
         EnsureRig();
         if (_motionTrack.Length == 0) { ApplyStaticPose(); return; }
+        RefreshAnimatedTrackAlignment();
         RestoreMotionPicker();
         if (!double.IsFinite(sceneSeconds)) sceneSeconds = 0;
         PreparedMotionClip first = _motionTrack[0];
@@ -197,7 +208,7 @@ public partial class RiggedActor
     }
 
     private void SampleTrackPose(PreparedMotionClip clip, double sceneSeconds, Quaternion[] locals)
-        => SamplePreparedPose(clip.Source, clip.SourceTime(sceneSeconds), clip.Loop, locals);
+        => SamplePreparedPose(clip.Source, clip.SourceTime(sceneSeconds), clip.Loops(sceneSeconds), locals);
 
     private void SamplePreparedPose(PreparedMotion source, double time, bool loop, Quaternion[] locals)
     {
@@ -214,23 +225,45 @@ public partial class RiggedActor
 
     private static Vector3 SampleClipRoot(PreparedMotionClip clip, double sceneSeconds)
     {
-        Vector3 root = clip.Source.Motion.SampleRootCurve(clip.Source.RootCurve, clip.SourceTime(sceneSeconds), clip.Loop) * clip.Source.Scale;
-        if (clip.InPlace) { root.X = 0; root.Z = 0; }
+        Vector3 root = clip.Source.Motion.SampleRootCurve(clip.Source.RootCurve, clip.SourceTime(sceneSeconds), clip.Loops(sceneSeconds)) * clip.Source.Scale;
+        if (clip.IsInPlace(sceneSeconds)) { root.X = 0; root.Z = 0; }
         return root + Vector3.Up * clip.Source.GroundCorrection;
     }
 
     private static float ClipWeight(PreparedMotionClip clip, double time)
-        => clip.FadeDuration <= 0 ? 1 : (float)Math.Clamp((time - clip.Start) / clip.FadeDuration, 0, 1);
+    {
+        double blend = MotionClipClock.BlendDuration(clip.Properties, time, clip.Start, clip.Duration, clip.FadeDuration, clip.FadeLimit);
+        return blend <= 0 ? 1 : (float)Math.Clamp((time - clip.Start) / blend, 0, 1);
+    }
 
-    private static Vector3 EvaluateTrackRoot(IReadOnlyList<PreparedMotionClip> clips, double time)
+    private static Vector3 EvaluateTrackRoot(IReadOnlyList<PreparedMotionClip> clips, double time, int count = int.MaxValue)
     {
         Vector3 root = SampleClipRoot(clips[0], time) + clips[0].Alignment;
-        for (int i = 1; i < clips.Count; i++)
+        for (int i = 1; i < Math.Min(clips.Count, count); i++)
         {
             if (time < clips[i].Start) break;
             root = root.Lerp(SampleClipRoot(clips[i], time) + clips[i].Alignment, ClipWeight(clips[i], time));
         }
         return root;
+    }
+
+    ulong MotionAnimationStamp()
+    {
+        ulong value = 0;
+        foreach (var clip in _motionTrack) value = (value * 1099511628211UL) ^ MotionClipClock.Fingerprint(clip.Properties);
+        return value;
+    }
+    void RefreshAnimatedTrackAlignment()
+    {
+        ulong stamp = MotionAnimationStamp();
+        if (stamp == _trackAnimationStamp) return;
+        for (int i = 0; i < _motionTrack.Length; i++)
+        {
+            var clip = _motionTrack[i];
+            var previous = i == 0 ? Vector3.Up * clip.Source.GroundCorrection : EvaluateTrackRoot(_motionTrack, clip.Start, i);
+            clip.Alignment = previous - SampleClipRoot(clip, clip.Start);
+        }
+        _trackAnimationStamp = stamp;
     }
 
     private static Vector3 ClipFacing(PreparedMotionClip clip)
